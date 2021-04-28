@@ -14,6 +14,10 @@ import { NewsItemComponent } from './news-item/news-item.component';
 import { ArticleComponent } from './article/article.component';
 import { EventsComponent } from './events/events.component';
 import { EventListItemComponent } from './event-list-item/event-list-item.component';
+import { SearchComponent } from './search/search.component';
+import { UserHomeComponent } from './user-home/user-home.component';
+import { TicketDetailComponent } from './ticket-detail/ticket-detail.component';
+import { TicketListItemComponent } from './ticket-list-item/ticket-list-item.component';
 
 @NgModule({
   declarations: [
@@ -28,13 +32,14 @@ import { EventListItemComponent } from './event-list-item/event-list-item.compon
     NewsItemComponent,
     ArticleComponent,
     EventsComponent,
-    EventListItemComponent
+    EventListItemComponent,
+    SearchComponent,
+    UserHomeComponent,
+    TicketDetailComponent,
+    TicketListItemComponent,
   ],
-  imports: [
-    BrowserModule,
-    AppRoutingModule
-  ],
+  imports: [BrowserModule, AppRoutingModule],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}

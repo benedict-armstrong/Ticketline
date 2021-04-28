@@ -1,11 +1,26 @@
 .event {
   display: flex;
-  height: 130px;
-  margin: 10px;
+  max-height: 130px;
+  margin: 5px;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+}
+
+.event:hover {
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
 }
 
 .info {
-  margin-left: 20px;
+  display: flex;
+}
+
+.info img {
+  max-height: 130px;
+}
+
+.detail {
+  margin: 20px;
 }
 
 .date-time {
