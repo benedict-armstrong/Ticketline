@@ -1,0 +1,50 @@
+.header img {
+  width: 100%;
+}
+
+.header {
+  margin: 30px 0px;
+  background-color: rgb(240, 240, 240);
+}
+
+.details {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 20px;
+  height: 100%;
+}
+
+#get-tickets {
+  width: 100%;
+  height: 50px;
+  border: none;
+  border-radius: 10px;
+  background: rgb(203, 103, 111);
+  background: linear-gradient(
+    261deg,
+    rgba(203, 103, 111, 1) 19%,
+    rgba(193, 73, 83, 1) 80%
+  );
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
+  color: white;
+  font-weight: 800;
+}
+
+#performer {
+  color: rgb(131, 131, 131);
+}
+
+.date {
+  margin-bottom: 20px;
+  text-align: center;
+  width: 30px;
+}
+
+#month {
+  font-size: 9.5pt;
+}
+
+.additional-info h5 {
+  height: 32px;
+}
