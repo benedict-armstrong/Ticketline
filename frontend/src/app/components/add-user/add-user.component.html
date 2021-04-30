@@ -1,0 +1,63 @@
+<form class="form" [formGroup]="addUserForm" (ngSubmit)="addUser()">
+
+  <div class="form-group">
+    <label for="inputUsername">Username</label>
+    <input type="text" name="username" formControlName="username" class="form-control" id="inputUsername"
+            aria-describedby="usernameHelp" placeholder="Enter username">
+    <div *ngIf="submitted && addUserForm.controls.username.errors" class="error">
+      <small class="form-text text-warning" *ngIf="addUserForm.controls.username.errors.required">Your username is
+        required!
+      </small>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label for="password">Password</label>
+    <input type="password" name="password" formControlName="password" class="form-control" id="password"
+            placeholder="Password">
+    <div *ngIf="submitted && addUserForm.controls.password.errors" class="error">
+      <small class="form-text text-warning" *ngIf="addUserForm.controls.password.errors.required">Your password
+        is
+        required!
+      </small>
+      <small class="form-text text-warning" *ngIf="addUserForm.controls.password.errors.minlength">Your password
+        must be at least 8 characters long!
+      </small>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label for="passwordRepeat">Repeat Password</label>
+    <input type="password" name="passwordRepeat" formControlName="passwordRepeat" class="form-control" id="passwordRepeat"
+            placeholder="Repeat Password">
+    <div *ngIf="submitted" class="error">
+      <small class="form-text text-warning" *ngIf="addUserForm.value.password != addUserForm.value.passwordRepeat">Your passwords must match.
+      </small>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label for="firstName">First Name</label>
+    <input type="text" name="firstName" formControlName="firstName" class="form-control" id="firstName"
+            aria-describedby="firstNameHelp" placeholder="Enter first Name">
+    <div *ngIf="submitted && addUserForm.controls.firstName.errors" class="error">
+      <small class="form-text text-warning" *ngIf="addUserForm.controls.firstName.errors.required">Your first Name is
+        required!
+      </small>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label for="lastName">last Name</label>
+    <input type="text" name="lastName" formControlName="lastName" class="form-control" id="lastName"
+            aria-describedby="lastNameHelp" placeholder="Enter last Name">
+    <div *ngIf="submitted && addUserForm.controls.lastName.errors" class="error">
+      <small class="form-text text-warning" *ngIf="addUserForm.controls.lastName.errors.required">Your last Name is
+        required!
+      </small>
+    </div>
+  </div>
+
+  <button type="button" (click)="addUser()" class="btn btn-success float-right">Login</button>
+
+</form>
