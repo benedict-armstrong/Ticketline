@@ -1,0 +1,47 @@
+.list-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  min-height: 100px;
+  margin: 20px 0px;
+  border-radius: 10px;
+  padding: 20px;
+  background-color: white;
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
+}
+
+.add {
+  padding: 0px 20px;
+  height: 50px;
+  border: none;
+  border-radius: 10px;
+  background: rgb(203, 103, 111);
+  background: linear-gradient(
+    261deg,
+    rgba(203, 103, 111, 1) 19%,
+    rgba(193, 73, 83, 1) 80%
+  );
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
+  color: white;
+  font-weight: 800;
+}
+
+.options {
+  display: flex;
+  align-items: center;
+}
+
+.age {
+  width: 100px;
+}
+
+.count {
+  margin-right: 20px;
+  font-size: 15pt;
+}
+
+.count button {
+  border: none;
+  background-color: white;
+  margin: 0px 5px;
+}
