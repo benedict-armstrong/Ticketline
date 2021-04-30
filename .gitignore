@@ -1,0 +1,15 @@
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+
+### VS Code ###
+.vscode/
+
+### Log-Files ###
+log/
+
+### Database-Files ###
+/database/
+*.mv.db
