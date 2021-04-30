@@ -3,6 +3,33 @@
 
     <h3>Add a new User</h3>
 
+    <div class="row">
+      <div class="col-6">
+        <div class="form-group">
+          <label for="firstName">First Name</label>
+          <input type="text" name="firstName" formControlName="firstName" class="form-control" id="firstName"
+                  aria-describedby="firstNameHelp" placeholder="Enter first Name">
+          <div *ngIf="submitted && addUserForm.controls.firstName.errors" class="error">
+            <small class="form-text text-warning" *ngIf="addUserForm.controls.firstName.errors.required">Your first Name is
+              required!
+            </small>
+          </div>
+        </div>
+      </div>
+      <div class="col-6">
+        <div class="form-group">
+          <label for="lastName">Last Name</label>
+          <input type="text" name="lastName" formControlName="lastName" class="form-control" id="lastName"
+                  aria-describedby="lastNameHelp" placeholder="Enter last Name">
+          <div *ngIf="submitted && addUserForm.controls.lastName.errors" class="error">
+            <small class="form-text text-warning" *ngIf="addUserForm.controls.lastName.errors.required">Your last Name is
+              required!
+            </small>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <div class="form-group">
       <label for="email">Email</label>
       <input type="email" name="email" formControlName="email" class="form-control" id="email"
@@ -12,6 +39,12 @@
           required!
         </small>
       </div>
+    </div>
+
+    <div class="form-group">
+      <label for="phoneNumber">Phone Number</label>
+      <input type="tel" name="phoneNumber" formControlName="telephoneNumber" class="form-control" id="phoneNumber"
+              aria-describedby="phoneNumberHelp" placeholder="Enter Phone Number">
     </div>
   
     <div class="form-group">
@@ -42,23 +75,27 @@
     <div class="row">
       <div class="col-6">
         <div class="form-group">
-          <label for="firstName">First Name</label>
-          <input type="text" name="firstName" formControlName="firstName" class="form-control" id="firstName"
-                  aria-describedby="firstNameHelp" placeholder="Enter first Name">
-          <div *ngIf="submitted && addUserForm.controls.firstName.errors" class="error">
-            <small class="form-text text-warning" *ngIf="addUserForm.controls.firstName.errors.required">Your first Name is
-              required!
+          <label for="userRole">User Role</label>
+          <select name="userRole" id="userRole" formControlName="userRole" class="form-control" aria-describedby="userRoleHelp">
+            <option value="CLIENT">Client</option>
+            <option value="ORGANIZER">Organizer</option>
+            <option value="ADMIN">Admin</option>
+          </select>
+          <div *ngIf="submitted && addUserForm.controls.userRole.errors" class="error">
+            <small class="form-text text-warning" *ngIf="addUserForm.controls.userRole.errors.required">A User Role is required!
             </small>
           </div>
         </div>
       </div>
       <div class="col-6">
         <div class="form-group">
-          <label for="lastName">Last Name</label>
-          <input type="text" name="lastName" formControlName="lastName" class="form-control" id="lastName"
-                  aria-describedby="lastNameHelp" placeholder="Enter last Name">
-          <div *ngIf="submitted && addUserForm.controls.lastName.errors" class="error">
-            <small class="form-text text-warning" *ngIf="addUserForm.controls.lastName.errors.required">Your last Name is
+          <label for="status">Status</label>
+          <select name="status" id="status" formControlName="status" class="form-control" aria-describedby="statusHelp">
+            <option value="ACTIVE">Active</option>
+            <option value="BANNED">Banned</option>
+          </select>
+          <div *ngIf="submitted && addUserForm.controls.status.errors" class="error">
+            <small class="form-text text-warning" *ngIf="addUserForm.controls.status.errors.required">A status is
               required!
             </small>
           </div>
@@ -66,25 +103,71 @@
       </div>
     </div>
 
+    <div class="form-group">
+      <label for="addressName">Address Name</label>
+      <input type="text" name="addressName" formControlName="addressName" class="form-control" id="addressName"
+              aria-describedby="addressNameHelp" placeholder="Enter Address Name">
+      <div *ngIf="submitted && addUserForm.controls.addressName.errors" class="error">
+        <small class="form-text text-warning" *ngIf="addUserForm.controls.addressName.errors.required">Your Address Name is
+          required!
+        </small>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="lineOne">Line One</label>
+      <input type="text" name="lineOne" formControlName="lineOne" class="form-control" id="lineOne"
+              aria-describedby="lineOneHelp" placeholder="Enter line one">
+      <div *ngIf="submitted && addUserForm.controls.lineOne.errors" class="error">
+        <small class="form-text text-warning" *ngIf="addUserForm.controls.lineOne.errors.required">Your line one is
+          required!
+        </small>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="lineTwo">Line Two</label>
+      <input type="text" name="lineTwo" formControlName="lineTwo" class="form-control" id="lineTwo"
+              aria-describedby="lineTwoHelp" placeholder="Enter line two">
+    </div>
+
     <div class="row">
       <div class="col-6">
         <div class="form-group">
-          <label for="permissions">First Name</label>
-          <select name="permissions" id="permissions" formControlName="permissions" class="form-control" aria-describedby="permissionsHelp">
-            <option value="CLIENT">Client</option>
-            <option value="ORGANIZER">Organizer</option>
-            <option value="ADMIN">Admin</option>
-          </select>
-          <div *ngIf="submitted && addUserForm.controls.permissions.errors" class="error">
-            <small class="form-text text-warning" *ngIf="addUserForm.controls.permissions.errors.required">Your first Name is
+          <label for="city">City Name</label>
+          <input type="text" name="city" formControlName="city" class="form-control" id="city"
+                  aria-describedby="cityHelp" placeholder="Enter City name">
+          <div *ngIf="submitted && addUserForm.controls.city.errors" class="error">
+            <small class="form-text text-warning" *ngIf="addUserForm.controls.city.errors.required">Your City Name is
               required!
             </small>
           </div>
         </div>
       </div>
       <div class="col-6">
+        <div class="form-group">
+          <label for="postcode">Postcode</label>
+          <input type="text" name="postcode" formControlName="postcode" class="form-control" id="postcode"
+                  aria-describedby="postcodeHelp" placeholder="Enter Postcode">
+          <div *ngIf="submitted && addUserForm.controls.postcode.errors" class="error">
+            <small class="form-text text-warning" *ngIf="addUserForm.controls.postcode.errors.required">Your Postcode is
+              required!
+            </small>
+          </div>
+        </div>
       </div>
-    </div>  
+    </div>
+
+    <div class="form-group">
+      <label for="country">Country</label>
+      <input type="text" name="country" formControlName="country" class="form-control" id="country"
+              aria-describedby="countryHelp" placeholder="Enter Country">
+      <div *ngIf="submitted && addUserForm.controls.country.errors" class="error">
+        <small class="form-text text-warning" *ngIf="addUserForm.controls.country.errors.required">Your Country is
+          required!
+        </small>
+      </div>
+    </div>
   
     <button type="button" (click)="addUser()" class="btn btn-success float-right" id="signin">Create</button>
   

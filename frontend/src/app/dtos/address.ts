@@ -1,11 +1,12 @@
 export class Address {
     constructor(
       public id: number,
-      public firstLine: string,
-      public secondLine: string,
+      public name: string,
+      public lineOne: string,
+      public lineTwo: string,
+      public city: string,
       public postcode: string,
-      public country: string,
-      public city: string) {
+      public country: string) {
     }
   }
   

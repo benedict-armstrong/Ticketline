@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {ApplicationUser} from '../dtos/application-user';
+import {User} from '../dtos/user';
 import {Observable} from 'rxjs';
 import {Globals} from '../global/globals';
 
@@ -17,8 +17,8 @@ export class ApplicationUserService {
   /**
    * Loads all messages from the backend
    */
-  getUser(): Observable<ApplicationUser[]> {
-    return this.httpClient.get<ApplicationUser[]>(this.userBaseUri);
+  getUser(): Observable<User[]> {
+    return this.httpClient.get<User[]>(this.userBaseUri);
   }
 
   /**
@@ -26,9 +26,9 @@ export class ApplicationUserService {
    *
    * @param id of message to load
    */
-  getUserById(id: number): Observable<ApplicationUser> {
+  getUserById(id: number): Observable<User> {
     console.log('Load user details for ' + id);
-    return this.httpClient.get<ApplicationUser>(this.userBaseUri + '/' + id);
+    return this.httpClient.get<User>(this.userBaseUri + '/' + id);
   }
 
   /**
@@ -36,8 +36,8 @@ export class ApplicationUserService {
    *
    * @param user to persist
    */
-  createUser(user: ApplicationUser): Observable<ApplicationUser> {
+  createUser(user: User): Observable<User> {
     console.log('Create user with email ' + user.email);
-    return this.httpClient.post<ApplicationUser>(this.userBaseUri, user);
+    return this.httpClient.post<User>(this.userBaseUri, user);
   }
 }
