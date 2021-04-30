@@ -2,7 +2,7 @@ package at.ac.tuwien.sepm.groupphase.backend.unittests;
 
 
 import at.ac.tuwien.sepm.groupphase.backend.basetest.TestDataUser;
-import at.ac.tuwien.sepm.groupphase.backend.entity.User;
+import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepm.groupphase.backend.repository.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -23,13 +23,13 @@ public class UserRepositoryTest implements TestDataUser {
 
     @Test
     private void givenNothing_whenSaveUser_thenFindListWithOneElementAndFindUserById() {
-        User user = User.UserBuilder.anUser()
+        ApplicationUser user = ApplicationUser.UserBuilder.anUser()
             .withFirstName(ADMIN_FIRST_NAME)
             .withLastName(ADMIN_LAST_NAME)
             .withEmail(ADMIN_EMAIL)
             .withLastLogin(ADMIN_LAST_LOGIN)
             .withRole(ADMIN_ROLE)
-            .withStatus(ADMIN_STATUS)
+            .withStatus(ADMIN_USER_STATUS)
             .withPassword(ADMIN_PASSWORD)
             .withPoints(ADMIN_POINTS)
             .withAddress(ADMIN_ADDRESS)

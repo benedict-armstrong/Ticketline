@@ -27,4 +27,13 @@ public interface UserService extends UserDetailsService {
      * @return a application user
      */
     ApplicationUser findApplicationUserByEmail(String email);
+
+    /**
+     * Add a user to system
+     *
+     * @param user to add
+     * @return added User
+     */
+    ApplicationUser addUser(ApplicationUser user);
+
 }
