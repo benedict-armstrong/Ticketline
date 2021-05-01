@@ -9,27 +9,10 @@
 }
 
 .search-field {
-  background: no-repeat scroll 15px 13px
-    url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16"><path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/></svg>');
+  background: no-repeat scroll 15px 16px
+    url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16"><path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/></svg>');
   padding-left: 40px;
-  background-color: rgb(242, 242, 242);
   width: 100%;
-}
-
-input {
-  border: none;
-  margin-right: 16px;
-  font-size: 11pt;
-  min-height: 40px;
-  background-color: rgb(242, 242, 242);
-  width: 100%;
-}
-
-input:focus {
-  outline: none !important;
-  border: none;
-  box-shadow: none;
-  background-color: rgb(242, 242, 242);
 }
 
 .filters {
@@ -39,23 +22,15 @@ input:focus {
   align-items: center;
 }
 
+.filters input,
+.filters select {
+  height: 38px !important;
+}
+
 .filters > div {
   width: 100%;
 }
 
 button {
-  margin: 10px;
-  height: 40px;
-  border: none;
-  border-radius: 10px;
-  background: rgb(203, 103, 111);
-  background: linear-gradient(
-    261deg,
-    rgba(203, 103, 111, 1) 19%,
-    rgba(193, 73, 83, 1) 80%
-  );
-  min-width: 130px;
-  color: white;
-  font-weight: 800;
-  box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
+  width: 130px;
 }

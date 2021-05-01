@@ -3,3 +3,70 @@
 body {
   font-family: "Roboto", sans-serif !important;
 }
+
+button {
+  width: 100%;
+  min-width: 45px;
+  margin: 10px 0px !important;
+  height: 45px;
+  border-radius: 10px !important;
+  border: none;
+  background: rgb(203, 103, 111);
+  background: linear-gradient(
+    261deg,
+    rgba(203, 103, 111, 1) 19%,
+    rgba(193, 73, 83, 1) 80%
+  );
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
+  color: white;
+  font-weight: 800;
+}
+
+button.secondary {
+  background: none;
+  background-color: white;
+  font-weight: 800;
+  color: rgba(193, 73, 83, 1);
+}
+
+button.no-shadow {
+  box-shadow: none;
+}
+
+button.custom {
+  width: auto;
+  min-width: none;
+  margin: 0px !important;
+  height: none;
+  border-radius: none !important;
+  border: none;
+  background: none;
+  box-shadow: none;
+  color: inherit;
+  font-weight: inherit;
+}
+
+button:focus {
+  outline: none !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+input.text-input,
+select.select-input {
+  border: none !important;
+  font-size: 12pt;
+  height: 50px !important;
+  background-color: rgb(242, 242, 242) !important;
+  border-radius: 3px !important;
+}
+
+input.text-input:focus {
+  outline: none !important;
+  border: none;
+  box-shadow: none;
+}
+
+input::placeholder {
+  opacity: 0.6 !important;
+}
