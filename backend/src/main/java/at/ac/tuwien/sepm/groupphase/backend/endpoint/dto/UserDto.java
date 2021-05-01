@@ -2,9 +2,7 @@ package at.ac.tuwien.sepm.groupphase.backend.endpoint.dto;
 
 import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
 
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.*;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
@@ -13,26 +11,29 @@ public class UserDto  {
 
     private Long id;
 
-    @NotNull
-    @NotEmpty
+    @NotBlank(message = "A first name is required")
+    @Size(max = 200, message = "First name must be 200 characters or less")
     private String firstName;
 
-    @NotNull
-    @NotEmpty
+    @NotBlank(message = "A last name is required")
+    @Size(max = 200, message = "Last name must be 200 characters or less")
     private String lastName;
 
+    @Size(max = 200, message = "Phone number can't be more than 50 characters long")
     private String telephoneNumber;
 
-    @NotNull(message = "Email must not be null")
+    @NotBlank(message = "An email is required")
     @Email
+    @Size(max = 200, message = "Email must be 200 characters or less")
     private String email;
 
-    @NotNull
+    @NotBlank(message = "Password is required")
     @NotEmpty
     private String password;
 
     private LocalDateTime lastLogin;
 
+    @PositiveOrZero(message = "Negative points values are not allowed")
     private int points;
 
     private ApplicationUser.UserStatus status;

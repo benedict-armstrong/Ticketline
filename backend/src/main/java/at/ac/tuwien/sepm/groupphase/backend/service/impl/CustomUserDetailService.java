@@ -15,6 +15,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.lang.invoke.MethodHandles;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -60,7 +61,8 @@ public class CustomUserDetailService implements UserService {
     @Override
     public ApplicationUser addUser(ApplicationUser user) {
         LOGGER.debug("Add new User to System");
+        user.setLastLogin(LocalDateTime.now());
+        user.setStatus(ApplicationUser.UserStatus.ACTIVE);
         return userRepository.save(user);
-
     }
 }

@@ -1,15 +1,8 @@
 package at.ac.tuwien.sepm.groupphase.backend.entity;
 
+import javax.persistence.*;
 import javax.validation.constraints.Past;
 import java.time.LocalDateTime;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Enumerated;
-import javax.persistence.EnumType;
-import javax.persistence.ManyToOne;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 
 @Entity
 public class ApplicationUser {
@@ -24,7 +17,7 @@ public class ApplicationUser {
     @Column(nullable = false, length = 200)
     private String lastName;
 
-    @Column(nullable = false, length = 200, name = "tel_number")
+    @Column(nullable = false, length = 50, name = "tel_number")
     private String telephoneNumber;
 
     @Column(nullable = false, length = 200)
@@ -34,7 +27,6 @@ public class ApplicationUser {
     private String password;
 
     @Column(nullable = false, name = "last_login")
-    @Past
     private LocalDateTime lastLogin;
 
     @Column()
@@ -46,9 +38,9 @@ public class ApplicationUser {
 
     @Enumerated(EnumType.ORDINAL)
     @Column(nullable = false)
-    private UserRole role;
+    private UserRole userRole;
 
-    @ManyToOne
+    @ManyToOne(cascade = {CascadeType.ALL})
     private Address address;
 
     public enum UserStatus {
@@ -132,11 +124,11 @@ public class ApplicationUser {
     }
 
     public UserRole getRole() {
-        return role;
+        return userRole;
     }
 
     public void setRole(UserRole role) {
-        this.role = role;
+        this.userRole = role;
     }
 
     public Address getAddress() {
@@ -157,7 +149,7 @@ public class ApplicationUser {
         private LocalDateTime lastLogin;
         private int points;
         private UserStatus userStatus;
-        private UserRole role;
+        private UserRole userRole;
         private Address address;
 
         private UserBuilder() {
@@ -213,7 +205,7 @@ public class ApplicationUser {
         }
 
         public UserBuilder withRole(UserRole role) {
-            this.role = role;
+            this.userRole = role;
             return this;
         }
 
@@ -228,7 +220,7 @@ public class ApplicationUser {
             user.lastName = this.lastName;
             user.password = this.password;
             user.firstName = this.firstName;
-            user.role = this.role;
+            user.userRole = this.userRole;
             user.lastLogin = this.lastLogin;
             user.points = this.points;
             user.telephoneNumber = this.telephoneNumber;
