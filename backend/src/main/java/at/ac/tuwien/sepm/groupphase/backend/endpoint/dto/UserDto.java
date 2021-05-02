@@ -2,7 +2,12 @@ package at.ac.tuwien.sepm.groupphase.backend.endpoint.dto;
 
 import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
 
-import javax.validation.constraints.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.PositiveOrZero;
+import javax.validation.constraints.NotNull;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
@@ -134,10 +139,24 @@ public class UserDto  {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         UserDto userDto = (UserDto) o;
-        return points == userDto.points && Objects.equals(id, userDto.id) && firstName.equals(userDto.firstName) && lastName.equals(userDto.lastName) && Objects.equals(telephoneNumber, userDto.telephoneNumber) && email.equals(userDto.email) && password.equals(userDto.password) && Objects.equals(lastLogin, userDto.lastLogin) && status == userDto.status && role == userDto.role && addressDto.equals(userDto.addressDto);
+        return points == userDto.points
+            && Objects.equals(id, userDto.id)
+            && firstName.equals(userDto.firstName)
+            && lastName.equals(userDto.lastName)
+            && Objects.equals(telephoneNumber, userDto.telephoneNumber)
+            && email.equals(userDto.email)
+            && password.equals(userDto.password)
+            && Objects.equals(lastLogin, userDto.lastLogin)
+            && status == userDto.status
+            && role == userDto.role
+            && addressDto.equals(userDto.addressDto);
     }
 
     @Override

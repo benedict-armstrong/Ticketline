@@ -88,8 +88,12 @@ public class AddressDto {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         AddressDto that = (AddressDto) o;
         return Objects.equals(id, that.id) && name.equals(that.name) && lineOne.equals(that.lineOne) && Objects.equals(lineTwo, that.lineTwo) && city.equals(that.city) && postcode.equals(that.postcode) && country.equals(that.country);
     }
