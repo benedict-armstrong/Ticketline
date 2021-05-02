@@ -11,7 +11,7 @@ export class User {
     public lastLogin: number,
     public points: number,
     public status: "ACTIVE" | "BANNED",
-    public userRole: "CLIENT" | "ORGANIZER" | "ADMIN",
+    public role: "CLIENT" | "ORGANIZER" | "ADMIN",
     public address: Address) {
   }
 }

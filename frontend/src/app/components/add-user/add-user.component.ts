@@ -29,7 +29,7 @@ export class AddUserComponent implements OnInit {
       passwordRepeat: ['', [Validators.required, Validators.minLength(8)]],
       points: [0, [Validators.min(0)]],
       status: ['ACTIVE', [Validators.required]],
-      userRole: ['CLIENT', [Validators.required]],
+      role: ['CLIENT', [Validators.required]],
       addressName: ['', [Validators.required]],
       lineOne: ['', [Validators.required]],
       lineTwo: [''],
@@ -54,7 +54,7 @@ export class AddUserComponent implements OnInit {
         , 0
         , this.addUserForm.value.points
         , this.addUserForm.value.status
-        , this.addUserForm.value.userRole
+        , this.addUserForm.value.role
         , new Address(null
           , this.addUserForm.value.addressName
           , this.addUserForm.value.lineOne
