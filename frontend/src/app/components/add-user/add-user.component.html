@@ -78,15 +78,15 @@
     <div class="row">
       <div class="col-6">
         <div class="form-group">
-          <label for="userRole">User Role</label>
-          <select name="userRole" id="userRole" formControlName="userRole" class="select-input form-select"
-            aria-describedby="userRoleHelp">
+          <label for="role">User Role</label>
+          <select name="role" id="role" formControlName="role" class="text-input form-control"
+            aria-describedby="roleHelp">
             <option value="CLIENT">Client</option>
             <option value="ORGANIZER">Organizer</option>
             <option value="ADMIN">Admin</option>
           </select>
-          <div *ngIf="submitted && addUserForm.controls.userRole.errors" class="error">
-            <small class="form-text text-warning" *ngIf="addUserForm.controls.userRole.errors.required">A User Role is
+          <div *ngIf="submitted && addUserForm.controls.role.errors" class="error">
+            <small class="form-text text-warning" *ngIf="addUserForm.controls.role.errors.required">A User Role is
               required!
             </small>
           </div>
@@ -178,5 +178,17 @@
 
     <button type="button" (click)="addUser()" id="signin">Create</button>
 
+    <div *ngIf="error" class="col-12 alert alert-danger alert-dismissible fade show" role="alert">
+      <strong>Error! </strong> {{ errorMessage }}
+      <button type="button" (click)="vanishAlert()" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div *ngIf="success" class="col-12 alert alert-success alert-dismissible fade show" role="alert">
+      <strong>Success</strong> The user has been created.
+      <button type="button" (click)="vanishAlert()" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
   </form>
 </div>

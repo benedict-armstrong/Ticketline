@@ -19,6 +19,9 @@ export class AddUserComponent implements OnInit {
   error = false;
   errorMessage = '';
 
+  // Success Flag
+  success = false;
+
   constructor(private applicationUserService: ApplicationUserService,private formBuilder: FormBuilder, private router: Router) {
     this.addUserForm = this.formBuilder.group({
       firstName: ['', [Validators.required]],
@@ -29,7 +32,7 @@ export class AddUserComponent implements OnInit {
       passwordRepeat: ['', [Validators.required, Validators.minLength(8)]],
       points: [0, [Validators.min(0)]],
       status: ['ACTIVE', [Validators.required]],
-      userRole: ['CLIENT', [Validators.required]],
+      role: ['CLIENT', [Validators.required]],
       addressName: ['', [Validators.required]],
       lineOne: ['', [Validators.required]],
       lineTwo: [''],
@@ -51,10 +54,10 @@ export class AddUserComponent implements OnInit {
         , this.addUserForm.value.telephoneNumber
         , this.addUserForm.value.email
         , this.addUserForm.value.password
-        , 0
+        , new Date()
         , this.addUserForm.value.points
         , this.addUserForm.value.status
-        , this.addUserForm.value.userRole
+        , this.addUserForm.value.role
         , new Address(null
           , this.addUserForm.value.addressName
           , this.addUserForm.value.lineOne
@@ -65,7 +68,7 @@ export class AddUserComponent implements OnInit {
         ));
       this.applicationUserService.createUser(user).subscribe(
         () => {
-          console.log('IT WORKS');
+          this.success = true;
         },
         error => {
           this.defaultServiceErrorHandling(error);
@@ -76,6 +79,10 @@ export class AddUserComponent implements OnInit {
     }
   }
 
+  vanishAlert(): void {
+    this.error = false;
+    this.success = false;
+  }
   
   ngOnInit(): void {
   }

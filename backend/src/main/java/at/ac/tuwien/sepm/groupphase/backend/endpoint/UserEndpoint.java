@@ -32,7 +32,7 @@ public class UserEndpoint {
     }
 
     @PostMapping
-    @Operation(summary = "Add User", security = @SecurityRequirement(name = "apiKey"))
+    @Operation(summary = "Add User")
     public UserDto add(@Valid @RequestBody UserDto userDto) {
         LOGGER.info("POST /api/v1/users");
         return userMapper.applicationUserToUserDto(userService.addUser(userMapper.userDtoToApplicationUser(userDto)));

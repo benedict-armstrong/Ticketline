@@ -70,3 +70,17 @@ input.text-input:focus {
 input::placeholder {
   opacity: 0.6 !important;
 }
+
+.alert {
+  height: auto;
+  vertical-align: middle
+}
+
+.alert > button {
+  width: auto;
+  height: auto;
+  margin: 0 !important;
+  position: relative;
+  box-shadow: none;
+  background: none;
+}

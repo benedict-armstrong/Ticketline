@@ -8,10 +8,10 @@ export class User {
     public telephoneNumber: string,
     public email: string,
     public password: string,
-    public lastLogin: number,
+    public lastLogin: Date,
     public points: number,
     public status: "ACTIVE" | "BANNED",
-    public userRole: "CLIENT" | "ORGANIZER" | "ADMIN",
+    public role: "CLIENT" | "ORGANIZER" | "ADMIN",
     public address: Address) {
   }
 }
