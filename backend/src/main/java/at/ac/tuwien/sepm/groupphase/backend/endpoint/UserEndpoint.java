@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.annotation.security.PermitAll;
 import javax.validation.Valid;
 import java.lang.invoke.MethodHandles;
 
@@ -32,9 +33,11 @@ public class UserEndpoint {
     }
 
     @PostMapping
+    @PermitAll
+    //TODO: Change!!!
     @Operation(summary = "Add User")
     public UserDto add(@Valid @RequestBody UserDto userDto) {
-        LOGGER.info("POST /api/v1/users");
+        LOGGER.info("POST /api/v1/users body: {}", userDto);
         return userMapper.applicationUserToUserDto(userService.addUser(userMapper.userDtoToApplicationUser(userDto)));
     }
 

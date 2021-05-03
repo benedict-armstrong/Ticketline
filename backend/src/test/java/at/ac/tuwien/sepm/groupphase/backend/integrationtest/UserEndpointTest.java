@@ -22,8 +22,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -77,7 +76,7 @@ public class UserEndpointTest implements TestDataUser {
     }
 
     @Test
-    public void whenPostUser_thenUserWithId() throws Exception {
+    public void whenPostUser_thenUserWithIdAndLastLogin() throws Exception {
 
         UserDto userDto = userMapper.applicationUserToUserDto(user);
         String body = objectMapper.writeValueAsString(userDto);
@@ -96,6 +95,76 @@ public class UserEndpointTest implements TestDataUser {
             UserDto.class);
 
         assertNotNull(userResponse.getId());
+        assertNotNull(userResponse.getLastLogin());
+
+    }
+
+    @Test
+    public void whenPostUsersWithSameEmail_then422() throws Exception {
+
+        UserDto userDto = userMapper.applicationUserToUserDto(user);
+        String body = objectMapper.writeValueAsString(userDto);
+
+        MvcResult mvcResult = this.mockMvc.perform(post(USER_BASE_URI)
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(body))
+            .andDo(print())
+            .andReturn();
+        MockHttpServletResponse response = mvcResult.getResponse();
+
+        assertEquals(HttpStatus.OK.value(), response.getStatus());
+        assertEquals(MediaType.APPLICATION_JSON_VALUE, response.getContentType());
+
+        UserDto userResponse = objectMapper.readValue(response.getContentAsString(),
+            UserDto.class);
+
+        assertNotNull(userResponse.getId());
+
+        MvcResult mvcResult2 = this.mockMvc.perform(post(USER_BASE_URI)
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(body))
+            .andDo(print())
+            .andReturn();
+        MockHttpServletResponse response2 = mvcResult2.getResponse();
+
+        assertEquals(HttpStatus.UNPROCESSABLE_ENTITY.value(), response2.getStatus());
+    }
+
+    @Test
+    public void whenPostUserWithNoName_then400() throws Exception {
+
+        user.setFirstName(null);
+
+        UserDto userDto = userMapper.applicationUserToUserDto(user);
+        String body = objectMapper.writeValueAsString(userDto);
+
+        MvcResult mvcResult = this.mockMvc.perform(post(USER_BASE_URI)
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(body))
+            .andDo(print())
+            .andReturn();
+        MockHttpServletResponse response = mvcResult.getResponse();
+
+        assertEquals(HttpStatus.BAD_REQUEST.value(), response.getStatus());
+
+    }
+
+    @Test
+    public void whenPostUserWithBadEmail_then400() throws Exception {
+
+        user.setEmail("bad.email");
+
+        UserDto userDto = userMapper.applicationUserToUserDto(user);
+        String body = objectMapper.writeValueAsString(userDto);
+
+        MvcResult mvcResult = this.mockMvc.perform(post(USER_BASE_URI)
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(body))
+            .andDo(print())
+            .andReturn();
+        MockHttpServletResponse response = mvcResult.getResponse();
+
+        assertEquals(HttpStatus.BAD_REQUEST.value(), response.getStatus());
 
     }
 

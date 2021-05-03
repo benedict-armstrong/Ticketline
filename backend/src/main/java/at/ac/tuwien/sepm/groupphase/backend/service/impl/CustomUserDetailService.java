@@ -2,6 +2,7 @@ package at.ac.tuwien.sepm.groupphase.backend.service.impl;
 
 import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
+import at.ac.tuwien.sepm.groupphase.backend.exception.UserAlreadyExistAuthenticationException;
 import at.ac.tuwien.sepm.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepm.groupphase.backend.service.UserService;
 import org.slf4j.Logger;
@@ -61,8 +62,16 @@ public class CustomUserDetailService implements UserService {
     @Override
     public ApplicationUser addUser(ApplicationUser user) {
         LOGGER.debug("Add new User to System");
-        user.setLastLogin(LocalDateTime.now());
-        user.setStatus(ApplicationUser.UserStatus.ACTIVE);
-        return userRepository.save(user);
+        if (userRepository.findUserByEmail(user.getEmail()) == null) {
+            if (user.getRole() == null) {
+                user.setRole(ApplicationUser.UserRole.CLIENT);
+            }
+            if (user.getStatus() == null) {
+                user.setStatus(ApplicationUser.UserStatus.ACTIVE);
+            }
+            user.setLastLogin(LocalDateTime.now());
+            return userRepository.save(user);
+        }
+        throw new UserAlreadyExistAuthenticationException(String.format("User with email address: %s already exists.", user.getEmail()));
     }
 }

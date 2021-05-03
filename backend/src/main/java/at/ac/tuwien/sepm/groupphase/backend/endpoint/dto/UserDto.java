@@ -32,8 +32,7 @@ public class UserDto  {
     @Size(max = 200, message = "Email must be 200 characters or less")
     private String email;
 
-    @NotBlank(message = "Password is required")
-    @NotEmpty
+    @NotBlank(message = "Password is required and cant be empty")
     private String password;
 
     private LocalDateTime lastLogin;
@@ -164,6 +163,22 @@ public class UserDto  {
         return Objects.hash(id, firstName, lastName, telephoneNumber, email, password, lastLogin, points, status, role, addressDto);
     }
 
+    @Override
+    public String toString() {
+        return "UserDto{"
+            + "id=" + id
+            + ", firstName='" + firstName + '\''
+            + ", lastName='" + lastName + '\''
+            + ", telephoneNumber='" + telephoneNumber + '\''
+            + ", email='" + email + '\''
+            + ", password='" + password + '\''
+            + ", lastLogin=" + lastLogin
+            + ", points=" + points
+            + ", status=" + status
+            + ", role=" + role
+            + ", addressDto=" + addressDto
+            + '}';
+    }
 
     public static final class UserDtoBuilder {
         private Long id;

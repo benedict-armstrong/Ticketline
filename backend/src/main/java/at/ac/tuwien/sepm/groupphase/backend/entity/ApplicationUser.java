@@ -1,14 +1,15 @@
 package at.ac.tuwien.sepm.groupphase.backend.entity;
 
+
 import javax.persistence.Entity;
-import javax.persistence.Id;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.persistence.Column;
 import javax.persistence.Enumerated;
 import javax.persistence.EnumType;
-import javax.persistence.ManyToOne;
 import javax.persistence.CascadeType;
+import javax.persistence.ManyToOne;
 import java.time.LocalDateTime;
 
 @Entity
@@ -27,7 +28,7 @@ public class ApplicationUser {
     @Column(nullable = false, length = 50, name = "tel_number")
     private String telephoneNumber;
 
-    @Column(nullable = false, length = 200)
+    @Column(nullable = false, length = 200, unique = true)
     private String email;
 
     @Column(nullable = false, length = 500)
