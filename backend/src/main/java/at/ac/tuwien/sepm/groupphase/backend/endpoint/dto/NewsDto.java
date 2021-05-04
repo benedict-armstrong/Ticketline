@@ -1,13 +1,11 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint.dto;
 
-import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
-@Entity
 public class NewsDto {
 
     private Long id;
@@ -70,7 +68,7 @@ public class NewsDto {
     }
 
     public EventDto getEvent() {
-        return event;
+        return eventDto;
     }
 
     public void setEvent(EventDto eventDto) {
