@@ -1,16 +1,16 @@
 <div class="login">
     <div class="login-card">
-        <h3>Welcome back!</h3>
-        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Deserunt, ut!</p>
-        <form action="">
+        <h3>Ticketline</h3>
+        <p></p>
+        <form calss="form" [formGroup]="loginForm" (ngSubmit)="login()">
             <div class="form-group">
                 <label for="email">EMAIL</label>
-                <input type="email" class="text-input form-control" name="email" id="email"
+                <input type="email" class="text-input form-control" name="email" id="email" formControlName="email"
                     aria-describedby="emailHelpId" placeholder="Enter your email">
             </div>
             <div class="form-group">
                 <label for="password">PASSWORD</label>
-                <input type="password" class="text-input form-control" name="password" id="password"
+                <input type="password" class="text-input form-control" name="password" id="password" formControlName="password"
                     placeholder="Enter your password">
             </div>
             <div class="login-options">
@@ -24,7 +24,7 @@
                     <a href="" id="forgot">Forgot Password?</a>
                 </div>
             </div>
-            <button type="signin" name="signin" id="signin" class="" [routerLink]="['/user']">SIGN IN</button>
+            <button type="submit" name="signin" id="signin" class="">SIGN IN</button>
         </form>
         <div>
             <button class="secondary" type="signup" name="signup" id="signup" [routerLink]="['/register']">SIGN
@@ -33,3 +33,5 @@
     </div>
 
 </div>
+
+<!--TODO: error handling!-->
