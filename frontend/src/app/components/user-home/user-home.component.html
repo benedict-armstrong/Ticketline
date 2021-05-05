@@ -1,8 +1,10 @@
-<div class="user-home">
-    <h3>Welcome Back Max!</h3>
+<div class="user-home" *ngIf="this.user">
+    <h3>Welcome Back {{this.user.firstName}}!</h3>
     <div class="user-booking cards">
         <h3>Your Bookings</h3>
-        <div class="row row-cols-1 row-cols-md-4 g-4">
+        Tba
+        <!-- TODO: US11 -->
+        <!--<div class="row row-cols-1 row-cols-md-4 g-4">
             <div class="col">
                 <div class="card h-100">
                     <div class="card-body">
@@ -62,7 +64,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div>  -->
 
     <div class="user-info cards">
         <h3>Address and Contact Info</h3>
@@ -75,9 +77,10 @@
                             <h5 class="card-title">Address</h5>
                         </div>
                         <p class="card-text">
-                            Technische Universität Wien<br>
-                            Karlsplatz 13<br>
-                            1040 Wien
+                            {{this.user.address.name}}<br>
+                            {{this.user.address.lineOne}}<br>
+                            {{this.user.address.postcode}} {{this.user.address.city}} <br>
+                            {{this.user.address.country}}
                         </p>
                         <button>Edit</button>
                     </div>
@@ -91,10 +94,9 @@
                             <h5 class="card-title">Contact</h5>
                         </div>
                         <p class="card-text">
-                            <strong>Name:</strong> Max Mustermann <br>
-                            <strong>Mail:</strong> contact@tuwien.ac.at <br>
-                            <strong>Telefon:</strong> +43 1 58801 0 <br>
-                            <strong>Fax:</strong> +43 1 5880141275
+                            <strong>Name:</strong> {{this.user.firstName}} {{this.user.lastName}} <br>
+                            <strong>Mail:</strong> {{this.user.email}} <br>
+                            <strong>Telefon:</strong> {{this.user.telephoneNumber}} <br>
                         </p>
                         <button>Edit</button>
                     </div>

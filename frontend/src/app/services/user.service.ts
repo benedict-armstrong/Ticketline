@@ -22,14 +22,24 @@ export class ApplicationUserService {
   }
 
   /**
-   * Loads specific message from the backend
+   * Loads specific user from the backend
    *
-   * @param id of message to load
+   * @param id of user to load
    */
   getUserById(id: number): Observable<User> {
     console.log('Load user details for ' + id);
     return this.httpClient.get<User>(this.userBaseUri + '/' + id);
   }
+
+  /**
+   * Loads specific user from the backend
+   *
+   * @param email of user to load
+   */
+     getUserByEmail(email: string): Observable<User> {
+      console.log('Load user details for ' + email);
+      return this.httpClient.get<User>(this.userBaseUri + '/' + email);
+    }
 
   /**
    * Persists user to the backend

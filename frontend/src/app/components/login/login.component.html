@@ -1,5 +1,11 @@
 <div class="login">
     <div class="login-card">
+        <div *ngIf="error" class="col-12 alert alert-danger alert-dismissible fade show" role="alert">
+            <strong>Error! </strong> {{ errorMessage }}
+            <button type="button" (click)="vanishAlert()" class="close" data-dismiss="alert" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
         <h3>Ticketline</h3>
         <p></p>
         <form calss="form" [formGroup]="loginForm" (ngSubmit)="login()">
@@ -31,7 +37,4 @@
                 UP</button>
         </div>
     </div>
-
 </div>
-
-<!--TODO: error handling!-->

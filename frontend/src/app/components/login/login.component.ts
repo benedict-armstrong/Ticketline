@@ -2,7 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup,  Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthRequest } from 'src/app/dtos/auth-request';
+import { User } from 'src/app/dtos/user';
 import { AuthService } from 'src/app/services/auth.service';
+import { ApplicationUserService } from 'src/app/services/user.service';
 
 @Component({
   selector: 'app-login',
@@ -18,7 +20,7 @@ export class LoginComponent implements OnInit {
   errorMessage = '';
   
 
-  constructor(private authService: AuthService,private formBuilder: FormBuilder,private router: Router) { 
+  constructor(private authService: AuthService,private applicationUserService: ApplicationUserService,private formBuilder: FormBuilder,private router: Router) { 
     this.loginForm = this.formBuilder.group({
       email: ['', [Validators.required]],
       password: ['', [Validators.required]]
@@ -28,6 +30,9 @@ export class LoginComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  /**
+   * Perform login after submitting the form to sign in.
+   */
   login(){
 
     if(this.loginForm.valid){
@@ -38,8 +43,14 @@ export class LoginComponent implements OnInit {
 
       this.authService.loginUser(authObj).subscribe(
         () => {
-          console.log("successful login!");
-          this.router.navigate(['/user']);
+          this.applicationUserService.getUserByEmail(authObj.email).subscribe(
+            (response) => {
+              this.router.navigate(['/user'], {state: {user: response}});
+            },
+            error => {
+              this.defaultServiceErrorHandling(error);
+            }
+          );
         },
         error => {
           this.defaultServiceErrorHandling(error);

@@ -62,6 +62,17 @@ export class AuthService {
     return 'UNDEFINED';
   }
 
+  /**
+   * Returns the email of the user based on the current token
+   */
+   getUserEmail() {
+    if (this.getToken() != null) {
+      const decoded: any = jwt_decode(this.getToken());
+      return decoded.sub;
+    }
+    return null;
+  }
+
   private setToken(authResponse: string) {
     localStorage.setItem('authToken', authResponse);
   }
