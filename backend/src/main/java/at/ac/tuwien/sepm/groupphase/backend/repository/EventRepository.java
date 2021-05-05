@@ -1,19 +1,19 @@
 package at.ac.tuwien.sepm.groupphase.backend.repository;
 
-import at.ac.tuwien.sepm.groupphase.backend.entity.News;
+import at.ac.tuwien.sepm.groupphase.backend.entity.Event;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
 @Repository
-public interface NewsRepository extends JpaRepository<News, Long> {
+public interface EventRepository extends JpaRepository<Event, Long> {
 
     /**
-     * Find all news entries.
+     * Find all event entries.
      *
-     * @return ordered list of all news entries
+     * @return ordered list of all events
      */
-    List<News> findAll();
+    List<Event> findAll();
 
 }

@@ -23,7 +23,8 @@ public class News {
     @Column(nullable = false, length = 10000)
     private String text;
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.ALL})
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "EVENT_ID")
     private Event event;
 
     public Long getId() {

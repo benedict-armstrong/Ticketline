@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {Router} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import {ApplicationNewsService} from '../../services/news.service';
 import {News} from '../../dtos/news';
 import {Event} from '../../dtos/event';
+import {ApplicationEventService} from '../../services/event.service';
 
 @Component({
   selector: 'app-add-news',
@@ -13,6 +14,8 @@ import {Event} from '../../dtos/event';
 export class AddNewsComponent implements OnInit {
 
   addNewsForm: FormGroup;
+  eventId = 0;
+  event = null;
   submitted = false;
   error = false;
   errorMessage = '';
@@ -21,19 +24,27 @@ export class AddNewsComponent implements OnInit {
 
   news: News = new News(null
     , null
-    , null // TODO add Username
+    , 'Moritz' // TODO add Username
     , null
     , null
     , null
     , []);
 
-  constructor(private applicationNewsService: ApplicationNewsService, private formBuilder: FormBuilder, private router: Router) {
+  constructor(private applicationNewsService: ApplicationNewsService, private applicationEventService: ApplicationEventService,
+              private formBuilder: FormBuilder, private router: Router, private actRoute: ActivatedRoute) {
+    this.eventId = this.actRoute.snapshot.params.id;
+    this.loadEvent(this.eventId);
+
     this.addNewsForm = this.formBuilder.group({
-      title: ['', [Validators.required, Validators.maxLength(10)]],
+      title: ['', [Validators.required, Validators.maxLength(100)]],
+      eventName: [''],
       text: ['', [Validators.required, Validators.maxLength(10000)]],
-      event: ['', [Validators.required]],
+      // event: ['', [Validators.required]],
       files: ['']
     });
+  }
+
+  ngOnInit(): void {
   }
 
   addNews() {
@@ -42,9 +53,7 @@ export class AddNewsComponent implements OnInit {
       // Add additional news data
       this.news.title = this.addNewsForm.value.title;
       this.news.text = this.addNewsForm.value.text;
-      this.news.event = new Event(this.addNewsForm.value.event.value
-        // TODO Add other Event data
-      );
+      this.news.event = this.event;
 
       this.applicationNewsService.publishNews(this.news).subscribe(
         () => {
@@ -58,6 +67,21 @@ export class AddNewsComponent implements OnInit {
       console.log('Invalid input');
       console.log(this.addNewsForm);
     }
+  }
+
+  loadEvent(id) {
+    console.log('loading id:' + id);
+    this.applicationEventService.getEventById(id).subscribe(
+      (event: Event) => {
+        this.event = event;
+        this.addNewsForm.patchValue({
+          eventName: event.title
+        });
+      },
+      error => {
+        this.defaultServiceErrorHandling(error);
+      }
+    );
   }
 
   onFileChange(event) {
@@ -84,8 +108,7 @@ export class AddNewsComponent implements OnInit {
     this.success = false;
   }
 
-  ngOnInit(): void {
-  }
+
 
   private defaultServiceErrorHandling(error: any) {
     console.log(error);

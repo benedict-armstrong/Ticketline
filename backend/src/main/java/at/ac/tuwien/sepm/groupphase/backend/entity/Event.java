@@ -1,14 +1,16 @@
 package at.ac.tuwien.sepm.groupphase.backend.entity;
 
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.util.Objects;
 
+@Entity
 public class Event {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(nullable = false)
+    private String title;
 
     public Long getId() {
         return id;
@@ -16,6 +18,14 @@ public class Event {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     @Override
@@ -27,7 +37,8 @@ public class Event {
             return false;
         }
         Event event = (Event) o;
-        return Objects.equals(id, event.id);
+        return Objects.equals(id, event.id)
+            && Objects.equals(title, event.title);
     }
 
     @Override
@@ -39,16 +50,18 @@ public class Event {
     public String toString() {
         return "Event{"
             + "id=" + id
+            + ", title=" + title
             + '}';
     }
 
     public static final class EventBuilder {
         private Long id;
+        private String title;
 
         private EventBuilder() {
         }
 
-        public static EventBuilder anEvent() {
+        public static EventBuilder aEvent() {
             return new EventBuilder();
         }
 
@@ -57,9 +70,15 @@ public class Event {
             return this;
         }
 
+        public EventBuilder withTitle(String title) {
+            this.title = title;
+            return this;
+        }
+
         public Event build() {
             Event event = new Event();
             event.setId(id);
+            event.setTitle(title);
             return event;
         }
     }

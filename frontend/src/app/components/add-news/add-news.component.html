@@ -18,29 +18,21 @@
     </div>
 
     <div class="form-group">
+      <label for="eventName">Event</label>
+      <input type="text" name="eventName" formControlName="eventName" class="text-input form-control" id="eventName"
+             placeholder="Enter Title" disabled>
+    </div>
+
+    <div class="form-group">
       <label for="text">Text</label>
       <input type="text" name="text" formControlName="text" class="text-input form-control" id="text"
-             placeholder="Enter Title">
+             placeholder="Enter Text">
       <div *ngIf="submitted && addNewsForm.controls.text.errors" class="error">
         <small class="form-text text-danger" *ngIf="addNewsForm.controls.text.errors.required">
           Text is required!
         </small>
         <small class="form-text text-danger" *ngIf="addNewsForm.controls.text.errors.maxLength">
           Text cannot be more than 100 characters!
-        </small>
-      </div>
-    </div>
-
-    <div class="form-group">
-      <label for="event">Event</label>
-      <select name="event" id="event" formControlName="event" class="select-input form-select">
-        <option value="1">1</option>
-        <option value="2">2</option>
-        <option value="3">3</option>
-      </select>
-      <div *ngIf="submitted && addNewsForm.controls.event.errors" class="error">
-        <small class="form-text text-danger" *ngIf="addNewsForm.controls.event.errors.required">
-          An event selection is required!
         </small>
       </div>
     </div>
@@ -77,7 +69,7 @@
       </button>
     </div>
     <div *ngIf="success" class="col-12 alert alert-success alert-dismissible fade show" role="alert">
-      <strong>Success</strong> The user has been created.
+      <strong>Success</strong> The news is published.
       <button type="button" (click)="vanishAlert()" class="close" data-dismiss="alert" aria-label="Close">
         <span aria-hidden="true">&times;</span>
       </button>

@@ -1,5 +1,6 @@
 export class Event {
   constructor(
-    public id: number
+    public id: number,
+    public title: string
   ) {}
 }

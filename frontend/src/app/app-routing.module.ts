@@ -21,7 +21,7 @@ const routes: Routes = [
   { path: 'event', component: EventDetailComponent },
   { path: 'user', component: UserHomeComponent },
   { path: 'ticket', component: TicketDetailComponent },
-  { path: 'add-news', component: AddNewsComponent },
+  { path: 'add-news/:id', component: AddNewsComponent },
 ];
 
 @NgModule({

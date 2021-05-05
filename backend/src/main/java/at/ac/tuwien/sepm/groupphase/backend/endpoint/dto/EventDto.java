@@ -1,16 +1,14 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint.dto;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
-import java.time.LocalDateTime;
+import at.ac.tuwien.sepm.groupphase.backend.entity.Event;
+
 import java.util.Objects;
 
 public class EventDto {
 
     private Long id;
+
+    private String title;
 
     public Long getId() {
         return id;
@@ -18,6 +16,14 @@ public class EventDto {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     @Override
@@ -28,8 +34,9 @@ public class EventDto {
         if (!(o instanceof EventDto)) {
             return false;
         }
-        EventDto news = (EventDto) o;
-        return Objects.equals(id, news.id);
+        EventDto event = (EventDto) o;
+        return Objects.equals(id, event.id)
+            && Objects.equals(title, event.title);
     }
 
     @Override
@@ -39,18 +46,20 @@ public class EventDto {
 
     @Override
     public String toString() {
-        return "News{"
+        return "Event{"
             + "id=" + id
+            + ", title=" + title
             + '}';
     }
 
     public static final class EventDtoBuilder {
         private Long id;
+        private String title;
 
         private EventDtoBuilder() {
         }
 
-        public static EventDtoBuilder anEvent() {
+        public static EventDtoBuilder aEvent() {
             return new EventDtoBuilder();
         }
 
@@ -59,10 +68,16 @@ public class EventDto {
             return this;
         }
 
-        public EventDto build() {
-            EventDto eventDto = new EventDto();
-            eventDto.setId(id);
-            return eventDto;
+        public EventDtoBuilder withTitle(String title) {
+            this.title = title;
+            return this;
+        }
+
+        public Event build() {
+            Event event = new Event();
+            event.setId(id);
+            event.setTitle(title);
+            return event;
         }
     }
 }
