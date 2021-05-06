@@ -23,6 +23,8 @@ export class UserHomeComponent implements OnInit {
     }else{
       if(authService.isLoggedIn()){
         this.loadUser(authService.getUserEmail());
+      }else{
+        this.router.navigate(['']);
       }
     }
    }
