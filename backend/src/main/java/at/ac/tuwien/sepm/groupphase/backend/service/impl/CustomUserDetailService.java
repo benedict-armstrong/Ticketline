@@ -84,9 +84,13 @@ public class CustomUserDetailService implements UserService {
     @Override
     public ApplicationUser updateUser(ApplicationUser user) {
         LOGGER.debug("Update User");
-        if (userRepository.findUserByEmail(user.getEmail()) != null) {
+        ApplicationUser oldUser = userRepository.findUserByEmail(user.getEmail());
 
-            user.setPassword(passwordEncoder.encode(user.getPassword())); //TODO: notwendig wegen update password!?
+        if (oldUser != null) {
+            if (!oldUser.getPassword().equals(user.getPassword())) {
+                user.setPassword(passwordEncoder.encode(user.getPassword()));
+            }
+
 
             return userRepository.save(user);
         }
