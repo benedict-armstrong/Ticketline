@@ -14,16 +14,20 @@ export class NavbarComponent implements OnInit {
   }
 
   /**
-  * Logout current user.
-  */
-  logoutUser(): void{
+   * Logout current user.
+   */
+  logoutUser(): void {
     this.authService.logoutUser();
   }
 
   /**
-  * Checks if user is logged in.
-  */
-  isLoggedIn(){
+   * Checks if user is logged in.
+   */
+  isLoggedIn() {
     return this.authService.isLoggedIn();
+  }
+
+  hasAdminPermission(): boolean {
+    return this.authService.getUserRole() === 'ADMIN';
   }
 }

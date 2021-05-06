@@ -3,7 +3,6 @@ import {AuthRequest} from '../dtos/auth-request';
 import {Observable} from 'rxjs';
 import {HttpClient} from '@angular/common/http';
 import {tap} from 'rxjs/operators';
-// @ts-ignore
 import jwt_decode from 'jwt-decode';
 import {Globals} from '../global/globals';
 
@@ -55,7 +54,9 @@ export class AuthService {
       const authInfo: string[] = decoded.rol;
       if (authInfo.includes('ROLE_ADMIN')) {
         return 'ADMIN';
-      } else if (authInfo.includes('ROLngE_USER')) {
+      } else if (authInfo.includes('ROLE_ORGANIZER')) {
+        return 'ORGANIZER';
+      } else if (authInfo.includes('ROLE_USER')) {
         return 'USER';
       }
     }
