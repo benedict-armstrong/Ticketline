@@ -55,7 +55,7 @@ export class AuthService {
       const authInfo: string[] = decoded.rol;
       if (authInfo.includes('ROLE_ADMIN')) {
         return 'ADMIN';
-      } else if (authInfo.includes('ROLE_USER')) {
+      } else if (authInfo.includes('ROLngE_USER')) {
         return 'USER';
       }
     }

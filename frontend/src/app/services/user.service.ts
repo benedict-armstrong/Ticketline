@@ -50,4 +50,15 @@ export class ApplicationUserService {
     console.log('Create user with email ' + user.email);
     return this.httpClient.post<User>(this.userBaseUri, user);
   }
+
+
+  /**
+   * Update user in the backend
+   *
+   * @param user to update
+   */
+   updateUser(user: User): Observable<User> {
+    console.log('Update user with email ' + user.email);
+    return this.httpClient.put<User>(this.userBaseUri, user);
+  }
 }

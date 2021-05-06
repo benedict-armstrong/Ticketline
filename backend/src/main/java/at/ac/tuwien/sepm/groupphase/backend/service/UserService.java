@@ -36,4 +36,12 @@ public interface UserService extends UserDetailsService {
      */
     ApplicationUser addUser(ApplicationUser user);
 
+    /**
+     * Update a user.
+     *
+     * @param user to update
+     * @return updated User
+     */
+    ApplicationUser updateUser(ApplicationUser user);
+
 }

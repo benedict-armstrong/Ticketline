@@ -1,7 +1,13 @@
 <div class="login">
-    <div class="login-card">
+    <div class="login-card" *ngIf="!this.passwordChange">
         <div *ngIf="error" class="col-12 alert alert-danger alert-dismissible fade show" role="alert">
             <strong>Error! </strong> {{ errorMessage }}
+            <button type="button" (click)="vanishAlert()" class="close" data-dismiss="alert" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div *ngIf="success" class="col-12 alert alert-success alert-dismissible fade show" role="alert">
+            <strong>Success!</strong> The password has been changed.
             <button type="button" (click)="vanishAlert()" class="close" data-dismiss="alert" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
@@ -20,14 +26,8 @@
                     placeholder="Enter your password">
             </div>
             <div class="login-options">
-                <div class="form-check">
-                    <label class="form-check-label">
-                        <input type="checkbox" class="form-check-input" name="remember" id="" value="checkedValue">
-                        Remember Me
-                    </label>
-                </div>
                 <div>
-                    <a href="" id="forgot">Forgot Password?</a>
+                    <a id="forgot" [routerLink]="" (click)="this.passwordChange=true;">Change Password</a>
                 </div>
             </div>
             <button type="submit" name="signin" id="signin" class="">SIGN IN</button>
@@ -36,5 +36,35 @@
             <button class="secondary" type="signup" name="signup" id="signup" [routerLink]="['/register']">SIGN
                 UP</button>
         </div>
+    </div>
+    <div class="password-change-card" *ngIf="this.passwordChange">
+        <div *ngIf="error" class="col-12 alert alert-danger alert-dismissible fade show" role="alert">
+            <strong>Error! </strong> {{ errorMessage }}
+            <button type="button" (click)="vanishAlert()" class="close" data-dismiss="alert" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <h3>Change Password</h3>
+        <p></p>
+        <form calss="form" [formGroup]="loginForm" (ngSubmit)="changePassword()">
+            <div class="form-group">
+                <label for="email">EMAIL</label>
+                <input type="email" class="text-input form-control" name="email" id="email" formControlName="email"
+                    aria-describedby="emailHelpId" placeholder="Enter your email">
+            </div>
+            <div class="form-group">
+                <label for="password">PASSWORD</label>
+                <input type="password" class="text-input form-control" name="password" id="password" formControlName="password"
+                    placeholder="Enter your old password"> <br>
+                <input type="password" class="text-input form-control" name="password" id="newPassword" formControlName="newPassword"
+                    placeholder="Enter your new password">
+            </div>
+            <div class="change-options">
+                <div>
+                    <a id="change" class="text-decoration-none" [routerLink]="" (click)="this.passwordChange=false;">Back to login</a>
+                </div>
+            </div>
+            <button type="submit" name="changePassword" id="changePassword" class="">CHANGE</button>
+        </form>
     </div>
 </div>

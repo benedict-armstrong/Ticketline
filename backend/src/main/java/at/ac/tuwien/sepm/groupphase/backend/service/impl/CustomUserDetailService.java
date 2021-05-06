@@ -80,4 +80,17 @@ public class CustomUserDetailService implements UserService {
         }
         throw new UserAlreadyExistAuthenticationException(String.format("User with email address: %s already exists.", user.getEmail()));
     }
+
+    @Override
+    public ApplicationUser updateUser(ApplicationUser user) {
+        LOGGER.debug("Update User");
+        if (userRepository.findUserByEmail(user.getEmail()) != null) {
+
+            user.setPassword(passwordEncoder.encode(user.getPassword())); //TODO: notwendig wegen update password!?
+
+            return userRepository.save(user);
+        }
+
+        throw new NotFoundException(String.format("Could not find the user with the email address %s", user.getEmail()));
+    }
 }
