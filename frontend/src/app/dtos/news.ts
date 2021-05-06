@@ -1,4 +1,5 @@
 import { Event } from './event';
+import { CustomImage } from './customImage';
 
 export class News {
   constructor(
@@ -8,6 +9,6 @@ export class News {
     public title: string,
     public text: string,
     public event: Event,
-    public picture: File[]
+    public customImages: CustomImage[]
   ) {}
 }

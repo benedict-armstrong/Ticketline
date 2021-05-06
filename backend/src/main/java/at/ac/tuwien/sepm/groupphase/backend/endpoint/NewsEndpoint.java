@@ -32,6 +32,7 @@ public class NewsEndpoint {
     @PostMapping
     @Operation(summary = "Publish a new news")
     public NewsDto create(@Valid @RequestBody NewsDto newsDto) {
+        LOGGER.info("Test");
         LOGGER.info("POST /api/v1/news body: {}", newsDto);
         return newsMapper.newsToNewsDto(newsService.addNews(newsMapper.newsDtoToNews(newsDto)));
     }

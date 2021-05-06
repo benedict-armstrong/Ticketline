@@ -32,6 +32,7 @@ public class CustomNewsService implements NewsService {
     @Override
     public News addNews(News news) {
         LOGGER.debug("Add new news");
+        LOGGER.info(news.getCustomImages().toString());
         news.setPublishedAt(LocalDateTime.now());
         return newsRepository.save(news);
     }

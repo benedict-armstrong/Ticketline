@@ -33,7 +33,7 @@ public class Event {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof News)) {
+        if (!(o instanceof Event)) {
             return false;
         }
         Event event = (Event) o;

@@ -20,7 +20,7 @@
     <div class="form-group">
       <label for="eventName">Event</label>
       <input type="text" name="eventName" formControlName="eventName" class="text-input form-control" id="eventName"
-             placeholder="Enter Title" disabled>
+             placeholder="" disabled>
     </div>
 
     <div class="form-group">
@@ -43,17 +43,20 @@
       <div *ngIf="fileNoImage" class="alert alert-danger">
         <div>The uploaded file is no image</div>
       </div>
+      <div *ngIf="tooManyFiles" class="alert alert-danger">
+        <div>Max. 10 images per news</div>
+      </div>
     </div>
 
-    <div *ngIf="news.picture.length > 0">
+    <div *ngIf="news.customImages.length > 0">
       <table class="table">
         <thead>
         <th scope="col">Name</th>
         <th scope="col" style="width: 5%"></th>
         </thead>
         <tbody>
-        <tr *ngFor="let image of news.picture; let i = index">
-          <td>{{image.name}}</td>
+        <tr *ngFor="let image of news.customImages; let i = index">
+          <td>{{image.imageData.name}}</td>
           <td><button type="button" class="btn btn-primary" style="width: 100%" (click)="removeImage(i)">X</button></td>
         </tr>
         </tbody>

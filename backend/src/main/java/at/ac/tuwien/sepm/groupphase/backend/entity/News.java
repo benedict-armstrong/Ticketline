@@ -1,7 +1,9 @@
 package at.ac.tuwien.sepm.groupphase.backend.entity;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 import javax.persistence.*;
 
 @Entity
@@ -26,6 +28,9 @@ public class News {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "EVENT_ID")
     private Event event;
+
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    private Set<CustomImage> customImages = new HashSet<>();
 
     public Long getId() {
         return id;
@@ -75,6 +80,14 @@ public class News {
         this.event = event;
     }
 
+    public Set<CustomImage> getCustomImages() {
+        return customImages;
+    }
+
+    public void setCustomImages(Set<CustomImage> customImages) {
+        this.customImages = customImages;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -115,6 +128,7 @@ public class News {
         private String title;
         private String text;
         private Event event;
+        private Set<CustomImage> customImages = new HashSet<>();
 
         private NewsBuilder() {
         }
@@ -153,6 +167,11 @@ public class News {
             return this;
         }
 
+        public NewsBuilder withImages(Set<CustomImage> customImages){
+            this.customImages = customImages;
+            return this;
+        }
+
         public News build() {
             News news = new News();
             news.setId(id);
@@ -161,6 +180,7 @@ public class News {
             news.setTitle(title);
             news.setText(text);
             news.setEvent(event);
+            news.setCustomImages(customImages);
             return news;
         }
     }

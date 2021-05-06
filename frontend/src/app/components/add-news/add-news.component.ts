@@ -5,6 +5,7 @@ import {ApplicationNewsService} from '../../services/news.service';
 import {News} from '../../dtos/news';
 import {Event} from '../../dtos/event';
 import {ApplicationEventService} from '../../services/event.service';
+import {CustomImage} from '../../dtos/customImage';
 
 @Component({
   selector: 'app-add-news',
@@ -20,6 +21,7 @@ export class AddNewsComponent implements OnInit {
   error = false;
   errorMessage = '';
   fileNoImage = false;
+  tooManyFiles = false;
   success = false;
 
   news: News = new News(null
@@ -39,7 +41,6 @@ export class AddNewsComponent implements OnInit {
       title: ['', [Validators.required, Validators.maxLength(100)]],
       eventName: [''],
       text: ['', [Validators.required, Validators.maxLength(10000)]],
-      // event: ['', [Validators.required]],
       files: ['']
     });
   }
@@ -65,12 +66,10 @@ export class AddNewsComponent implements OnInit {
       );
     } else {
       console.log('Invalid input');
-      console.log(this.addNewsForm);
     }
   }
 
   loadEvent(id) {
-    console.log('loading id:' + id);
     this.applicationEventService.getEventById(id).subscribe(
       (event: Event) => {
         this.event = event;
@@ -86,20 +85,23 @@ export class AddNewsComponent implements OnInit {
 
   onFileChange(event) {
     this.fileNoImage = false;
+    this.tooManyFiles = false;
     if (event.target.files.length > 0) {
       const file = event.target.files[0];
-      if (file.type.includes('image')) {
-        this.news.picture.push(file);
-        console.log(file);
-      } else {
+      if (!file.type.includes('image')) {
         this.fileNoImage = true;
+      } else if (this.news.customImages.length >= 10) {
+        this.tooManyFiles = true;
+      } else {
+        const tempImg = new CustomImage(null, file);
+        this.news.customImages.push(tempImg);
       }
     }
   }
 
   removeImage(index) {
     if (index > -1) {
-      this.news.picture.splice(index, 1);
+      this.news.customImages.splice(index, 1);
     }
   }
 
