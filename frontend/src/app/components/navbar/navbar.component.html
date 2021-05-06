@@ -15,7 +15,7 @@
 
         <div class="navbar-collapse collapse" id="collapsingNavbar">
             <ul class="nav navbar-nav ms-auto">
-                <li class="nav-item">
+                <li class="nav-item" *ngIf="isLoggedIn()">
                     <a *ngIf="hasAdminPermission()" class="nav-link" [routerLink]="['add-user']">Add User</a>
                 </li>
                 <li class="nav-item">
