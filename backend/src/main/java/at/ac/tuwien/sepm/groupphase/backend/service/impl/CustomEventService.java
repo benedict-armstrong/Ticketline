@@ -34,9 +34,9 @@ public class CustomEventService implements EventService {
     public Event findById(long id) {
         LOGGER.debug("Get event by id {}", id);
         Optional<Event> temp = eventRepository.findById(id);
-        if (temp.isPresent()){
+        if (temp.isPresent()) {
             return temp.get();
-        } else{
+        } else {
             throw new NotFoundException();
         }
     }

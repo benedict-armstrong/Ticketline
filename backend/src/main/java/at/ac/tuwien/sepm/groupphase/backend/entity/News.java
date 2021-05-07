@@ -4,7 +4,17 @@ import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Column;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.CascadeType;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+
 
 @Entity
 public class News {
@@ -167,7 +177,7 @@ public class News {
             return this;
         }
 
-        public NewsBuilder withImages(Set<CustomImage> customImages){
+        public NewsBuilder withImages(Set<CustomImage> customImages) {
             this.customImages = customImages;
             return this;
         }

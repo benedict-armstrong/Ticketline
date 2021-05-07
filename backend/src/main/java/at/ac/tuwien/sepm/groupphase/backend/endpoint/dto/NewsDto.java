@@ -172,7 +172,7 @@ public class NewsDto {
             return this;
         }
 
-        public NewsDtoBuilder withImages(Set<CustomImage> customImages){
+        public NewsDtoBuilder withImages(Set<CustomImage> customImages) {
             this.customImagesDto = customImagesDto;
             return this;
         }
