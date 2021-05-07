@@ -9,9 +9,11 @@ public interface NewsService {
     /**
      * Find all message entries ordered by published at date (descending).
      *
-     * @return ordered list of al message entries
+     * @param limit the amount of news entries to be returned
+     * @param offset the offset required for pagination
+     * @return ordered list of all satisfying message entries
      */
-    List<News> findAll();
+    List<News> getAll(Long limit, Long offset);
 
 
 
@@ -22,5 +24,4 @@ public interface NewsService {
      * @return complete news entry
      */
     News addNews(News news);
-
 }
