@@ -7,28 +7,11 @@ import {Globals} from '../global/globals';
 @Injectable({
   providedIn: 'root'
 })
-export class ApplicationUserService {
+export class UserService {
 
   private userBaseUri: string = this.globals.backendUri + '/users';
 
   constructor(private httpClient: HttpClient, private globals: Globals) {
-  }
-
-  /**
-   * Loads all messages from the backend
-   */
-  getUser(): Observable<User[]> {
-    return this.httpClient.get<User[]>(this.userBaseUri);
-  }
-
-  /**
-   * Loads specific message from the backend
-   *
-   * @param id of message to load
-   */
-  getUserById(id: number): Observable<User> {
-    console.log('Load user details for ' + id);
-    return this.httpClient.get<User>(this.userBaseUri + '/' + id);
   }
 
   /**

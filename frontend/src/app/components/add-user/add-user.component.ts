@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Address } from 'src/app/dtos/address';
 import { User } from '../../dtos/user';
-import { ApplicationUserService } from '../../services/user.service';
+import { UserService } from '../../services/user.service';
 
 @Component({
   selector: 'app-add-user',
@@ -22,7 +22,7 @@ export class AddUserComponent implements OnInit {
   success = false;
 
   constructor(
-    private applicationUserService: ApplicationUserService,
+    private userService: UserService,
     private formBuilder: FormBuilder,
     private router: Router
   ) {
@@ -72,7 +72,7 @@ export class AddUserComponent implements OnInit {
           this.addUserForm.value.country
         )
       );
-      this.applicationUserService.createUser(user).subscribe(
+      this.userService.createUser(user).subscribe(
         () => {
           this.success = true;
         },
