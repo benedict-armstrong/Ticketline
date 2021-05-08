@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 
+import javax.annotation.security.PermitAll;
 import javax.validation.Valid;
 import java.lang.invoke.MethodHandles;
 
@@ -33,11 +34,11 @@ public class NewsEndpoint {
     }
 
     //@Secured("ROLE_ADMIN")
+    @PermitAll
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
     @Operation(summary = "Publish a new news")
     public NewsDto create(@Valid @RequestBody NewsDto newsDto) {
-        LOGGER.info("Test");
         LOGGER.info("POST /api/v1/news body: {}", newsDto);
         return newsMapper.newsToNewsDto(newsService.addNews(newsMapper.newsDtoToNews(newsDto)));
     }
