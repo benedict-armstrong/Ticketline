@@ -1,7 +1,7 @@
 <div class="card text-left h-100" [routerLink]="['/article']">
-    <img class="card-img-top" src="assets/placeholder_news.jpg" alt="">
+    <img *ngIf="newsItem.customImages[0]" class="card-img-top" src="assets/placeholder_news.jpg" alt="">
     <div class="card-body">
-        <h4 class="card-title">News Item</h4>
-        <p class="card-text">Description</p>
+        <h4 class="card-title">{{newsItem.title}}</h4>
+        <p class="card-text">{{newsItem.text.substr(0, 25) + (newsItem.text.length>25 ? '...' : '')}}</p>
     </div>
 </div>

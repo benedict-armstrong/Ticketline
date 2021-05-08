@@ -24,9 +24,9 @@ public class CustomNewsService implements NewsService {
     }
 
     @Override
-    public List<News> findAll() {
-        LOGGER.debug("Get all news");
-        return null;
+    public List<News> getAll(Long limit, Long offset) {
+        LOGGER.trace("Get all news");
+        return newsRepository.getAll(limit, offset);
     }
 
     @Override
