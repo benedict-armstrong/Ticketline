@@ -1,6 +1,6 @@
 <div class="row row-cols-1 row-cols-md-4 g-4">
   <div *ngFor="let entry of news" class="col">
-    <app-news-item></app-news-item>
+    <app-news-item [newsItem]="entry"></app-news-item>
   </div>
 </div>
 <div class="text-center more" (click)="loadBatch()">

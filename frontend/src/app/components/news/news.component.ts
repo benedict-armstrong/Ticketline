@@ -10,7 +10,7 @@ import {News} from '../../dtos/news';
 export class NewsComponent implements OnInit {
 
   news: News[] = [];
-  limit = 4;
+  limit = 4; // Determines how many news entries are loaded at the beginning and with each click on Load More
   offset = 0;
 
   constructor(private newsService: ApplicationNewsService) { }
@@ -24,7 +24,6 @@ export class NewsComponent implements OnInit {
       response => {
         this.news.push(...response);
         this.offset += this.limit;
-        console.log('UPD ', this.news);
       }, error => {
         console.error(error);
       }
