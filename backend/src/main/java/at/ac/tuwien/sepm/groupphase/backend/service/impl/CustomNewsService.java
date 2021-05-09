@@ -1,6 +1,7 @@
 package at.ac.tuwien.sepm.groupphase.backend.service.impl;
 
 import at.ac.tuwien.sepm.groupphase.backend.entity.News;
+import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepm.groupphase.backend.repository.NewsRepository;
 import at.ac.tuwien.sepm.groupphase.backend.service.NewsService;
 import org.slf4j.Logger;
@@ -35,5 +36,18 @@ public class CustomNewsService implements NewsService {
         LOGGER.info(news.getCustomImages().toString());
         news.setPublishedAt(LocalDateTime.now());
         return newsRepository.save(news);
+    }
+
+    @Override
+    public News getOneById(Long id) {
+        LOGGER.debug("Get one news by id");
+
+        News news = newsRepository.findOneById(id);
+
+        if (news != null) {
+            return news;
+        }
+
+        throw new NotFoundException(String.format("Could not find the news with the id %d", id));
     }
 }

@@ -18,4 +18,10 @@ public interface NewsRepository extends JpaRepository<News, Long> {
     @Query(value = "SELECT * FROM News n ORDER BY n.published_at LIMIT ?1 OFFSET ?2", nativeQuery = true)
     List<News> getAll(Long limit, Long offset);
 
+    /**
+     * Find one news by id.
+     *
+     * @return news with the id.
+     */
+    News findOneById(Long id);
 }

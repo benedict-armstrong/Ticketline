@@ -24,4 +24,13 @@ public interface NewsService {
      * @return complete news entry
      */
     News addNews(News news);
+
+    /**
+     * Returns the news with the specific id.
+     *
+     * @param id from news
+     * @return complete news entry
+     */
+    News getOneById(Long id);
+
 }

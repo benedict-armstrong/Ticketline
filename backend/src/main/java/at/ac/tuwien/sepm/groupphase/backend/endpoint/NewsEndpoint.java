@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import javax.annotation.security.PermitAll;
 import javax.validation.Valid;
@@ -65,6 +66,15 @@ public class NewsEndpoint {
             throw new InvalidQueryParameterException("Query parameters limit and offset must be numeric", e);
         }
         return newsService.getAll(limit, offset).stream().map(newsMapper::newsToNewsDto).collect(Collectors.toList());
+    }
+
+    @GetMapping(value = {"/{id}"})
+    @PermitAll
+    @Operation(summary = "Get a news by id")
+    public NewsDto getOneById(@Valid @PathVariable("id") Long id) {
+        LOGGER.info("GET /api/v1/news/{}", id);
+
+        return newsMapper.newsToNewsDto(newsService.getOneById(id));
     }
 
 }
