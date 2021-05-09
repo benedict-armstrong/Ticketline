@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { ArticleComponent } from './components/article/article.component';
 import { EventDetailComponent } from './components/event-detail/event-detail.component';
 import { EventsComponent } from './components/events/events.component';
 import { HomePageComponent } from './components/home-page/home-page.component';
@@ -10,6 +9,7 @@ import { RegisterComponent } from './components/register/register.component';
 import { TicketDetailComponent } from './components/ticket-detail/ticket-detail.component';
 import { UserHomeComponent } from './components/user-home/user-home.component';
 import {AddNewsComponent} from './components/add-news/add-news.component';
+import { NewsDetailComponent } from './components/news-detail/news-details.component';
 
 const routes: Routes = [
   { path: '', component: HomePageComponent },
@@ -17,7 +17,7 @@ const routes: Routes = [
   { path: 'register', component: RegisterComponent },
   { path: 'news', component: NewsComponent },
   { path: 'events', component: EventsComponent },
-  { path: 'article', component: ArticleComponent },
+  { path: 'news-detail/:id', component: NewsDetailComponent },
   { path: 'event', component: EventDetailComponent },
   { path: 'user', component: UserHomeComponent },
   { path: 'ticket', component: TicketDetailComponent },

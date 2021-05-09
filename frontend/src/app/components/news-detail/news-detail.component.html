@@ -1,0 +1,50 @@
+<article class="news-detail" *ngIf="newsItem">
+    <div class="header">
+        <div class="row">
+            <div class="col-md-8">
+                <img src="assets/placeholder_jumbotron.jpg" alt="">
+            </div>
+            <div class="col-md-4">
+                <div class="details">
+                    <div>
+                        <div class="date">
+                            <div id="month">
+                                JUN
+                            </div>
+                            <div id="day">
+                                04
+                            </div>
+                        </div>
+                        <h4><strong>Title of a very exciting Event</strong></h4>
+                        <p id="performer">Performer</p>
+                        <p>Venue</p>
+                        <p>38€</p>
+                    </div>
+                    <button id="get-tickets" [routerLink]="['/event']">Get tickets</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="body">
+        <div class="row">
+            <div class="col-md-8">
+                <h3>{{newsItem.title}}</h3>
+                <p> {{newsItem.text}}
+                </p>
+            </div>
+            <div class="col-md-4 additional-info">
+                <h5>Additional Info</h5>
+
+                <p>
+                    Date and Time:<br>
+                    Friday, Jun 4, 2021, 21:20 <br>
+                    <small><a href="">Add to Calendar</a></small>
+                </p>
+
+                <p>Written by: <br>
+                    {{newsItem.author}}</p>
+            </div>
+        </div>
+
+    </div>
+</article>

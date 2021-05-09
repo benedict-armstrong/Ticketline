@@ -1,8 +1,8 @@
-import {Injectable} from '@angular/core';
-import {HttpClient, HttpParams} from '@angular/common/http';
-import {News} from '../dtos/news';
-import {Observable, of} from 'rxjs';
-import {Globals} from '../global/globals';
+import { Injectable } from '@angular/core';
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { News } from '../dtos/news';
+import { Observable, of } from 'rxjs';
+import { Globals } from '../global/globals';
 
 @Injectable({
   providedIn: 'root'
@@ -39,7 +39,19 @@ export class ApplicationNewsService {
     if (offset != null) {
       params = params.set('offset', String(offset));
     }
-    return this.httpClient.get<News[]>(this.newsBaseUri, {params});
+    return this.httpClient.get<News[]>(this.newsBaseUri, { params });
+  }
+
+  /**
+   * Loads specific news from the backend
+   *
+   * @param id of news to load
+   */
+  getNewsById(id: number): Observable<News> {
+    console.log('Load news details for ' + id);
+    return this.httpClient.get<News>(this.newsBaseUri + '/' + id);
   }
 
 }
+
+
