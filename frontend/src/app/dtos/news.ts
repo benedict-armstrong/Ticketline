@@ -1,5 +1,4 @@
 import { Event } from './event';
-import { CustomImage } from './customImage';
 import {CustomFile} from './customFile';
 
 export class News {

@@ -33,7 +33,7 @@ export class FileService {
   private static blobToFile(blob: Blob): File {
     const b: any = blob;
     b.lastModifiedDate = new Date();
-    b.name = 'Image';
+    b.name = 'File';
     return b;
   }
   private static mime(type: string): string {
