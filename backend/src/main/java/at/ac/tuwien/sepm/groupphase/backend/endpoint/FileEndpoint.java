@@ -43,7 +43,7 @@ public class FileEndpoint {
         if (file != null && file.getContentType() != null) {
             File fileEntity;
             try {
-                fileEntity = new File(file.getBytes(), fileTypeFromMIME(file.getContentType()));
+                fileEntity = new File(file.getBytes(), fileTypeFromMime(file.getContentType()));
             } catch (IOException e) {
                 throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Cannot retrieve bytes from file", e);
             } catch (IllegalArgumentException e) {
@@ -55,7 +55,7 @@ public class FileEndpoint {
         }
     }
 
-    private FileType fileTypeFromMIME(String mime) throws IllegalArgumentException {
+    private FileType fileTypeFromMime(String mime) throws IllegalArgumentException {
         // Add cases in the switch below (and in the enum FileType) to support other formats
         switch (mime) {
             case "image/jpg":
