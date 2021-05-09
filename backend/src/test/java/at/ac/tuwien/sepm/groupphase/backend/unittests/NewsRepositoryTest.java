@@ -90,4 +90,11 @@ public class NewsRepositoryTest implements TestDataNews {
         );
     }
 
+    @Test
+    @DisplayName("Should return empty list when getting all news with limit zero")
+    public void givenNews_whenGetAll_LimitIsZero_thenReturnEmptyList() {
+        newsRepository.save(news);
+        assertTrue(newsRepository.getAll(0L, Long.MAX_VALUE).isEmpty());
+    }
+
 }
