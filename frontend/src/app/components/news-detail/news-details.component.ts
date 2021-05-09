@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { News } from 'src/app/dtos/news';
+import { FileService } from 'src/app/services/file.service';
 import { ApplicationNewsService } from 'src/app/services/news.service';
 
 @Component({
@@ -15,6 +16,7 @@ export class NewsDetailComponent implements OnInit {
   success = false;
   newsId = 0;
   newsItem: News;
+  imgURL= [];
 
   constructor(private newsService: ApplicationNewsService,  private route: Router, private actRoute: ActivatedRoute) {
   }
@@ -24,6 +26,16 @@ export class NewsDetailComponent implements OnInit {
     this.newsService.getNewsById(this.newsId).subscribe(
       (response) => {
         this.newsItem = response;
+        if (this.newsItem.images.length > 0) {
+          //const img = FileService.asFile(this.newsItem.images[0].data, this.newsItem.images[0].type);
+
+          for(var i=0; i<this.newsItem.images.length; i++){
+            let img = FileService.asFile(this.newsItem.images[i].data, this.newsItem.images[i].type);
+            this.setURL(img, i);
+          }
+
+          console.log(this.imgURL);
+        }
       },
       error => {
         this.defaultServiceErrorHandling(error);
@@ -47,6 +59,14 @@ export class NewsDetailComponent implements OnInit {
     } else {
       this.errorMessage = error.error;
     }
+  }
+
+  private setURL(file: File, id: number) {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = _event => {
+      this.imgURL[id] = reader.result;
+    };
   }
 
 }
