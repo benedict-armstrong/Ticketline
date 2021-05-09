@@ -30,7 +30,7 @@ public class NewsRepositoryTest implements TestDataNews {
     private NewsRepository newsRepository;
 
     @Autowired
-    EventRepository eventRepository;
+    private EventRepository eventRepository;
 
     private News news;
     private News news2;
