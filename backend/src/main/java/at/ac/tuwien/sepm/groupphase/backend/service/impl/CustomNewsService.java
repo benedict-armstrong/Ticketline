@@ -25,14 +25,13 @@ public class CustomNewsService implements NewsService {
 
     @Override
     public List<News> getAll(Long limit, Long offset) {
-        LOGGER.trace("Get all news");
+        LOGGER.trace("getAll({}, {})", limit, offset);
         return newsRepository.getAll(limit, offset);
     }
 
     @Override
     public News addNews(News news) {
-        LOGGER.debug("Add new news");
-        LOGGER.info(news.getCustomImages().toString());
+        LOGGER.trace("addNews({})", news);
         news.setPublishedAt(LocalDateTime.now());
         return newsRepository.save(news);
     }

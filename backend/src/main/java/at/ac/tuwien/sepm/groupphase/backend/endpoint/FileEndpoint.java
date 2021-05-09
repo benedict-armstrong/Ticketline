@@ -57,9 +57,7 @@ public class FileEndpoint {
             } catch (IOException ignored) {
                 throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Cannot retrieve bytes from file");
             }
-            FileDto dto = fileMapper.fileToFileDto(fileService.save(fileEntity));
-            dto.setData(null); // Avoid sending big files back
-            return dto;
+            return fileMapper.fileToFileDto(fileService.save(fileEntity));
         }
         throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "No file received");
     }
