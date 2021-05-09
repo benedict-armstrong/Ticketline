@@ -48,6 +48,7 @@ public class NewsEndpoint {
         return newsMapper.newsToNewsDto(newsService.addNews(newsMapper.newsDtoToNews(newsDto)));
     }
 
+    @PermitAll
     @GetMapping
     @Operation(summary = "Get all news")
     public List<NewsDto> getAll(@RequestParam Map<String, String> params) {

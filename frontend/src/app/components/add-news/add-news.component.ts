@@ -6,6 +6,7 @@ import {News} from '../../dtos/news';
 import {Event} from '../../dtos/event';
 import {ApplicationEventService} from '../../services/event.service';
 import {FileService} from '../../services/file.service';
+import {compareLocations} from '@angular/localize/src/tools/src/extract/translation_files/utils';
 
 @Component({
   selector: 'app-add-news',
@@ -23,6 +24,7 @@ export class AddNewsComponent implements OnInit {
   fileNoImage = false;
   tooManyFiles = false;
   success = false;
+  files = [];
 
   news: News = new News(null
     , null
@@ -57,14 +59,42 @@ export class AddNewsComponent implements OnInit {
       this.news.text = this.addNewsForm.value.text;
       this.news.event = this.event;
 
-      this.applicationNewsService.publishNews(this.news).subscribe(
-        () => {
-          this.success = true;
-        },
-        error => {
-          this.defaultServiceErrorHandling(error);
-        }
-      );
+      // New Imageupload
+      const fileService = this.fileService;
+      let count = this.files.length;
+      if (count === 0) {
+        // Normal news publish without images
+        this.applicationNewsService.publishNews(this.news).subscribe(
+          () => {
+            this.success = true;
+          },
+          error => {
+            this.defaultServiceErrorHandling(error);
+          }
+        );
+      } else {
+        // With images
+        this.files.forEach(file => {
+          fileService.upload(file).subscribe(f => {
+            this.news.images.push(f);
+            count--;
+            if (count === 0) {
+              this.applicationNewsService.publishNews(this.news).subscribe(
+                () => {
+                  this.success = true;
+                },
+                error => {
+                  this.defaultServiceErrorHandling(error);
+                }
+              );
+            }
+          });
+        });
+      }
+
+      // New Imageupload End */
+
+
     } else {
       console.log('Invalid input');
     }
@@ -94,18 +124,22 @@ export class AddNewsComponent implements OnInit {
       } else if (this.news.images.length >= 10) {
         this.tooManyFiles = true;
       } else {
+        this.files.push(file);
+        console.log(this.news.images);
+        /* Backup
         this.fileService.upload(file).subscribe(f => {
           this.news.images.push(f);
           console.log('UPL ', f);
           console.log('NEWS now ', this.news);
         });
+        */
       }
     }
   }
 
   removeImage(index) {
     if (index > -1) {
-      this.news.images.splice(index, 1);
+      this.files.splice(index, 1);
     }
   }
 

@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
+import javax.annotation.security.PermitAll;
 import java.io.IOException;
 import java.lang.invoke.MethodHandles;
 
@@ -34,6 +35,7 @@ public class FileEndpoint {
         this.fileMapper = fileMapper;
     }
 
+    @PermitAll
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public FileDto uploadFile(@RequestParam("file") MultipartFile file) {
