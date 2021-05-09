@@ -5,7 +5,7 @@ import {ApplicationNewsService} from '../../services/news.service';
 import {News} from '../../dtos/news';
 import {Event} from '../../dtos/event';
 import {ApplicationEventService} from '../../services/event.service';
-import {CustomImage} from '../../dtos/customImage';
+import {FileService} from '../../services/file.service';
 
 @Component({
   selector: 'app-add-news',
@@ -33,7 +33,8 @@ export class AddNewsComponent implements OnInit {
     , []);
 
   constructor(private applicationNewsService: ApplicationNewsService, private applicationEventService: ApplicationEventService,
-              private formBuilder: FormBuilder, private router: Router, private actRoute: ActivatedRoute) {
+              private formBuilder: FormBuilder, private router: Router, private actRoute: ActivatedRoute,
+              private fileService: FileService) {
     this.eventId = this.actRoute.snapshot.params.id;
     this.loadEvent(this.eventId);
 
@@ -90,18 +91,21 @@ export class AddNewsComponent implements OnInit {
       const file = event.target.files[0];
       if (!file.type.includes('image')) {
         this.fileNoImage = true;
-      } else if (this.news.customImages.length >= 10) {
+      } else if (this.news.images.length >= 10) {
         this.tooManyFiles = true;
       } else {
-        const tempImg = new CustomImage(null, file);
-        this.news.customImages.push(tempImg);
+        this.fileService.upload(file).subscribe(f => {
+          this.news.images.push(f);
+          console.log('UPL ', f);
+          console.log('NEWS now ', this.news);
+        });
       }
     }
   }
 
   removeImage(index) {
     if (index > -1) {
-      this.news.customImages.splice(index, 1);
+      this.news.images.splice(index, 1);
     }
   }
 

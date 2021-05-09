@@ -39,8 +39,8 @@ public class News {
     @JoinColumn(name = "EVENT_ID")
     private Event event;
 
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    private Set<CustomImage> customImages = new HashSet<>();
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
+    private Set<File> images = new HashSet<>();
 
     public Long getId() {
         return id;
@@ -90,12 +90,12 @@ public class News {
         this.event = event;
     }
 
-    public Set<CustomImage> getCustomImages() {
-        return customImages;
+    public Set<File> getImages() {
+        return images;
     }
 
-    public void setCustomImages(Set<CustomImage> customImages) {
-        this.customImages = customImages;
+    public void setImages(Set<File> images) {
+        this.images = images;
     }
 
     @Override
@@ -130,7 +130,6 @@ public class News {
             + '}';
     }
 
-
     public static final class NewsBuilder {
         private Long id;
         private LocalDateTime publishedAt;
@@ -138,7 +137,7 @@ public class News {
         private String title;
         private String text;
         private Event event;
-        private Set<CustomImage> customImages = new HashSet<>();
+        private Set<File> images = new HashSet<>();
 
         private NewsBuilder() {
         }
@@ -177,8 +176,8 @@ public class News {
             return this;
         }
 
-        public NewsBuilder withImages(Set<CustomImage> customImages) {
-            this.customImages = customImages;
+        public NewsBuilder withImages(Set<File> images) {
+            this.images = images;
             return this;
         }
 
@@ -190,7 +189,7 @@ public class News {
             news.setTitle(title);
             news.setText(text);
             news.setEvent(event);
-            news.setCustomImages(customImages);
+            news.setImages(images);
             return news;
         }
     }

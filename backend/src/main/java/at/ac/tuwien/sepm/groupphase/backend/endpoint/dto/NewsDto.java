@@ -1,15 +1,10 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint.dto;
 
-import at.ac.tuwien.sepm.groupphase.backend.entity.CustomImage;
-import at.ac.tuwien.sepm.groupphase.backend.entity.News;
-
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
-import java.util.HashSet;
 import java.util.Objects;
-import java.util.Set;
 
 public class NewsDto {
 
@@ -33,8 +28,7 @@ public class NewsDto {
     private EventDto eventDto;
 
     @Size(max = 10, message = "Upload 10 images or less")
-    private CustomImageDto[] customImages = new CustomImageDto[10];
-
+    private FileDto[] images = new FileDto[10];
 
     public Long getId() {
         return id;
@@ -84,12 +78,12 @@ public class NewsDto {
         this.eventDto = eventDto;
     }
 
-    public CustomImageDto[] getCustomImages() {
-        return customImages;
+    public FileDto[] getImages() {
+        return images;
     }
 
-    public void setCustomImages(CustomImageDto[] customImages) {
-        this.customImages = customImages;
+    public void setImages(FileDto[] images) {
+        this.images = images;
     }
 
     @Override
@@ -121,7 +115,6 @@ public class NewsDto {
             + ", author='" + author + '\''
             + ", title='" + title + '\''
             + ", text='" + text + '\''
-            + ", image='" + customImages.toString() + '\''
             + '}';
     }
 
@@ -133,7 +126,7 @@ public class NewsDto {
         private String title;
         private String text;
         private EventDto eventDto;
-        private Set<CustomImageDto> customImagesDto = new HashSet<>();
+        private FileDto[] images = new FileDto[10];
 
         private NewsDtoBuilder() {
         }
@@ -172,8 +165,8 @@ public class NewsDto {
             return this;
         }
 
-        public NewsDtoBuilder withImages(Set<CustomImage> customImages) {
-            this.customImagesDto = customImagesDto;
+        public NewsDtoBuilder withImages(FileDto[] images) {
+            this.images = images;
             return this;
         }
 
@@ -185,6 +178,7 @@ public class NewsDto {
             newsDto.setTitle(title);
             newsDto.setText(text);
             newsDto.setEvent(eventDto);
+            newsDto.setImages(images);
             return newsDto;
         }
     }

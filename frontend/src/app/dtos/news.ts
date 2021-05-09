@@ -1,5 +1,6 @@
 import { Event } from './event';
 import { CustomImage } from './customImage';
+import {CustomFile} from './customFile';
 
 export class News {
   constructor(
@@ -9,6 +10,6 @@ export class News {
     public title: string,
     public text: string,
     public event: Event,
-    public customImages: CustomImage[]
+    public images: CustomFile[]
   ) {}
 }
