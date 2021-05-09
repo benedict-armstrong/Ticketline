@@ -9,6 +9,7 @@ import { NewsComponent } from './components/news/news.component';
 import { RegisterComponent } from './components/register/register.component';
 import { TicketDetailComponent } from './components/ticket-detail/ticket-detail.component';
 import { UserHomeComponent } from './components/user-home/user-home.component';
+import {AddNewsComponent} from './components/add-news/add-news.component';
 import { AddUserComponent } from './components/add-user/add-user.component';
 import {AuthGuard} from './guards/auth.guard';
 
@@ -22,6 +23,7 @@ const routes: Routes = [
   { path: 'event', component: EventDetailComponent },
   { path: 'user', component: UserHomeComponent },
   { path: 'ticket', component: TicketDetailComponent },
+  { path: 'add-news/:id', component: AddNewsComponent },
   { path: 'add-user', component: AddUserComponent, canActivate: [AuthGuard], data: { roles: ['ADMIN']} }
 ];
 

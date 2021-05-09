@@ -20,7 +20,7 @@ import { SearchComponent } from './components/search/search.component';
 import { UserHomeComponent } from './components/user-home/user-home.component';
 import { TicketDetailComponent } from './components/ticket-detail/ticket-detail.component';
 import { TicketListItemComponent } from './components/ticket-list-item/ticket-list-item.component';
-import { AddUserComponent } from './components/add-user/add-user.component';
+import {AddNewsComponent} from './components/add-news/add-news.component';
 
 @NgModule({
   declarations: [
@@ -40,7 +40,7 @@ import { AddUserComponent } from './components/add-user/add-user.component';
     UserHomeComponent,
     TicketDetailComponent,
     TicketListItemComponent,
-    AddUserComponent
+    AddNewsComponent,
   ],
   imports: [
     BrowserModule,
