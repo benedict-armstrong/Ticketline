@@ -10,7 +10,7 @@ public interface NewsService {
      * Find all message entries ordered by published at date (descending).
      *
      * @param limit the amount of news entries to be returned
-     * @param offset the offset required for pagination
+     * @param offset the maximum ID that the news must have
      * @return ordered list of all satisfying message entries
      */
     List<News> getAll(Long limit, Long offset);
