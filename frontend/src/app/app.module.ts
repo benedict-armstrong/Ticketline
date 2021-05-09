@@ -18,6 +18,10 @@ import { SearchComponent } from './components/search/search.component';
 import { UserHomeComponent } from './components/user-home/user-home.component';
 import { TicketDetailComponent } from './components/ticket-detail/ticket-detail.component';
 import { TicketListItemComponent } from './components/ticket-list-item/ticket-list-item.component';
+import { ShoppingcartTestingComponent } from './components/shoppingcart-testing/shoppingcart-testing.component';
+import { ShoppingcartComponent } from './components/shoppingcart/shoppingcart.component';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [
@@ -37,8 +41,17 @@ import { TicketListItemComponent } from './components/ticket-list-item/ticket-li
     UserHomeComponent,
     TicketDetailComponent,
     TicketListItemComponent,
+    ShoppingcartTestingComponent,
+    ShoppingcartComponent,
   ],
-  imports: [BrowserModule, AppRoutingModule],
+  imports: [
+    BrowserModule, 
+    AppRoutingModule,
+    ReactiveFormsModule,
+    HttpClientModule,
+    FormsModule
+
+],
   providers: [],
   bootstrap: [AppComponent],
 })
