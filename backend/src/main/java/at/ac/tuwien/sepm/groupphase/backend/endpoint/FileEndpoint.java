@@ -49,7 +49,9 @@ public class FileEndpoint {
             } catch (IllegalArgumentException e) {
                 throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, e.getMessage(), e);
             }
-            return fileMapper.fileToFileDto(fileService.save(fileEntity));
+            FileDto dto = fileMapper.fileToFileDto(fileService.save(fileEntity));
+            dto.setData(null); // avoid sending big files back
+            return dto;
         } else {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "No file received");
         }
