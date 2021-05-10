@@ -58,6 +58,9 @@ public class NewsEndpoint {
         try {
             if (params.containsKey("limit")) {
                 limit = Long.parseLong(params.get("limit"));
+                if (limit < 0) {
+                    throw new InvalidQueryParameterException("Query parameter limit cannot be smaller than 0");
+                }
             }
             if (params.containsKey("offset")) {
                 offset = Long.parseLong(params.get("offset"));
