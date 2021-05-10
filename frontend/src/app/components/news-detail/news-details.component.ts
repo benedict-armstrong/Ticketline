@@ -29,8 +29,8 @@ export class NewsDetailComponent implements OnInit {
         if (this.newsItem.images.length > 0) {
           //const img = FileService.asFile(this.newsItem.images[0].data, this.newsItem.images[0].type);
 
-          for(var i=0; i<this.newsItem.images.length; i++){
-            let img = FileService.asFile(this.newsItem.images[i].data, this.newsItem.images[i].type);
+          for(let i=0; i<this.newsItem.images.length; i++){
+            const img = FileService.asFile(this.newsItem.images[i].data, this.newsItem.images[i].type);
             this.setURL(img, i);
           }
 
