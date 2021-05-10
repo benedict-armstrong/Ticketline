@@ -13,13 +13,13 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
-public class CustomNewsService implements NewsService {
+public class NewsServiceImpl implements NewsService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final NewsRepository newsRepository;
 
     @Autowired
-    public CustomNewsService(NewsRepository newsRepository) {
+    public NewsServiceImpl(NewsRepository newsRepository) {
         this.newsRepository = newsRepository;
     }
 
