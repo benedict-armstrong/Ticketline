@@ -26,7 +26,7 @@ public interface NewsService {
     /**
      * Returns the news with the specific id.
      *
-     * @param id from news
+     * @param id of the news to get
      * @return complete news entry
      */
     News getOneById(Long id);

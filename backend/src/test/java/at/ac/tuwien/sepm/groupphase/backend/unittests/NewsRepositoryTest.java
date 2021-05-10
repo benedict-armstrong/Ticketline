@@ -97,4 +97,16 @@ public class NewsRepositoryTest implements TestDataNews {
         assertTrue(newsRepository.getAll(0L, Long.MAX_VALUE).isEmpty());
     }
 
+    @Test
+    @DisplayName("Should return news with id")
+    public void givenNews_whenFindOneByIdSameAsGiven() {
+        News savedNews = newsRepository.save(news);
+        assertEquals(newsRepository.findOneById(savedNews.getId()), savedNews);
+    }
+
+    @Test
+    @DisplayName("Should return null when searching for negative id")
+    public void givenNothing_whenFindOnyById_ShouldBeNull() {
+        assertNull(newsRepository.findOneById(TestDataNews.NEGATIVEID));
+    }
 }
