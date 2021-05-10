@@ -18,6 +18,12 @@
                 <li class="nav-item" *ngIf="isLoggedIn()">
                     <a *ngIf="hasAdminPermission()" class="nav-link" [routerLink]="['add-user']">Add User</a>
                 </li>
+                <li class="nav-item" *ngIf="isLoggedIn()">
+                  <a *ngIf="hasOrganizerPermission()" class="nav-link" [routerLink]="['add-event']">Add Event</a>
+                </li>
+                <li class="nav-item" *ngIf="isLoggedIn()">
+                  <a *ngIf="hasOrganizerPermission()" class="nav-link" [routerLink]="['add-news']">Add News</a>
+                </li>
                 <li class="nav-item">
                     <a class="nav-link" [routerLink]="['events']">Events</a>
                 </li>

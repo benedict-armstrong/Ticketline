@@ -27,4 +27,12 @@ export class ApplicationEventService {
   getEventById(id: number): Observable<Event> {
     return this.httpClient.get<Event>(this.eventBaseUri + '/' + id);
   }
+
+  /**
+   * Add a new event
+   */
+  addEvent(event: Event): Observable<Event> {
+    console.log(event);
+    return this.httpClient.post<Event>(this.eventBaseUri, event);
+  }
 }

@@ -1,11 +1,17 @@
 package at.ac.tuwien.sepm.groupphase.backend.entity;
 
 import javax.persistence.Entity;
+import javax.persistence.Id;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.Column;
+import javax.persistence.OneToMany;
+import javax.persistence.FetchType;
+import javax.persistence.CascadeType;
+import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 @Entity
 public class Event {
@@ -15,6 +21,18 @@ public class Event {
 
     @Column(nullable = false)
     private String title;
+
+    @Column(nullable = false)
+    private String description;
+
+    @Column(nullable = false)
+    private LocalDateTime date;
+
+    @Column
+    private int duration;
+
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
+    private Set<File> images = new HashSet<>();
 
     public Long getId() {
         return id;
@@ -32,35 +50,74 @@ public class Event {
         this.title = title;
     }
 
+    public String getDescription() {
+        return description;
+    }
+
+    public LocalDateTime getDate() {
+        return date;
+    }
+
+    public void setDate(LocalDateTime date) {
+        this.date = date;
+    }
+
+    public int getDuration() {
+        return duration;
+    }
+
+    public void setDuration(int duration) {
+        this.duration = duration;
+    }
+
+    public Set<File> getImages() {
+        return images;
+    }
+
+    public void setImages(Set<File> images) {
+        this.images = images;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof Event)) {
+        if (o == null || getClass() != o.getClass()) {
             return false;
         }
         Event event = (Event) o;
-        return Objects.equals(id, event.id)
-            && Objects.equals(title, event.title);
+        return duration == event.duration && Objects.equals(id, event.id) && title.equals(event.title) && description.equals(event.description) && date.equals(event.date) && Objects.equals(images, event.images);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id);
+        return Objects.hash(id, title, description, date, duration, images);
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     @Override
     public String toString() {
         return "Event{"
             + "id=" + id
-            + ", title=" + title
+            + ", title='" + title + '\''
+            + ", description='" + description + '\''
+            + ", date=" + date
+            + ", duration=" + duration
+            + ", images=" + images
             + '}';
     }
 
     public static final class EventBuilder {
         private Long id;
         private String title;
+        private String description;
+        private LocalDateTime date;
+        private int duration;
+        private Set<File> images;
 
         private EventBuilder() {
         }
@@ -79,10 +136,33 @@ public class Event {
             return this;
         }
 
+        public EventBuilder withDescription(String description) {
+            this.description = description;
+            return this;
+        }
+
+        public EventBuilder withDate(LocalDateTime date) {
+            this.date = date;
+            return this;
+        }
+
+        public EventBuilder withDuration(int duration) {
+            this.duration = duration;
+            return this;
+        }
+
+        public EventBuilder withImages(Set<File> images) {
+            this.images = images;
+            return this;
+        }
+
         public Event build() {
             Event event = new Event();
             event.setId(id);
             event.setTitle(title);
+            event.setDescription(description);
+            event.setDate(date);
+            event.setDuration(duration);
             return event;
         }
     }

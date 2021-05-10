@@ -19,4 +19,12 @@ public interface EventService {
      * @return event with id
      */
     Event findById(long id);
+
+    /**
+     * add a new event.
+     *
+     * @param event to be added
+     * @return the added event with id set
+     */
+    Event addEvent(Event event);
 }

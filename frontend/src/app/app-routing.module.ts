@@ -12,6 +12,7 @@ import { UserHomeComponent } from './components/user-home/user-home.component';
 import {AddNewsComponent} from './components/add-news/add-news.component';
 import { AddUserComponent } from './components/add-user/add-user.component';
 import {AuthGuard} from './guards/auth.guard';
+import {AddEventComponent} from './components/add-event/add-event.component';
 
 const routes: Routes = [
   { path: '', component: HomePageComponent },
@@ -23,8 +24,9 @@ const routes: Routes = [
   { path: 'event', component: EventDetailComponent },
   { path: 'user', component: UserHomeComponent },
   { path: 'ticket', component: TicketDetailComponent },
-  { path: 'add-news/:id', component: AddNewsComponent },
-  { path: 'add-user', component: AddUserComponent, canActivate: [AuthGuard], data: { roles: ['ADMIN']} }
+  { path: 'add-news/:id', component: AddNewsComponent, canActivate: [AuthGuard], data: { roles: ['ADMIN', 'ORGANIZER']} },
+  { path: 'add-user', component: AddUserComponent, canActivate: [AuthGuard], data: { roles: ['ADMIN']} },
+  { path: 'add-event', component: AddEventComponent, canActivate: [AuthGuard], data: { roles: ['ADMIN', 'ORGANIZER', 'USER']} }
 ];
 
 @NgModule({

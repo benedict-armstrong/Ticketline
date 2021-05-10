@@ -40,4 +40,10 @@ public class CustomEventService implements EventService {
             throw new NotFoundException();
         }
     }
+
+    @Override
+    public Event addEvent(Event event) {
+        LOGGER.trace("addEvent({})", event);
+        return eventRepository.save(event);
+    }
 }

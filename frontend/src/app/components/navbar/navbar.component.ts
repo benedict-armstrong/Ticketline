@@ -30,4 +30,8 @@ export class NavbarComponent implements OnInit {
   hasAdminPermission(): boolean {
     return this.authService.getUserRole() === 'ADMIN';
   }
+
+  hasOrganizerPermission(): boolean {
+    return this.authService.getUserRole() === 'ORGANIZER' || this.hasAdminPermission();
+  }
 }
