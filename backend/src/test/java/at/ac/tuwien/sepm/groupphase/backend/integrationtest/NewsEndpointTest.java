@@ -58,9 +58,6 @@ public class NewsEndpointTest implements TestDataNews, TestDataFile {
     @Autowired
     private ObjectMapper objectMapper;
 
-    @Autowired
-    private NewsMapper newsMapper;
-
     private final Event event = Event.EventBuilder.aEvent()
         .withTitle("Testevent")
         .build();
