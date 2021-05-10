@@ -5,7 +5,7 @@ import at.ac.tuwien.sepm.groupphase.backend.entity.File;
 import org.mapstruct.Mapper;
 
 @Mapper
-public interface FileMapper {
+public interface FileMapper extends FileTypeMapper {
 
     FileDto fileToFileDto(File file);
 

@@ -43,30 +43,18 @@ public class FileEndpoint {
         if (file != null && file.getContentType() != null) {
             File fileEntity;
             try {
-                fileEntity = new File(file.getBytes(), fileTypeFromMime(file.getContentType()));
+                fileEntity = new File(file.getBytes(), FileType.fromMime(file.getContentType()));
             } catch (IOException e) {
                 throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Cannot retrieve bytes from file", e);
             } catch (IllegalArgumentException e) {
-                throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, e.getMessage(), e);
+                throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY,
+                    "Format \"" + file.getContentType() + "\" not supported", e);
             }
             FileDto dto = fileMapper.fileToFileDto(fileService.save(fileEntity));
             dto.setData(null); // avoid sending big files back
             return dto;
         } else {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "No file received");
-        }
-    }
-
-    private FileType fileTypeFromMime(String mime) throws IllegalArgumentException {
-        // Add cases in the switch below (and in the enum FileType) to support other formats
-        switch (mime) {
-            case "image/jpg":
-            case "image/jpeg":
-                return FileType.IMAGE_JPEG;
-            case "image/png":
-                return FileType.IMAGE_PNG;
-            default:
-                throw new IllegalArgumentException("Format \"" + mime + "\" not supported");
         }
     }
 

@@ -28,16 +28,13 @@ export class FileService {
     return bytes;
   }
   private static bytesToBlob(bytes: Uint8Array, type: string): Blob {
-    return new Blob([bytes], {type: this.mime(type)});
+    return new Blob([bytes], {type});
   };
   private static blobToFile(blob: Blob): File {
     const b: any = blob;
     b.lastModifiedDate = new Date();
     b.name = 'File';
     return b;
-  }
-  private static mime(type: string): string {
-    return type.toLowerCase().replace('_', '/');
   }
   // ----- Converter above -----
 
