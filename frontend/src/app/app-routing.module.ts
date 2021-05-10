@@ -10,6 +10,7 @@ import { RegisterComponent } from './components/register/register.component';
 import { ShoppingcartTestingComponent } from './components/shoppingcart-testing/shoppingcart-testing.component';
 import { TicketDetailComponent } from './components/ticket-detail/ticket-detail.component';
 import { UserHomeComponent } from './components/user-home/user-home.component';
+import { AddUserComponent } from './components/add-user/add-user.component';
 
 const routes: Routes = [
   { path: '', component: HomePageComponent },
@@ -22,6 +23,7 @@ const routes: Routes = [
   { path: 'user', component: UserHomeComponent },
   { path: 'ticket', component: TicketDetailComponent },
   { path: 'sctest', component: ShoppingcartTestingComponent}
+  { path: 'add-user', component: AddUserComponent },
 ];
 
 @NgModule({
