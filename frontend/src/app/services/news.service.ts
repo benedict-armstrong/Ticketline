@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpParams} from '@angular/common/http';
 import {News} from '../dtos/news';
-import {Observable, of} from 'rxjs';
+import {Observable} from 'rxjs';
 import {Globals} from '../global/globals';
 
 @Injectable({

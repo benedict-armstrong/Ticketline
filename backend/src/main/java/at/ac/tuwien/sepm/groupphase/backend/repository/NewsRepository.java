@@ -13,9 +13,11 @@ public interface NewsRepository extends JpaRepository<News, Long> {
     /**
      * Find all news entries.
      *
-     * @return ordered list of all news entries
+     * @param limit the amount of news entries to be retrieved
+     * @param offset the maximum ID the news entries must have
+     * @return ordered list of satisfying news entries
      */
-    @Query(value = "SELECT * FROM News n ORDER BY n.published_at LIMIT ?1 OFFSET ?2", nativeQuery = true)
+    @Query(value = "SELECT * FROM News n WHERE n.id < ?2 ORDER BY n.published_at DESC LIMIT ?1", nativeQuery = true)
     List<News> getAll(Long limit, Long offset);
 
 }

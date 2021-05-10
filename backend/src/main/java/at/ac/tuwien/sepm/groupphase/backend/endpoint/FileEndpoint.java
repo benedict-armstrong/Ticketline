@@ -41,27 +41,33 @@ public class FileEndpoint {
     public FileDto uploadFile(@RequestParam("file") MultipartFile file) {
         LOGGER.info("POST /files {}", file);
         if (file != null && file.getContentType() != null) {
-            FileType type;
             File fileEntity;
-            switch (file.getContentType()) {
-                case "image/jpg":
-                case "image/jpeg":
-                    type = FileType.IMAGE_JPEG;
-                    break;
-                case "image/png":
-                    type = FileType.IMAGE_PNG;
-                    break;
-                default:
-                    throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Can only process images");
-            }
             try {
-                fileEntity = new File(file.getBytes(), type);
-            } catch (IOException ignored) {
-                throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Cannot retrieve bytes from file");
+                fileEntity = new File(file.getBytes(), fileTypeFromMime(file.getContentType()));
+            } catch (IOException e) {
+                throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Cannot retrieve bytes from file", e);
+            } catch (IllegalArgumentException e) {
+                throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, e.getMessage(), e);
             }
-            return fileMapper.fileToFileDto(fileService.save(fileEntity));
+            FileDto dto = fileMapper.fileToFileDto(fileService.save(fileEntity));
+            dto.setData(null); // avoid sending big files back
+            return dto;
+        } else {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "No file received");
         }
-        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "No file received");
+    }
+
+    private FileType fileTypeFromMime(String mime) throws IllegalArgumentException {
+        // Add cases in the switch below (and in the enum FileType) to support other formats
+        switch (mime) {
+            case "image/jpg":
+            case "image/jpeg":
+                return FileType.IMAGE_JPEG;
+            case "image/png":
+                return FileType.IMAGE_PNG;
+            default:
+                throw new IllegalArgumentException("Format \"" + mime + "\" not supported");
+        }
     }
 
 }

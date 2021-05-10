@@ -6,7 +6,6 @@ import {News} from '../../dtos/news';
 import {Event} from '../../dtos/event';
 import {ApplicationEventService} from '../../services/event.service';
 import {FileService} from '../../services/file.service';
-import {compareLocations} from '@angular/localize/src/tools/src/extract/translation_files/utils';
 
 @Component({
   selector: 'app-add-news',
@@ -91,10 +90,6 @@ export class AddNewsComponent implements OnInit {
           });
         });
       }
-
-      // New Imageupload End */
-
-
     } else {
       console.log('Invalid input');
     }
@@ -126,13 +121,6 @@ export class AddNewsComponent implements OnInit {
       } else {
         this.files.push(file);
         console.log(this.news.images);
-        /* Backup
-        this.fileService.upload(file).subscribe(f => {
-          this.news.images.push(f);
-          console.log('UPL ', f);
-          console.log('NEWS now ', this.news);
-        });
-        */
       }
     }
   }
@@ -147,8 +135,6 @@ export class AddNewsComponent implements OnInit {
     this.error = false;
     this.success = false;
   }
-
-
 
   private defaultServiceErrorHandling(error: any) {
     console.log(error);

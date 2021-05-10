@@ -10,8 +10,8 @@ import {News} from '../../dtos/news';
 export class NewsComponent implements OnInit {
 
   news: News[] = [];
-  limit = 4; // Determines how many news entries are loaded at the beginning and with each click on Load More
-  offset = 0;
+  private limit = 8; // Determines how many news entries are loaded at the beginning and with each click on Load More
+  private offset = null;
 
   constructor(private newsService: ApplicationNewsService) { }
 
@@ -23,7 +23,7 @@ export class NewsComponent implements OnInit {
     this.newsService.getNews(this.limit, this.offset).subscribe(
       response => {
         this.news.push(...response);
-        this.offset += this.limit;
+        this.offset = response[response.length - 1].id;
       }, error => {
         console.error(error);
       }
