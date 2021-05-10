@@ -15,6 +15,12 @@ export class FileService {
               private globals: Globals) { }
 
   // ----- CustomFile to File converter ----
+  /**
+   * Converts a CustomFile object to a File object.
+   *
+   * @param customFile a CustomFile file.
+   * @param type the type of the file, as a MIME type string.
+   */
   public static asFile(customFile: CustomFile, type: string): File {
     return this.blobToFile(this.bytesToBlob(this.base64ToArrayBuffer(customFile), type));
   }
@@ -38,6 +44,11 @@ export class FileService {
   }
   // ----- Converter above -----
 
+  /**
+   * Uploads a file to the server.
+   *
+   * @param file the file to be uploaded to the server.
+   */
   upload(file: File): Observable<CustomFile> {
     const formData = new FormData();
     formData.append('file', file);

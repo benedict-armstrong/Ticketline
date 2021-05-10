@@ -19,6 +19,11 @@ export class NewsComponent implements OnInit {
     this.loadBatch();
   }
 
+  /**
+   * Loads the next news entries to be displayed.
+   * The amount of news entries in one batch is specified in the property `limit`.
+   * Offsetting is done with the help of IDs.
+   */
   loadBatch() {
     this.newsService.getNews(this.limit, this.offset).subscribe(
       response => {
