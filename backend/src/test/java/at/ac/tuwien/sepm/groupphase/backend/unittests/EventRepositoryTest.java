@@ -4,6 +4,7 @@ import at.ac.tuwien.sepm.groupphase.backend.basetest.TestDataEvent;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Event;
 import at.ac.tuwien.sepm.groupphase.backend.repository.EventRepository;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,11 +36,21 @@ public class EventRepositoryTest implements TestDataEvent {
     }
 
     @Test
-    public void givenNothing_whenSaveNews_thenFindListWithOneElementAndFindNewsById() {
+    @DisplayName("Check if one item is added")
+    public void givenNothing_whenSaveNews_thenFindListWithOneElement() {
         eventRepository.save(event);
 
         assertAll(
-            () -> assertEquals(1, eventRepository.findAll().size()),
+            () -> assertEquals(1, eventRepository.findAll().size())
+        );
+    }
+
+    @Test
+    @DisplayName("Should return test event by id")
+    public void givenNothing_whenSaveNews_thenFindNewsById() {
+        eventRepository.save(event);
+
+        assertAll(
             () -> assertNotNull(eventRepository.findById(event.getId()))
         );
     }

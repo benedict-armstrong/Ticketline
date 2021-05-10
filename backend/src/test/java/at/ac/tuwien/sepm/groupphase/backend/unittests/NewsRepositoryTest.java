@@ -3,7 +3,6 @@ package at.ac.tuwien.sepm.groupphase.backend.unittests;
 import at.ac.tuwien.sepm.groupphase.backend.basetest.TestDataNews;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Event;
 import at.ac.tuwien.sepm.groupphase.backend.entity.News;
-import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepm.groupphase.backend.repository.EventRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.NewsRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -62,11 +61,21 @@ public class NewsRepositoryTest implements TestDataNews {
     }
 
     @Test
-    public void givenNothing_whenSaveNews_thenFindListWithOneElementAndFindNewsById() {
+    @DisplayName("Check if one item is added")
+    public void givenNothing_whenSaveNews_thenFindListWithOneElement() {
         newsRepository.save(news);
 
         assertAll(
-            () -> assertEquals(1, newsRepository.findAll().size()),
+            () -> assertEquals(1, newsRepository.findAll().size())
+        );
+    }
+
+    @Test
+    @DisplayName("Should return test news by id")
+    public void givenNothing_whenSaveNews_thenFindNewsById() {
+        newsRepository.save(news);
+
+        assertAll(
             () -> assertNotNull(newsRepository.findById(news.getId()))
         );
     }
