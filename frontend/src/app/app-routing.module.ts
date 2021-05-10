@@ -9,6 +9,7 @@ import { NewsComponent } from './components/news/news.component';
 import { RegisterComponent } from './components/register/register.component';
 import { TicketDetailComponent } from './components/ticket-detail/ticket-detail.component';
 import { UserHomeComponent } from './components/user-home/user-home.component';
+import { AddUserComponent } from './components/add-user/add-user.component';
 
 const routes: Routes = [
   { path: '', component: HomePageComponent },
@@ -20,6 +21,7 @@ const routes: Routes = [
   { path: 'event', component: EventDetailComponent },
   { path: 'user', component: UserHomeComponent },
   { path: 'ticket', component: TicketDetailComponent },
+  { path: 'add-user', component: AddUserComponent },
 ];
 
 @NgModule({

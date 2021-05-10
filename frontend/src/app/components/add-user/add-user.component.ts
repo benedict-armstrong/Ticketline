@@ -2,15 +2,15 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Address } from 'src/app/dtos/address';
-import { User } from 'src/app/dtos/user';
-import { UserService } from 'src/app/services/user.service';
+import { User } from '../../dtos/user';
+import { UserService } from '../../services/user.service';
 
 @Component({
-  selector: 'app-register',
-  templateUrl: './register.component.html',
-  styleUrls: ['./register.component.scss'],
+  selector: 'app-add-user',
+  templateUrl: './add-user.component.html',
+  styleUrls: ['./add-user.component.scss'],
 })
-export class RegisterComponent implements OnInit {
+export class AddUserComponent implements OnInit {
   addUserForm: FormGroup;
   // After first submission attempt, form validation will start
   submitted = false;
@@ -32,6 +32,7 @@ export class RegisterComponent implements OnInit {
       telephoneNumber: [''],
       email: ['', [Validators.required]],
       password: ['', [Validators.required, Validators.minLength(8)]],
+      passwordRepeat: ['', [Validators.required, Validators.minLength(8)]],
       points: [0, [Validators.min(0)]],
       status: ['ACTIVE', [Validators.required]],
       role: ['CLIENT', [Validators.required]],
@@ -47,9 +48,8 @@ export class RegisterComponent implements OnInit {
   /**
    * Form validation will start after the method is called, additionally an AuthRequest will be sent
    */
-   addUser() {
+  addUser() {
     this.submitted = true;
-    console.log(this.addUserForm);
     if (this.addUserForm.valid) {
       const user: User = new User(
         null,
