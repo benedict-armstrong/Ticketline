@@ -46,7 +46,7 @@ import { AddUserComponent } from './components/add-user/add-user.component';
     AddUserComponent
   ],
   imports: [
-    BrowserModule, 
+    BrowserModule,
     AppRoutingModule,
     ReactiveFormsModule,
     HttpClientModule,

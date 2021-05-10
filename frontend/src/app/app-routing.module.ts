@@ -22,7 +22,7 @@ const routes: Routes = [
   { path: 'event', component: EventDetailComponent },
   { path: 'user', component: UserHomeComponent },
   { path: 'ticket', component: TicketDetailComponent },
-  { path: 'sctest', component: ShoppingcartTestingComponent}
+  { path: 'sctest', component: ShoppingcartTestingComponent},
   { path: 'add-user', component: AddUserComponent },
 ];
 

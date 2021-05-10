@@ -9,13 +9,13 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 })
 export class ShoppingcartTestingComponent implements OnInit {
   addCartForm: FormGroup;
-  tickets = [{name: "Normal", seating: "Standing", age: "Adult", maxNumber: 20, amount: 0}]
+  tickets = [{name: 'Normal', seating: 'Standing', age: 'Adult', maxNumber: 20, amount: 0}];
 
   constructor(
     private formBuilder: FormBuilder
   ) {
     this.addCartForm = this.formBuilder.group(
-      this.tickets.reduce(function(map, obj) {
+      this.tickets.reduce((map, obj) => {
         map[obj.name] = 0;
         return map;
       }, {})
