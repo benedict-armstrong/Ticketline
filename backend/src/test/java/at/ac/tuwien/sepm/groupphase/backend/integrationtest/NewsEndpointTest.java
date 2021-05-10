@@ -1,10 +1,14 @@
 package at.ac.tuwien.sepm.groupphase.backend.integrationtest;
 
+import at.ac.tuwien.sepm.groupphase.backend.basetest.TestDataFile;
 import at.ac.tuwien.sepm.groupphase.backend.basetest.TestDataNews;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.NewsDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.NewsMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Event;
+import at.ac.tuwien.sepm.groupphase.backend.entity.File;
 import at.ac.tuwien.sepm.groupphase.backend.entity.News;
 import at.ac.tuwien.sepm.groupphase.backend.repository.EventRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.FileRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.NewsRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
@@ -24,8 +28,11 @@ import org.springframework.test.web.servlet.MvcResult;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -34,7 +41,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest
 @ActiveProfiles("test")
 @AutoConfigureMockMvc
-public class NewsEndpointTest implements TestDataNews {
+public class NewsEndpointTest implements TestDataNews, TestDataFile {
 
     @Autowired
     private MockMvc mockMvc;
@@ -46,17 +53,31 @@ public class NewsEndpointTest implements TestDataNews {
     private EventRepository eventRepository;
 
     @Autowired
+    private FileRepository fileRepository;
+
+    @Autowired
     private ObjectMapper objectMapper;
+
+    @Autowired
+    private NewsMapper newsMapper;
 
     private final Event event = Event.EventBuilder.aEvent()
         .withTitle("Testevent")
         .build();
 
+    private final File file = File.FileBuilder.aFile()
+        .withData(TEST_FILE_DATA)
+        .withType(TEST_FILE_TYPE)
+        .build();
+
+    private Set<File> images = new HashSet<>();
+
     private final News news = News.NewsBuilder.aNews()
-        .withTitle(TEST_NEWS_TITLE)
-        .withText(TEST_NEWS_TEXT)
+        .withTitle("Testtitle")
+        .withText("Testtext")
         .withAuthor("Testuser")
         .withEvent(event)
+        .withImages(images)
         .withPublishedAt(TEST_NEWS_PUBLISHED_AT)
         .build();
 
@@ -64,7 +85,13 @@ public class NewsEndpointTest implements TestDataNews {
     public void beforeEach() {
         newsRepository.deleteAll();
         eventRepository.deleteAll();
+        fileRepository.deleteAll();
+
+        images = new HashSet<>();
+        images.add(file);
+
         eventRepository.save(event);
+        fileRepository.save(file);
     }
 
     @Test
@@ -125,7 +152,7 @@ public class NewsEndpointTest implements TestDataNews {
                 .withText(news.getText())
                 .withAuthor(news.getAuthor())
                 .withEvent(news.getEvent())
-                .withPublishedAt(news.getPublishedAt().plusDays(i))
+                .withPublishedAt(news.getPublishedAt())
                 .build();
             News saved = newsRepository.save(n);
             if (i == limit + 2) {
@@ -185,6 +212,26 @@ public class NewsEndpointTest implements TestDataNews {
             () -> assertEquals(HttpStatus.UNPROCESSABLE_ENTITY.value(), responseL.getStatus()),
             () -> assertEquals(HttpStatus.UNPROCESSABLE_ENTITY.value(), responseO.getStatus()),
             () -> assertEquals(HttpStatus.UNPROCESSABLE_ENTITY.value(), responseLO.getStatus())
+        );
+    }
+
+    @Test
+    @DisplayName("Should return 201 and news object with set ID and publishing date after create")
+    public void whenCreateNews_then201AndNewsWithIdAndPublishedAt() throws Exception {
+        MvcResult mvcResult = this.mockMvc.perform(
+            post(NEWS_BASE_URI)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(news))
+        ).andReturn();
+
+        MockHttpServletResponse response = mvcResult.getResponse();
+        assertEquals(HttpStatus.CREATED.value(), response.getStatus());
+        assertEquals(MediaType.APPLICATION_JSON_VALUE, response.getContentType());
+
+        NewsDto savedDto = objectMapper.readValue(response.getContentAsString(), NewsDto.class);
+        assertAll(
+            () -> assertNotNull(savedDto.getId()),
+            () -> assertNotNull(savedDto.getPublishedAt())
         );
     }
 
