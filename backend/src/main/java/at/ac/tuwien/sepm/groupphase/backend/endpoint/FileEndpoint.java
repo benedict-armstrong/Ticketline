@@ -25,6 +25,10 @@ import java.lang.invoke.MethodHandles;
 @RequestMapping(value = "/api/v1/files")
 public class FileEndpoint {
 
+    /*  ----- File Format Support -----
+     *  Refer to the documentation of FileType
+     */
+
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final FileService fileService;
     private final FileMapper fileMapper;

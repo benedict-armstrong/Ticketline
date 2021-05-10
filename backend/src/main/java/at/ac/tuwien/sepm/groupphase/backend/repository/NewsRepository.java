@@ -11,7 +11,7 @@ import java.util.List;
 public interface NewsRepository extends JpaRepository<News, Long> {
 
     /**
-     * Find all news entries.
+     * Finds news entries.
      *
      * @param limit the amount of news entries to be retrieved
      * @param offset the maximum ID the news entries must have

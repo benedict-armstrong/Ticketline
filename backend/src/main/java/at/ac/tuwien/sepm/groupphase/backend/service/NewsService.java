@@ -15,8 +15,6 @@ public interface NewsService {
      */
     List<News> getAll(Long limit, Long offset);
 
-
-
     /**
      * Adds a single news entry.
      *
@@ -24,4 +22,5 @@ public interface NewsService {
      * @return complete news entry
      */
     News addNews(News news);
+
 }
