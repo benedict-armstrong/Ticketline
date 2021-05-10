@@ -15,6 +15,12 @@ export class FileService {
               private globals: Globals) { }
 
   // ----- CustomFile to File converter ----
+  /**
+   * Converts a CustomFile object to a File object.
+   *
+   * @param customFile a CustomFile file.
+   * @param type the type of the file, as a MIME type string.
+   */
   public static asFile(customFile: CustomFile, type: string): File {
     return this.blobToFile(this.bytesToBlob(this.base64ToArrayBuffer(customFile), type));
   }
@@ -28,19 +34,21 @@ export class FileService {
     return bytes;
   }
   private static bytesToBlob(bytes: Uint8Array, type: string): Blob {
-    return new Blob([bytes], {type: this.mime(type)});
+    return new Blob([bytes], {type});
   };
   private static blobToFile(blob: Blob): File {
     const b: any = blob;
     b.lastModifiedDate = new Date();
-    b.name = 'Image';
+    b.name = 'File';
     return b;
-  }
-  private static mime(type: string): string {
-    return type.toLowerCase().replace('_', '/');
   }
   // ----- Converter above -----
 
+  /**
+   * Uploads a file to the server.
+   *
+   * @param file the file to be uploaded to the server.
+   */
   upload(file: File): Observable<CustomFile> {
     const formData = new FormData();
     formData.append('file', file);

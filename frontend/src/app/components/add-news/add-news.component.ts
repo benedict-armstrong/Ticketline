@@ -23,6 +23,7 @@ export class AddNewsComponent implements OnInit {
   fileNoImage = false;
   tooManyFiles = false;
   success = false;
+  files = [];
 
   news: News = new News(null
     , null
@@ -57,14 +58,38 @@ export class AddNewsComponent implements OnInit {
       this.news.text = this.addNewsForm.value.text;
       this.news.event = this.event;
 
-      this.applicationNewsService.publishNews(this.news).subscribe(
-        () => {
-          this.success = true;
-        },
-        error => {
-          this.defaultServiceErrorHandling(error);
-        }
-      );
+      // New Imageupload
+      const fileService = this.fileService;
+      let count = this.files.length;
+      if (count === 0) {
+        // Normal news publish without images
+        this.applicationNewsService.publishNews(this.news).subscribe(
+          () => {
+            this.success = true;
+          },
+          error => {
+            this.defaultServiceErrorHandling(error);
+          }
+        );
+      } else {
+        // With images
+        this.files.forEach(file => {
+          fileService.upload(file).subscribe(f => {
+            this.news.images.push(f);
+            count--;
+            if (count === 0) {
+              this.applicationNewsService.publishNews(this.news).subscribe(
+                () => {
+                  this.success = true;
+                },
+                error => {
+                  this.defaultServiceErrorHandling(error);
+                }
+              );
+            }
+          });
+        });
+      }
     } else {
       console.log('Invalid input');
     }
@@ -94,18 +119,15 @@ export class AddNewsComponent implements OnInit {
       } else if (this.news.images.length >= 10) {
         this.tooManyFiles = true;
       } else {
-        this.fileService.upload(file).subscribe(f => {
-          this.news.images.push(f);
-          console.log('UPL ', f);
-          console.log('NEWS now ', this.news);
-        });
+        this.files.push(file);
+        console.log(this.news.images);
       }
     }
   }
 
   removeImage(index) {
     if (index > -1) {
-      this.news.images.splice(index, 1);
+      this.files.splice(index, 1);
     }
   }
 
@@ -113,8 +135,6 @@ export class AddNewsComponent implements OnInit {
     this.error = false;
     this.success = false;
   }
-
-
 
   private defaultServiceErrorHandling(error: any) {
     console.log(error);

@@ -25,6 +25,12 @@ export class NewsItemComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  /**
+   * Sets the imgURL property (src of img) to the file's temporary URL.
+   *
+   * @param file the file to be displayed in the img tag
+   * @private
+   */
   private setURL(file: File) {
     const reader = new FileReader();
     reader.readAsDataURL(file);

@@ -17,12 +17,17 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
+import javax.annotation.security.PermitAll;
 import java.io.IOException;
 import java.lang.invoke.MethodHandles;
 
 @RestController
 @RequestMapping(value = "/api/v1/files")
 public class FileEndpoint {
+
+    /*  ----- File Format Support -----
+     *  Refer to the documentation of FileType
+     */
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final FileService fileService;
@@ -34,32 +39,27 @@ public class FileEndpoint {
         this.fileMapper = fileMapper;
     }
 
+    @PermitAll
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public FileDto uploadFile(@RequestParam("file") MultipartFile file) {
         LOGGER.info("POST /files {}", file);
         if (file != null && file.getContentType() != null) {
-            FileType type;
             File fileEntity;
-            switch (file.getContentType()) {
-                case "image/jpg":
-                case "image/jpeg":
-                    type = FileType.IMAGE_JPEG;
-                    break;
-                case "image/png":
-                    type = FileType.IMAGE_PNG;
-                    break;
-                default:
-                    throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Can only process images");
-            }
             try {
-                fileEntity = new File(file.getBytes(), type);
-            } catch (IOException ignored) {
-                throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Cannot retrieve bytes from file");
+                fileEntity = new File(file.getBytes(), FileType.fromMime(file.getContentType()));
+            } catch (IOException e) {
+                throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Cannot retrieve bytes from file", e);
+            } catch (IllegalArgumentException e) {
+                throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY,
+                    "Format \"" + file.getContentType() + "\" not supported", e);
             }
-            return fileMapper.fileToFileDto(fileService.save(fileEntity));
+            FileDto dto = fileMapper.fileToFileDto(fileService.save(fileEntity));
+            dto.setData(null); // avoid sending big files back
+            return dto;
+        } else {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "No file received");
         }
-        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "No file received");
     }
 
 }

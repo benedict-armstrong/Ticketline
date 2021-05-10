@@ -48,15 +48,15 @@
       </div>
     </div>
 
-    <div *ngIf="news.images.length > 0">
+    <div *ngIf="files.length > 0">
       <table class="table">
         <thead>
         <th scope="col">Name</th>
         <th scope="col" style="width: 5%"></th>
         </thead>
         <tbody>
-        <tr *ngFor="let image of news.images; let i = index">
-          <td>Image {{i+1}}</td>
+        <tr *ngFor="let image of files; let i = index">
+          <td>{{image.name}}</td>
           <td><button type="button" class="btn btn-primary" style="width: 100%" (click)="removeImage(i)">X</button></td>
         </tr>
         </tbody>

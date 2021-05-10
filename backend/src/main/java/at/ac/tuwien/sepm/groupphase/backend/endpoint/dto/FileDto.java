@@ -49,16 +49,23 @@ public class FileDto {
 
     public static final class FileDtoBuilder {
         private Long id;
-        private byte[] file;
+        private byte[] data;
         private String type;
+
+        public FileDtoBuilder() {
+        }
+
+        public static FileDtoBuilder aFileDto() {
+            return new FileDtoBuilder();
+        }
 
         public FileDtoBuilder withId(Long id) {
             this.id = id;
             return this;
         }
 
-        public FileDtoBuilder withFile(byte[] file) {
-            this.file = file;
+        public FileDtoBuilder withData(byte[] file) {
+            this.data = data;
             return this;
         }
 
@@ -70,7 +77,7 @@ public class FileDto {
         public FileDto build() {
             FileDto fileDto = new FileDto();
             fileDto.setId(id);
-            fileDto.setData(file);
+            fileDto.setData(data);
             fileDto.setType(type);
             return fileDto;
         }

@@ -49,15 +49,19 @@ public class NewsEndpoint {
         return newsMapper.newsToNewsDto(newsService.addNews(newsMapper.newsDtoToNews(newsDto)));
     }
 
+    @PermitAll
     @GetMapping
     @Operation(summary = "Get all news")
     public List<NewsDto> getAll(@RequestParam Map<String, String> params) {
         LOGGER.info("GET /api/v1/news?" + params);
-        long limit = 20L;
-        long offset = 0L;
+        long limit = 8L;
+        long offset = Long.MAX_VALUE;
         try {
             if (params.containsKey("limit")) {
                 limit = Long.parseLong(params.get("limit"));
+                if (limit < 0) {
+                    throw new InvalidQueryParameterException("Query parameter limit cannot be smaller than 0");
+                }
             }
             if (params.containsKey("offset")) {
                 offset = Long.parseLong(params.get("offset"));
