@@ -232,4 +232,42 @@ public class NewsEndpointTest implements TestDataNews, TestDataFile {
         );
     }
 
+    @Test
+    @DisplayName("Should return 200 and news with the given ID")
+    public void givenNews_whenGetOneById_then200AndNewsWithId() throws Exception {
+        News n = News.NewsBuilder.aNews()
+            .withTitle(news.getTitle())
+            .withText(news.getText())
+            .withAuthor(news.getAuthor())
+            .withEvent(news.getEvent())
+            .withPublishedAt(news.getPublishedAt())
+            .build();
+        News saved = newsRepository.save(n);
+
+        assertNotNull(saved);
+
+        MvcResult mvcResult = this.mockMvc.perform(
+            get(NEWS_BASE_URI + "/" + saved.getId())
+        ).andReturn();
+
+        MockHttpServletResponse response = mvcResult.getResponse();
+        assertEquals(HttpStatus.OK.value(), response.getStatus());
+        assertEquals(MediaType.APPLICATION_JSON_VALUE, response.getContentType());
+
+        NewsDto newsDto = objectMapper.readValue(response.getContentAsString(), NewsDto.class);
+
+        assertEquals(newsDto.getId(), saved.getId());
+    }
+
+    @Test
+    @DisplayName("Should return 200 and news with the given ID")
+    public void whenGetOneByIdWithNegativeId_then404() throws Exception {
+
+        MvcResult mvcResult = this.mockMvc.perform(
+            get(NEWS_BASE_URI + "/" + -1)
+        ).andReturn();
+
+        MockHttpServletResponse response = mvcResult.getResponse();
+        assertEquals(HttpStatus.NOT_FOUND.value(), response.getStatus());
+    }
 }
