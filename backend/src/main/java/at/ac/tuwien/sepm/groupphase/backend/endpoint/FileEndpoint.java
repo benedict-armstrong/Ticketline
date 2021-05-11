@@ -3,6 +3,7 @@ package at.ac.tuwien.sepm.groupphase.backend.endpoint;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.FileDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.FileMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.File;
+import at.ac.tuwien.sepm.groupphase.backend.exception.BadFileException;
 import at.ac.tuwien.sepm.groupphase.backend.service.FileService;
 import io.swagger.v3.oas.annotations.Operation;
 import org.slf4j.Logger;
@@ -50,10 +51,9 @@ public class FileEndpoint {
             try {
                 fileEntity = new File(file.getBytes(), File.Type.fromMime(file.getContentType()));
             } catch (IOException e) {
-                throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Cannot retrieve bytes from file", e);
+                throw new BadFileException("Cannot retrieve bytes from file", e);
             } catch (IllegalArgumentException e) {
-                throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY,
-                    "Format \"" + file.getContentType() + "\" not supported", e);
+                throw new BadFileException("Format \"" + file.getContentType() + "\" not supported", e);
             }
             FileDto dto = fileMapper.fileToFileDto(fileService.save(fileEntity));
             dto.setData(null); // avoid sending big files back
