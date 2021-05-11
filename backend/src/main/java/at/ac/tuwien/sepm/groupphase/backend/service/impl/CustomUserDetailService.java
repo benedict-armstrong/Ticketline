@@ -13,6 +13,7 @@ import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.lang.invoke.MethodHandles;
@@ -24,10 +25,12 @@ public class CustomUserDetailService implements UserService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public CustomUserDetailService(UserRepository userRepository) {
+    public CustomUserDetailService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -70,8 +73,28 @@ public class CustomUserDetailService implements UserService {
                 user.setStatus(ApplicationUser.UserStatus.ACTIVE);
             }
             user.setLastLogin(LocalDateTime.now());
+
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
+
             return userRepository.save(user);
         }
         throw new UserAlreadyExistAuthenticationException(String.format("User with email address: %s already exists.", user.getEmail()));
+    }
+
+    @Override
+    public ApplicationUser updateUser(ApplicationUser user) {
+        LOGGER.debug("Update User");
+        ApplicationUser oldUser = userRepository.findUserByEmail(user.getEmail());
+
+        if (oldUser != null) {
+            if (!oldUser.getPassword().equals(user.getPassword())) {
+                user.setPassword(passwordEncoder.encode(user.getPassword()));
+            }
+
+
+            return userRepository.save(user);
+        }
+
+        throw new NotFoundException(String.format("Could not find the user with the email address %s", user.getEmail()));
     }
 }

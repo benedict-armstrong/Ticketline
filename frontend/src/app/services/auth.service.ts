@@ -3,7 +3,6 @@ import {AuthRequest} from '../dtos/auth-request';
 import {Observable} from 'rxjs';
 import {HttpClient} from '@angular/common/http';
 import {tap} from 'rxjs/operators';
-// @ts-ignore
 import jwt_decode from 'jwt-decode';
 import {Globals} from '../global/globals';
 
@@ -55,11 +54,24 @@ export class AuthService {
       const authInfo: string[] = decoded.rol;
       if (authInfo.includes('ROLE_ADMIN')) {
         return 'ADMIN';
+      } else if (authInfo.includes('ROLE_ORGANIZER')) {
+        return 'ORGANIZER';
       } else if (authInfo.includes('ROLE_USER')) {
         return 'USER';
       }
     }
     return 'UNDEFINED';
+  }
+
+  /**
+   * Returns the email of the user based on the current token
+   */
+   getUserEmail() {
+    if (this.getToken() != null) {
+      const decoded: any = jwt_decode(this.getToken());
+      return decoded.sub;
+    }
+    return null;
   }
 
   private setToken(authResponse: string) {

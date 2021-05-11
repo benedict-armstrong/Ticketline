@@ -15,14 +15,20 @@
 
         <div class="navbar-collapse collapse" id="collapsingNavbar">
             <ul class="nav navbar-nav ms-auto">
+                <li class="nav-item" *ngIf="isLoggedIn()">
+                    <a *ngIf="hasAdminPermission()" class="nav-link" [routerLink]="['add-user']">Add User</a>
+                </li>
                 <li class="nav-item">
                     <a class="nav-link" [routerLink]="['events']">Events</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" [routerLink]="['news']">News</a>
                 </li>
-                <li class="nav-item">
+                <li class="nav-item" *ngIf="!this.isLoggedIn()">
                     <a class="nav-link" [routerLink]="['login']">Sign In</a>
+                </li>
+                <li class="nav-item" *ngIf="this.isLoggedIn()">
+                    <a class="nav-link" (click)="this.logoutUser();" [routerLink]="['']">Logout</a>
                 </li>
 
             </ul>

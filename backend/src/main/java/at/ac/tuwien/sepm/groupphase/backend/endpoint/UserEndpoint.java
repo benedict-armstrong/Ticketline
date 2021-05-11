@@ -9,7 +9,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -41,4 +44,21 @@ public class UserEndpoint {
         return userMapper.applicationUserToUserDto(userService.addUser(userMapper.userDtoToApplicationUser(userDto)));
     }
 
+    @GetMapping(value = {"/{email}"})
+    @PermitAll
+    //TODO: Change!!!
+    @Operation(summary = "Find User by Email")
+    public UserDto findByEmail(@Valid @PathVariable("email") String email) {
+        LOGGER.info("GET /api/v1/users/{}", email);
+        return userMapper.applicationUserToUserDto(userService.findApplicationUserByEmail(email));
+    }
+
+    @PutMapping
+    @PermitAll
+    //TODO: Change!!!
+    @Operation(summary = "Update User")
+    public UserDto update(@Valid @RequestBody UserDto userDto) {
+        LOGGER.info("PUT /api/v1/users/{}", userDto);
+        return userMapper.applicationUserToUserDto(userService.updateUser(userMapper.userDtoToApplicationUser(userDto)));
+    }
 }
