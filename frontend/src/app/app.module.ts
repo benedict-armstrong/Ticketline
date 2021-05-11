@@ -21,6 +21,7 @@ import { UserHomeComponent } from './components/user-home/user-home.component';
 import { TicketDetailComponent } from './components/ticket-detail/ticket-detail.component';
 import { TicketListItemComponent } from './components/ticket-list-item/ticket-list-item.component';
 import {AddNewsComponent} from './components/add-news/add-news.component';
+import { AddUserComponent } from './components/add-user/add-user.component';
 
 @NgModule({
   declarations: [
@@ -41,6 +42,7 @@ import {AddNewsComponent} from './components/add-news/add-news.component';
     TicketDetailComponent,
     TicketListItemComponent,
     AddNewsComponent,
+    AddUserComponent
   ],
   imports: [
     BrowserModule,
