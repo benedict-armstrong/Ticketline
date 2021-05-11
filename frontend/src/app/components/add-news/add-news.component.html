@@ -11,7 +11,7 @@
         <small class="form-text text-danger" *ngIf="addNewsForm.controls.title.errors.required">
           Title is required!
         </small>
-        <small class="form-text text-danger" *ngIf="addNewsForm.controls.title.errors.maxLength">
+        <small class="form-text text-danger" *ngIf="addNewsForm.controls.title.errors.maxlength">
           Title cannot be more than 100 characters!
         </small>
       </div>
@@ -31,8 +31,8 @@
         <small class="form-text text-danger" *ngIf="addNewsForm.controls.text.errors.required">
           Text is required!
         </small>
-        <small class="form-text text-danger" *ngIf="addNewsForm.controls.text.errors.maxLength">
-          Text cannot be more than 100 characters!
+        <small class="form-text text-danger" *ngIf="addNewsForm.controls.text.errors.maxlength">
+          Text cannot be more than 10000 characters!
         </small>
       </div>
     </div>
