@@ -44,6 +44,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         LOGGER.warn(ex.getMessage());
         return handleExceptionInternal(ex, ex.getMessage(), new HttpHeaders(), HttpStatus.UNPROCESSABLE_ENTITY, request);
     }
+
     @ExceptionHandler(value = {UserAlreadyExistAuthenticationException.class})
     protected ResponseEntity<Object> handleUserAlreadyExists(RuntimeException ex, WebRequest request) {
         LOGGER.warn(ex.getMessage());
@@ -57,6 +58,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return handleExceptionInternal(ex, bodyOfResponse,
             new HttpHeaders(), HttpStatus.CONFLICT, request);
     }
+    
     /**
      * Override methods from ResponseEntityExceptionHandler to send a customized HTTP response for a know exception
      * from e.g. Spring
