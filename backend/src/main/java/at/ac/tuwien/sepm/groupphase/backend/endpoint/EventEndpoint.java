@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.annotation.security.PermitAll;
 import java.lang.invoke.MethodHandles;
 import java.util.List;
 
@@ -30,6 +31,7 @@ public class EventEndpoint {
     }
 
     //@Secured("ROLE_USER")
+    @PermitAll
     @GetMapping
     @Operation(summary = "Get list of messages without details")
     public List<EventDto> findAll() {
@@ -38,6 +40,7 @@ public class EventEndpoint {
     }
 
     //@Secured("ROLE_USER")
+    @PermitAll
     @GetMapping(value = "/{id}")
     @Operation(summary = "Get detailed information about a specific message")
     public EventDto find(@PathVariable Long id) {
