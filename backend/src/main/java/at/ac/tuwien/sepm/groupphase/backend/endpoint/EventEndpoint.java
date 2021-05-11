@@ -33,7 +33,7 @@ public class EventEndpoint {
     //@Secured("ROLE_USER")
     @PermitAll
     @GetMapping
-    @Operation(summary = "Get list of messages without details")
+    @Operation(summary = "Get all events")
     public List<EventDto> findAll() {
         LOGGER.info("GET /api/v1/events");
         return eventMapper.eventToEventDto(eventService.findAll());
@@ -42,7 +42,7 @@ public class EventEndpoint {
     //@Secured("ROLE_USER")
     @PermitAll
     @GetMapping(value = "/{id}")
-    @Operation(summary = "Get detailed information about a specific message")
+    @Operation(summary = "Get a specific event")
     public EventDto find(@PathVariable Long id) {
         LOGGER.info("GET /api/v1/events/{}", id);
         EventDto test = eventMapper.eventToEventDto(eventService.findById(id));

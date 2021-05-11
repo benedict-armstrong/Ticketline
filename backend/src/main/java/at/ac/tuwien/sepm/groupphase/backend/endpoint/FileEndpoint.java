@@ -5,6 +5,7 @@ import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.FileMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.File;
 import at.ac.tuwien.sepm.groupphase.backend.entity.enumeration.FileType;
 import at.ac.tuwien.sepm.groupphase.backend.service.FileService;
+import io.swagger.v3.oas.annotations.Operation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,6 +43,7 @@ public class FileEndpoint {
     @PermitAll
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
+    @Operation(summary = "Upload a file")
     public FileDto uploadFile(@RequestParam("file") MultipartFile file) {
         LOGGER.info("POST /files {}", file);
         if (file != null && file.getContentType() != null) {

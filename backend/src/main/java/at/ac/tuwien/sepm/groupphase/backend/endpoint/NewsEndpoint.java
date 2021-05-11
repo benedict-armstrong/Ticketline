@@ -43,7 +43,7 @@ public class NewsEndpoint {
     @PermitAll
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
-    @Operation(summary = "Publish a new news")
+    @Operation(summary = "Publish a news article")
     public NewsDto create(@Valid @RequestBody NewsDto newsDto) {
         LOGGER.info("POST /api/v1/news body: {}", newsDto);
         return newsMapper.newsToNewsDto(newsService.addNews(newsMapper.newsDtoToNews(newsDto)));
@@ -74,7 +74,7 @@ public class NewsEndpoint {
 
     @GetMapping(value = {"/{id}"})
     @PermitAll
-    @Operation(summary = "Get a news by id")
+    @Operation(summary = "Get a news article by id")
     public NewsDto getOneById(@Valid @PathVariable("id") Long id) {
         LOGGER.info("GET /api/v1/news/{}", id);
         return newsMapper.newsToNewsDto(newsService.getOneById(id));
