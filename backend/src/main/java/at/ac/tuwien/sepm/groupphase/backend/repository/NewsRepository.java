@@ -27,4 +27,5 @@ public interface NewsRepository extends JpaRepository<News, Long> {
      * @return news with the id.
      */
     News findOneById(Long id);
+
 }

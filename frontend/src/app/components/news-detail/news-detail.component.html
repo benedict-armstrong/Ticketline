@@ -23,6 +23,7 @@
             <div class="col-md-4">
                 <div class="details">
                     <div>
+                        <p><em>Corresponding event</em></p>
                         <div class="date">
                             <div id="month">
                                 JUN
@@ -49,12 +50,12 @@
                 </p>
             </div>
             <div class="col-md-4 additional-info">
-                <h5>Additional Info</h5>
+                <h5>About this article</h5>
 
                 <p>
-                    Date and Time:<br>
-                    Friday, Jun 4, 2021, 21:20 <br>
-                    <small><a href="">Add to Calendar</a></small>
+                    Published on:<br>
+                    {{date.toLocaleDateString()}} at {{date.getHours()}}:{{date.getMinutes()}}<br>
+<!--                    <small><a href="">Add to Calendar</a></small>-->
                 </p>
 
                 <p>Written by: <br>

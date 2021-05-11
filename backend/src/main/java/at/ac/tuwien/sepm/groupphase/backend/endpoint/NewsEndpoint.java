@@ -77,7 +77,6 @@ public class NewsEndpoint {
     @Operation(summary = "Get a news by id")
     public NewsDto getOneById(@Valid @PathVariable("id") Long id) {
         LOGGER.info("GET /api/v1/news/{}", id);
-
         return newsMapper.newsToNewsDto(newsService.getOneById(id));
     }
 
