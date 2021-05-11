@@ -1,5 +1,7 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint.exceptionhandler;
 
+import at.ac.tuwien.sepm.groupphase.backend.exception.BadFileException;
+import at.ac.tuwien.sepm.groupphase.backend.exception.InvalidQueryParameterException;
 import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepm.groupphase.backend.exception.UserAlreadyExistAuthenticationException;
 import org.slf4j.Logger;
@@ -36,6 +38,12 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     protected ResponseEntity<Object> handleNotFound(RuntimeException ex, WebRequest request) {
         LOGGER.warn(ex.getMessage());
         return handleExceptionInternal(ex, ex.getMessage(), new HttpHeaders(), HttpStatus.NOT_FOUND, request);
+    }
+
+    @ExceptionHandler(value = {InvalidQueryParameterException.class, BadFileException.class})
+    protected ResponseEntity<Object> simpleHandleUnprocessableEntity(RuntimeException ex, WebRequest request) {
+        LOGGER.warn(ex.getMessage());
+        return handleExceptionInternal(ex, ex.getMessage(), new HttpHeaders(), HttpStatus.UNPROCESSABLE_ENTITY, request);
     }
 
     @ExceptionHandler(value = {UserAlreadyExistAuthenticationException.class})

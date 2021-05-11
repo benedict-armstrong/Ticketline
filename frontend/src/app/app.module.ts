@@ -13,13 +13,14 @@ import { RegisterComponent } from './components/register/register.component';
 import { EventDetailComponent } from './components/event-detail/event-detail.component';
 import { NewsComponent } from './components/news/news.component';
 import { NewsItemComponent } from './components/news-item/news-item.component';
-import { ArticleComponent } from './components/article/article.component';
+import { NewsDetailComponent } from './components/news-detail/news-details.component';
 import { EventsComponent } from './components/events/events.component';
 import { EventListItemComponent } from './components/event-list-item/event-list-item.component';
 import { SearchComponent } from './components/search/search.component';
 import { UserHomeComponent } from './components/user-home/user-home.component';
 import { TicketDetailComponent } from './components/ticket-detail/ticket-detail.component';
 import { TicketListItemComponent } from './components/ticket-list-item/ticket-list-item.component';
+import {AddNewsComponent} from './components/add-news/add-news.component';
 import { AddUserComponent } from './components/add-user/add-user.component';
 
 @NgModule({
@@ -33,13 +34,14 @@ import { AddUserComponent } from './components/add-user/add-user.component';
     EventDetailComponent,
     NewsComponent,
     NewsItemComponent,
-    ArticleComponent,
+    NewsDetailComponent,
     EventsComponent,
     EventListItemComponent,
     SearchComponent,
     UserHomeComponent,
     TicketDetailComponent,
     TicketListItemComponent,
+    AddNewsComponent,
     AddUserComponent
   ],
   imports: [
