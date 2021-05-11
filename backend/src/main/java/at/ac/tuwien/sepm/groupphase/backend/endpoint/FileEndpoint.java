@@ -3,7 +3,6 @@ package at.ac.tuwien.sepm.groupphase.backend.endpoint;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.FileDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.FileMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.File;
-import at.ac.tuwien.sepm.groupphase.backend.entity.enumeration.FileType;
 import at.ac.tuwien.sepm.groupphase.backend.service.FileService;
 import io.swagger.v3.oas.annotations.Operation;
 import org.slf4j.Logger;
@@ -27,7 +26,7 @@ import java.lang.invoke.MethodHandles;
 public class FileEndpoint {
 
     /*  ----- File Format Support -----
-     *  Refer to the documentation of FileType
+     *  Refer to the documentation of File.Type
      */
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
@@ -49,7 +48,7 @@ public class FileEndpoint {
         if (file != null && file.getContentType() != null) {
             File fileEntity;
             try {
-                fileEntity = new File(file.getBytes(), FileType.fromMime(file.getContentType()));
+                fileEntity = new File(file.getBytes(), File.Type.fromMime(file.getContentType()));
             } catch (IOException e) {
                 throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Cannot retrieve bytes from file", e);
             } catch (IllegalArgumentException e) {

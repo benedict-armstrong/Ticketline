@@ -1,7 +1,6 @@
 package at.ac.tuwien.sepm.groupphase.backend.datagenerator;
 
 import at.ac.tuwien.sepm.groupphase.backend.entity.File;
-import at.ac.tuwien.sepm.groupphase.backend.entity.enumeration.FileType;
 import at.ac.tuwien.sepm.groupphase.backend.repository.FileRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,8 +49,8 @@ public class FileDataGenerator {
         return data;
     }
 
-    private FileType randomFileType() {
-        FileType[] fileTypes = FileType.values();
+    private File.Type randomFileType() {
+        File.Type[] fileTypes = File.Type.values();
         return fileTypes[ThreadLocalRandom.current().nextInt(fileTypes.length)];
     }
 

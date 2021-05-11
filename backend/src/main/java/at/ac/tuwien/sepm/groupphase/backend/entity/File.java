@@ -1,7 +1,5 @@
 package at.ac.tuwien.sepm.groupphase.backend.entity;
 
-import at.ac.tuwien.sepm.groupphase.backend.entity.enumeration.FileType;
-
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -21,11 +19,11 @@ public class File {
     private byte[] data;
 
     @Enumerated(EnumType.STRING)
-    private FileType type;
+    private Type type;
 
     public File() { }
 
-    public File(byte[] data, FileType type) {
+    public File(byte[] data, Type type) {
         this.data = data;
         this.type = type;
     }
@@ -46,11 +44,11 @@ public class File {
         this.data = data;
     }
 
-    public FileType getType() {
+    public Type getType() {
         return type;
     }
 
-    public void setType(FileType type) {
+    public void setType(Type type) {
         this.type = type;
     }
 
@@ -66,7 +64,7 @@ public class File {
     public static final class FileBuilder {
         private Long id;
         private byte[] data;
-        private FileType type;
+        private Type type;
 
         public FileBuilder() {}
 
@@ -84,7 +82,7 @@ public class File {
             return this;
         }
 
-        public FileBuilder withType(FileType type) {
+        public FileBuilder withType(Type type) {
             this.type = type;
             return this;
         }
@@ -96,6 +94,43 @@ public class File {
             file.setType(type);
             return file;
         }
+    }
+
+    /**
+     * Lists all file formats supported by this application.
+     */
+    public enum Type {
+
+        // Supported file formats
+        IMAGE_JPG, IMAGE_JPEG, IMAGE_PNG;
+
+        /*
+         *  To add support for more file formats, complete the list of enum cases above.
+         *  The names of the cases should mimic MIME types: "application/json" <=> APPLICATION_JSON
+         *
+         *  If your entity handles File entities or Types, the respective Mapper must extend FileTypeMapper.
+         */
+
+        /**
+         * Parses the MIME type string and returns the corresponding File.Type case.
+         *
+         * @param mime an MIME as a string
+         * @return the corresponding File.Type case
+         * @throws IllegalArgumentException if the file format is not supported
+         */
+        public static Type fromMime(String mime) throws IllegalArgumentException {
+            return valueOf(mime.toUpperCase().replace('/', '_'));
+        }
+
+        /**
+         * Translates a File.Type case to the corresponding MIME type string.
+         *
+         * @return the MIME type string of this file type.
+         */
+        public String toMime() {
+            return this.toString().toLowerCase().replace('_', '/');
+        }
+
     }
 
 }
