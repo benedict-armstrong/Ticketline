@@ -233,7 +233,7 @@ public class NewsEndpointTest implements TestDataNews, TestDataFile {
     }
 
     @Test
-    @DisplayName("Should return 200 and news with the given ID")
+    @DisplayName("Should return 200 and news with the given ID on get by ID")
     public void givenNews_whenGetOneById_then200AndNewsWithId() throws Exception {
         News n = News.NewsBuilder.aNews()
             .withTitle(news.getTitle())
@@ -260,7 +260,7 @@ public class NewsEndpointTest implements TestDataNews, TestDataFile {
     }
 
     @Test
-    @DisplayName("Should return 200 and news with the given ID")
+    @DisplayName("Should return 404 when no news entry with given ID is found")
     public void whenGetOneByIdWithNegativeId_then404() throws Exception {
 
         MvcResult mvcResult = this.mockMvc.perform(

@@ -1,5 +1,8 @@
 package at.ac.tuwien.sepm.groupphase.backend.entity.enumeration;
 
+/**
+ * Lists all file formats supported by this application.
+ */
 public enum FileType {
 
     // Supported file formats
