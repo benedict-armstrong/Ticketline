@@ -3,6 +3,7 @@ import {ApplicationEventService} from '../../services/event.service';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {FileService} from '../../services/file.service';
 import {Event} from '../../dtos/event';
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-add-event',
@@ -22,7 +23,8 @@ export class AddEventComponent implements OnInit {
   event = new Event(null, null, null, null, null, null, []);
 
   constructor(private applicationEventService: ApplicationEventService,
-              private formBuilder: FormBuilder, private fileService: FileService) {
+              private formBuilder: FormBuilder, private fileService: FileService,
+              private router: Router) {
 
     this.addEventForm = this.formBuilder.group({
       eventName: ['', [Validators.required, Validators.maxLength(100)]],
@@ -54,8 +56,9 @@ export class AddEventComponent implements OnInit {
       if (count === 0) {
         // Normal event without images
         this.applicationEventService.addEvent(this.event).subscribe(
-          () => {
+          (response) => {
             this.success = true;
+            this.router.navigate(['event-detail', response.id]);
           },
           error => {
             this.defaultServiceErrorHandling(error);
@@ -69,8 +72,9 @@ export class AddEventComponent implements OnInit {
             count--;
             if (count === 0) {
               this.applicationEventService.addEvent(this.event).subscribe(
-                () => {
+                (response) => {
                   this.success = true;
+                  this.router.navigate(['event-detail', response.id]);
                 },
                 error => {
                   this.defaultServiceErrorHandling(error);

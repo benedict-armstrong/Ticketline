@@ -1,15 +1,29 @@
 <div class="event">
-    <div class="jumbotron">
-        <img src="assets/placeholder_event.jpg" alt="">
+    <div id="carouselExampleControls" class="carousel slide col-md-8" data-bs-ride="carousel">
+      <div class="carousel-inner">
+        <div *ngIf="eventItem.images.length > 0">
+          <div  class="carousel-item active" *ngFor="let img of imgURL let i = index" [ngClass]="{'active': i == 0 }">
+            <img class="card-img-top" [src]="img" alt="">
+          </div>
+        </div>
+      </div>
+      <div *ngIf="eventItem.images.length > 1">
+        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
+          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
+          <span class="carousel-control-next-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Next</span>
+        </button>
+      </div>
     </div>
     <div class="main">
         <div class="header">
-            <h3>Titel of Event</h3>
-            <p class="info">Subtitle with Date, Time and Venue</p>
-            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Maiores laboriosam voluptatum nam amet ipsam
-                blanditiis deserunt numquam dicta tempora molestias optio, iusto expedita enim, quisquam natus sapiente.
-                Ullam deserunt quos repellendus ut, dolor eius aspernatur, nisi voluptates, praesentium accusamus quidem
-                odio totam non nostrum dicta.</p>
+            <h3>{{eventItem.title}}</h3>
+            <p class="info">{{eventItem.date | date:'EEEE, MM.d.y, hh:mm a'}}</p>
+            <p>Duration: {{eventItem.duration}} Minutes</p>
+            <p>{{eventItem.description}}</p>
         </div>
         <div class="body">
             <div class="options row row-cols-1 row-cols-md-4 g-4">

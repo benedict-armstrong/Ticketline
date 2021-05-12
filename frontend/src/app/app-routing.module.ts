@@ -21,7 +21,7 @@ const routes: Routes = [
   { path: 'news', component: NewsComponent },
   { path: 'events', component: EventsComponent },
   { path: 'news-detail/:id', component: NewsDetailComponent },
-  { path: 'event', component: EventDetailComponent },
+  { path: 'event-detail/:id', component: EventDetailComponent },
   { path: 'user', component: UserHomeComponent },
   { path: 'ticket', component: TicketDetailComponent },
   { path: 'add-news/:id', component: AddNewsComponent, canActivate: [AuthGuard], data: { roles: ['ADMIN', 'ORGANIZER']} },
