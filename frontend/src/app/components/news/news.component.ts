@@ -12,8 +12,8 @@ export class NewsComponent implements OnInit {
   news: News[] = [];
   noNews = false;
 
-  private limit = 8; // Determines how many news entries are loaded at the beginning and with each click on Load More
-  private offset = null;
+  private page = 0;
+  private size = 8; // Determines how many news entries are loaded at the beginning and with each click on Load More
 
   constructor(private newsService: ApplicationNewsService) { }
 
@@ -27,11 +27,11 @@ export class NewsComponent implements OnInit {
    * Offsetting is done with the help of IDs.
    */
   loadBatch() {
-    this.newsService.getNews(this.limit, this.offset).subscribe(
+    this.newsService.getNews(this.page, this.size).subscribe(
       response => {
         this.news.push(...response);
         if (response.length > 0) {
-          this.offset = response[response.length - 1].id;
+          this.page++;
           this.noNews = false;
         } else {
           this.noNews = true;
