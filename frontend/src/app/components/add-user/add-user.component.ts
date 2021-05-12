@@ -3,15 +3,14 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Address } from 'src/app/dtos/address';
 import { User } from '../../dtos/user';
-import { ApplicationUserService } from '../../services/user.service';
+import { UserService } from '../../services/user.service';
 
 @Component({
   selector: 'app-add-user',
   templateUrl: './add-user.component.html',
-  styleUrls: ['./add-user.component.scss']
+  styleUrls: ['./add-user.component.scss'],
 })
 export class AddUserComponent implements OnInit {
-
   addUserForm: FormGroup;
   // After first submission attempt, form validation will start
   submitted = false;
@@ -22,7 +21,11 @@ export class AddUserComponent implements OnInit {
   // Success Flag
   success = false;
 
-  constructor(private applicationUserService: ApplicationUserService,private formBuilder: FormBuilder, private router: Router) {
+  constructor(
+    private userService: UserService,
+    private formBuilder: FormBuilder,
+    private router: Router
+  ) {
     this.addUserForm = this.formBuilder.group({
       firstName: ['', [Validators.required]],
       lastName: ['', [Validators.required]],
@@ -45,32 +48,35 @@ export class AddUserComponent implements OnInit {
   /**
    * Form validation will start after the method is called, additionally an AuthRequest will be sent
    */
-   addUser() {
+  addUser() {
     this.submitted = true;
     if (this.addUserForm.valid) {
-      var user:User = new User(null
-        , this.addUserForm.value.firstName
-        , this.addUserForm.value.lastName
-        , this.addUserForm.value.telephoneNumber
-        , this.addUserForm.value.email
-        , this.addUserForm.value.password
-        , new Date()
-        , this.addUserForm.value.points
-        , this.addUserForm.value.status
-        , this.addUserForm.value.role
-        , new Address(null
-          , this.addUserForm.value.addressName
-          , this.addUserForm.value.lineOne
-          , this.addUserForm.value.lineTwo
-          , this.addUserForm.value.city
-          , this.addUserForm.value.postcode
-          , this.addUserForm.value.country
-        ));
-      this.applicationUserService.createUser(user).subscribe(
+      const user: User = new User(
+        null,
+        this.addUserForm.value.firstName,
+        this.addUserForm.value.lastName,
+        this.addUserForm.value.telephoneNumber,
+        this.addUserForm.value.email,
+        this.addUserForm.value.password,
+        new Date(),
+        this.addUserForm.value.points,
+        this.addUserForm.value.status,
+        this.addUserForm.value.role,
+        new Address(
+          null,
+          this.addUserForm.value.addressName,
+          this.addUserForm.value.lineOne,
+          this.addUserForm.value.lineTwo,
+          this.addUserForm.value.city,
+          this.addUserForm.value.postcode,
+          this.addUserForm.value.country
+        )
+      );
+      this.userService.createUser(user).subscribe(
         () => {
           this.success = true;
         },
-        error => {
+        (error) => {
           this.defaultServiceErrorHandling(error);
         }
       );
@@ -83,9 +89,8 @@ export class AddUserComponent implements OnInit {
     this.error = false;
     this.success = false;
   }
-  
-  ngOnInit(): void {
-  }
+
+  ngOnInit(): void {}
 
   private defaultServiceErrorHandling(error: any) {
     console.log(error);

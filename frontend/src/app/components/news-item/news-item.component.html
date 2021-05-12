@@ -1,4 +1,4 @@
-<div class="card text-left h-100" [routerLink]="['/article']">
+<div class="card text-left h-100" [routerLink]="['/news-detail', item.id]">
     <img *ngIf="item.images.length > 0" class="card-img-top" [src]="imgURL" alt="">
     <div class="card-body">
         <h4 class="card-title">{{item.title}}</h4>

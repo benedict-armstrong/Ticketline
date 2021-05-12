@@ -39,7 +39,19 @@ export class ApplicationNewsService {
     if (offset != null) {
       params = params.set('offset', String(offset));
     }
-    return this.httpClient.get<News[]>(this.newsBaseUri, {params});
+    return this.httpClient.get<News[]>(this.newsBaseUri, { params });
+  }
+
+  /**
+   * Loads specific news from the backend
+   *
+   * @param id of news to load
+   */
+  getNewsById(id: number): Observable<News> {
+    console.log('Load news details for ' + id);
+    return this.httpClient.get<News>(this.newsBaseUri + '/' + id);
   }
 
 }
+
+

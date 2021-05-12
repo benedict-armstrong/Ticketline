@@ -7,7 +7,7 @@ import {Globals} from '../global/globals';
 @Injectable({
   providedIn: 'root'
 })
-export class ApplicationUserService {
+export class UserService {
 
   private userBaseUri: string = this.globals.backendUri + '/users';
 

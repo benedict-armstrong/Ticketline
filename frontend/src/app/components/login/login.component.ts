@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthRequest } from 'src/app/dtos/auth-request';
-import { User } from 'src/app/dtos/user';
 import { AuthService } from 'src/app/services/auth.service';
 import { ApplicationUserService } from 'src/app/services/user.service';
 
@@ -21,7 +20,9 @@ export class LoginComponent implements OnInit {
   errorMessage = '';
 
 
-  constructor(private authService: AuthService, private applicationUserService: ApplicationUserService, private formBuilder: FormBuilder, private router: Router) {
+  constructor(private authService: AuthService,
+              private applicationUserService: ApplicationUserService,
+              private formBuilder: FormBuilder, private router: Router) {
     this.loginForm = this.formBuilder.group({
       email: ['', [Validators.required]],
       password: ['', [Validators.required]],
@@ -38,7 +39,7 @@ export class LoginComponent implements OnInit {
   login() {
 
     if (this.loginForm.valid) {
-      let authObj: AuthRequest = new AuthRequest(
+      const authObj: AuthRequest = new AuthRequest(
         this.loginForm.value.email,
         this.loginForm.value.password
       );
@@ -50,8 +51,8 @@ export class LoginComponent implements OnInit {
               response.lastLogin = new Date();
               console.log(response.lastLogin);
               this.applicationUserService.updateUser(response).subscribe(
-                (response) => {
-                  this.router.navigate(['/user'], { state: { user: response } });
+                (responseData) => {
+                  this.router.navigate(['/user'], { state: { user: responseData } });
                 },
                 error => {
                   this.defaultServiceErrorHandling(error);
@@ -77,7 +78,7 @@ export class LoginComponent implements OnInit {
    */
   changePassword() {
     if (this.loginForm.valid) {
-      let authObj: AuthRequest = new AuthRequest(
+      const authObj: AuthRequest = new AuthRequest(
         this.loginForm.value.email,
         this.loginForm.value.password
       );
@@ -95,7 +96,7 @@ export class LoginComponent implements OnInit {
                 (response) => {
                   response.password = this.loginForm.value.newPassword;
                   this.applicationUserService.updateUser(response).subscribe(
-                    (response) => {
+                    () => {
                       this.loginForm.reset();
                       this.passwordChange = false;
                       this.success = true;

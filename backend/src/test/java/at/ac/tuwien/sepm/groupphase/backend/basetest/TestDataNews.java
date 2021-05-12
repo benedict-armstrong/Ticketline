@@ -6,6 +6,7 @@ import java.util.List;
 public interface TestDataNews extends TestData {
 
     Long ID = 1L;
+    Long NEGATIVEID = -1L;
     String TEST_NEWS_TITLE = "TestNewsTitle";
     String TEST_NEWS_TEXT = "TestNewsText";
 

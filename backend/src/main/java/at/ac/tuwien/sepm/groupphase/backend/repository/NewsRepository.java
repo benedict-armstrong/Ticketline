@@ -11,7 +11,7 @@ import java.util.List;
 public interface NewsRepository extends JpaRepository<News, Long> {
 
     /**
-     * Find all news entries.
+     * Finds news entries.
      *
      * @param limit the amount of news entries to be retrieved
      * @param offset the maximum ID the news entries must have
@@ -19,5 +19,13 @@ public interface NewsRepository extends JpaRepository<News, Long> {
      */
     @Query(value = "SELECT * FROM News n WHERE n.id < ?2 ORDER BY n.published_at DESC LIMIT ?1", nativeQuery = true)
     List<News> getAll(Long limit, Long offset);
+
+    /**
+     * Find one news by id.
+     *
+     * @param id of the news to find
+     * @return news with the id.
+     */
+    News findOneById(Long id);
 
 }

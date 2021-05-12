@@ -3,8 +3,9 @@ package at.ac.tuwien.sepm.groupphase.backend.endpoint;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.FileDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.FileMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.File;
-import at.ac.tuwien.sepm.groupphase.backend.entity.enumeration.FileType;
+import at.ac.tuwien.sepm.groupphase.backend.exception.BadFileException;
 import at.ac.tuwien.sepm.groupphase.backend.service.FileService;
+import io.swagger.v3.oas.annotations.Operation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +26,10 @@ import java.lang.invoke.MethodHandles;
 @RequestMapping(value = "/api/v1/files")
 public class FileEndpoint {
 
+    /*  ----- File Format Support -----
+     *  Refer to the documentation of File.Type
+     */
+
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final FileService fileService;
     private final FileMapper fileMapper;
@@ -38,35 +43,23 @@ public class FileEndpoint {
     @PermitAll
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
+    @Operation(summary = "Upload a file")
     public FileDto uploadFile(@RequestParam("file") MultipartFile file) {
         LOGGER.info("POST /files {}", file);
         if (file != null && file.getContentType() != null) {
             File fileEntity;
             try {
-                fileEntity = new File(file.getBytes(), fileTypeFromMime(file.getContentType()));
+                fileEntity = new File(file.getBytes(), File.Type.fromMime(file.getContentType()));
             } catch (IOException e) {
-                throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Cannot retrieve bytes from file", e);
+                throw new BadFileException("Cannot retrieve bytes from file", e);
             } catch (IllegalArgumentException e) {
-                throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, e.getMessage(), e);
+                throw new BadFileException("Format \"" + file.getContentType() + "\" not supported", e);
             }
             FileDto dto = fileMapper.fileToFileDto(fileService.save(fileEntity));
             dto.setData(null); // avoid sending big files back
             return dto;
         } else {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "No file received");
-        }
-    }
-
-    private FileType fileTypeFromMime(String mime) throws IllegalArgumentException {
-        // Add cases in the switch below (and in the enum FileType) to support other formats
-        switch (mime) {
-            case "image/jpg":
-            case "image/jpeg":
-                return FileType.IMAGE_JPEG;
-            case "image/png":
-                return FileType.IMAGE_PNG;
-            default:
-                throw new IllegalArgumentException("Format \"" + mime + "\" not supported");
         }
     }
 

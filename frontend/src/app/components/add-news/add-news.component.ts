@@ -120,7 +120,6 @@ export class AddNewsComponent implements OnInit {
         this.tooManyFiles = true;
       } else {
         this.files.push(file);
-        console.log(this.news.images);
       }
     }
   }

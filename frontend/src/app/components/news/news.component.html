@@ -4,6 +4,7 @@
   </div>
 </div>
 <div class="text-center more" (click)="loadBatch()">
-  <h3>Load More</h3>
-  <h3><i class="bi bi-arrow-bar-down"></i></h3>
+  <h3 *ngIf="!noNews">Load More</h3>
+  <h3 *ngIf="noNews">You're all caught up</h3>
+  <h3 *ngIf="!noNews"><i class="bi bi-arrow-bar-down"></i></h3>
 </div>
