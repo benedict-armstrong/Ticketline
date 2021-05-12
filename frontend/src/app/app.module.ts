@@ -22,6 +22,7 @@ import { ShoppingcartComponent } from './components/shoppingcart/shoppingcart.co
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { AddUserComponent } from './components/add-user/add-user.component';
+import { CartListingComponent } from './components/shoppingcart/cart-listing/cart-listing.component';
 
 @NgModule({
   declarations: [
@@ -43,7 +44,8 @@ import { AddUserComponent } from './components/add-user/add-user.component';
     TicketListItemComponent,
     ShoppingcartTestingComponent,
     ShoppingcartComponent,
-    AddUserComponent
+    AddUserComponent,
+    CartListingComponent
   ],
   imports: [
     BrowserModule,

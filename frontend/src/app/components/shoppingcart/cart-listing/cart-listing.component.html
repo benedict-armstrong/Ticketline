@@ -1,0 +1,30 @@
+<div class="card">
+    <div class="row topRow">
+        <div class="col-9">
+            <span>{{item.name}}</span>
+        </div>
+        <div class="col-3">
+            <button>X</button>
+        </div>
+    </div>
+    <div class="row secondRow">
+        <div class="col-8 counts">
+            <form [formGroup]="countForm">
+                <div class="row">
+                    <div class="col-4">
+                        <button class="minus-button" id="minus-button-1">-</button>
+                    </div>
+                    <div class="col-4">
+                        <input type="number" formControlName="count">
+                    </div>
+                    <div class="col-4">
+                        <button class="plus-button" id="plus-button-1">+</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="col-4 prices">
+            <span class="price">{{item.price * countForm.value.count}} €</span>
+        </div>
+    </div>
+</div>

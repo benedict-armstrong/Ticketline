@@ -1,4 +1,5 @@
-<app-navbar></app-navbar>
+<app-navbar [cartToggle]="cartToggle" (toggleEvent)="cartToggle=$event"></app-navbar>
+<app-shoppingcart *ngIf="cartToggle" [shoppingCart]="shoppingCart"></app-shoppingcart>
 <div class="container main">
   <router-outlet></router-outlet>
 </div>

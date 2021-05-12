@@ -1,0 +1,45 @@
+#hideCart {
+	right: -340px;
+}
+
+#sidebar-cart {
+	top: 0;
+    right: 0;
+	background: white;
+	color: black;
+	padding: 15px 15px 0 15px;
+	position: fixed;
+	display: block;
+	width: 320px;
+	height: 100%;
+	z-index: 1000000;
+	box-shadow: -10px 0 15px rgba(0, 0, 0, 0.1);
+
+	div.topRow {
+		margin-bottom: 15px;
+		padding-bottom: 15px;
+		box-shadow: 0px 3px 2px -2px rgba(0, 0, 0, 0.2);
+
+		h3 {
+			margin: 0px;
+		}
+
+		button.close-button {
+			height: 100%;
+			width: min-content;
+			margin: 0px 0px !important;
+		}
+	}
+
+	div.products {
+		overflow-y: scroll;
+		overflow-x: hidden;
+		height: 82%;
+		margin-bottom: 10px;
+		padding-bottom: 10px;
+		box-shadow: 0px 3px 2px -2px rgba(0, 0, 0, 0.2);
+	}
+	div.products::-webkit-scrollbar {
+		display: none;
+	}
+}

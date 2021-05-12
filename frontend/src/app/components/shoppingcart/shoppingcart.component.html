@@ -1,1 +1,21 @@
-<p>shoppingcart works!</p>
+<div id="sidebar-cart">
+	<div class="row topRow">
+		<div class="col-3">
+			<button class="close-button">X</button>
+		</div>
+		<div class="col-9">
+			<h3>Shopping Cart</h3>
+		</div>
+	</div>
+	<div class="products">
+		<app-cart-listing *ngFor="let item of shoppingCart; index as i;" [item]="item"></app-cart-listing>
+	</div>
+	<div class="totals">
+		<div class="subtotal">
+			<span class="label">Subtotal:</span> <span class="amount">$54.00</span>
+		</div>
+	</div>
+	<div class="buttons">
+		<button class="checkout-button">Checkout</button>
+	</div>
+</div>
