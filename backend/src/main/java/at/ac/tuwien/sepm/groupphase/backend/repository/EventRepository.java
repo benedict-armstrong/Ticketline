@@ -1,3 +1,4 @@
+/*
 package at.ac.tuwien.sepm.groupphase.backend.repository;
 
 import at.ac.tuwien.sepm.groupphase.backend.entity.Event;
@@ -14,6 +15,10 @@ public interface EventRepository extends JpaRepository<Event, Long> {
      *
      * @return ordered list of all events
      */
+
+/*
     List<Event> findAll();
 
 }
+
+ */

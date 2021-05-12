@@ -1,3 +1,4 @@
+/*
 package at.ac.tuwien.sepm.groupphase.backend.endpoint.dto;
 
 import at.ac.tuwien.sepm.groupphase.backend.entity.Event;
@@ -81,3 +82,5 @@ public class EventDto {
         }
     }
 }
+
+ */

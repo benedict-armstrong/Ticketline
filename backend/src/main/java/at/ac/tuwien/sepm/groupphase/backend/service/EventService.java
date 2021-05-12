@@ -1,3 +1,4 @@
+/*
 package at.ac.tuwien.sepm.groupphase.backend.service;
 
 import at.ac.tuwien.sepm.groupphase.backend.entity.Event;
@@ -11,6 +12,7 @@ public interface EventService {
      *
      * @return list of all events
      */
+/*
     List<Event> findAll();
 
     /**
@@ -18,5 +20,9 @@ public interface EventService {
      *
      * @return event with id
      */
+/*
     Event findById(long id);
 }
+
+
+ */
