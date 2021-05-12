@@ -4,6 +4,7 @@ import at.ac.tuwien.sepm.groupphase.backend.exception.BadFileException;
 import at.ac.tuwien.sepm.groupphase.backend.exception.InvalidQueryParameterException;
 import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepm.groupphase.backend.exception.UserAlreadyExistAuthenticationException;
+import at.ac.tuwien.sepm.groupphase.backend.exception.AuthorizationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
