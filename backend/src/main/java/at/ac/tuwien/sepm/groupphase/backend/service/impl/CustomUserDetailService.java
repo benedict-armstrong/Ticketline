@@ -4,10 +4,12 @@ import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepm.groupphase.backend.exception.UserAlreadyExistAuthenticationException;
 import at.ac.tuwien.sepm.groupphase.backend.repository.UserRepository;
+import at.ac.tuwien.sepm.groupphase.backend.security.AuthenticationFacade;
 import at.ac.tuwien.sepm.groupphase.backend.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.User;
@@ -26,11 +28,13 @@ public class CustomUserDetailService implements UserService {
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private AuthenticationFacade authenticationFacade;
 
     @Autowired
-    public CustomUserDetailService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public CustomUserDetailService(UserRepository userRepository, PasswordEncoder passwordEncoder, AuthenticationFacade authenticationFacade) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.authenticationFacade = authenticationFacade;
     }
 
     @Override
@@ -73,8 +77,17 @@ public class CustomUserDetailService implements UserService {
                 user.setStatus(ApplicationUser.UserStatus.ACTIVE);
             }
             user.setLastLogin(LocalDateTime.now());
-
             user.setPassword(passwordEncoder.encode(user.getPassword()));
+
+            Authentication authentication = authenticationFacade.getAuthentication();
+
+            // If !user or user is not ADMIN set UserRole, UserStatus and Points to default.
+            if (authentication != null && authentication.getAuthorities().stream()
+                .noneMatch(r -> r.getAuthority().equals("ROLE_ADMIN"))) {
+                user.setRole(ApplicationUser.UserRole.CLIENT);
+                user.setStatus(ApplicationUser.UserStatus.ACTIVE);
+                user.setPoints(0);
+            }
 
             return userRepository.save(user);
         }
