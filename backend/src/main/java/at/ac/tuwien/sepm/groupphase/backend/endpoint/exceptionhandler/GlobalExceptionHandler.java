@@ -52,10 +52,17 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return handleExceptionInternal(ex, ex.getMessage(), new HttpHeaders(), HttpStatus.UNPROCESSABLE_ENTITY, request);
     }
 
+    @ExceptionHandler(value = {AuthorizationException.class})
+    protected ResponseEntity<Object> handleAuthorizationException(RuntimeException ex, WebRequest request) {
+        LOGGER.warn(ex.getMessage());
+        return handleExceptionInternal(ex, ex.getMessage(), new HttpHeaders(), HttpStatus.UNAUTHORIZED, request);
+    }
+
     @ExceptionHandler(value = { IllegalArgumentException.class, IllegalStateException.class })
     protected ResponseEntity<Object> handleConflict(
         RuntimeException ex, WebRequest request) {
-        return handleExceptionInternal(ex, ex.getMessage(), new HttpHeaders(), HttpStatus.CONFLICT, request);
+        return handleExceptionInternal(ex, ex.getMessage(),
+            new HttpHeaders(), HttpStatus.CONFLICT, request);
     }
 
     /**
