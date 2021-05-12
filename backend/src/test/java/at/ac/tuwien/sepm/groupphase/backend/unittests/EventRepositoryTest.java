@@ -1,3 +1,4 @@
+/*
 package at.ac.tuwien.sepm.groupphase.backend.unittests;
 
 import at.ac.tuwien.sepm.groupphase.backend.basetest.TestDataEvent;
@@ -56,3 +57,4 @@ public class EventRepositoryTest implements TestDataEvent {
     }
 
 }
+*/

@@ -50,6 +50,12 @@ public class FileEndpointTest implements TestDataFile {
         "hello/world",
         TEST_FILE_DATA
     );
+    private final MockMultipartFile mockMultipartFileWithNoType = new MockMultipartFile(
+        "file",
+        "file.zz",
+        null,
+        TEST_FILE_DATA
+    );
 
     @BeforeEach
     public void beforeEach() {
@@ -57,8 +63,8 @@ public class FileEndpointTest implements TestDataFile {
     }
 
     @Test
-    @DisplayName("Should return file DTO without data after successful upload")
-    public void whenUploadFile_successful_thenGetFileDtoWithoutDataBack() throws Exception {
+    @DisplayName("Should return file DTO after successful upload")
+    public void whenUploadFile_successful_thenGetFileDtoBack() throws Exception {
         MvcResult mvcResult = this.mockMvc.perform(
             multipart(FILE_BASE_URI)
                 .file(mockMultipartFile)
@@ -70,9 +76,19 @@ public class FileEndpointTest implements TestDataFile {
         FileDto fileDto = objectMapper.readValue(response.getContentAsString(), FileDto.class);
         assertAll(
             () -> assertNotNull(fileDto.getId()),
-            () -> assertNull(fileDto.getData()),
             () -> assertNotNull(fileDto.getType())
         );
+    }
+
+    @Test
+    @DisplayName("Should return 422 when uploading a file with no file type")
+    public void whenUploadFile_noFileType_then422() throws Exception {
+        MvcResult mvcResult = this.mockMvc.perform(
+            multipart(FILE_BASE_URI)
+                .file(mockMultipartFileWithNoType)
+        ).andReturn();
+        MockHttpServletResponse response = mvcResult.getResponse();
+        assertEquals(HttpStatus.UNPROCESSABLE_ENTITY.value(), response.getStatus());
     }
 
     @Test

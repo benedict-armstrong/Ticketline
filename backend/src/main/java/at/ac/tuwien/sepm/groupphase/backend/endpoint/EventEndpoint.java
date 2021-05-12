@@ -1,3 +1,4 @@
+/*
 package at.ac.tuwien.sepm.groupphase.backend.endpoint;
 
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventDto;
@@ -50,3 +51,4 @@ public class EventEndpoint {
         return test;
     }
 }
+ */

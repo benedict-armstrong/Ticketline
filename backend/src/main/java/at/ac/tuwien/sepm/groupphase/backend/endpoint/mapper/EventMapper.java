@@ -1,3 +1,4 @@
+/*
 package at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper;
 
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventDto;
@@ -16,3 +17,5 @@ public interface EventMapper {
     List<EventDto> eventToEventDto(List<Event> event);
 
 }
+
+ */

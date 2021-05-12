@@ -1,8 +1,9 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint;
 
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.NewsDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.PaginationDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.NewsMapper;
-import at.ac.tuwien.sepm.groupphase.backend.exception.InvalidQueryParameterException;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.PaginationMapper;
 import at.ac.tuwien.sepm.groupphase.backend.service.NewsService;
 import io.swagger.v3.oas.annotations.Operation;
 import org.slf4j.Logger;
@@ -15,15 +16,12 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.PathVariable;
 
 import javax.annotation.security.PermitAll;
 import javax.validation.Valid;
 import java.lang.invoke.MethodHandles;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(value = "/api/v1/news")
@@ -32,11 +30,13 @@ public class NewsEndpoint {
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final NewsService newsService;
     private final NewsMapper newsMapper;
+    private final PaginationMapper paginationMapper;
 
     @Autowired
-    public NewsEndpoint(NewsService newsService, NewsMapper newsMapper) {
+    public NewsEndpoint(NewsService newsService, NewsMapper newsMapper, PaginationMapper paginationMapper) {
         this.newsService = newsService;
         this.newsMapper = newsMapper;
+        this.paginationMapper = paginationMapper;
     }
 
     //@Secured("ROLE_ADMIN")
@@ -52,24 +52,11 @@ public class NewsEndpoint {
     @PermitAll
     @GetMapping
     @Operation(summary = "Get all news")
-    public List<NewsDto> getAll(@RequestParam Map<String, String> params) {
-        LOGGER.info("GET /api/v1/news?" + params);
-        long limit = 8L;
-        long offset = Long.MAX_VALUE;
-        try {
-            if (params.containsKey("limit")) {
-                limit = Long.parseLong(params.get("limit"));
-                if (limit < 0) {
-                    throw new InvalidQueryParameterException("Query parameter limit cannot be smaller than 0");
-                }
-            }
-            if (params.containsKey("offset")) {
-                offset = Long.parseLong(params.get("offset"));
-            }
-        } catch (NumberFormatException e) {
-            throw new InvalidQueryParameterException("Query parameters limit and offset must be numeric", e);
-        }
-        return newsService.getAll(limit, offset).stream().map(newsMapper::newsToNewsDto).collect(Collectors.toList());
+    public List<NewsDto> getAll(PaginationDto paginationDto) {
+        LOGGER.info("GET /api/v1/news?{}", paginationDto);
+        return newsMapper.newsListToNewsDtoList(
+            newsService.getAll(paginationMapper.paginationDtoToPageable(paginationDto))
+        );
     }
 
     @GetMapping(value = {"/{id}"})
