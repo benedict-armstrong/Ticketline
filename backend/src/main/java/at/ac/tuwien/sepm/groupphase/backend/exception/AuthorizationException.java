@@ -2,9 +2,9 @@ package at.ac.tuwien.sepm.groupphase.backend.exception;
 
 import org.springframework.security.core.AuthenticationException;
 
-public class AuthorizationExeption extends AuthenticationException {
+public class AuthorizationException extends AuthenticationException {
 
-    public AuthorizationExeption(final String msg) {
+    public AuthorizationException(final String msg) {
         super(msg);
     }
 

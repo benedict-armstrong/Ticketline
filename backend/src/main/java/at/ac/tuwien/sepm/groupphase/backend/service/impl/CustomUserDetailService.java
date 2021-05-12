@@ -1,6 +1,7 @@
 package at.ac.tuwien.sepm.groupphase.backend.service.impl;
 
 import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
+import at.ac.tuwien.sepm.groupphase.backend.exception.AuthorizationException;
 import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepm.groupphase.backend.exception.UserAlreadyExistAuthenticationException;
 import at.ac.tuwien.sepm.groupphase.backend.repository.UserRepository;
@@ -21,6 +22,7 @@ import org.springframework.stereotype.Service;
 import java.lang.invoke.MethodHandles;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class CustomUserDetailService implements UserService {
@@ -72,23 +74,28 @@ public class CustomUserDetailService implements UserService {
 
         //throw UserAlreadyExistAuthenticationException if email is already in system
         if (userRepository.findUserByEmail(user.getEmail()) == null) {
+            user.setLastLogin(LocalDateTime.now());
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
+
+            // If user is not ADMIN and tries to set UserRole (to something other than Client), UserStatus or Points throw AuthorizationException
+            if (!authenticationFacade.isAdmin()) {
+                if (user.getRole() != null && !Objects.equals(user.getRole(), ApplicationUser.UserRole.CLIENT)) {
+                    throw new AuthorizationException("You have to be ADMIN to set USER_ROLE");
+                }
+                if (user.getStatus() != null && !Objects.equals(user.getStatus(), ApplicationUser.UserStatus.ACTIVE)) {
+                    throw new AuthorizationException("You have to be ADMIN to set USER_STATUS");
+                }
+                if (user.getPoints() != 0) {
+                    throw new AuthorizationException("You have to be ADMIN to set Points");
+                }
+
+            }
+
             if (user.getRole() == null) {
                 user.setRole(ApplicationUser.UserRole.CLIENT);
             }
             if (user.getStatus() == null) {
                 user.setStatus(ApplicationUser.UserStatus.ACTIVE);
-            }
-            user.setLastLogin(LocalDateTime.now());
-            user.setPassword(passwordEncoder.encode(user.getPassword()));
-
-            Authentication authentication = authenticationFacade.getAuthentication();
-
-            // If !user or user is not ADMIN set UserRole, UserStatus and Points to default.
-            if (authentication != null && authentication.getAuthorities().stream()
-                .noneMatch(r -> r.getAuthority().equals("ROLE_ADMIN"))) {
-                user.setRole(ApplicationUser.UserRole.CLIENT);
-                user.setStatus(ApplicationUser.UserStatus.ACTIVE);
-                user.setPoints(0);
             }
 
             return userRepository.save(user);

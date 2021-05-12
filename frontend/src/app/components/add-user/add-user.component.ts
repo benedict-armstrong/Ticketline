@@ -48,7 +48,7 @@ export class AddUserComponent implements OnInit {
    addUser() {
     this.submitted = true;
     if (this.addUserForm.valid) {
-      var user:User = new User(null
+      const user: User = new User(null
         , this.addUserForm.value.firstName
         , this.addUserForm.value.lastName
         , this.addUserForm.value.telephoneNumber
@@ -83,7 +83,7 @@ export class AddUserComponent implements OnInit {
     this.error = false;
     this.success = false;
   }
-  
+
   ngOnInit(): void {
   }
 

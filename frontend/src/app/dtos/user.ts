@@ -10,8 +10,8 @@ export class User {
     public password: string,
     public lastLogin: Date,
     public points: number,
-    public status: "ACTIVE" | "BANNED",
-    public role: "CLIENT" | "ORGANIZER" | "ADMIN",
+    public status: 'ACTIVE' | 'BANNED',
+    public role: 'CLIENT' | 'ORGANIZER' | 'ADMIN',
     public address: Address) {
   }
 }

@@ -2,17 +2,15 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthRequest } from 'src/app/dtos/auth-request';
-import { User } from 'src/app/dtos/user';
 import { AuthService } from 'src/app/services/auth.service';
 import { ApplicationUserService } from 'src/app/services/user.service';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.scss']
+  styleUrls: ['./login.component.scss'],
 })
 export class LoginComponent implements OnInit {
-
   loginForm: FormGroup;
   passwordChange = false;
   success = false;
@@ -20,25 +18,27 @@ export class LoginComponent implements OnInit {
   error = false;
   errorMessage = '';
 
-
-  constructor(private authService: AuthService, private applicationUserService: ApplicationUserService, private formBuilder: FormBuilder, private router: Router) {
+  constructor(
+    private authService: AuthService,
+    private applicationUserService: ApplicationUserService,
+    private formBuilder: FormBuilder,
+    private router: Router
+  ) {
     this.loginForm = this.formBuilder.group({
       email: ['', [Validators.required]],
       password: ['', [Validators.required]],
-      newPassword: ['']
+      newPassword: [''],
     });
   }
 
-  ngOnInit(): void {
-  }
+  ngOnInit(): void {}
 
   /**
    * Perform login after submitting the form to sign in.
    */
   login() {
-
     if (this.loginForm.valid) {
-      let authObj: AuthRequest = new AuthRequest(
+      const authObj: AuthRequest = new AuthRequest(
         this.loginForm.value.email,
         this.loginForm.value.password
       );
@@ -46,23 +46,26 @@ export class LoginComponent implements OnInit {
       this.authService.loginUser(authObj).subscribe(
         () => {
           this.applicationUserService.getUserByEmail(authObj.email).subscribe(
-            (response) => {
-              response.lastLogin = new Date();
-              console.log(response.lastLogin);
-              this.applicationUserService.updateUser(response).subscribe(
-                (response) => {
-                  this.router.navigate(['/user'], { state: { user: response } });
+            (oldUser) => {
+              oldUser.lastLogin = new Date();
+              console.log(oldUser.lastLogin);
+              this.applicationUserService.updateUser(oldUser).subscribe(
+                (newUser) => {
+                  this.router.navigate(['/user'], {
+                    state: { user: newUser },
+                  });
                 },
-                error => {
+                (error) => {
                   this.defaultServiceErrorHandling(error);
-                });
+                }
+              );
             },
-            error => {
+            (error) => {
               this.defaultServiceErrorHandling(error);
             }
           );
         },
-        error => {
+        (error) => {
           this.defaultServiceErrorHandling(error);
         }
       );
@@ -77,39 +80,43 @@ export class LoginComponent implements OnInit {
    */
   changePassword() {
     if (this.loginForm.valid) {
-      let authObj: AuthRequest = new AuthRequest(
+      const authObj: AuthRequest = new AuthRequest(
         this.loginForm.value.email,
         this.loginForm.value.password
       );
 
       if (this.loginForm.value.newPassword) {
-
-        if (this.loginForm.value.newPassword === this.loginForm.value.password) {
-          this.errorMessage = 'The new password must be different from the old password';
+        if (
+          this.loginForm.value.newPassword === this.loginForm.value.password
+        ) {
+          this.errorMessage =
+            'The new password must be different from the old password';
           this.error = true;
         } else {
-
           this.authService.loginUser(authObj).subscribe(
             () => {
-              this.applicationUserService.getUserByEmail(authObj.email).subscribe(
-                (response) => {
-                  response.password = this.loginForm.value.newPassword;
-                  this.applicationUserService.updateUser(response).subscribe(
-                    (response) => {
-                      this.loginForm.reset();
-                      this.passwordChange = false;
-                      this.success = true;
-                    },
-                    error => {
-                      this.defaultServiceErrorHandling(error);
-                    });
-                },
-                error => {
-                  this.defaultServiceErrorHandling(error);
-                }
-              );
+              this.applicationUserService
+                .getUserByEmail(authObj.email)
+                .subscribe(
+                  (oldUser) => {
+                    oldUser.password = this.loginForm.value.newPassword;
+                    this.applicationUserService.updateUser(oldUser).subscribe(
+                      (newUser) => {
+                        this.loginForm.reset();
+                        this.passwordChange = false;
+                        this.success = true;
+                      },
+                      (error) => {
+                        this.defaultServiceErrorHandling(error);
+                      }
+                    );
+                  },
+                  (error) => {
+                    this.defaultServiceErrorHandling(error);
+                  }
+                );
             },
-            error => {
+            (error) => {
               this.defaultServiceErrorHandling(error);
             }
           );
@@ -138,5 +145,4 @@ export class LoginComponent implements OnInit {
       this.errorMessage = error.error;
     }
   }
-
 }

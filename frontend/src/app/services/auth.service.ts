@@ -1,16 +1,16 @@
-import { Injectable } from "@angular/core";
-import { AuthRequest } from "../dtos/auth-request";
-import { Observable } from "rxjs";
-import { HttpClient } from "@angular/common/http";
-import { tap } from "rxjs/operators";
-import jwt_decode from "jwt-decode";
-import { Globals } from "../global/globals";
+import { Injectable } from '@angular/core';
+import { AuthRequest } from '../dtos/auth-request';
+import { Observable } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
+import { tap } from 'rxjs/operators';
+import jwt_decode from 'jwt-decode';
+import { Globals } from '../global/globals';
 
 @Injectable({
-  providedIn: "root",
+  providedIn: 'root',
 })
 export class AuthService {
-  private authBaseUri: string = this.globals.backendUri + "/authentication";
+  private authBaseUri: string = this.globals.backendUri + '/authentication';
 
   constructor(private httpClient: HttpClient, private globals: Globals) {}
 
@@ -21,7 +21,7 @@ export class AuthService {
    */
   loginUser(authRequest: AuthRequest): Observable<string> {
     return this.httpClient
-      .post(this.authBaseUri, authRequest, { responseType: "text" })
+      .post(this.authBaseUri, authRequest, { responseType: 'text' })
       .pipe(tap((authResponse: string) => this.setToken(authResponse)));
   }
 
@@ -37,12 +37,12 @@ export class AuthService {
   }
 
   logoutUser(): void {
-    console.log("Logout");
-    localStorage.removeItem("authToken");
+    console.log('Logout');
+    localStorage.removeItem('authToken');
   }
 
   getToken(): string {
-    return localStorage.getItem("authToken");
+    return localStorage.getItem('authToken');
   }
 
   /**
@@ -52,15 +52,15 @@ export class AuthService {
     if (this.getToken() != null) {
       const decoded: any = jwt_decode(this.getToken());
       const authInfo: string[] = decoded.rol;
-      if (authInfo.includes("ROLE_ADMIN")) {
-        return "ADMIN";
-      } else if (authInfo.includes("ROLE_ORGANIZER")) {
-        return "ORGANIZER";
-      } else if (authInfo.includes("ROLE_USER")) {
-        return "USER";
+      if (authInfo.includes('ROLE_ADMIN')) {
+        return 'ADMIN';
+      } else if (authInfo.includes('ROLE_ORGANIZER')) {
+        return 'ORGANIZER';
+      } else if (authInfo.includes('ROLE_USER')) {
+        return 'USER';
       }
     }
-    return "UNDEFINED";
+    return 'UNDEFINED';
   }
 
   /**
@@ -75,7 +75,7 @@ export class AuthService {
   }
 
   private setToken(authResponse: string) {
-    localStorage.setItem("authToken", authResponse);
+    localStorage.setItem('authToken', authResponse);
   }
 
   private getTokenExpirationDate(token: string): Date {

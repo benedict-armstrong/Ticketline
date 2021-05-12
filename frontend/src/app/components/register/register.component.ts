@@ -1,14 +1,14 @@
-import { Component, OnInit } from "@angular/core";
-import { FormBuilder, FormGroup, Validators } from "@angular/forms";
-import { Router } from "@angular/router";
-import { Address } from "src/app/dtos/address";
-import { User } from "../../dtos/user";
-import { ApplicationUserService } from "../../services/user.service";
+import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
+import { Address } from 'src/app/dtos/address';
+import { User } from '../../dtos/user';
+import { ApplicationUserService } from '../../services/user.service';
 
 @Component({
-  selector: "app-register",
-  templateUrl: "./register.component.html",
-  styleUrls: ["./register.component.scss"],
+  selector: 'app-register',
+  templateUrl: './register.component.html',
+  styleUrls: ['./register.component.scss'],
 })
 export class RegisterComponent implements OnInit {
   registerForm: FormGroup;
@@ -16,7 +16,7 @@ export class RegisterComponent implements OnInit {
   submitted = false;
   // Error flag
   error = false;
-  errorMessage = "";
+  errorMessage = '';
 
   // Success Flag
   success = false;
@@ -27,21 +27,21 @@ export class RegisterComponent implements OnInit {
     private router: Router
   ) {
     this.registerForm = this.formBuilder.group({
-      firstName: ["", [Validators.required]],
-      lastName: ["", [Validators.required]],
-      telephoneNumber: [""],
-      email: ["", [Validators.required]],
-      password: ["", [Validators.required, Validators.minLength(8)]],
-      passwordRepeat: ["", [Validators.required, Validators.minLength(8)]],
+      firstName: ['', [Validators.required]],
+      lastName: ['', [Validators.required]],
+      telephoneNumber: [''],
+      email: ['', [Validators.required]],
+      password: ['', [Validators.required, Validators.minLength(8)]],
+      passwordRepeat: ['', [Validators.required, Validators.minLength(8)]],
       points: [0, [Validators.min(0)]],
-      status: ["ACTIVE", [Validators.required]],
-      role: ["CLIENT", [Validators.required]],
-      addressName: ["", [Validators.required]],
-      lineOne: ["", [Validators.required]],
-      lineTwo: [""],
-      city: ["", [Validators.required]],
-      postcode: ["", [Validators.required]],
-      country: ["", [Validators.required]],
+      status: ['ACTIVE', [Validators.required]],
+      role: ['CLIENT', [Validators.required]],
+      addressName: ['', [Validators.required]],
+      lineOne: ['', [Validators.required]],
+      lineTwo: [''],
+      city: ['', [Validators.required]],
+      postcode: ['', [Validators.required]],
+      country: ['', [Validators.required]],
     });
   }
 
@@ -51,7 +51,7 @@ export class RegisterComponent implements OnInit {
   addUser() {
     this.submitted = true;
     if (this.registerForm.valid) {
-      var user: User = new User(
+      const user: User = new User(
         null,
         this.registerForm.value.firstName,
         this.registerForm.value.lastName,
@@ -60,8 +60,8 @@ export class RegisterComponent implements OnInit {
         this.registerForm.value.password,
         new Date(),
         this.registerForm.value.points,
-        "ACTIVE",
-        "CLIENT",
+        'ACTIVE',
+        'CLIENT',
         new Address(
           null,
           this.registerForm.value.addressName,
@@ -75,13 +75,14 @@ export class RegisterComponent implements OnInit {
       this.applicationUserService.createUser(user).subscribe(
         () => {
           this.success = true;
+          this.router.navigate(['/user'], { state: { user } });
         },
         (error) => {
           this.defaultServiceErrorHandling(error);
         }
       );
     } else {
-      console.log("Invalid input");
+      console.log('Invalid input');
     }
   }
 
@@ -95,7 +96,7 @@ export class RegisterComponent implements OnInit {
   private defaultServiceErrorHandling(error: any) {
     console.log(error);
     this.error = true;
-    if (typeof error.error === "object") {
+    if (typeof error.error === 'object') {
       this.errorMessage = error.error.error;
     } else {
       this.errorMessage = error.error;

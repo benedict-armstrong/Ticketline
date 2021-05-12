@@ -32,7 +32,7 @@ export class UserHomeComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  
+
 
   /**
    * Load User with email from Backend.
