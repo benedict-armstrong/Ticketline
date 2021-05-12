@@ -1,7 +1,6 @@
 package at.ac.tuwien.sepm.groupphase.backend.service.impl;
 
 import at.ac.tuwien.sepm.groupphase.backend.entity.Event;
-import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepm.groupphase.backend.repository.EventRepository;
 import at.ac.tuwien.sepm.groupphase.backend.service.EventService;
 import org.slf4j.Logger;
@@ -33,12 +32,7 @@ public class CustomEventService implements EventService {
     @Override
     public Event findById(long id) {
         LOGGER.debug("Get event by id {}", id);
-        Optional<Event> temp = eventRepository.findById(id);
-        if (temp.isPresent()) {
-            return temp.get();
-        } else {
-            throw new NotFoundException();
-        }
+        return eventRepository.findOneById(id);
     }
 
     @Override
