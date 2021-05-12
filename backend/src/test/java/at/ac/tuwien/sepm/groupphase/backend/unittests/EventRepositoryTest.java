@@ -35,6 +35,7 @@ public class EventRepositoryTest implements TestDataEvent {
             .withDescription(TEST_EVENT_DESCRIPTION)
             .withDate(TEST_EVENT_DATE_FUTURE)
             .withDuration(TEST_EVENT_DURATION)
+            .withEventType(TEST_EVENT_EVENT_TYPE)
             .build();
     }
 

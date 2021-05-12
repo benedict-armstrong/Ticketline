@@ -60,6 +60,7 @@ public class EventEndpointTest {
         .withDescription(TestDataEvent.TEST_EVENT_DESCRIPTION)
         .withDate(TestDataEvent.TEST_EVENT_DATE_FUTURE)
         .withDuration(TestDataEvent.TEST_EVENT_DURATION)
+        .withEventType(TestDataEvent.TEST_EVENT_EVENT_TYPE)
         .withImages(images)
         .build();
 

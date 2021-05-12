@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepm.groupphase.backend.integrationtest;
 
+import at.ac.tuwien.sepm.groupphase.backend.basetest.TestDataEvent;
 import at.ac.tuwien.sepm.groupphase.backend.basetest.TestDataFile;
 import at.ac.tuwien.sepm.groupphase.backend.basetest.TestDataNews;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.NewsDto;
@@ -59,7 +60,11 @@ public class NewsEndpointTest implements TestDataNews, TestDataFile {
     private ObjectMapper objectMapper;
 
     private final Event event = Event.EventBuilder.aEvent()
-        .withTitle("Testevent")
+        .withTitle(TestDataEvent.TEST_EVENT_TITLE)
+        .withDescription(TestDataEvent.TEST_EVENT_DESCRIPTION)
+        .withDate(TestDataEvent.TEST_EVENT_DATE_FUTURE)
+        .withDuration(TestDataEvent.TEST_EVENT_DURATION)
+        .withEventType(TestDataEvent.TEST_EVENT_EVENT_TYPE)
         .build();
 
     private final File file = File.FileBuilder.aFile()
