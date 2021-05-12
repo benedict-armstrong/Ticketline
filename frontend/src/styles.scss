@@ -7,7 +7,7 @@ body {
 button {
   width: 100%;
   min-width: 45px;
-  margin: 10px 0px !important;
+  margin: 10px 0 !important;
   height: 45px;
   border-radius: 10px !important;
   border: none;
@@ -17,14 +17,13 @@ button {
     rgba(203, 103, 111, 1) 19%,
     rgba(193, 73, 83, 1) 80%
   );
-  box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
+  box-shadow: rgba(0, 0, 0, 0.1) 0 4px 12px;
   color: white;
   font-weight: 800;
 }
 
 button.secondary {
-  background: none;
-  background-color: white;
+  background: white none;
   font-weight: 800;
   color: rgba(193, 73, 83, 1);
 }
@@ -36,7 +35,7 @@ button.no-shadow {
 button.custom {
   width: auto;
   min-width: none;
-  margin: 0px !important;
+  margin: 0 !important;
   height: none;
   border-radius: none !important;
   border: none;
