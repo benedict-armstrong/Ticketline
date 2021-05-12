@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { User } from 'src/app/dtos/user';
 import { AuthService } from 'src/app/services/auth.service';
-import { ApplicationUserService } from 'src/app/services/user.service';
+import { UserService } from 'src/app/services/user.service';
 
 @Component({
   selector: 'app-user-home',
@@ -17,7 +17,7 @@ export class UserHomeComponent implements OnInit {
 
   user: User;
 
-  constructor(private applicationUserService: ApplicationUserService, private authService: AuthService, private router: Router) {
+  constructor(private userService: UserService, private authService: AuthService, private router: Router) {
     if(this.router.getCurrentNavigation().extras.state){
       this.user = this.router.getCurrentNavigation().extras.state.user;
     }else{
@@ -32,13 +32,13 @@ export class UserHomeComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  
+
 
   /**
    * Load User with email from Backend.
    */
   loadUser(email: string){
-    this.applicationUserService.getUserByEmail(email).subscribe(
+    this.userService.getUserByEmail(email).subscribe(
       (response) => {
         this.user = response;
       },
