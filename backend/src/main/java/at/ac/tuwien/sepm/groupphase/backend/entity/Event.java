@@ -8,6 +8,8 @@ import javax.persistence.Column;
 import javax.persistence.OneToMany;
 import javax.persistence.FetchType;
 import javax.persistence.CascadeType;
+import javax.persistence.Enumerated;
+import javax.persistence.EnumType;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Objects;
@@ -28,7 +30,23 @@ public class Event {
     @Column(nullable = false)
     private LocalDateTime date;
 
-    @Column
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private EventType eventType;
+
+    public enum EventType {
+        CINEMA, THEATRE, OPERA, CONCERT
+    }
+
+    public EventType getEventType() {
+        return eventType;
+    }
+
+    public void setEventType(EventType eventType) {
+        this.eventType = eventType;
+    }
+
+    @Column(nullable = false)
     private int duration;
 
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
@@ -116,6 +134,7 @@ public class Event {
         private String title;
         private String description;
         private LocalDateTime date;
+        private EventType eventType;
         private int duration;
         private Set<File> images;
 
@@ -146,6 +165,11 @@ public class Event {
             return this;
         }
 
+        public EventBuilder withEventType(EventType eventType) {
+            this.eventType = eventType;
+            return this;
+        }
+
         public EventBuilder withDuration(int duration) {
             this.duration = duration;
             return this;
@@ -162,7 +186,9 @@ public class Event {
             event.setTitle(title);
             event.setDescription(description);
             event.setDate(date);
+            event.setEventType(eventType);
             event.setDuration(duration);
+            event.setImages(images);
             return event;
         }
     }

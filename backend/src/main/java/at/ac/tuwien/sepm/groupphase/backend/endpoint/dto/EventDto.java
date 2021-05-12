@@ -1,7 +1,9 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint.dto;
 
 import at.ac.tuwien.sepm.groupphase.backend.entity.Event;
+import at.ac.tuwien.sepm.groupphase.backend.entity.Event.EventType;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import org.hibernate.validator.constraints.Range;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Component;
 
@@ -28,7 +30,19 @@ public class EventDto {
     @Size(max = 10, message = "Upload 10 images or less")
     private FileDto[] images = new FileDto[10];
 
+    @NotNull(message = "Eventtype is required")
+    private EventType eventType;
+
+    @Range(min = 1, message = "Duration must be greater than 0")
     private int duration;
+
+    public EventType getEventType() {
+        return eventType;
+    }
+
+    public void setEventType(EventType eventType) {
+        this.eventType = eventType;
+    }
 
     @NotNull(message = "Event date is required")
     @Future
@@ -109,8 +123,14 @@ public class EventDto {
     }
 
     public static final class EventDtoBuilder {
+
         private Long id;
-        private String title;
+        private @NotBlank(message = "A title is required") @Size(max = 100, message = "Title must be 100 characters or less") String title;
+        private @NotBlank(message = "A description is required") @Size(max = 10000, message = "Description must be 10000 characters or less") String description;
+        private @Size(max = 10, message = "Upload 10 images or less") FileDto[] images;
+        private @NotBlank(message = "Eventtype is required") EventType eventType;
+        private @Range(min = 1, message = "Duration must be greater than 0") int duration;
+        private @NotNull(message = "Event date is required") @Future LocalDateTime date;
 
         private EventDtoBuilder() {
         }
@@ -119,21 +139,52 @@ public class EventDto {
             return new EventDtoBuilder();
         }
 
+        public EventDto build() {
+            EventDto event = new EventDto();
+            event.setId(id);
+            event.setTitle(title);
+            event.setEventType(eventType);
+            event.setDuration(duration);
+            event.setDescription(description);
+            event.setImages(images);
+            event.setDate(date);
+
+            return event;
+        }
+
         public EventDtoBuilder withId(Long id) {
             this.id = id;
             return this;
         }
 
-        public EventDtoBuilder withTitle(String title) {
+        public EventDtoBuilder withTitle(@NotBlank(message = "A title is required") @Size(max = 100, message = "Title must be 100 characters or less") String title) {
             this.title = title;
             return this;
         }
 
-        public Event build() {
-            Event event = new Event();
-            event.setId(id);
-            event.setTitle(title);
-            return event;
+        public EventDtoBuilder withDescription(@NotBlank(message = "A description is required") @Size(max = 10000, message = "Description must be 10000 characters or less") String description) {
+            this.description = description;
+            return this;
+        }
+
+        public EventDtoBuilder withImages(@Size(max = 10, message = "Upload 10 images or less") FileDto[] images) {
+            this.images = images;
+            return this;
+        }
+
+        public EventDtoBuilder withEventType(@NotBlank(message = "Eventtype is required") EventType eventType) {
+            this.eventType = eventType;
+            return this;
+        }
+
+        public EventDtoBuilder withDuration(@Range(min = 1, message = "Duration must be greater than 0") int duration) {
+            this.duration = duration;
+            return this;
+        }
+
+        public EventDtoBuilder withDate(@NotNull(message = "Event date is required") @Future LocalDateTime date) {
+            this.date = date;
+            return this;
         }
     }
 }

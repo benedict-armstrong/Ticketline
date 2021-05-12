@@ -19,7 +19,7 @@ export class AddEventComponent implements OnInit {
   errorMessage: string;
   success = false;
 
-  event = new Event(null, null, null, null, null, []);
+  event = new Event(null, null, null, null, null, null, []);
 
   constructor(private applicationEventService: ApplicationEventService,
               private formBuilder: FormBuilder, private fileService: FileService) {
@@ -30,7 +30,8 @@ export class AddEventComponent implements OnInit {
       files: [''],
       // TODO: Validation for minDate?
       date: ['', [Validators.required]],
-      duration: ['']
+      eventType: ['CONCERT', [Validators.required]],
+      duration: ['', [Validators.required]]
     });
   }
 
@@ -45,6 +46,7 @@ export class AddEventComponent implements OnInit {
       this.event.description = this.addEventForm.value.description;
       this.event.date = this.addEventForm.value.date;
       this.event.duration = this.addEventForm.value.duration;
+      this.event.eventType = this.addEventForm.value.eventType;
 
       // New Imageupload
       const fileService = this.fileService;

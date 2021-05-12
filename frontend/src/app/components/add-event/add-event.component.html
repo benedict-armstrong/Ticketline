@@ -45,8 +45,30 @@
     </div>
 
     <div class="form-group">
+      <label for="eventType">Eventtype</label>
+      <select name="eventType" id="eventType" formControlName="eventType" class="select-input form-select">
+        <option value="CONCERT">Concert</option>
+        <option value="OPERA">Opera</option>
+        <option value="CINEMA">Cinema</option>
+        <option value="THEATRE">Theatre</option>
+      </select>
+      <div *ngIf="submitted && addEventForm.controls.eventType.errors" class="error">
+        <small class="form-text text-danger" *ngIf="addEventForm.controls.eventType.errors.required">
+          Eventtype is
+          required!
+        </small>
+      </div>
+    </div>
+
+    <div class="form-group">
       <label for="duration">Duration</label>
       <input type="number" name="duration" formControlName="duration" class="form-control" id="duration">
+      <div *ngIf="submitted && addEventForm.controls.duration.errors" class="error">
+        <small class="form-text text-danger" *ngIf="addEventForm.controls.duration.errors.required">
+          Duration is
+          required!
+        </small>
+      </div>
     </div>
 
     <div class="form-group">

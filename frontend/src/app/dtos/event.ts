@@ -6,6 +6,7 @@ export class Event {
     public title: string,
     public description: string,
     public date: Date,
+    public eventType: 'CINEMA' | 'THEATRE' | 'OPERA' | 'CONCERT',
     public duration: number,
     public images: CustomFile[]
   ) {}
