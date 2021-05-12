@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'app-navbar',
@@ -10,7 +11,7 @@ export class NavbarComponent implements OnInit {
   @Input() cartToggle: boolean;
   @Output() toggleEvent = new EventEmitter<boolean>();
 
-  constructor() { }
+  constructor(private authService: AuthService) {}
 
   ngOnInit(): void {
   }
@@ -20,4 +21,21 @@ export class NavbarComponent implements OnInit {
     this.toggleEvent.emit(this.cartToggle);
   }
 
+  /**
+   * Logout current user.
+   */
+  logoutUser(): void {
+    this.authService.logoutUser();
+  }
+
+  /**
+   * Checks if user is logged in.
+   */
+  isLoggedIn() {
+    return this.authService.isLoggedIn();
+  }
+
+  hasAdminPermission(): boolean {
+    return this.authService.getUserRole() === 'ADMIN';
+  }
 }

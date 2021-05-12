@@ -10,7 +10,7 @@ import { RegisterComponent } from './components/register/register.component';
 import { EventDetailComponent } from './components/event-detail/event-detail.component';
 import { NewsComponent } from './components/news/news.component';
 import { NewsItemComponent } from './components/news-item/news-item.component';
-import { ArticleComponent } from './components/article/article.component';
+import { NewsDetailComponent } from './components/news-detail/news-details.component';
 import { EventsComponent } from './components/events/events.component';
 import { EventListItemComponent } from './components/event-list-item/event-list-item.component';
 import { SearchComponent } from './components/search/search.component';
@@ -21,6 +21,7 @@ import { ShoppingcartTestingComponent } from './components/shoppingcart-testing/
 import { ShoppingcartComponent } from './components/shoppingcart/shoppingcart.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
+import { AddNewsComponent } from './components/add-news/add-news.component';
 import { AddUserComponent } from './components/add-user/add-user.component';
 import { CartListingComponent } from './components/shoppingcart/cart-listing/cart-listing.component';
 
@@ -35,7 +36,7 @@ import { CartListingComponent } from './components/shoppingcart/cart-listing/car
     EventDetailComponent,
     NewsComponent,
     NewsItemComponent,
-    ArticleComponent,
+    NewsDetailComponent,
     EventsComponent,
     EventListItemComponent,
     SearchComponent,
@@ -45,7 +46,9 @@ import { CartListingComponent } from './components/shoppingcart/cart-listing/car
     ShoppingcartTestingComponent,
     ShoppingcartComponent,
     AddUserComponent,
-    CartListingComponent
+    CartListingComponent,
+    AddNewsComponent,
+    AddUserComponent,
   ],
   imports: [
     BrowserModule,
