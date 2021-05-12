@@ -27,7 +27,7 @@ export class AddNewsComponent implements OnInit {
 
   news: News = new News(null
     , null
-    , 'Moritz' // TODO add Username
+    , null
     , null
     , null
     , null
@@ -42,6 +42,7 @@ export class AddNewsComponent implements OnInit {
     this.addNewsForm = this.formBuilder.group({
       title: ['', [Validators.required, Validators.maxLength(100)]],
       eventName: [''],
+      author: ['', [Validators.required, Validators.maxLength(100)]],
       text: ['', [Validators.required, Validators.maxLength(10000)]],
       files: ['']
     });
@@ -57,8 +58,8 @@ export class AddNewsComponent implements OnInit {
       this.news.title = this.addNewsForm.value.title;
       this.news.text = this.addNewsForm.value.text;
       this.news.event = this.event;
+      this.news.author = this.addNewsForm.value.author;
 
-      // New Imageupload
       const fileService = this.fileService;
       let count = this.files.length;
       if (count === 0) {
