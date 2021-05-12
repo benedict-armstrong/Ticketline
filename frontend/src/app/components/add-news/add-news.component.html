@@ -38,7 +38,7 @@
     </div>
 
     <div class="form-group">
-      <label for="files">Picture Upload</label>
+      <label id="fileLabel" for="files">Picture Upload</label>
       <input formControlName="files" id="files" type="file" class="form-control" (change)="onFileChange($event)">
       <div *ngIf="fileNoImage" class="alert alert-danger">
         <div>The uploaded file is no image</div>
@@ -57,7 +57,7 @@
         <tbody>
         <tr *ngFor="let image of files; let i = index">
           <td>{{image.name}}</td>
-          <td><button type="button" class="btn btn-primary" style="width: 100%" (click)="removeImage(i)">X</button></td>
+          <td><button type="button" class="secondary deleteButton" style="width: 100%" (click)="removeImage(i)">X</button></td>
         </tr>
         </tbody>
       </table>
