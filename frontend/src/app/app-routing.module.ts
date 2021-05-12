@@ -23,7 +23,7 @@ const routes: Routes = [
   { path: 'event', component: EventDetailComponent },
   { path: 'user', component: UserHomeComponent },
   { path: 'ticket', component: TicketDetailComponent },
-  { path: 'add-news/:id', component: AddNewsComponent },
+  { path: 'add-news', component: AddNewsComponent },
   { path: 'add-user', component: AddUserComponent, canActivate: [AuthGuard], data: { roles: ['ADMIN']} },
 ];
 
