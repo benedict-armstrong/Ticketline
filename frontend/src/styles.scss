@@ -37,6 +37,10 @@ button.no-shadow {
   box-shadow: none;
 }
 
+button.no-border {
+  border: none;
+}
+
 button:focus {
   box-shadow: none;
 }
