@@ -8,11 +8,11 @@ body {
 button.primary, button.secondary {
   width: 100%;
   min-width: 45px;
-  margin: 10px 0px;
+  margin: 10px 0;
   height: 45px;
   border-radius: 10px;
   border: 1px solid $gray-242;
-  box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
+  box-shadow: rgba(0, 0, 0, 0.1) 0 4px 12px;
   font-weight: 800;
 }
 
@@ -27,9 +27,8 @@ button.primary {
 }
 
 button.secondary {
-  background: none;
-  background-color: white;
-  box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
+  background: white none;
+  box-shadow: rgba(0, 0, 0, 0.1) 0 4px 12px;
   color: $primary-darker;
 }
 
