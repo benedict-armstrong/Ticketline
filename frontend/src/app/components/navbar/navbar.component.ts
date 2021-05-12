@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { AuthService } from 'src/app/services/auth.service';
+import { ShoppingcartService } from 'src/app/services/shoppingcart.service';
 
 @Component({
   selector: 'app-navbar',
@@ -7,18 +8,14 @@ import { AuthService } from 'src/app/services/auth.service';
   styleUrls: ['./navbar.component.scss']
 })
 export class NavbarComponent implements OnInit {
-  
-  @Input() cartToggle: boolean;
-  @Output() toggleEvent = new EventEmitter<boolean>();
 
-  constructor(private authService: AuthService) {}
+  constructor(private authService: AuthService, private cartService: ShoppingcartService) {}
 
   ngOnInit(): void {
   }
 
   toggleCart() {
-    this.cartToggle = !this.cartToggle;
-    this.toggleEvent.emit(this.cartToggle);
+    this.cartService.status = !this.cartService.status;
   }
 
   /**

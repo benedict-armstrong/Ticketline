@@ -23,7 +23,6 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { AddNewsComponent } from './components/add-news/add-news.component';
 import { AddUserComponent } from './components/add-user/add-user.component';
-import { CartListingComponent } from './components/shoppingcart/cart-listing/cart-listing.component';
 
 @NgModule({
   declarations: [
@@ -46,7 +45,6 @@ import { CartListingComponent } from './components/shoppingcart/cart-listing/car
     ShoppingcartTestingComponent,
     ShoppingcartComponent,
     AddUserComponent,
-    CartListingComponent,
     AddNewsComponent,
     AddUserComponent,
   ],

@@ -1,14 +1,43 @@
-<div id="sidebar-cart">
+<div id="sidebar-cart" *ngIf="cartService.status">
 	<div class="row topRow">
 		<div class="col-3">
-			<button class="close-button">X</button>
+			<button (click)="close()" class="close-button">X</button>
 		</div>
 		<div class="col-9">
 			<h3>Shopping Cart</h3>
 		</div>
 	</div>
 	<div class="products">
-		<app-cart-listing *ngFor="let item of shoppingCart; index as i;" [item]="item"></app-cart-listing>
+		<div class="card" *ngFor="let item of cartService.cart; index as i;">
+			<div class="row cardHeader">
+				<div class="col-9">
+					<span>{{item.name}}</span>
+				</div>
+				<div class="col-3">
+					<button>X</button>
+				</div>
+			</div>
+			<div class="row cardBody">
+				<div class="col-8 counts">
+					<form>
+						<div class="row">
+							<div class="col-4">
+								<button class="minus-button" id="minus-button-1">-</button>
+							</div>
+							<div class="col-4">
+								<input type="number">
+							</div>
+							<div class="col-4">
+								<button class="plus-button" id="plus-button-1">+</button>
+							</div>
+						</div>
+					</form>
+				</div>
+				<div class="col-4 prices">
+					<span class="price">{{item.price}} €</span>
+				</div>
+			</div>
+		</div>
 	</div>
 	<div class="totals">
 		<div class="subtotal">

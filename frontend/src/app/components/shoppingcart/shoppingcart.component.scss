@@ -43,3 +43,52 @@
 		display: none;
 	}
 }
+
+.card {
+    margin-bottom: 13px;
+    padding: 8px;
+    background: #f7eaeb;
+
+    div.cardHeader {
+        button {
+            background: none;
+            box-shadow: none;
+            color: #cb676f;
+            margin: 0px 0px 0px 10px !important;
+            padding: 0px;
+            width: min-content;
+            height: min-content;
+            border: 1px black !important;
+            border-radius: 0px !important;
+        }
+    }
+    
+    div.cardBody {
+        button {
+            background: none;
+            box-shadow: none;
+            color: #cb676f;
+            margin: 0px !important;
+            padding: 0px;
+            width: min-content;
+            height: min-content;
+            border: 1px black !important;
+            border-radius: 0px !important;
+        }
+
+        input {
+            width: 50px;
+			border-radius: 10px;
+			box-shadow: none;
+			text-align: center;
+        }
+
+		input[type=number]::-webkit-inner-spin-button {
+			-webkit-appearance: none;
+		  }
+
+        .prices {
+            text-align: right;
+        }
+    }
+}
