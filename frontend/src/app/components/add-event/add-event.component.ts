@@ -18,22 +18,18 @@ export class AddEventComponent implements OnInit {
   error = false;
   errorMessage: string;
   success = false;
-  minDate = new Date(Date.now() * 1000);
 
   event = new Event(null, null, null, null, null, []);
 
   constructor(private applicationEventService: ApplicationEventService,
               private formBuilder: FormBuilder, private fileService: FileService) {
-    // this.eventId = this.actRoute.snapshot.params.id;
-    // this.loadEvent(this.eventId);
 
     this.addEventForm = this.formBuilder.group({
       eventName: ['', [Validators.required, Validators.maxLength(100)]],
       description: ['', [Validators.required, Validators.maxLength(10000)]],
       files: [''],
-      date: ['', [Validators.required
-        // , Validators.min(this.minDate)
-      ]],
+      // TODO: Validation for minDate?
+      date: ['', [Validators.required]],
       duration: ['']
     });
   }
@@ -43,8 +39,6 @@ export class AddEventComponent implements OnInit {
 
   addEvent() {
     this.submitted = true;
-    console.log(this.minDate);
-    console.log(this.addEventForm.value.date);
     if (this.addEventForm.valid) {
       // Add additional event data
       this.event.title = this.addEventForm.value.eventName;
@@ -84,10 +78,6 @@ export class AddEventComponent implements OnInit {
           });
         });
       }
-
-      // New Imageupload End */
-
-
     } else {
       console.log('Invalid input');
     }
