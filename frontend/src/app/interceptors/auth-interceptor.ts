@@ -19,12 +19,11 @@ export class AuthInterceptor implements HttpInterceptor {
   ): Observable<HttpEvent<any>> {
     const authUri = this.globals.backendUri + "/authentication";
 
-    // Do not intercept authentication requests or if user is not logged in yet
-    if (req.url === authUri || !this.authService.isLoggedIn) {
+    // Do not intercept authentication requests or if no user is logged in
+    if (req.url === authUri || !this.authService.isLoggedIn()) {
+      console.log("Unauthenticated Request");
       return next.handle(req);
     }
-
-    console.log("Add authentication");
 
     const authReq = req.clone({
       headers: req.headers.set(

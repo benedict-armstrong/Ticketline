@@ -69,6 +69,8 @@ public class CustomUserDetailService implements UserService {
     @Override
     public ApplicationUser addUser(ApplicationUser user) {
         LOGGER.debug("Add new User to System");
+
+        //throw UserAlreadyExistAuthenticationException if email is already in system
         if (userRepository.findUserByEmail(user.getEmail()) == null) {
             if (user.getRole() == null) {
                 user.setRole(ApplicationUser.UserRole.CLIENT);
@@ -103,7 +105,6 @@ public class CustomUserDetailService implements UserService {
             if (!oldUser.getPassword().equals(user.getPassword())) {
                 user.setPassword(passwordEncoder.encode(user.getPassword()));
             }
-
 
             return userRepository.save(user);
         }

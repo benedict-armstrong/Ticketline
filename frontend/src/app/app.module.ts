@@ -22,6 +22,7 @@ import { TicketDetailComponent } from "./components/ticket-detail/ticket-detail.
 import { TicketListItemComponent } from "./components/ticket-list-item/ticket-list-item.component";
 import { AddUserComponent } from "./components/add-user/add-user.component";
 import { AuthInterceptor } from "./interceptors/auth-interceptor";
+import { httpInterceptorProviders } from "./interceptors";
 
 @NgModule({
   declarations: [
@@ -50,9 +51,7 @@ import { AuthInterceptor } from "./interceptors/auth-interceptor";
     HttpClientModule,
     FormsModule,
   ],
-  providers: [
-    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
-  ],
+  providers: [httpInterceptorProviders], // Interceptors defined in interceptors/index.ts
   bootstrap: [AppComponent],
 })
 export class AppModule {}

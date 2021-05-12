@@ -40,7 +40,7 @@ public class UserEndpoint {
     @PostMapping
     @PermitAll
     @Operation(summary = "Add User")
-    public UserDto add(@Valid @RequestBody UserDto userDto, Authentication authentication) {
+    public UserDto add(@Valid @RequestBody UserDto userDto) {
         LOGGER.info("POST /api/v1/users body: {}", userDto);
         return userMapper.applicationUserToUserDto(userService.addUser(userMapper.userDtoToApplicationUser(userDto)));
     }
