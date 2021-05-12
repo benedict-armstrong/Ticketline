@@ -1,151 +1,163 @@
-<div class="login">
-    <div class="login-card">
-        <h3>Create Account</h3>
-        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Deserunt, ut!</p>
-        <form class="form" [formGroup]="addUserForm" (ngSubmit)="addUser()">        
-            <div class="row">
-              <div class="col-md-6">
-                <div class="form-group">
-                  <label for="firstName">First Name</label>
-                  <input type="text" name="firstName" formControlName="firstName" class="text-input form-control" id="firstName"
-                    aria-describedby="firstNameHelp" placeholder="Enter your first Name">
-                  <div *ngIf="submitted && addUserForm.controls.firstName.errors" class="error">
-                    <small class="form-text text-warning" *ngIf="addUserForm.controls.firstName.errors.required">Your first Name
-                      is
-                      required!
-                    </small>
-                  </div>
-                </div>
-              </div>
-              <div class="col-6">
-                <div class="form-group">
-                  <label for="lastName">Last Name</label>
-                  <input type="text" name="lastName" formControlName="lastName" class="text-input form-control" id="lastName"
-                    aria-describedby="lastNameHelp" placeholder="Enter your last Name">
-                  <div *ngIf="submitted && addUserForm.controls.lastName.errors" class="error">
-                    <small class="form-text text-warning" *ngIf="addUserForm.controls.lastName.errors.required">Your last Name
-                      is
-                      required!
-                    </small>
-                  </div>
-                </div>
-              </div>
-            </div>
-        
-            <div class="form-group">
-              <label for="email">Email</label>
-              <input type="email" name="email" formControlName="email" class="text-input form-control" id="email"
-                aria-describedby="emailHelp" placeholder="Enter your email">
-              <div *ngIf="submitted && addUserForm.controls.email.errors" class="error">
-                <small class="form-text text-warning" *ngIf="addUserForm.controls.email.errors.required">Your email is
-                  required!
-                </small>
-              </div>
-            </div>
-        
-            <div class="form-group">
-              <label for="phoneNumber">Phone Number</label>
-              <input type="tel" name="phoneNumber" formControlName="telephoneNumber" class="text-input form-control"
-                id="phoneNumber" aria-describedby="phoneNumberHelp" placeholder="Enter your Phone Number">
-            </div>
-        
-            <div class="form-group">
-              <label for="password">Password</label>
-              <input type="password" name="password" formControlName="password" class="text-input form-control" id="password"
-                placeholder="Password">
-              <div *ngIf="submitted && addUserForm.controls.password.errors" class="error">
-                <small class="form-text text-warning" *ngIf="addUserForm.controls.password.errors.required">Your password
-                  is
-                  required!
-                </small>
-                <small class="form-text text-warning" *ngIf="addUserForm.controls.password.errors.minlength">Your password
-                  must be at least 8 characters long!
-                </small>
-              </div>
-            </div>
-        
-            <div class="form-group">
-              <label for="addressName">Address Name</label>
-              <input type="text" name="addressName" formControlName="addressName" class="text-input form-control"
-                id="addressName" aria-describedby="addressNameHelp" placeholder="Enter Address Name">
-              <div *ngIf="submitted && addUserForm.controls.addressName.errors" class="error">
-                <small class="form-text text-warning" *ngIf="addUserForm.controls.addressName.errors.required">Your Address Name
-                  is
-                  required!
-                </small>
-              </div>
-            </div>
-        
-            <div class="form-group">
-              <label for="lineOne">Line One</label>
-              <input type="text" name="lineOne" formControlName="lineOne" class="text-input form-control" id="lineOne"
-                aria-describedby="lineOneHelp" placeholder="Enter line one">
-              <div *ngIf="submitted && addUserForm.controls.lineOne.errors" class="error">
-                <small class="form-text text-warning" *ngIf="addUserForm.controls.lineOne.errors.required">Your line one is
-                  required!
-                </small>
-              </div>
-            </div>
-        
-            <div class="form-group">
-              <label for="lineTwo">Line Two</label>
-              <input type="text" name="lineTwo" formControlName="lineTwo" class="text-input form-control" id="lineTwo"
-                aria-describedby="lineTwoHelp" placeholder="Enter line two">
-            </div>
-        
-            <div class="row">
-              <div class="col-6">
-                <div class="form-group">
-                  <label for="city">City Name</label>
-                  <input type="text" name="city" formControlName="city" class="text-input form-control" id="city"
-                    aria-describedby="cityHelp" placeholder="Enter City name">
-                  <div *ngIf="submitted && addUserForm.controls.city.errors" class="error">
-                    <small class="form-text text-warning" *ngIf="addUserForm.controls.city.errors.required">Your City Name is
-                      required!
-                    </small>
-                  </div>
-                </div>
-              </div>
-              <div class="col-6">
-                <div class="form-group">
-                  <label for="postcode">Postcode</label>
-                  <input type="text" name="postcode" formControlName="postcode" class="text-input form-control" id="postcode"
-                    aria-describedby="postcodeHelp" placeholder="Enter Postcode">
-                  <div *ngIf="submitted && addUserForm.controls.postcode.errors" class="error">
-                    <small class="form-text text-warning" *ngIf="addUserForm.controls.postcode.errors.required">Your Postcode is
-                      required!
-                    </small>
-                  </div>
-                </div>
-              </div>
-            </div>
-        
-            <div class="form-group">
-              <label for="country">Country</label>
-              <input type="text" name="country" formControlName="country" class="text-input form-control" id="country"
-                aria-describedby="countryHelp" placeholder="Enter Country">
-              <div *ngIf="submitted && addUserForm.controls.country.errors" class="error">
-                <small class="form-text text-warning" *ngIf="addUserForm.controls.country.errors.required">Your Country is
-                  required!
-                </small>
-              </div>
-            </div>
-        
-            <button type="button" (click)="addUser()" id="signin">Create</button>
-        
-            <div *ngIf="error" class="col-12 alert alert-danger alert-dismissible fade show" role="alert">
-              <strong>Error! </strong> {{ errorMessage }}
-              <button type="button" (click)="vanishAlert()" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
-            </div>
-            <div *ngIf="success" class="col-12 alert alert-success alert-dismissible fade show" role="alert">
-              <strong>Success</strong> The user has been created.
-              <button type="button" (click)="vanishAlert()" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
-            </div>
-          </form>
+<div class="register">
+  <form class="form" [formGroup]="registerForm" (ngSubmit)="addUser()">
+
+    <h3>Sign Up</h3>
+
+    <div class="row">
+      <div class="col-6">
+        <div class="form-group">
+          <label for="firstName">First Name</label>
+          <input type="text" name="firstName" formControlName="firstName" class="text-input form-control" id="firstName"
+            aria-describedby="firstNameHelp" placeholder="Enter first Name">
+          <div *ngIf="submitted && registerForm.controls.firstName.errors" class="error">
+            <small class="form-text text-warning" *ngIf="registerForm.controls.firstName.errors.required">Your first
+              Name
+              is
+              required!
+            </small>
+          </div>
+        </div>
+      </div>
+      <div class="col-6">
+        <div class="form-group">
+          <label for="lastName">Last Name</label>
+          <input type="text" name="lastName" formControlName="lastName" class="text-input form-control" id="lastName"
+            aria-describedby="lastNameHelp" placeholder="Enter last Name">
+          <div *ngIf="submitted && registerForm.controls.lastName.errors" class="error">
+            <small class="form-text text-warning" *ngIf="registerForm.controls.lastName.errors.required">Your last Name
+              is
+              required!
+            </small>
+          </div>
+        </div>
+      </div>
     </div>
 
+    <div class="form-group">
+      <label for="email">Email</label>
+      <input type="email" name="email" formControlName="email" class="text-input form-control" id="email"
+        aria-describedby="emailHelp" placeholder="Enter email">
+      <div *ngIf="submitted && registerForm.controls.email.errors" class="error">
+        <small class="form-text text-warning" *ngIf="registerForm.controls.email.errors.required">Your email is
+          required!
+        </small>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="phoneNumber">Phone Number</label>
+      <input type="tel" name="phoneNumber" formControlName="telephoneNumber" class="text-input form-control"
+        id="phoneNumber" aria-describedby="phoneNumberHelp" placeholder="Enter Phone Number">
+    </div>
+
+    <div class="form-group">
+      <label for="password">Password</label>
+      <input type="password" name="password" formControlName="password" class="text-input form-control" id="password"
+        placeholder="Password">
+      <div *ngIf="submitted && registerForm.controls.password.errors" class="error">
+        <small class="form-text text-warning" *ngIf="registerForm.controls.password.errors.required">Your password
+          is
+          required!
+        </small>
+        <small class="form-text text-warning" *ngIf="registerForm.controls.password.errors.minlength">Your password
+          must be at least 8 characters long!
+        </small>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="passwordRepeat">Repeat Password</label>
+      <input type="password" name="passwordRepeat" formControlName="passwordRepeat" class="text-input form-control"
+        id="passwordRepeat" placeholder="Repeat Password">
+      <div *ngIf="submitted" class="error">
+        <small class="form-text text-warning"
+          *ngIf="registerForm.value.password != registerForm.value.passwordRepeat">Your passwords must match.
+        </small>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="addressName">Address Name</label>
+      <input type="text" name="addressName" formControlName="addressName" class="text-input form-control"
+        id="addressName" aria-describedby="addressNameHelp" placeholder="Enter Address Name">
+      <div *ngIf="submitted && registerForm.controls.addressName.errors" class="error">
+        <small class="form-text text-warning" *ngIf="registerForm.controls.addressName.errors.required">Your Address
+          Name
+          is
+          required!
+        </small>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="lineOne">Line One</label>
+      <input type="text" name="lineOne" formControlName="lineOne" class="text-input form-control" id="lineOne"
+        aria-describedby="lineOneHelp" placeholder="Enter line one">
+      <div *ngIf="submitted && registerForm.controls.lineOne.errors" class="error">
+        <small class="form-text text-warning" *ngIf="registerForm.controls.lineOne.errors.required">Your line one is
+          required!
+        </small>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="lineTwo">Line Two</label>
+      <input type="text" name="lineTwo" formControlName="lineTwo" class="text-input form-control" id="lineTwo"
+        aria-describedby="lineTwoHelp" placeholder="Enter line two">
+    </div>
+
+    <div class="row">
+      <div class="col-6">
+        <div class="form-group">
+          <label for="city">City Name</label>
+          <input type="text" name="city" formControlName="city" class="text-input form-control" id="city"
+            aria-describedby="cityHelp" placeholder="Enter City name">
+          <div *ngIf="submitted && registerForm.controls.city.errors" class="error">
+            <small class="form-text text-warning" *ngIf="registerForm.controls.city.errors.required">Your City Name is
+              required!
+            </small>
+          </div>
+        </div>
+      </div>
+      <div class="col-6">
+        <div class="form-group">
+          <label for="postcode">Postcode</label>
+          <input type="text" name="postcode" formControlName="postcode" class="text-input form-control" id="postcode"
+            aria-describedby="postcodeHelp" placeholder="Enter Postcode">
+          <div *ngIf="submitted && registerForm.controls.postcode.errors" class="error">
+            <small class="form-text text-warning" *ngIf="registerForm.controls.postcode.errors.required">Your Postcode
+              is
+              required!
+            </small>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="country">Country</label>
+      <input type="text" name="country" formControlName="country" class="text-input form-control" id="country"
+        aria-describedby="countryHelp" placeholder="Enter Country">
+      <div *ngIf="submitted && registerForm.controls.country.errors" class="error">
+        <small class="form-text text-warning" *ngIf="registerForm.controls.country.errors.required">Your Country is
+          required!
+        </small>
+      </div>
+    </div>
+
+    <button type="button" (click)="addUser()" id="signin">Sign Up</button>
+
+    <div *ngIf="error" class="col-12 alert alert-danger alert-dismissible fade show" role="alert">
+      <strong>Error! </strong> {{ errorMessage }}
+      <button type="button" (click)="vanishAlert()" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div *ngIf="success" class="col-12 alert alert-success alert-dismissible fade show" role="alert">
+      <strong>Success</strong> The user has been created.
+      <button type="button" (click)="vanishAlert()" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+  </form>
 </div>

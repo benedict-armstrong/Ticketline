@@ -8,7 +8,7 @@ import { UserService } from 'src/app/services/user.service';
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.scss']
+  styleUrls: ['./login.component.scss'],
 })
 export class LoginComponent implements OnInit {
 
@@ -26,18 +26,16 @@ export class LoginComponent implements OnInit {
     this.loginForm = this.formBuilder.group({
       email: ['', [Validators.required]],
       password: ['', [Validators.required]],
-      newPassword: ['']
+      newPassword: [''],
     });
   }
 
-  ngOnInit(): void {
-  }
+  ngOnInit(): void {}
 
   /**
    * Perform login after submitting the form to sign in.
    */
   login() {
-
     if (this.loginForm.valid) {
       const authObj: AuthRequest = new AuthRequest(
         this.loginForm.value.email,
@@ -77,12 +75,13 @@ export class LoginComponent implements OnInit {
       );
 
       if (this.loginForm.value.newPassword) {
-
-        if (this.loginForm.value.newPassword === this.loginForm.value.password) {
-          this.errorMessage = 'The new password must be different from the old password';
+        if (
+          this.loginForm.value.newPassword === this.loginForm.value.password
+        ) {
+          this.errorMessage =
+            'The new password must be different from the old password';
           this.error = true;
         } else {
-
           this.authService.loginUser(authObj).subscribe(
             () => {
               this.userService.getUserByEmail(authObj.email).subscribe(
@@ -132,5 +131,4 @@ export class LoginComponent implements OnInit {
       this.errorMessage = error.error;
     }
   }
-
 }
