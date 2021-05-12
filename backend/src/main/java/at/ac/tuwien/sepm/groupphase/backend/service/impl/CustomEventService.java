@@ -1,3 +1,4 @@
+/*
 package at.ac.tuwien.sepm.groupphase.backend.service.impl;
 
 import at.ac.tuwien.sepm.groupphase.backend.entity.Event;
@@ -41,3 +42,6 @@ public class CustomEventService implements EventService {
         }
     }
 }
+
+
+ */

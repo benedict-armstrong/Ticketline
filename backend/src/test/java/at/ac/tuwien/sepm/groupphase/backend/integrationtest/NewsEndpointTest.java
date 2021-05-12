@@ -4,10 +4,10 @@ import at.ac.tuwien.sepm.groupphase.backend.basetest.TestDataFile;
 import at.ac.tuwien.sepm.groupphase.backend.basetest.TestDataNews;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.NewsDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.NewsMapper;
-import at.ac.tuwien.sepm.groupphase.backend.entity.Event;
+//import at.ac.tuwien.sepm.groupphase.backend.entity.Event;
 import at.ac.tuwien.sepm.groupphase.backend.entity.File;
 import at.ac.tuwien.sepm.groupphase.backend.entity.News;
-import at.ac.tuwien.sepm.groupphase.backend.repository.EventRepository;
+//import at.ac.tuwien.sepm.groupphase.backend.repository.EventRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.FileRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.NewsRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -49,8 +49,11 @@ public class NewsEndpointTest implements TestDataNews, TestDataFile {
     @Autowired
     private NewsRepository newsRepository;
 
+    /*
     @Autowired
     private EventRepository eventRepository;
+
+     */
 
     @Autowired
     private FileRepository fileRepository;
@@ -58,9 +61,12 @@ public class NewsEndpointTest implements TestDataNews, TestDataFile {
     @Autowired
     private ObjectMapper objectMapper;
 
+    /*
     private final Event event = Event.EventBuilder.aEvent()
         .withTitle("Testevent")
         .build();
+
+     */
 
     private final File file = File.FileBuilder.aFile()
         .withData(TEST_FILE_DATA)
@@ -73,21 +79,21 @@ public class NewsEndpointTest implements TestDataNews, TestDataFile {
         .withTitle("Testtitle")
         .withText("Testtext")
         .withAuthor("Testuser")
-        .withEvent(event)
         .withImages(images)
         .withPublishedAt(TEST_NEWS_PUBLISHED_AT)
         .build();
+        //.withEvent(event)
 
     @BeforeEach
     public void beforeEach() {
         newsRepository.deleteAll();
-        eventRepository.deleteAll();
+        //eventRepository.deleteAll();
         fileRepository.deleteAll();
 
         images = new HashSet<>();
         images.add(file);
 
-        eventRepository.save(event);
+        //eventRepository.save(event);
         fileRepository.save(file);
     }
 
@@ -119,7 +125,7 @@ public class NewsEndpointTest implements TestDataNews, TestDataFile {
                 .withTitle(news.getTitle() + i)
                 .withText(news.getText())
                 .withAuthor(news.getAuthor())
-                .withEvent(news.getEvent())
+                //.withEvent(news.getEvent())
                 .withPublishedAt(news.getPublishedAt())
                 .build();
             newsRepository.save(n);
@@ -204,7 +210,7 @@ public class NewsEndpointTest implements TestDataNews, TestDataFile {
             .withTitle(news.getTitle())
             .withText(news.getText())
             .withAuthor(news.getAuthor())
-            .withEvent(news.getEvent())
+            //.withEvent(news.getEvent())
             .withPublishedAt(news.getPublishedAt())
             .build();
         News saved = newsRepository.save(n);

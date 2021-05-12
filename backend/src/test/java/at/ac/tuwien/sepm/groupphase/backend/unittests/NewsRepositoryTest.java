@@ -1,9 +1,9 @@
 package at.ac.tuwien.sepm.groupphase.backend.unittests;
 
 import at.ac.tuwien.sepm.groupphase.backend.basetest.TestDataNews;
-import at.ac.tuwien.sepm.groupphase.backend.entity.Event;
+//import at.ac.tuwien.sepm.groupphase.backend.entity.Event;
 import at.ac.tuwien.sepm.groupphase.backend.entity.News;
-import at.ac.tuwien.sepm.groupphase.backend.repository.EventRepository;
+//import at.ac.tuwien.sepm.groupphase.backend.repository.EventRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.NewsRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -28,8 +28,11 @@ public class NewsRepositoryTest implements TestDataNews {
     @Autowired
     private NewsRepository newsRepository;
 
+    /*
     @Autowired
     private EventRepository eventRepository;
+
+     */
 
     private News news;
     private News news2;
@@ -37,17 +40,20 @@ public class NewsRepositoryTest implements TestDataNews {
     @BeforeEach
     public void beforeEach(){
         newsRepository.deleteAll();
+        /*
         eventRepository.deleteAll();
         Event event = Event.EventBuilder.aEvent()
             .withTitle("Testevent")
             .build();
         eventRepository.save(event);
 
+         */
+
         news = News.NewsBuilder.aNews()
             .withTitle(TEST_NEWS_TITLE)
             .withText(TEST_NEWS_TEXT)
             .withAuthor("Testuser")
-            .withEvent(event)
+            //.withEvent(event)
             .withPublishedAt(TEST_NEWS_PUBLISHED_AT)
             .build();
 
@@ -55,7 +61,7 @@ public class NewsRepositoryTest implements TestDataNews {
             .withTitle(TEST_NEWS_TITLE + "2")
             .withText(TEST_NEWS_TEXT)
             .withAuthor("TestAuthor")
-            .withEvent(event)
+            //.withEvent(event)
             .withPublishedAt(TEST_NEWS_PUBLISHED_AT)
             .build();
     }
