@@ -1,73 +1,74 @@
 /* You can add global styles to this file, and also import other style files */
+@import "./colors.scss";
 
 body {
   font-family: "Roboto", sans-serif !important;
 }
 
-button {
+button.primary, button.secondary {
   width: 100%;
   min-width: 45px;
-  margin: 10px 0 !important;
+  margin: 10px 0px;
   height: 45px;
-  border-radius: 10px !important;
-  border: none;
-  background: rgb(203, 103, 111);
-  background: linear-gradient(
-    261deg,
-    rgba(203, 103, 111, 1) 19%,
-    rgba(193, 73, 83, 1) 80%
-  );
-  box-shadow: rgba(0, 0, 0, 0.1) 0 4px 12px;
-  color: white;
+  border-radius: 10px;
+  border: 1px solid $gray-242;
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
   font-weight: 800;
 }
 
+button.primary {
+  background: $primary;
+  background: linear-gradient(
+    261deg,
+    $primary 19%,
+    $primary-darker 80%
+  );
+  color: white;
+}
+
 button.secondary {
-  background: white none;
-  font-weight: 800;
-  color: rgba(193, 73, 83, 1);
+  background: none;
+  background-color: white;
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
+  color: $primary-darker;
 }
 
 button.no-shadow {
   box-shadow: none;
 }
 
-button.custom {
-  width: auto;
-  min-width: none;
-  margin: 0 !important;
-  height: none;
-  border-radius: none !important;
+button.no-border {
   border: none;
-  background: none;
-  box-shadow: none;
-  color: inherit;
-  font-weight: inherit;
 }
 
 button:focus {
-  outline: none !important;
-  border: none !important;
-  box-shadow: none !important;
+  box-shadow: none;
 }
 
 input.text-input,
 select.select-input {
-  border: none !important;
+  border: none;
   font-size: 12pt;
-  height: 50px !important;
-  background-color: rgb(242, 242, 242) !important;
-  border-radius: 3px !important;
+  height: 50px;
+  background-color: $gray-242;
+  border-radius: 3px;
 }
 
 input.text-input:focus {
-  outline: none !important;
+  background-color: $gray-242;
+  outline: none;
   border: none;
   box-shadow: none;
 }
 
-input::placeholder {
-  opacity: 0.6 !important;
+input.text-input::placeholder {
+  opacity: 0.6;
+}
+
+label {
+  margin-bottom: 5px;
+  font-size: 10pt;
+  opacity: 0.8;
 }
 
 .alert {
@@ -75,10 +76,10 @@ input::placeholder {
   vertical-align: middle;
 }
 
-.alert > button {
+button.close {
   width: auto;
   height: auto;
-  margin: 0 !important;
+  margin: 0;
   position: relative;
   box-shadow: none;
   background: none;

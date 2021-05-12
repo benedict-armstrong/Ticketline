@@ -1,21 +1,5 @@
-.login {
-  min-height: 80vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.login-options {
-  display: flex;
-  justify-content: space-between;
-}
-
-label[for="email"],
-label[for="password"],
-label[for="name"] {
-  margin-bottom: 5px;
-  font-size: 10pt;
-  opacity: 0.8;
+.register {
+  margin: 10px 15%;
 }
 
 .form-group {
