@@ -1,20 +1,18 @@
-import {Injectable} from '@angular/core';
-import {AuthRequest} from '../dtos/auth-request';
-import {Observable} from 'rxjs';
-import {HttpClient} from '@angular/common/http';
-import {tap} from 'rxjs/operators';
+import { Injectable } from '@angular/core';
+import { AuthRequest } from '../dtos/auth-request';
+import { Observable } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
+import { tap } from 'rxjs/operators';
 import jwt_decode from 'jwt-decode';
-import {Globals} from '../global/globals';
+import { Globals } from '../global/globals';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AuthService {
-
   private authBaseUri: string = this.globals.backendUri + '/authentication';
 
-  constructor(private httpClient: HttpClient, private globals: Globals) {
-  }
+  constructor(private httpClient: HttpClient, private globals: Globals) {}
 
   /**
    * Login in the user. If it was successful, a valid JWT token will be stored
@@ -22,26 +20,28 @@ export class AuthService {
    * @param authRequest User data
    */
   loginUser(authRequest: AuthRequest): Observable<string> {
-    return this.httpClient.post(this.authBaseUri, authRequest, {responseType: 'text'})
-      .pipe(
-        tap((authResponse: string) => this.setToken(authResponse))
-      );
+    return this.httpClient
+      .post(this.authBaseUri, authRequest, { responseType: 'text' })
+      .pipe(tap((authResponse: string) => this.setToken(authResponse)));
   }
-
 
   /**
    * Check if a valid JWT token is saved in the localStorage
    */
-  isLoggedIn() {
-    return !!this.getToken() && (this.getTokenExpirationDate(this.getToken()).valueOf() > new Date().valueOf());
+  isLoggedIn(): boolean {
+    return (
+      !!this.getToken() &&
+      this.getTokenExpirationDate(this.getToken()).valueOf() >
+        new Date().valueOf()
+    );
   }
 
-  logoutUser() {
+  logoutUser(): void {
     console.log('Logout');
     localStorage.removeItem('authToken');
   }
 
-  getToken() {
+  getToken(): string {
     return localStorage.getItem('authToken');
   }
 
@@ -66,7 +66,7 @@ export class AuthService {
   /**
    * Returns the email of the user based on the current token
    */
-   getUserEmail() {
+  getUserEmail() {
     if (this.getToken() != null) {
       const decoded: any = jwt_decode(this.getToken());
       return decoded.sub;
@@ -79,7 +79,6 @@ export class AuthService {
   }
 
   private getTokenExpirationDate(token: string): Date {
-
     const decoded: any = jwt_decode(token);
     if (decoded.exp === undefined) {
       return null;
@@ -89,5 +88,4 @@ export class AuthService {
     date.setUTCSeconds(decoded.exp);
     return date;
   }
-
 }

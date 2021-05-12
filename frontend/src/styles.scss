@@ -65,6 +65,12 @@ input.text-input::placeholder {
   opacity: 0.6;
 }
 
+label {
+  margin-bottom: 5px;
+  font-size: 10pt;
+  opacity: 0.8;
+}
+
 .alert {
   height: auto;
   vertical-align: middle;
