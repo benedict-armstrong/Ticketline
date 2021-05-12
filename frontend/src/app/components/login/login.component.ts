@@ -48,15 +48,8 @@ export class LoginComponent implements OnInit {
         () => {
           this.userService.getUserByEmail(authObj.email).subscribe(
             (response) => {
-              response.lastLogin = new Date();
               console.log(response.lastLogin);
-              this.userService.updateUser(response).subscribe(
-                (responseData) => {
-                  this.router.navigate(['/user'], { state: { user: responseData } });
-                },
-                error => {
-                  this.defaultServiceErrorHandling(error);
-                });
+              this.router.navigate(['/user'], { state: { user: response } });
             },
             error => {
               this.defaultServiceErrorHandling(error);
