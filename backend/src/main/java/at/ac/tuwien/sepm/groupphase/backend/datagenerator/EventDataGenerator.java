@@ -13,8 +13,9 @@ import java.lang.invoke.MethodHandles;
 @Profile("generateData")
 @Component
 public class EventDataGenerator {
+    // dummy generator for later events
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+    /*private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private static final int NUMBER_OF_EVENTS_TO_GENERATE = 5;
     private static final String TEST_EVENT = "Test Event";
 
@@ -38,5 +39,5 @@ public class EventDataGenerator {
                 eventRepository.save(event);
             }
         }
-    }
+    }*/
 }

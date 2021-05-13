@@ -44,11 +44,11 @@ public class NewsDataGenerator {
     }
 
     @PostConstruct
-    private void generateNewsWithEventWithoutPictures() {
+    private void generateNewsWithoutPictures() {
         if (newsRepository.findAll().size() > 0) {
             LOGGER.debug("news already generated");
         } else {
-            List<Event> events = new LinkedList<>();
+            /*List<Event> events = new LinkedList<>();
 
             if (eventRepository.findAll().size() > 4) {
                 LOGGER.debug("events for news already generated");
@@ -64,13 +64,14 @@ public class NewsDataGenerator {
                     LOGGER.debug("saving event {} for news", event);
                     eventRepository.save(event);
                 }
-            }
+            }*/
 
             LOGGER.debug("generating {} news entries with events and without pictures", NUMBER_OF_NEWS_TO_GENERATE);
 
             for (int i = 0; i < NUMBER_OF_NEWS_TO_GENERATE; i++) {
                 News news = News.NewsBuilder.aNews().withPublishedAt(LocalDateTime.now()).withAuthor(TEST_AUTHOR_NAME)
-                    .withTitle(TEST_TITLE + i).withText(TEST_TEXT + i).withEvent(events.get(i)).build();
+                    .withTitle(TEST_TITLE + i).withText(TEST_TEXT + i) // .withEvent(events.get(i))
+                    .build();
 
                 LOGGER.debug("saving news {}", news);
                 newsRepository.save(news);
@@ -84,7 +85,7 @@ public class NewsDataGenerator {
 
         try (InputStream inputStream = url.openStream()) {
             int n = 0;
-            byte [] buffer = new byte[ 1024 ];
+            byte [] buffer = new byte[1024];
             while (-1 != (n = inputStream.read(buffer))) {
                 output.write(buffer, 0, n);
             }
@@ -98,7 +99,7 @@ public class NewsDataGenerator {
         if (newsRepository.findAll().size() > 5) {
             LOGGER.debug("news already generated");
         } else {
-            List<Event> events = new LinkedList<>();
+            /*List<Event> events = new LinkedList<>();
 
             if (eventRepository.findAll().size() > 4) {
                 LOGGER.debug("events for news already generated");
@@ -114,11 +115,11 @@ public class NewsDataGenerator {
                     LOGGER.debug("saving event {} for news", event);
                     eventRepository.save(event);
                 }
-            }
+            }*/
 
             LOGGER.debug("generating {} news entries with events and with pictures", NUMBER_OF_NEWS_TO_GENERATE);
 
-            // using free images from pixaby to test
+            // using free images from pixabay to test
             // Image 1 https://pixabay.com/vectors/test-pattern-tv-tv-test-pattern-152459/
             // Image 2 https://pixabay.com/illustrations/maintenance-under-construction-2422173/
             byte[] imgBuffer1 = recoverImageFromUrl("https://cdn.pixabay.com/photo/2013/07/12/17/47/test-pattern-152459_960_720.png");
@@ -139,7 +140,7 @@ public class NewsDataGenerator {
                 fileRepository.save(file2);
 
                 News news = News.NewsBuilder.aNews().withPublishedAt(LocalDateTime.now()).withAuthor(TEST_AUTHOR_NAME)
-                    .withTitle(TEST_TITLE + (i + 10)).withText(TEST_TEXT + (i + 10)).withEvent(events.get(i))
+                    .withTitle(TEST_TITLE + (i + 10)).withText(TEST_TEXT + (i + 10)) //.withEvent(events.get(i))
                     .withImages(set).build();
 
                 LOGGER.debug("saving news {}", news);
