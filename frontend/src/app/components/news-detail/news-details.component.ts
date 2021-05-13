@@ -1,8 +1,9 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { News } from 'src/app/dtos/news';
 import { FileService } from 'src/app/services/file.service';
 import { ApplicationNewsService } from 'src/app/services/news.service';
+import {Event} from '../../dtos/event';
 
 @Component({
   selector: 'app-news-detail',
@@ -16,6 +17,7 @@ export class NewsDetailComponent implements OnInit {
   success = false;
   newsId = 0;
   newsItem: News;
+  correspondingEvent: Event;
   imgURL = [];
   date: Date;
 
@@ -27,9 +29,10 @@ export class NewsDetailComponent implements OnInit {
     this.newsService.getNewsById(this.newsId).subscribe(
       (response) => {
         this.newsItem = response;
+        this.correspondingEvent = this.newsItem.event;
         this.date = new Date(response.publishedAt);
         if (this.newsItem.images.length > 0) {
-          for(let i=0; i<this.newsItem.images.length; i++){
+          for (let i = 0; i < this.newsItem.images.length; i++) {
             const img = FileService.asFile(this.newsItem.images[i].data, this.newsItem.images[i].type);
             this.setURL(img, i);
           }

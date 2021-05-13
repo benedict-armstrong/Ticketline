@@ -20,24 +20,27 @@
                 </button>
             </div>
               </div>
-            <div class="col-md-4">
+            <div class="col-md-4" *ngIf="correspondingEvent">
                 <div class="details">
                     <div>
                         <p><em>Corresponding event</em></p>
                         <div class="date">
                             <div id="month">
-                                JUN
+                              {{correspondingEvent.date | date:'MMM'}}
                             </div>
                             <div id="day">
-                                04
+                              {{correspondingEvent.date | date:'d'}}
+                            </div>
+                            <div id="year">
+                              {{correspondingEvent.date | date:'y'}}
                             </div>
                         </div>
-                        <h4><strong>Title of a very exciting Event</strong></h4>
-                        <p id="performer">Performer</p>
-                        <p>Venue</p>
+                        <h4><strong>{{correspondingEvent.title}}</strong></h4>
+                        <p id="performer">Performer?</p>
+                        <p>Venue?</p>
                         <p>38€</p>
                     </div>
-                    <button id="get-tickets" [routerLink]="['/event']">Get tickets</button>
+                    <button class="primary" id="get-tickets" [routerLink]="['/event-detail', correspondingEvent.id]">Get tickets</button>
                 </div>
             </div>
         </div>
