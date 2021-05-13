@@ -19,7 +19,6 @@ export class UserHomeComponent implements OnInit {
 
   constructor(private userService: UserService, private authService: AuthService, private router: Router) {
     if (this.router.getCurrentNavigation().extras.state) {
-
       this.user = this.router.getCurrentNavigation().extras.state.user;
     } else {
       if (authService.isLoggedIn()) {

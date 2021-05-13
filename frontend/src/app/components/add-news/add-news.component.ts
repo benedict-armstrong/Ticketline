@@ -30,7 +30,6 @@ export class AddNewsComponent implements OnInit {
     , null
     , null
     , null
-    , null
     , []);
 
   constructor(private applicationNewsService: ApplicationNewsService, private applicationEventService: ApplicationEventService,
