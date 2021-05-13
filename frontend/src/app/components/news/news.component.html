@@ -3,7 +3,12 @@
     <app-news-item [newsItem]="entry"></app-news-item>
   </div>
 </div>
-<div class="text-center more" (click)="loadBatch()">
+<div *ngIf="wasError" class="alert alert-danger alert-dismissible" role="alert">
+  {{errorMessage}}
+  <button type="button" (click)="loadBatch()" class="btn-close" data-dismiss="alert" aria-label="Close">
+  </button>
+</div>
+<div *ngIf="!wasError" class="text-center more" (click)="loadBatch()">
   <h3 *ngIf="!noNews">Load More</h3>
   <h3 *ngIf="noNews">You're all caught up</h3>
   <h3 *ngIf="!noNews"><i class="bi bi-arrow-bar-down"></i></h3>

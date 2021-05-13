@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, EventEmitter, OnInit, Output} from '@angular/core';
 import {ApplicationNewsService} from '../../services/news.service';
 import {News} from '../../dtos/news';
 
@@ -11,6 +11,9 @@ export class NewsComponent implements OnInit {
 
   news: News[] = [];
   noNews = false;
+
+  wasError = false;
+  errorMessage: string;
 
   private page = 0;
   private size = 8; // Determines how many news entries are loaded at the beginning and with each click on Load More
@@ -27,6 +30,7 @@ export class NewsComponent implements OnInit {
    * Offsetting is done with the help of IDs.
    */
   loadBatch() {
+    this.wasError = false;
     this.newsService.getNews(this.page, this.size).subscribe(
       response => {
         this.news.push(...response);
@@ -37,9 +41,14 @@ export class NewsComponent implements OnInit {
           this.noNews = true;
         }
       }, error => {
-        console.error(error);
+        this.handleError(error);
       }
     );
+  }
+
+  private handleError(error: Error) {
+    this.wasError = true;
+    this.errorMessage = error.message;
   }
 
 }
