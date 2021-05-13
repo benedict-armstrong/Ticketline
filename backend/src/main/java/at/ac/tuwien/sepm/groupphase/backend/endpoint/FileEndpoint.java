@@ -41,7 +41,7 @@ public class FileEndpoint {
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(summary = "Upload a file")
     public FileDto uploadFile(@RequestParam("file") MultipartFile file) {
-        LOGGER.info("POST /files {}", file);
+        LOGGER.info("POST /files (size={}, type={})", file.getSize(), file.getContentType());
         return fileMapper.fileToFileDto(fileService.upload(fileMapper.multipartFileToFile(file)));
     }
 
