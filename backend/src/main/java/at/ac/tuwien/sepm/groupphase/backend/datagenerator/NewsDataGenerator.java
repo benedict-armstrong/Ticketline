@@ -31,15 +31,14 @@ public class NewsDataGenerator {
     private static final String TEST_AUTHOR_NAME = "Test Author";
     private static final String TEST_TITLE = "Test Title";
     private static final String TEST_TEXT = "Test Test Test";
-    private static final String TEST_EVENT = "Test Event for News";
+    // private static final String TEST_EVENT = "Test Event for News";
 
     private final NewsRepository newsRepository;
-    private final EventRepository eventRepository;
+    // private final EventRepository eventRepository;
     private final FileRepository fileRepository;
 
-    public NewsDataGenerator(NewsRepository newsRepository, EventRepository eventRepository, FileRepository fileRepository) {
+    public NewsDataGenerator(NewsRepository newsRepository, FileRepository fileRepository) {
         this.newsRepository = newsRepository;
-        this.eventRepository = eventRepository;
         this.fileRepository = fileRepository;
     }
 
