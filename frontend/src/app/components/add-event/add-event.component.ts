@@ -3,7 +3,7 @@ import {ApplicationEventService} from '../../services/event.service';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {FileService} from '../../services/file.service';
 import {Event} from '../../dtos/event';
-import {Router} from "@angular/router";
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-add-event',
