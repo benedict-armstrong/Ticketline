@@ -1,7 +1,7 @@
 package at.ac.tuwien.sepm.groupphase.backend.datagenerator;
 
-import at.ac.tuwien.sepm.groupphase.backend.entity.Event;
-import at.ac.tuwien.sepm.groupphase.backend.repository.EventRepository;
+//import at.ac.tuwien.sepm.groupphase.backend.entity.Event;
+//import at.ac.tuwien.sepm.groupphase.backend.repository.EventRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Profile;
