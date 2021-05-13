@@ -32,8 +32,8 @@ export class NewsComponent implements OnInit {
         this.news.push(...response);
         if (response.length > 0) {
           this.page++;
-          this.noNews = false;
-        } else {
+        }
+        if (response.length < this.size) {
           this.noNews = true;
         }
       }, error => {
