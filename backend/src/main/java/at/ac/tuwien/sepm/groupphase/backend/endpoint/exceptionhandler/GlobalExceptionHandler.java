@@ -41,8 +41,14 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return handleExceptionInternal(ex, ex.getMessage(), new HttpHeaders(), HttpStatus.NOT_FOUND, request);
     }
 
-    @ExceptionHandler(value = {InvalidQueryParameterException.class, BadFileException.class})
-    protected ResponseEntity<Object> simpleHandleUnprocessableEntity(RuntimeException ex, WebRequest request) {
+    @ExceptionHandler(value = {InvalidQueryParameterException.class})
+    protected ResponseEntity<Object> handleInvalidQueryParameterException(RuntimeException ex, WebRequest request) {
+        LOGGER.warn(ex.getMessage());
+        return handleExceptionInternal(ex, ex.getMessage(), new HttpHeaders(), HttpStatus.UNPROCESSABLE_ENTITY, request);
+    }
+
+    @ExceptionHandler(value = {BadFileException.class})
+    protected ResponseEntity<Object> handleBadFileException(RuntimeException ex, WebRequest request) {
         LOGGER.warn(ex.getMessage());
         return handleExceptionInternal(ex, ex.getMessage(), new HttpHeaders(), HttpStatus.UNPROCESSABLE_ENTITY, request);
     }
