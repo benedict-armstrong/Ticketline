@@ -6,3 +6,19 @@ img {
   height: 200px;
   object-fit: cover;
 }
+
+#unread-badge-wrap {
+  display: flex;
+  justify-content: flex-end;
+  position: relative;
+  left: 10px;
+  bottom: 10px;
+}
+
+#unread-badge {
+  width: 20px;
+  height: 20px;
+  border-radius: 10px;
+  color: blue;
+  z-index: 10;
+}

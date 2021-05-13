@@ -1,7 +1,10 @@
 <div class="card text-left h-100" [routerLink]="['/news-detail', item.id]">
-    <img *ngIf="item.images.length > 0" class="card-img-top" [src]="imgURL" alt="">
-    <div class="card-body">
-        <h4 class="card-title">{{item.title}}</h4>
-        <p class="card-text">{{item.text.substr(0, 25) + (item.text.length>25 ? '...' : '')}}</p>
-    </div>
+  <div *ngIf="!read" id="unread-badge-wrap">
+    <div id="unread-badge" class="badge bg-primary">&nbsp;</div>
+  </div>
+  <img *ngIf="item.images.length > 0" class="card-img-top" [src]="imgURL" alt="">
+  <div class="card-body">
+    <h4 class="card-title">{{item.title}}</h4>
+    <p class="card-text">{{item.text.substr(0, 25) + (item.text.length>25 ? '...' : '')}}</p>
+  </div>
 </div>
