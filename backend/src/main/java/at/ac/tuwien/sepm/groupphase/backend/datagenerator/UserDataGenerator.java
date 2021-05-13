@@ -3,9 +3,11 @@ package at.ac.tuwien.sepm.groupphase.backend.datagenerator;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Address;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepm.groupphase.backend.repository.UserRepository;
+import at.ac.tuwien.sepm.groupphase.backend.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Profile;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -25,9 +27,11 @@ public class UserDataGenerator {
     private static final String TEST_ADDRESS_COUNTRY = "Austria";
 
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    public UserDataGenerator(UserRepository userRepository) {
+    public UserDataGenerator(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @PostConstruct
@@ -47,6 +51,9 @@ public class UserDataGenerator {
                                         .withLineOne("line " + i).withCity(TEST_ADDRESS_CITY)
                                         .withPostcode(TEST_ADDRESS_POSTCODE).withCountry(TEST_ADDRESS_COUNTRY).build())
                                         .withLastLogin(LocalDateTime.now()).build();
+
+                user.setLastLogin(LocalDateTime.now());
+                user.setPassword(passwordEncoder.encode(user.getPassword()));
                 LOGGER.debug("saving user {}", user);
                 userRepository.save(user);
             }
@@ -67,9 +74,11 @@ public class UserDataGenerator {
                     .withLineOne("line " + "Admin").withCity(TEST_ADDRESS_CITY)
                     .withPostcode(TEST_ADDRESS_POSTCODE).withCountry(TEST_ADDRESS_COUNTRY).build())
                 .withLastLogin(LocalDateTime.now()).build();
+
+            user.setLastLogin(LocalDateTime.now());
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
             LOGGER.debug("saving admin user {}", user);
             userRepository.save(user);
-
         }
     }
 
@@ -87,9 +96,11 @@ public class UserDataGenerator {
                     .withLineOne("line " + "Organizer").withCity(TEST_ADDRESS_CITY)
                     .withPostcode(TEST_ADDRESS_POSTCODE).withCountry(TEST_ADDRESS_COUNTRY).build())
                 .withLastLogin(LocalDateTime.now()).build();
+
+            user.setLastLogin(LocalDateTime.now());
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
             LOGGER.debug("saving organizer user {}", user);
             userRepository.save(user);
-
         }
     }
 }

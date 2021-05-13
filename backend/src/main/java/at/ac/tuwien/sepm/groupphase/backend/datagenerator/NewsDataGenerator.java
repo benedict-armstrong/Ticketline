@@ -121,23 +121,28 @@ public class NewsDataGenerator {
 
             // using free images from pixabay to test
             // Image 1 https://pixabay.com/vectors/test-pattern-tv-tv-test-pattern-152459/
-            // Image 2 https://pixabay.com/illustrations/maintenance-under-construction-2422173/
+            // Image 2 https://cdn.pixabay.com/photo/2015/11/22/19/04/crowd-1056764_960_720.jpg
+            // Image 3 https://pixabay.com/de/photos/hand-drehscheibe-dj-neon-lights-1850120/
             byte[] imgBuffer1 = recoverImageFromUrl("https://cdn.pixabay.com/photo/2013/07/12/17/47/test-pattern-152459_960_720.png");
-            byte[] imgBuffer2 = recoverImageFromUrl("https://cdn.pixabay.com/photo/2017/06/20/08/12/maintenance-2422173_960_720.png");
+            byte[] imgBuffer2 = recoverImageFromUrl("https://cdn.pixabay.com/photo/2015/11/22/19/04/crowd-1056764_960_720.jpg");
+            byte[] imgBuffer3 = recoverImageFromUrl("https://cdn.pixabay.com/photo/2016/11/22/19/15/hand-1850120_960_720.jpg");
 
             for (int i = 0; i < NUMBER_OF_NEWS_TO_GENERATE; i++) {
                 Set<File> set = new HashSet<>();
                 File file1 = File.FileBuilder.aFile().withData(imgBuffer1).withType(File.Type.IMAGE_PNG).build();
                 set.add(file1);
-
                 LOGGER.debug("saving file {} for news", file1);
                 fileRepository.save(file1);
 
-                File file2 = File.FileBuilder.aFile().withData(imgBuffer2).withType(File.Type.IMAGE_PNG).build();
+                File file2 = File.FileBuilder.aFile().withData(imgBuffer2).withType(File.Type.IMAGE_JPG).build();
                 set.add(file2);
-
                 LOGGER.debug("saving file {} for news", file2);
                 fileRepository.save(file2);
+
+                File file3 = File.FileBuilder.aFile().withData(imgBuffer3).withType(File.Type.IMAGE_JPG).build();
+                set.add(file3);
+                LOGGER.debug("saving file {} for news", file3);
+                fileRepository.save(file3);
 
                 News news = News.NewsBuilder.aNews().withPublishedAt(LocalDateTime.now()).withAuthor(TEST_AUTHOR_NAME)
                     .withTitle(TEST_TITLE + (i + 10)).withText(TEST_TEXT + (i + 10)) //.withEvent(events.get(i))
