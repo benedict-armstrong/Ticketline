@@ -1,18 +1,14 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint.dto;
 
-import at.ac.tuwien.sepm.groupphase.backend.entity.Event;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Event.EventType;
-import com.fasterxml.jackson.annotation.JsonFormat;
 import org.hibernate.validator.constraints.Range;
-import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.stereotype.Component;
 
-import javax.persistence.Column;
 import javax.validation.constraints.Future;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.Objects;
 
 public class EventDto {
@@ -36,13 +32,14 @@ public class EventDto {
     @Range(min = 1, message = "Duration must be greater than 0")
     private int duration;
 
-    public EventType getEventType() {
-        return eventType;
-    }
+    @NotNull(message = "Location is required")
+    private AddressDto location;
 
-    public void setEventType(EventType eventType) {
-        this.eventType = eventType;
-    }
+    @NotNull(message = "Artist is required")
+    private ArtistDto artist;
+
+    @Size(min = 1, message = "Atleast one sectortype is required")
+    private SectorTypeDto[] sectorTypes;
 
     @NotNull(message = "Event date is required")
     @Future
@@ -64,8 +61,40 @@ public class EventDto {
         this.duration = duration;
     }
 
+    public EventType getEventType() {
+        return eventType;
+    }
+
+    public void setEventType(EventType eventType) {
+        this.eventType = eventType;
+    }
+
     public LocalDateTime getDate() {
         return date;
+    }
+
+    public AddressDto getLocation() {
+        return location;
+    }
+
+    public void setLocation(AddressDto location) {
+        this.location = location;
+    }
+
+    public ArtistDto getArtist() {
+        return artist;
+    }
+
+    public void setArtist(ArtistDto artist) {
+        this.artist = artist;
+    }
+
+    public SectorTypeDto[] getSectorTypes() {
+        return sectorTypes;
+    }
+
+    public void setSectorTypes(SectorTypeDto[] sectorTypes) {
+        this.sectorTypes = sectorTypes;
     }
 
     public void setDate(LocalDateTime date) {
@@ -101,24 +130,43 @@ public class EventDto {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof EventDto)) {
+        if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        EventDto event = (EventDto) o;
-        return Objects.equals(id, event.id)
-            && Objects.equals(title, event.title);
+        EventDto eventDto = (EventDto) o;
+        return duration == eventDto.duration
+            && Objects.equals(id, eventDto.id)
+            && Objects.equals(title, eventDto.title)
+            && Objects.equals(description, eventDto.description)
+            && Arrays.equals(images, eventDto.images)
+            && eventType == eventDto.eventType
+            && Objects.equals(location, eventDto.location)
+            && Objects.equals(artist, eventDto.artist)
+            && Arrays.equals(sectorTypes, eventDto.sectorTypes)
+            && Objects.equals(date, eventDto.date);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id);
+        int result = Objects.hash(id, title, description, eventType, duration, location, artist, date);
+        result = 31 * result + Arrays.hashCode(images);
+        result = 31 * result + Arrays.hashCode(sectorTypes);
+        return result;
     }
 
     @Override
     public String toString() {
-        return "Event{"
+        return "EventDto{"
             + "id=" + id
-            + ", title=" + title
+            + ", title='" + title + '\''
+            + ", description='" + description + '\''
+            + ", images=" + Arrays.toString(images)
+            + ", eventType=" + eventType
+            + ", duration=" + duration
+            + ", locationDto=" + location
+            + ", artistDto=" + artist
+            + ", sectorTypeDto=" + Arrays.toString(sectorTypes)
+            + ", date=" + date
             + '}';
     }
 

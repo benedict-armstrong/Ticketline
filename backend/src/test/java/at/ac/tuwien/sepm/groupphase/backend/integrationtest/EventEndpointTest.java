@@ -3,10 +3,8 @@ package at.ac.tuwien.sepm.groupphase.backend.integrationtest;
 import at.ac.tuwien.sepm.groupphase.backend.basetest.TestDataEvent;
 import at.ac.tuwien.sepm.groupphase.backend.basetest.TestDataFile;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventDto;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.NewsDto;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Event;
 import at.ac.tuwien.sepm.groupphase.backend.entity.File;
-import at.ac.tuwien.sepm.groupphase.backend.entity.News;
 import at.ac.tuwien.sepm.groupphase.backend.repository.EventRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.FileRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -39,7 +37,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 @SpringBootTest
 @ActiveProfiles("test")
 @AutoConfigureMockMvc
-public class EventEndpointTest {
+public class EventEndpointTest implements TestDataEvent {
 
     @Autowired
     private MockMvc mockMvc;
@@ -60,14 +58,7 @@ public class EventEndpointTest {
 
     private Set<File> images = new HashSet<>();
 
-    private Event event = Event.EventBuilder.aEvent()
-        .withTitle(TestDataEvent.TEST_EVENT_TITLE)
-        .withDescription(TestDataEvent.TEST_EVENT_DESCRIPTION)
-        .withDate(TestDataEvent.TEST_EVENT_DATE_FUTURE)
-        .withDuration(TestDataEvent.TEST_EVENT_DURATION)
-        .withEventType(TestDataEvent.TEST_EVENT_EVENT_TYPE)
-        .withImages(images)
-        .build();
+    private Event event;
 
     @BeforeEach
     public void beforeEach() {
@@ -76,6 +67,18 @@ public class EventEndpointTest {
 
         images = new HashSet<>();
         images.add(file);
+
+        event = Event.EventBuilder.aEvent()
+            .withTitle(TestDataEvent.TEST_EVENT_TITLE)
+            .withDescription(TestDataEvent.TEST_EVENT_DESCRIPTION)
+            .withDate(TestDataEvent.TEST_EVENT_DATE_FUTURE)
+            .withDuration(TestDataEvent.TEST_EVENT_DURATION)
+            .withEventType(TestDataEvent.TEST_EVENT_EVENT_TYPE)
+            .withArtist(TestDataEvent.getTestEventArtist())
+            .withLocation(TestDataEvent.getTestEventLocation())
+            .withSectorTypes(TestDataEvent.getTestEventSectortypes())
+            .withImages(images)
+            .build();
 
         fileRepository.save(file);
     }
@@ -105,11 +108,14 @@ public class EventEndpointTest {
         int pageSize = 5;
         for (int i = 0; i < amountOfEventsToGenerate; i++) {
             Event e = Event.EventBuilder.aEvent()
-                .withTitle(TestDataEvent.TEST_EVENT_TITLE + i)
+                .withTitle(TestDataEvent.TEST_EVENT_TITLE)
                 .withDescription(TestDataEvent.TEST_EVENT_DESCRIPTION)
                 .withDate(TestDataEvent.TEST_EVENT_DATE_FUTURE)
                 .withDuration(TestDataEvent.TEST_EVENT_DURATION)
                 .withEventType(TestDataEvent.TEST_EVENT_EVENT_TYPE)
+                .withArtist(TestDataEvent.getTestEventArtist())
+                .withLocation(TestDataEvent.getTestEventLocation())
+                .withSectorTypes(TestDataEvent.getTestEventSectortypes())
                 .build();
             eventRepository.save(e);
         }
@@ -194,6 +200,34 @@ public class EventEndpointTest {
             .withDescription(TestDataEvent.TEST_EVENT_DESCRIPTION)
             .withDate(TestDataEvent.TEST_EVENT_DATE_PAST)
             .withDuration(TestDataEvent.TEST_EVENT_DURATION)
+            .withEventType(TestDataEvent.TEST_EVENT_EVENT_TYPE)
+            .withArtist(TestDataEvent.getTestEventArtist())
+            .withLocation(TestDataEvent.getTestEventLocation())
+            .withSectorTypes(TestDataEvent.getTestEventSectortypes())
+            .build();
+
+        MvcResult mvcResult = this.mockMvc.perform(
+            post(TestDataEvent.EVENT_BASE_URI)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(invalidEvent))
+        ).andReturn();
+
+        MockHttpServletResponse response = mvcResult.getResponse();
+        assertEquals(HttpStatus.BAD_REQUEST.value(), response.getStatus());
+    }
+
+    @Test
+    @DisplayName("Should return 400 when Date is in past")
+    public void whenCreateEventWithNoSectorTypes_then400() throws Exception {
+        Event invalidEvent = Event.EventBuilder.aEvent()
+            .withTitle(TestDataEvent.TEST_EVENT_TITLE)
+            .withDescription(TestDataEvent.TEST_EVENT_DESCRIPTION)
+            .withDate(TestDataEvent.TEST_EVENT_DATE_FUTURE)
+            .withDuration(TestDataEvent.TEST_EVENT_DURATION)
+            .withEventType(TestDataEvent.TEST_EVENT_EVENT_TYPE)
+            .withArtist(TestDataEvent.getTestEventArtist())
+            .withLocation(TestDataEvent.getTestEventLocation())
+            .withSectorTypes(new HashSet<>())
             .build();
 
         MvcResult mvcResult = this.mockMvc.perform(

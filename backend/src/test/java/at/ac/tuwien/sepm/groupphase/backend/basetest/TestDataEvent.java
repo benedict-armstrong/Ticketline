@@ -1,8 +1,13 @@
 package at.ac.tuwien.sepm.groupphase.backend.basetest;
 
+import at.ac.tuwien.sepm.groupphase.backend.entity.Address;
+import at.ac.tuwien.sepm.groupphase.backend.entity.Artist;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Event;
+import at.ac.tuwien.sepm.groupphase.backend.entity.SectorType;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
 public interface TestDataEvent extends TestData {
 
@@ -17,4 +22,17 @@ public interface TestDataEvent extends TestData {
 
     String EVENT_BASE_URI = BASE_URI + "/events";
 
+    static Set<SectorType> getTestEventSectortypes() {
+        Set<SectorType> sectorTypes = new HashSet<>();
+        sectorTypes.add(SectorType.SectorTypeBuilder.aSectorType().withName("Sector").withAmountOfTickets(100).build());
+        return sectorTypes;
+    }
+
+    static Artist getTestEventArtist() {
+        return Artist.ArtistBuilder.anArtist().withFirstName("Max").withLastName("Mustermann").build();
+    }
+
+    static Address getTestEventLocation() {
+        return Address.AddressBuilder.anAddress().withName("Max Mustermann").withLineOne("Teststraße 1").withCity("Wien").withPostcode("1010").withCountry("Österreich").build();
+    }
 }

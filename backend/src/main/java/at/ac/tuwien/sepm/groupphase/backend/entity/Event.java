@@ -1,17 +1,18 @@
 package at.ac.tuwien.sepm.groupphase.backend.entity;
 
-import org.hibernate.annotations.DynamicUpdate;
-
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Column;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.FetchType;
 import javax.persistence.CascadeType;
 import javax.persistence.Enumerated;
 import javax.persistence.EnumType;
+import javax.persistence.OneToOne;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Objects;
@@ -40,19 +41,23 @@ public class Event {
         CINEMA, THEATRE, OPERA, CONCERT
     }
 
-    public EventType getEventType() {
-        return eventType;
-    }
-
-    public void setEventType(EventType eventType) {
-        this.eventType = eventType;
-    }
-
     @Column(nullable = false)
     private int duration;
 
+    @OneToOne(cascade = {CascadeType.ALL})
+    @JoinColumn(name = "LOCATION_ID")
+    private Address location;
+
+    @OneToOne(cascade = {CascadeType.ALL})
+    @JoinColumn(name = "ARTIST_ID")
+    private Artist artist;
+
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
     private Set<File> images = new HashSet<>();
+
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @NotNull
+    private Set<SectorType> sectorTypes = new HashSet<>();
 
     public Long getId() {
         return id;
@@ -98,6 +103,38 @@ public class Event {
         this.images = images;
     }
 
+    public EventType getEventType() {
+        return eventType;
+    }
+
+    public void setEventType(EventType eventType) {
+        this.eventType = eventType;
+    }
+
+    public Set<SectorType> getSectorTypes() {
+        return sectorTypes;
+    }
+
+    public void setSectorTypes(Set<SectorType> sectorTypes) {
+        this.sectorTypes = sectorTypes;
+    }
+
+    public Address getLocation() {
+        return location;
+    }
+
+    public Artist getArtist() {
+        return artist;
+    }
+
+    public void setArtist(Artist artist) {
+        this.artist = artist;
+    }
+
+    public void setLocation(Address location) {
+        this.location = location;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -107,16 +144,15 @@ public class Event {
             return false;
         }
         Event event = (Event) o;
-        return duration == event.duration && Objects.equals(id, event.id) && title.equals(event.title) && description.equals(event.description) && date.equals(event.date) && Objects.equals(images, event.images);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, title, description, date, duration, images);
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
+        return duration == event.duration
+            && Objects.equals(id, event.id)
+            && Objects.equals(title, event.title)
+            && Objects.equals(description, event.description)
+            && Objects.equals(date, event.date) && eventType == event.eventType
+            && Objects.equals(location, event.location)
+            && Objects.equals(artist, event.artist)
+            && Objects.equals(images, event.images)
+            && Objects.equals(sectorTypes, event.sectorTypes);
     }
 
     @Override
@@ -126,9 +162,22 @@ public class Event {
             + ", title='" + title + '\''
             + ", description='" + description + '\''
             + ", date=" + date
+            + ", eventType=" + eventType
             + ", duration=" + duration
+            + ", location=" + location
+            + ", artist=" + artist
             + ", images=" + images
+            + ", sectorTypes=" + sectorTypes
             + '}';
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, title, description, date, eventType, duration, location, artist, images, sectorTypes);
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public static final class EventBuilder {
@@ -136,9 +185,12 @@ public class Event {
         private String title;
         private String description;
         private LocalDateTime date;
+        private Artist artist;
+        private Address location;
         private EventType eventType;
         private int duration;
         private Set<File> images;
+        private Set<SectorType> sectorTypes;
 
         private EventBuilder() {
         }
@@ -182,6 +234,21 @@ public class Event {
             return this;
         }
 
+        public EventBuilder withSectorTypes(Set<SectorType> sectorTypes) {
+            this.sectorTypes = sectorTypes;
+            return this;
+        }
+
+        public EventBuilder withArtist(Artist artist) {
+            this.artist = artist;
+            return this;
+        }
+
+        public EventBuilder withLocation(Address location) {
+            this.location = location;
+            return this;
+        }
+
         public Event build() {
             Event event = new Event();
             event.setId(id);
@@ -191,6 +258,9 @@ public class Event {
             event.setEventType(eventType);
             event.setDuration(duration);
             event.setImages(images);
+            event.setArtist(artist);
+            event.setLocation(location);
+            event.setSectorTypes(sectorTypes);
             return event;
         }
     }

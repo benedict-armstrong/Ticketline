@@ -68,6 +68,9 @@
           Duration is
           required!
         </small>
+        <small class="form-text text-danger" *ngIf="addEventForm.controls.duration.errors.min">
+          Duration must be greater than 0!
+        </small>
       </div>
     </div>
 
@@ -95,6 +98,168 @@
         </tr>
         </tbody>
       </table>
+    </div>
+
+    <hr/>
+
+    <div id="sectorTypeGroup">
+      <h5>Sector Types</h5>
+      <div class="row">
+        <div class="col-6">
+          <div class="form-group">
+            <label for="sectorName">Sector Name</label>
+            <input type="text" name="sectorName" formControlName="sectorName" class="text-input form-control" id="sectorName"
+                   placeholder="Enter sector name">
+            <div *ngIf="sectorError.name" class="error">
+              <small class="form-text text-danger">
+                Sector Name is required!
+              </small>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-6">
+          <div class="form-group">
+            <label for="sectorAmountTickets">Amount of tickets in sector</label>
+            <input type="number" name="sectorAmountTickets" formControlName="sectorAmountTickets" class="text-input form-control" id="sectorAmountTickets"
+                   placeholder="Enter amount of tickets">
+            <div *ngIf="sectorError.amountTickets" class="error">
+              <small class="form-text text-danger">
+                Amount of tickets must be greater than 0!
+              </small>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="form-group col-3">
+        <button class="primary" type="button" (click)="addSectorType()">Add sector type</button>
+      </div>
+
+      <div *ngIf="sectorTypes.length > 0">
+        <table class="table">
+          <tr>
+          <th>Name</th>
+          <th>Amount of Tickets</th>
+          </tr>
+          <tbody>
+          <tr *ngFor="let sectorType of sectorTypes; let i = index">
+            <td>{{sectorType.name}}</td>
+            <td>{{sectorType.amountOfTickets}}</td>
+            <td><button type="button" class="btn btn-primary" style="width: 100%" (click)="removeSectorType(i)">X</button></td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+      <div *ngIf="sectorTypes.length === 0 && submitted" class="error">
+        <small class="form-text text-danger">
+          Atleast one sector type required!
+        </small>
+      </div>
+    </div>
+
+    <hr/>
+
+    <div id="artistGroup">
+      <h5>Artist</h5>
+      <div class="row">
+        <div class="col-6">
+          <div class="form-group">
+            <label for="artistFirstName">Artist Firstname</label>
+            <input type="text" name="artistFirstName" formControlName="artistFirstName" class="text-input form-control" id="artistFirstName"
+            placeholder="Enter artist firstname">
+            <div *ngIf="submitted && addEventForm.controls.artistFirstName.errors" class="error">
+              <small class="form-text text-danger" *ngIf="addEventForm.controls.artistFirstName.errors.required">
+                Artist Firstname is required!
+              </small>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-6">
+          <div class="form-group">
+            <label for="artistLastName">Artist Lastname</label>
+            <input type="text" name="artistLastName" formControlName="artistLastName" class="text-input form-control" id="artistLastName"
+            placeholder="Enter artist lastname">
+            <div *ngIf="submitted && addEventForm.controls.artistLastName.errors" class="error">
+              <small class="form-text text-danger" *ngIf="addEventForm.controls.artistLastName.errors.required">
+                Artist Lastname is required!
+              </small>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <hr/>
+
+    <div id="addressGroup">
+      <h5>Location</h5>
+      <div class="form-group">
+        <label for="addressName">Address Name</label>
+        <input type="text" name="addressName" formControlName="addressName" class="text-input form-control"
+               id="addressName" aria-describedby="addressNameHelp" placeholder="Enter Address Name">
+        <div *ngIf="submitted && addEventForm.controls.addressName.errors" class="error">
+          <small class="form-text text-danger" *ngIf="addEventForm.controls.addressName.errors.required"> Address Name
+            is
+            required!
+          </small>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="lineOne">Line One</label>
+        <input type="text" name="lineOne" formControlName="lineOne" class="text-input form-control" id="lineOne"
+               aria-describedby="lineOneHelp" placeholder="Enter line one">
+        <div *ngIf="submitted && addEventForm.controls.lineOne.errors" class="error">
+          <small class="form-text text-danger" *ngIf="addEventForm.controls.lineOne.errors.required"> Line one is
+            required!
+          </small>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="lineTwo">Line Two</label>
+        <input type="text" name="lineTwo" formControlName="lineTwo" class="text-input form-control" id="lineTwo"
+               aria-describedby="lineTwoHelp" placeholder="Enter line two">
+      </div>
+
+      <div class="row">
+        <div class="col-6">
+          <div class="form-group">
+            <label for="city">City Name</label>
+            <input type="text" name="city" formControlName="city" class="text-input form-control" id="city"
+                   aria-describedby="cityHelp" placeholder="Enter City name">
+            <div *ngIf="submitted && addEventForm.controls.city.errors" class="error">
+              <small class="form-text text-danger" *ngIf="addEventForm.controls.city.errors.required"> City Name is
+                required!
+              </small>
+            </div>
+          </div>
+        </div>
+        <div class="col-6">
+          <div class="form-group">
+            <label for="postcode">Postcode</label>
+            <input type="text" name="postcode" formControlName="postcode" class="text-input form-control" id="postcode"
+                   aria-describedby="postcodeHelp" placeholder="Enter Postcode">
+            <div *ngIf="submitted && addEventForm.controls.postcode.errors" class="error">
+              <small class="form-text text-danger" *ngIf="addEventForm.controls.postcode.errors.required"> Postcode is
+                required!
+              </small>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="country">Country</label>
+        <input type="text" name="country" formControlName="country" class="text-input form-control" id="country"
+               aria-describedby="countryHelp" placeholder="Enter Country">
+        <div *ngIf="submitted && addEventForm.controls.country.errors" class="error">
+          <small class="form-text text-danger" *ngIf="addEventForm.controls.country.errors.required"> Country is
+            required!
+          </small>
+        </div>
+      </div>
     </div>
 
     <button type="button" (click)="addEvent()" class="primary" id="create">Create</button>

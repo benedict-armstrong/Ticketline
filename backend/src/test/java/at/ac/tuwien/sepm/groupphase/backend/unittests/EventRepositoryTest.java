@@ -31,11 +31,14 @@ public class EventRepositoryTest implements TestDataEvent {
         eventRepository.deleteAll();
 
         event = Event.EventBuilder.aEvent()
-            .withTitle(TEST_EVENT_TITLE)
-            .withDescription(TEST_EVENT_DESCRIPTION)
-            .withDate(TEST_EVENT_DATE_FUTURE)
-            .withDuration(TEST_EVENT_DURATION)
-            .withEventType(TEST_EVENT_EVENT_TYPE)
+            .withTitle(TestDataEvent.TEST_EVENT_TITLE)
+            .withDescription(TestDataEvent.TEST_EVENT_DESCRIPTION)
+            .withDate(TestDataEvent.TEST_EVENT_DATE_FUTURE)
+            .withDuration(TestDataEvent.TEST_EVENT_DURATION)
+            .withEventType(TestDataEvent.TEST_EVENT_EVENT_TYPE)
+            .withArtist(TestDataEvent.getTestEventArtist())
+            .withLocation(TestDataEvent.getTestEventLocation())
+            .withSectorTypes(TestDataEvent.getTestEventSectortypes())
             .build();
     }
 

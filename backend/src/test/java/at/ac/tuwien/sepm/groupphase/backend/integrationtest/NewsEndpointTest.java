@@ -4,7 +4,6 @@ import at.ac.tuwien.sepm.groupphase.backend.basetest.TestDataEvent;
 import at.ac.tuwien.sepm.groupphase.backend.basetest.TestDataFile;
 import at.ac.tuwien.sepm.groupphase.backend.basetest.TestDataNews;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.NewsDto;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.NewsMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Event;
 import at.ac.tuwien.sepm.groupphase.backend.entity.File;
 import at.ac.tuwien.sepm.groupphase.backend.entity.News;
@@ -27,7 +26,6 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
-import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
@@ -59,13 +57,7 @@ public class NewsEndpointTest implements TestDataNews, TestDataFile {
     @Autowired
     private ObjectMapper objectMapper;
 
-    private final Event event = Event.EventBuilder.aEvent()
-        .withTitle(TestDataEvent.TEST_EVENT_TITLE)
-        .withDescription(TestDataEvent.TEST_EVENT_DESCRIPTION)
-        .withDate(TestDataEvent.TEST_EVENT_DATE_FUTURE)
-        .withDuration(TestDataEvent.TEST_EVENT_DURATION)
-        .withEventType(TestDataEvent.TEST_EVENT_EVENT_TYPE)
-        .build();
+    private Event event;
 
     private final File file = File.FileBuilder.aFile()
         .withData(TEST_FILE_DATA)
@@ -88,6 +80,18 @@ public class NewsEndpointTest implements TestDataNews, TestDataFile {
         newsRepository.deleteAll();
         eventRepository.deleteAll();
         fileRepository.deleteAll();
+
+        event = Event.EventBuilder.aEvent()
+            .withTitle(TestDataEvent.TEST_EVENT_TITLE)
+            .withDescription(TestDataEvent.TEST_EVENT_DESCRIPTION)
+            .withDate(TestDataEvent.TEST_EVENT_DATE_FUTURE)
+            .withDuration(TestDataEvent.TEST_EVENT_DURATION)
+            .withEventType(TestDataEvent.TEST_EVENT_EVENT_TYPE)
+            .withArtist(TestDataEvent.getTestEventArtist())
+            .withLocation(TestDataEvent.getTestEventLocation())
+            .withSectorTypes(TestDataEvent.getTestEventSectortypes())
+            .build();
+        news.setEvent(event);
 
         images = new HashSet<>();
         images.add(file);

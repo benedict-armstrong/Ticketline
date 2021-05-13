@@ -45,6 +45,9 @@ public class NewsRepositoryTest implements TestDataNews {
             .withDate(TestDataEvent.TEST_EVENT_DATE_FUTURE)
             .withDuration(TestDataEvent.TEST_EVENT_DURATION)
             .withEventType(TestDataEvent.TEST_EVENT_EVENT_TYPE)
+            .withArtist(TestDataEvent.getTestEventArtist())
+            .withLocation(TestDataEvent.getTestEventLocation())
+            .withSectorTypes(TestDataEvent.getTestEventSectortypes())
             .build();
         eventRepository.save(event);
 

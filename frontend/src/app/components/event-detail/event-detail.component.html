@@ -26,6 +26,13 @@
             </div>
             <p class="info">{{eventItem.date | date:'EEEE, MMM d, y HH:mm'}} <br>
               Duration: {{eventItem.duration}} Minutes</p>
+            <p class="info">Performer: {{eventItem.artist.firstName}} {{eventItem.artist.lastName}}</p>
+            <p class="info">Location: <br>
+              {{this.eventItem.location.name}}<br>
+              {{this.eventItem.location.lineOne}}<br>
+              {{this.eventItem.location.postcode}} {{this.eventItem.location.city}} <br>
+              {{this.eventItem.location.country}}
+            </p>
             <p>{{eventItem.description}}</p>
         </div>
         <div class="body">
@@ -48,9 +55,9 @@
 
             <div class="tickets">
                 <p class="text-center">We will try to find seats next to each other</p>
-                <app-ticket-list-item></app-ticket-list-item>
-                <app-ticket-list-item></app-ticket-list-item>
-                <app-ticket-list-item></app-ticket-list-item>
+                <div *ngFor="let sectorType of eventItem.sectorTypes">
+                    <app-ticket-list-item [sectorType]="sectorType"></app-ticket-list-item>
+                </div>
             </div>
 
             <div class="selected-items row">
