@@ -47,7 +47,9 @@ public class CustomUserDetailService implements UserService {
 
             List<GrantedAuthority> grantedAuthorities;
             if (applicationUser.getRole() == ApplicationUser.UserRole.ADMIN) {
-                grantedAuthorities = AuthorityUtils.createAuthorityList("ROLE_ADMIN", "ROLE_USER");
+                grantedAuthorities = AuthorityUtils.createAuthorityList("ROLE_ADMIN", "ROLE_ORGANIZER", "ROLE_USER");
+            } else if (applicationUser.getRole() == ApplicationUser.UserRole.ORGANIZER) {
+                grantedAuthorities = AuthorityUtils.createAuthorityList("ROLE_ORGANIZER", "ROLE_USER");
             } else {
                 grantedAuthorities = AuthorityUtils.createAuthorityList("ROLE_USER");
             }
