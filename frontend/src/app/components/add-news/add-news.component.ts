@@ -66,6 +66,9 @@ export class AddNewsComponent implements OnInit {
         this.applicationNewsService.publishNews(this.news).subscribe(
           () => {
             this.success = true;
+            setTimeout(() => {
+              this.router.navigate(['/']);
+            }, 3000);
           },
           error => {
             this.defaultServiceErrorHandling(error);
@@ -81,6 +84,9 @@ export class AddNewsComponent implements OnInit {
               this.applicationNewsService.publishNews(this.news).subscribe(
                 () => {
                   this.success = true;
+                  setTimeout(() => {
+                    this.router.navigate(['/']);
+                  }, 3000);
                 },
                 error => {
                   this.defaultServiceErrorHandling(error);
