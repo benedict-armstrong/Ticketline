@@ -3,6 +3,7 @@ import {Event} from '../../dtos/event';
 import {FileService} from '../../services/file.service';
 import {ActivatedRoute} from '@angular/router';
 import {ApplicationEventService} from '../../services/event.service';
+import {AuthService} from '../../services/auth.service';
 
 @Component({
   selector: 'app-event-detail',
@@ -16,7 +17,8 @@ export class EventDetailComponent implements OnInit {
   error = false;
   errorMessage = '';
 
-  constructor(private eventService: ApplicationEventService, private activeRoute: ActivatedRoute) { }
+  constructor(private eventService: ApplicationEventService,
+              private activeRoute: ActivatedRoute, private authService: AuthService) { }
 
   ngOnInit(): void {
     const eventId = this.activeRoute.snapshot.params.id;
@@ -41,6 +43,10 @@ export class EventDetailComponent implements OnInit {
 
   vanishAlert(): void {
     this.error = false;
+  }
+
+  hasOrganizerPermission(): boolean {
+    return this.authService.getUserRole() === 'ORGANIZER' || this.authService.getUserRole() === 'ADMIN';
   }
 
   private setURL(file: File, id: number) {

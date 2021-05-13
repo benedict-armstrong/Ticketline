@@ -17,6 +17,10 @@
   color: rgba(193, 73, 83, 1);
 }
 
+.header > h3, .header > .add-news {
+  display: inline-block;
+}
+
 .options {
   display: flex;
   justify-content: center;

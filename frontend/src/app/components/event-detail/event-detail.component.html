@@ -1,4 +1,4 @@
-<div class="event">
+<div class="event" *ngIf="eventItem">
     <div id="carouselExampleControls" class="carousel slide col-md-8" data-bs-ride="carousel">
       <div class="carousel-inner">
         <div *ngIf="eventItem.images.length > 0">
@@ -20,9 +20,12 @@
     </div>
     <div class="main">
         <div class="header">
-            <h3>{{eventItem.title}}</h3>
-            <p class="info">{{eventItem.date | date:'EEEE, MM.d.y, hh:mm a'}}</p>
-            <p>Duration: {{eventItem.duration}} Minutes</p>
+            <h3 class="col-10">{{eventItem.title}}</h3>
+            <div class="col-2 add-news" *ngIf="hasOrganizerPermission()">
+                <button class="col-2 primary" [routerLink]="['/add-news', eventItem.id]">Add News</button>
+            </div>
+            <p class="info">{{eventItem.date | date:'EEEE, MMM d, y hh:mm'}} <br>
+              Duration: {{eventItem.duration}} Minutes</p>
             <p>{{eventItem.description}}</p>
         </div>
         <div class="body">
@@ -68,7 +71,7 @@
                 </div>
                 <div class="checkout-buttons">
                     <button class="secondary">Continue Shopping</button>
-                    <button>Checkout</button>
+                    <button class="primary">Checkout</button>
                 </div>
             </div>
 
