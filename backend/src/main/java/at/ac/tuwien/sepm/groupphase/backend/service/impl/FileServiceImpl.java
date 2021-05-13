@@ -22,7 +22,7 @@ public class FileServiceImpl implements FileService {
     }
 
     @Override
-    public File upload(File file) {
+    public File addFile(File file) {
         LOGGER.trace("save(file:(size={}, type={}))", file.getData().length, file.getType().toString());
         return fileRepository.save(file);
     }
