@@ -19,6 +19,9 @@ export class UserHomeComponent implements OnInit {
   // Success Flag
   passwordSuccess = false;
 
+  // Show User Actions
+  userActions = false;
+
   // If password change is submitted
   passwordSubmitted = false;
 
