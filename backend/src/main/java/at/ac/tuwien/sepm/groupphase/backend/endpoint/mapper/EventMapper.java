@@ -7,7 +7,7 @@ import org.mapstruct.Mapper;
 import java.util.List;
 
 @Mapper
-public interface EventMapper {
+public interface EventMapper extends FileTypeMapper {
 
     Event eventDtoToEvent(EventDto eventDto);
 
