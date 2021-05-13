@@ -59,4 +59,9 @@ public class EventRepositoryTest implements TestDataEvent {
         );
     }
 
+    @Test
+    @DisplayName("Should return null when searching for negative id")
+    public void givenNothing_whenFindOnyById_ShouldBeNull() {
+        assertNull(eventRepository.findOneById(-1L));
+    }
 }
