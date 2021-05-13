@@ -16,7 +16,7 @@ public class EventDataGenerator {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private static final int NUMBER_OF_EVENTS_TO_GENERATE = 5;
-    private static final String TEST_EVENT = "Test Event for News";
+    private static final String TEST_EVENT = "Test Event";
 
     private final EventRepository eventRepository;
 
@@ -26,7 +26,7 @@ public class EventDataGenerator {
 
     @PostConstruct
     private void generateEvent() {
-        if (eventRepository.findAll().size() > 4) {
+        if (eventRepository.findAll().size() > 0) {
             LOGGER.debug("events already generated");
         } else {
             LOGGER.debug("generating {} event entries", NUMBER_OF_EVENTS_TO_GENERATE);

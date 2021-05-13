@@ -4,18 +4,18 @@ import at.ac.tuwien.sepm.groupphase.backend.entity.Event;
 import at.ac.tuwien.sepm.groupphase.backend.entity.File;
 import at.ac.tuwien.sepm.groupphase.backend.entity.News;
 import at.ac.tuwien.sepm.groupphase.backend.repository.EventRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.FileRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.NewsRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 import javax.annotation.PostConstruct;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.lang.invoke.MethodHandles;
 import java.net.URL;
-import java.net.URLConnection;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -35,10 +35,12 @@ public class NewsDataGenerator {
 
     private final NewsRepository newsRepository;
     private final EventRepository eventRepository;
+    private final FileRepository fileRepository;
 
-    public NewsDataGenerator(NewsRepository newsRepository, EventRepository eventRepository) {
+    public NewsDataGenerator(NewsRepository newsRepository, EventRepository eventRepository, FileRepository fileRepository) {
         this.newsRepository = newsRepository;
         this.eventRepository = eventRepository;
+        this.fileRepository = fileRepository;
     }
 
     @PostConstruct
@@ -76,9 +78,23 @@ public class NewsDataGenerator {
         }
     }
 
+    private byte[] recoverImageFromUrl(String urlText) throws Exception {
+        URL url = new URL(urlText);
+        ByteArrayOutputStream output = new ByteArrayOutputStream();
 
-    /*@PostConstruct
-    private void generateNewsWithEventWithPictures() {
+        try (InputStream inputStream = url.openStream()) {
+            int n = 0;
+            byte [] buffer = new byte[ 1024 ];
+            while (-1 != (n = inputStream.read(buffer))) {
+                output.write(buffer, 0, n);
+            }
+        }
+
+        return output.toByteArray();
+    }
+
+    @PostConstruct
+    private void generateNewsWithEventWithPictures() throws Exception {
         if (newsRepository.findAll().size() > 5) {
             LOGGER.debug("news already generated");
         } else {
@@ -102,28 +118,25 @@ public class NewsDataGenerator {
 
             LOGGER.debug("generating {} news entries with events and with pictures", NUMBER_OF_NEWS_TO_GENERATE);
 
-            byte[] buffer = null;
-            try {
-                URL url = new URL("https://picjumbo.com/wp-content/uploads/the-golden-gate-bridge-sunset-1080x720.jpg");
-                URLConnection connection = url.openConnection();
-                InputStream is = connection.getInputStream();
-                InputStreamReader isr = new InputStreamReader(is);
-                StringBuffer sb = new StringBuffer();
-                int r;
-                while ((r = isr.read()) != -1) {
-                    sb.append(r);
-                }
-
-                buffer = sb.toString().getBytes();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-
+            // using free images from pixaby to test
+            // Image 1 https://pixabay.com/vectors/test-pattern-tv-tv-test-pattern-152459/
+            // Image 2 https://pixabay.com/illustrations/maintenance-under-construction-2422173/
+            byte[] imgBuffer1 = recoverImageFromUrl("https://cdn.pixabay.com/photo/2013/07/12/17/47/test-pattern-152459_960_720.png");
+            byte[] imgBuffer2 = recoverImageFromUrl("https://cdn.pixabay.com/photo/2017/06/20/08/12/maintenance-2422173_960_720.png");
 
             for (int i = 0; i < NUMBER_OF_NEWS_TO_GENERATE; i++) {
                 Set<File> set = new HashSet<>();
-                set.add(File.FileBuilder.aFile().withData(buffer).withType(File.Type.IMAGE_JPG).build());
+                File file1 = File.FileBuilder.aFile().withData(imgBuffer1).withType(File.Type.IMAGE_PNG).build();
+                set.add(file1);
+
+                LOGGER.debug("saving file {} for news", file1);
+                fileRepository.save(file1);
+
+                File file2 = File.FileBuilder.aFile().withData(imgBuffer2).withType(File.Type.IMAGE_PNG).build();
+                set.add(file2);
+
+                LOGGER.debug("saving file {} for news", file2);
+                fileRepository.save(file2);
 
                 News news = News.NewsBuilder.aNews().withPublishedAt(LocalDateTime.now()).withAuthor(TEST_AUTHOR_NAME)
                     .withTitle(TEST_TITLE + (i + 10)).withText(TEST_TEXT + (i + 10)).withEvent(events.get(i))
@@ -134,6 +147,6 @@ public class NewsDataGenerator {
             }
 
         }
-    }*/
+    }
 
 }
