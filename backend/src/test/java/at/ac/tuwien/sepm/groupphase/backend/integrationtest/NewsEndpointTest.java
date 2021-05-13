@@ -101,6 +101,8 @@ public class NewsEndpointTest implements TestDataNews, TestDataFile {
     public void givenNothing_whenGetAllNews_thenReturnEmptyList() throws Exception {
         MvcResult mvcResult = this.mockMvc.perform(
             get(NEWS_BASE_URI)
+                .param("page", "0")
+                .param("size", "10")
         ).andReturn();
         MockHttpServletResponse response = mvcResult.getResponse();
         assertEquals(HttpStatus.OK.value(), response.getStatus());
@@ -113,42 +115,11 @@ public class NewsEndpointTest implements TestDataNews, TestDataFile {
     }
 
     @Test
-    @DisplayName("Should return 8 freshest news on get all with no arguments")
-    public void givenManyNews_whenGetAllWithNoArguments_thenReturnListWith8FreshNews() throws Exception {
-        LocalDateTime freshest = null;
-        for (int i = 0; i < 15; i++) {
-            News n = News.NewsBuilder.aNews()
-                .withTitle(news.getTitle() + i)
-                .withText(news.getText())
-                .withAuthor(news.getAuthor())
-                .withEvent(news.getEvent())
-                .withPublishedAt(news.getPublishedAt().plusDays(i))
-                .build();
-            freshest = n.getPublishedAt();
-            newsRepository.save(n);
-        }
-        assertNotNull(freshest);
-
-        MvcResult mvcResult = this.mockMvc.perform(
-            get(NEWS_BASE_URI)
-        ).andReturn();
-        MockHttpServletResponse response = mvcResult.getResponse();
-        assertEquals(HttpStatus.OK.value(), response.getStatus());
-        assertEquals(MediaType.APPLICATION_JSON_VALUE, response.getContentType());
-
-        NewsDto[] newsDtos = objectMapper.readValue(response.getContentAsString(), NewsDto[].class);
-        assertEquals(8, newsDtos.length);
-        for (int i = 0; i < newsDtos.length; i++) {
-            assertEquals(freshest.minusDays(i), newsDtos[i].getPublishedAt());
-        }
-    }
-
-    @Test
-    @DisplayName("Should return list of news with IDs smaller than offset on get all")
-    public void givenNews_whenGetAllWithOnlyOffset_thenReturnListWithNews_AllIdsSmallerThanOffset() throws Exception {
-        long limit = 4L;
-        Long offset = null;
-        for (int i = 0; i < limit + 4; i++) {
+    @DisplayName("Should return correctly sized chunk of news on get all")
+    public void givenNews_whenGetAll_thenGetCorrectChunk() throws Exception {
+        int amountOfNewsToGenerate = 15;
+        int pageSize = 5;
+        for (int i = 0; i < amountOfNewsToGenerate; i++) {
             News n = News.NewsBuilder.aNews()
                 .withTitle(news.getTitle() + i)
                 .withText(news.getText())
@@ -156,35 +127,29 @@ public class NewsEndpointTest implements TestDataNews, TestDataFile {
                 .withEvent(news.getEvent())
                 .withPublishedAt(news.getPublishedAt())
                 .build();
-            News saved = newsRepository.save(n);
-            if (i == limit + 2) {
-               offset = saved.getId();
-            }
+            newsRepository.save(n);
         }
-        assertNotNull(offset);
 
         MvcResult mvcResult = this.mockMvc.perform(
             get(NEWS_BASE_URI)
-            .param("limit", Long.toString(limit))
-            .param("offset", offset.toString())
+            .param("page", String.valueOf(1))
+            .param("size", String.valueOf(pageSize))
         ).andReturn();
         MockHttpServletResponse response = mvcResult.getResponse();
         assertEquals(HttpStatus.OK.value(), response.getStatus());
         assertEquals(MediaType.APPLICATION_JSON_VALUE, response.getContentType());
 
         NewsDto[] newsDtos = objectMapper.readValue(response.getContentAsString(), NewsDto[].class);
-        assertEquals(limit, newsDtos.length);
-        for (NewsDto newsDto : newsDtos) {
-            assertTrue(newsDto.getId() < offset);
-        }
+        assertEquals(pageSize, newsDtos.length);
     }
 
     @Test
-    @DisplayName("Should return 422 on get all with negative limit")
+    @DisplayName("Should return 422 on get all with negative parameters")
     public void whenGetAllWithNegativeLimit_then422() throws Exception {
         MvcResult mvcResult = this.mockMvc.perform(
             get(NEWS_BASE_URI)
-                .param("limit", "-1")
+                .param("page", "-1")
+                .param("size", "-2")
         ).andReturn();
         MockHttpServletResponse response = mvcResult.getResponse();
         assertEquals(HttpStatus.UNPROCESSABLE_ENTITY.value(), response.getStatus());
@@ -195,25 +160,25 @@ public class NewsEndpointTest implements TestDataNews, TestDataFile {
     public void whenGetAllWithNonNumericParams_then422() throws Exception {
         MvcResult mvcResultL = this.mockMvc.perform(
             get(NEWS_BASE_URI)
-                .param("limit", "A")
+                .param("page", "A")
         ).andReturn();
         MvcResult mvcResultO = this.mockMvc.perform(
             get(NEWS_BASE_URI)
-                .param("offset", "-")
+                .param("size", "-")
         ).andReturn();
         MvcResult mvcResultLO = this.mockMvc.perform(
             get(NEWS_BASE_URI)
-                .param("limit", "~")
-                .param("offset", "B")
+                .param("page", "~")
+                .param("size", "B")
         ).andReturn();
 
         MockHttpServletResponse responseL = mvcResultL.getResponse();
         MockHttpServletResponse responseO = mvcResultO.getResponse();
         MockHttpServletResponse responseLO = mvcResultLO.getResponse();
         assertAll(
-            () -> assertEquals(HttpStatus.UNPROCESSABLE_ENTITY.value(), responseL.getStatus()),
-            () -> assertEquals(HttpStatus.UNPROCESSABLE_ENTITY.value(), responseO.getStatus()),
-            () -> assertEquals(HttpStatus.UNPROCESSABLE_ENTITY.value(), responseLO.getStatus())
+            () -> assertEquals(HttpStatus.BAD_REQUEST.value(), responseL.getStatus()),
+            () -> assertEquals(HttpStatus.BAD_REQUEST.value(), responseO.getStatus()),
+            () -> assertEquals(HttpStatus.BAD_REQUEST.value(), responseLO.getStatus())
         );
     }
 

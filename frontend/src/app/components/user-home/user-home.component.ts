@@ -17,8 +17,9 @@ export class UserHomeComponent implements OnInit {
 
   user: User;
 
-  constructor(private applicationUserService: UserService, private authService: AuthService, private router: Router) {
+  constructor(private userService: UserService, private authService: AuthService, private router: Router) {
     if (this.router.getCurrentNavigation().extras.state) {
+
       this.user = this.router.getCurrentNavigation().extras.state.user;
     } else {
       if (authService.isLoggedIn()) {
@@ -38,7 +39,7 @@ export class UserHomeComponent implements OnInit {
    * Load User with email from Backend.
    */
   loadUser(email: string) {
-    this.applicationUserService.getUserByEmail(email).subscribe(
+    this.userService.getUserByEmail(email).subscribe(
       (response) => {
         this.user = response;
       },

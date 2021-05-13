@@ -5,18 +5,14 @@
   align-items: center;
 }
 
+.login div {
+  width: 400px;
+}
+
 .login-options {
   display: flex;
   justify-content: space-between;
 }
-
-label[for="email"],
-label[for="password"] {
-  margin-bottom: 5px;
-  font-size: 10pt;
-  opacity: 0.8;
-}
-
 .form-group {
   margin: 20px 0px;
 }

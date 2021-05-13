@@ -8,7 +8,7 @@ import { UserService } from 'src/app/services/user.service';
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.scss']
+  styleUrls: ['./login.component.scss'],
 })
 export class LoginComponent implements OnInit {
 
@@ -21,23 +21,21 @@ export class LoginComponent implements OnInit {
 
 
   constructor(private authService: AuthService,
-              private applicationUserService: UserService,
+              private userService: UserService,
               private formBuilder: FormBuilder, private router: Router) {
     this.loginForm = this.formBuilder.group({
       email: ['', [Validators.required]],
       password: ['', [Validators.required]],
-      newPassword: ['']
+      newPassword: [''],
     });
   }
 
-  ngOnInit(): void {
-  }
+  ngOnInit(): void {}
 
   /**
    * Perform login after submitting the form to sign in.
    */
   login() {
-
     if (this.loginForm.valid) {
       const authObj: AuthRequest = new AuthRequest(
         this.loginForm.value.email,
@@ -46,17 +44,10 @@ export class LoginComponent implements OnInit {
 
       this.authService.loginUser(authObj).subscribe(
         () => {
-          this.applicationUserService.getUserByEmail(authObj.email).subscribe(
+          this.userService.getUserByEmail(authObj.email).subscribe(
             (response) => {
-              response.lastLogin = new Date();
               console.log(response.lastLogin);
-              this.applicationUserService.updateUser(response).subscribe(
-                (responseData) => {
-                  this.router.navigate(['/user'], { state: { user: responseData } });
-                },
-                error => {
-                  this.defaultServiceErrorHandling(error);
-                });
+              this.router.navigate(['/user'], { state: { user: response } });
             },
             error => {
               this.defaultServiceErrorHandling(error);
@@ -84,18 +75,19 @@ export class LoginComponent implements OnInit {
       );
 
       if (this.loginForm.value.newPassword) {
-
-        if (this.loginForm.value.newPassword === this.loginForm.value.password) {
-          this.errorMessage = 'The new password must be different from the old password';
+        if (
+          this.loginForm.value.newPassword === this.loginForm.value.password
+        ) {
+          this.errorMessage =
+            'The new password must be different from the old password';
           this.error = true;
         } else {
-
           this.authService.loginUser(authObj).subscribe(
             () => {
-              this.applicationUserService.getUserByEmail(authObj.email).subscribe(
+              this.userService.getUserByEmail(authObj.email).subscribe(
                 (response) => {
                   response.password = this.loginForm.value.newPassword;
-                  this.applicationUserService.updateUser(response).subscribe(
+                  this.userService.updateUser(response).subscribe(
                     () => {
                       this.loginForm.reset();
                       this.passwordChange = false;
@@ -139,5 +131,4 @@ export class LoginComponent implements OnInit {
       this.errorMessage = error.error;
     }
   }
-
 }

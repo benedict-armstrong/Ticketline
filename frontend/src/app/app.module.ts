@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import {FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {HttpClientModule} from '@angular/common/http';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { HttpClientModule } from '@angular/common/http';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -22,7 +22,8 @@ import { TicketDetailComponent } from './components/ticket-detail/ticket-detail.
 import { TicketListItemComponent } from './components/ticket-list-item/ticket-list-item.component';
 import {AddNewsComponent} from './components/add-news/add-news.component';
 import { AddEventComponent } from './components/add-event/add-event.component';
-import {AddUserComponent} from './components/add-user/add-user.component';
+import { AddUserComponent } from './components/add-user/add-user.component';
+import { httpInterceptorProviders } from './interceptors';
 
 @NgModule({
   declarations: [
@@ -51,8 +52,9 @@ import {AddUserComponent} from './components/add-user/add-user.component';
     AppRoutingModule,
     ReactiveFormsModule,
     HttpClientModule,
-    FormsModule],
-  providers: [],
+    FormsModule,
+  ],
+  providers: [httpInterceptorProviders], // Interceptors defined in interceptors/index.ts
   bootstrap: [AppComponent],
 })
 export class AppModule {}

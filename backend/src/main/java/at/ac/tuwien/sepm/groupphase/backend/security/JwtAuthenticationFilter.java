@@ -2,6 +2,8 @@ package at.ac.tuwien.sepm.groupphase.backend.security;
 
 import at.ac.tuwien.sepm.groupphase.backend.config.properties.SecurityProperties;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserLoginDto;
+import at.ac.tuwien.sepm.groupphase.backend.service.UserService;
+import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,18 +21,21 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.lang.invoke.MethodHandles;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final AuthenticationManager authenticationManager;
+    private final UserService userService;
     private final JwtTokenizer jwtTokenizer;
 
     public JwtAuthenticationFilter(AuthenticationManager authenticationManager, SecurityProperties securityProperties,
-                                   JwtTokenizer jwtTokenizer) {
+                                   JwtTokenizer jwtTokenizer, UserService userService) {
         this.authenticationManager = authenticationManager;
         this.jwtTokenizer = jwtTokenizer;
+        this.userService = userService;
         setFilterProcessesUrl(securityProperties.getLoginUri());
     }
 
@@ -68,6 +73,10 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
             .stream()
             .map(GrantedAuthority::getAuthority)
             .collect(Collectors.toList());
+
+        ApplicationUser applicationUser = userService.findApplicationUserByEmail(user.getUsername());
+        applicationUser.setLastLogin(LocalDateTime.now());
+        userService.updateUser(applicationUser);
 
         response.getWriter().write(jwtTokenizer.getAuthToken(user.getUsername(), roles));
         LOGGER.info("Successfully authenticated user {}", user.getUsername());
