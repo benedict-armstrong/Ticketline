@@ -80,31 +80,31 @@ public class NewsRepositoryTest implements TestDataNews {
         );
     }
 
-    @Test
-    @DisplayName("Should not include news with ID when offset is equal to that ID")
-    public void givenNews_whenOffsetIsEqualToId_thenExpectNoNewsWithIdInList() {
-        News savedNews = newsRepository.save(news);
-        assertFalse(newsRepository.getAll(10L, savedNews.getId()).contains(savedNews));
-    }
+//    @Test
+//    @DisplayName("Should not include news with ID when offset is equal to that ID")
+//    public void givenNews_whenOffsetIsEqualToId_thenExpectNoNewsWithIdInList() {
+//        News savedNews = newsRepository.save(news);
+//        assertFalse(newsRepository.getAll(10L, savedNews.getId()).contains(savedNews));
+//    }
 
-    @Test
-    @DisplayName("Should return list with all news when offset is larger than any ID")
-    public void givenNews_whenGetAll_OffsetLargerThanAnyId_thenReturnEmptyList() {
-        News savedNews1 = newsRepository.save(news);
-        News savedNews2 = newsRepository.save(news2);
-        List<News> allNews = newsRepository.getAll(10L, Long.MAX_VALUE);
-        assertAll(
-            () -> assertTrue(allNews.contains(savedNews1)),
-            () -> assertTrue(allNews.contains(savedNews2))
-        );
-    }
+//    @Test
+//    @DisplayName("Should return list with all news when offset is larger than any ID")
+//    public void givenNews_whenGetAll_OffsetLargerThanAnyId_thenReturnEmptyList() {
+//        News savedNews1 = newsRepository.save(news);
+//        News savedNews2 = newsRepository.save(news2);
+//        List<News> allNews = newsRepository.getAll(10L, Long.MAX_VALUE);
+//        assertAll(
+//            () -> assertTrue(allNews.contains(savedNews1)),
+//            () -> assertTrue(allNews.contains(savedNews2))
+//        );
+//    }
 
-    @Test
-    @DisplayName("Should return empty list when getting all news with limit zero")
-    public void givenNews_whenGetAll_LimitIsZero_thenReturnEmptyList() {
-        newsRepository.save(news);
-        assertTrue(newsRepository.getAll(0L, Long.MAX_VALUE).isEmpty());
-    }
+//    @Test
+//    @DisplayName("Should return empty list when getting all news with limit zero")
+//    public void givenNews_whenGetAll_LimitIsZero_thenReturnEmptyList() {
+//        newsRepository.save(news);
+//        assertTrue(newsRepository.getAll(0L, Long.MAX_VALUE).isEmpty());
+//    }
 
     @Test
     @DisplayName("Should return news with id")
