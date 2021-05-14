@@ -1,14 +1,14 @@
-import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
-import { Address } from 'src/app/dtos/address';
-import { User } from '../../dtos/user';
-import { UserService } from '../../services/user.service';
+import { Component, OnInit } from "@angular/core";
+import { FormBuilder, FormGroup, Validators } from "@angular/forms";
+import { Router } from "@angular/router";
+import { Address } from "src/app/dtos/address";
+import { User } from "../../dtos/user";
+import { UserService } from "../../services/user.service";
 
 @Component({
-  selector: 'app-add-user',
-  templateUrl: './add-user.component.html',
-  styleUrls: ['./add-user.component.scss'],
+  selector: "app-add-user",
+  templateUrl: "./add-user.component.html",
+  styleUrls: ["./add-user.component.scss"],
 })
 export class AddUserComponent implements OnInit {
   addUserForm: FormGroup;
@@ -16,7 +16,7 @@ export class AddUserComponent implements OnInit {
   submitted = false;
   // Error flag
   error = false;
-  errorMessage = '';
+  errorMessage = "";
 
   // Success Flag
   success = false;
@@ -27,21 +27,21 @@ export class AddUserComponent implements OnInit {
     private router: Router
   ) {
     this.addUserForm = this.formBuilder.group({
-      firstName: ['', [Validators.required]],
-      lastName: ['', [Validators.required]],
-      telephoneNumber: [''],
-      email: ['', [Validators.required]],
-      password: ['', [Validators.required, Validators.minLength(8)]],
-      passwordRepeat: ['', [Validators.required, Validators.minLength(8)]],
+      firstName: ["", [Validators.required]],
+      lastName: ["", [Validators.required]],
+      telephoneNumber: [""],
+      email: ["", [Validators.required]],
+      password: ["", [Validators.required, Validators.minLength(8)]],
+      passwordRepeat: ["", [Validators.required, Validators.minLength(8)]],
       points: [0, [Validators.min(0)]],
-      status: ['ACTIVE', [Validators.required]],
-      role: ['CLIENT', [Validators.required]],
-      addressName: ['', [Validators.required]],
-      lineOne: ['', [Validators.required]],
-      lineTwo: [''],
-      city: ['', [Validators.required]],
-      postcode: ['', [Validators.required]],
-      country: ['', [Validators.required]],
+      status: ["ACTIVE", [Validators.required]],
+      role: ["CLIENT", [Validators.required]],
+      addressName: ["", [Validators.required]],
+      lineOne: ["", [Validators.required]],
+      lineTwo: [""],
+      city: ["", [Validators.required]],
+      postcode: ["", [Validators.required]],
+      country: ["", [Validators.required]],
     });
   }
 
@@ -81,7 +81,7 @@ export class AddUserComponent implements OnInit {
         }
       );
     } else {
-      console.log('Invalid input');
+      console.log("Invalid input");
     }
   }
 
@@ -95,7 +95,7 @@ export class AddUserComponent implements OnInit {
   private defaultServiceErrorHandling(error: any) {
     console.log(error);
     this.error = true;
-    if (typeof error.error === 'object') {
+    if (typeof error.error === "object") {
       this.errorMessage = error.error.error;
     } else {
       this.errorMessage = error.error;

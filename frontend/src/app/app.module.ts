@@ -23,8 +23,10 @@ import { TicketListItemComponent } from "./components/ticket-list-item/ticket-li
 import { AddNewsComponent } from "./components/add-news/add-news.component";
 import { AddUserComponent } from "./components/add-user/add-user.component";
 import { httpInterceptorProviders } from "./interceptors";
-import { AddVenueComponent } from "./components/add-venue/add-venue.component";
-import { VenueCreatorComponent } from "./components/venue-creator/venue-creator.component";
+import { AddVenueComponent } from "./components/venue/add-venue/add-venue.component";
+import { VenueCreatorComponent } from "./components/venue/venue-creator/venue-creator.component";
+import { VenueLayoutGridComponent } from "./components/venue/venue-layout-grid/venue-layout-grid.component";
+import { VenueAddSectorComponent } from "./components/venue/venue-add-sector/venue-add-sector.component";
 
 @NgModule({
   declarations: [
@@ -49,6 +51,8 @@ import { VenueCreatorComponent } from "./components/venue-creator/venue-creator.
     AddUserComponent,
     AddVenueComponent,
     VenueCreatorComponent,
+    VenueLayoutGridComponent,
+    VenueAddSectorComponent,
   ],
   imports: [
     BrowserModule,

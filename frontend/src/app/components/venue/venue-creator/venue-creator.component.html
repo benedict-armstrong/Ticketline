@@ -1,0 +1,30 @@
+<div class="venue-creator">
+  <div class="size-select">
+    <form [formGroup]="venueLayoutForm" (ngSubmit)="makeGrid()">
+      <div class="grid-size">
+
+        <div for="grid-size-x">Grid size:</div>
+
+        <div class="form-group">
+          <input type="number" id="gridSizeX" name="gridSizeX" formControlName="gridSizeX"
+            class="text-input form-control" placeholder="X" aria-label="grid size X" min="10" max="100">
+        </div>
+        <div for="grid-size-x">X</div>
+        <input type="number" id="gridSizeY" name="gridSizeY" formControlName="gridSizeY" class="text-input form-control"
+          min="10" max="100" placeholder="Y" aria-label="grid size Y">
+
+        <button class="primary" type="button" (click)="makeGrid()" id="make-grid">Update</button>
+
+        <div *ngIf="venueLayoutForm.controls.gridSizeX.errors || venueLayoutForm.controls.gridSizeY.errors"
+          class="error">
+          <small class="form-text text-warning">
+            Grid size must be between 10 and 100</small>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="venue-layout-grid">
+    <app-venue-layout-grid [venueLayout]="this.venueLayout"></app-venue-layout-grid>
+  </div>
+
+</div>

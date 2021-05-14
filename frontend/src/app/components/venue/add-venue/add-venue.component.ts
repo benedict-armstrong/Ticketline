@@ -9,10 +9,21 @@ import { Router } from "@angular/router";
 })
 export class AddVenueComponent implements OnInit {
   venueForm: FormGroup;
+  submitted = false;
 
   constructor(private formBuilder: FormBuilder, private router: Router) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.venueForm = this.formBuilder.group({
+      venueName: ["", [Validators.required]],
+      addressName: ["", [Validators.required]],
+      lineOne: ["", [Validators.required]],
+      lineTwo: [""],
+      city: ["", [Validators.required]],
+      postcode: ["", [Validators.required]],
+      country: ["", [Validators.required]],
+    });
+  }
 
   add() {}
 }
