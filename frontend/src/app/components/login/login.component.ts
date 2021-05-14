@@ -1,32 +1,33 @@
-import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
-import { AuthRequest } from 'src/app/dtos/auth-request';
-import { AuthService } from 'src/app/services/auth.service';
-import { UserService } from 'src/app/services/user.service';
+import { Component, OnInit } from "@angular/core";
+import { FormBuilder, FormGroup, Validators } from "@angular/forms";
+import { Router } from "@angular/router";
+import { AuthRequest } from "src/app/dtos/auth-request";
+import { AuthService } from "src/app/services/auth.service";
+import { UserService } from "src/app/services/user.service";
 
 @Component({
-  selector: 'app-login',
-  templateUrl: './login.component.html',
-  styleUrls: ['./login.component.scss'],
+  selector: "app-login",
+  templateUrl: "./login.component.html",
+  styleUrls: ["./login.component.scss"],
 })
 export class LoginComponent implements OnInit {
-
   loginForm: FormGroup;
   passwordChange = false;
   success = false;
   // Error flag
   error = false;
-  errorMessage = '';
+  errorMessage = "";
 
-
-  constructor(private authService: AuthService,
-              private userService: UserService,
-              private formBuilder: FormBuilder, private router: Router) {
+  constructor(
+    private authService: AuthService,
+    private userService: UserService,
+    private formBuilder: FormBuilder,
+    private router: Router
+  ) {
     this.loginForm = this.formBuilder.group({
-      email: ['', [Validators.required]],
-      password: ['', [Validators.required]],
-      newPassword: [''],
+      email: ["", [Validators.required]],
+      password: ["", [Validators.required]],
+      newPassword: [""],
     });
   }
 
@@ -47,19 +48,19 @@ export class LoginComponent implements OnInit {
           this.userService.getUserByEmail(authObj.email).subscribe(
             (response) => {
               console.log(response.lastLogin);
-              this.router.navigate(['/user'], { state: { user: response } });
+              this.router.navigate(["/user"], { state: { user: response } });
             },
-            error => {
+            (error) => {
               this.defaultServiceErrorHandling(error);
             }
           );
         },
-        error => {
+        (error) => {
           this.defaultServiceErrorHandling(error);
         }
       );
     } else {
-      this.errorMessage = 'Invalid input';
+      this.errorMessage = "Invalid input";
       this.error = true;
     }
   }
@@ -79,7 +80,7 @@ export class LoginComponent implements OnInit {
           this.loginForm.value.newPassword === this.loginForm.value.password
         ) {
           this.errorMessage =
-            'The new password must be different from the old password';
+            "The new password must be different from the old password";
           this.error = true;
         } else {
           this.authService.loginUser(authObj).subscribe(
@@ -93,26 +94,27 @@ export class LoginComponent implements OnInit {
                       this.passwordChange = false;
                       this.success = true;
                     },
-                    error => {
+                    (error) => {
                       this.defaultServiceErrorHandling(error);
-                    });
+                    }
+                  );
                 },
-                error => {
+                (error) => {
                   this.defaultServiceErrorHandling(error);
                 }
               );
             },
-            error => {
+            (error) => {
               this.defaultServiceErrorHandling(error);
             }
           );
         }
       } else {
-        this.errorMessage = 'Please enter new password';
+        this.errorMessage = "Please enter new password";
         this.error = true;
       }
     } else {
-      this.errorMessage = 'Invalid input';
+      this.errorMessage = "Invalid input";
       this.error = true;
     }
   }
@@ -125,7 +127,7 @@ export class LoginComponent implements OnInit {
   private defaultServiceErrorHandling(error: any) {
     console.log(error);
     this.error = true;
-    if (typeof error.error === 'object') {
+    if (typeof error.error === "object") {
       this.errorMessage = error.error.error;
     } else {
       this.errorMessage = error.error;

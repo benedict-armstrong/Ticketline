@@ -1,0 +1,13 @@
+<h3>Add a new Venue:</h3>
+<form calss="form" [formGroup]="venueForm" (ngSubmit)="add()">
+  <div class="form-group">
+    <label for="venueName">Venue Name</label>
+    <input type="email" class="text-input form-control" name="venueName" id="venueName" formControlName="venueName"
+      placeholder="Enter venue name">
+  </div>
+  <app-venue-creator>
+
+
+  </app-venue-creator>
+  <button type="submit" name="signin" id="signin" class="primary">Add</button>
+</form>
