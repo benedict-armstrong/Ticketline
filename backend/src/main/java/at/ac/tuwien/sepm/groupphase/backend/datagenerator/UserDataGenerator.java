@@ -44,8 +44,8 @@ public class UserDataGenerator {
 
             for (int i = 0; i < NUMBER_OF_USER_TO_GENERATE; i++) {
                 ApplicationUser user = ApplicationUser.UserBuilder.anUser().withEmail(TEST_USER_NAME + i + "@gmx.com")
-                                        .withPassword(TEST_USER_NAME + i).withFirstName(TEST_USER_NAME + i + " first")
-                                        .withLastName(TEST_USER_NAME + i + " last").withRole(ApplicationUser.UserRole.CLIENT)
+                                        .withPassword(TEST_USER_NAME + i + TEST_USER_NAME).withFirstName(TEST_USER_NAME + i + "first")
+                                        .withLastName(TEST_USER_NAME + i + "last").withRole(ApplicationUser.UserRole.CLIENT)
                                         .withTelephoneNumber("012345" + i).withStatus(ApplicationUser.UserStatus.ACTIVE)
                                         .withAddress(Address.AddressBuilder.anAddress().withName(TEST_ADDRESS_NAME + i)
                                         .withLineOne("line " + i).withCity(TEST_ADDRESS_CITY)
@@ -67,8 +67,8 @@ public class UserDataGenerator {
         } else {
             LOGGER.debug("generating admin user");
             ApplicationUser user = ApplicationUser.UserBuilder.anUser().withEmail(TEST_USER_NAME + "Admin" + "@gmx.com")
-                .withPassword(TEST_USER_NAME + "Admin").withFirstName(TEST_USER_NAME + "Admin" + " first")
-                .withLastName(TEST_USER_NAME + "Admin" + " last").withRole(ApplicationUser.UserRole.ADMIN)
+                .withPassword(TEST_USER_NAME + "Admin").withFirstName(TEST_USER_NAME + "Admin" + "first")
+                .withLastName(TEST_USER_NAME + "Admin" + "last").withRole(ApplicationUser.UserRole.ADMIN)
                 .withTelephoneNumber("0123459").withStatus(ApplicationUser.UserStatus.ACTIVE)
                 .withAddress(Address.AddressBuilder.anAddress().withName(TEST_ADDRESS_NAME + "Admin")
                     .withLineOne("line " + "Admin").withCity(TEST_ADDRESS_CITY)
@@ -89,8 +89,8 @@ public class UserDataGenerator {
         } else {
             LOGGER.debug("generating organizer user");
             ApplicationUser user = ApplicationUser.UserBuilder.anUser().withEmail(TEST_USER_NAME + "Organizer" + "@gmx.com")
-                .withPassword(TEST_USER_NAME + "Organizer").withFirstName(TEST_USER_NAME + "Organizer" + " first")
-                .withLastName(TEST_USER_NAME + "Organizer" + " last").withRole(ApplicationUser.UserRole.ORGANIZER)
+                .withPassword(TEST_USER_NAME + "Organizer").withFirstName(TEST_USER_NAME + "Organizer" + "first")
+                .withLastName(TEST_USER_NAME + "Organizer" + "last").withRole(ApplicationUser.UserRole.ORGANIZER)
                 .withTelephoneNumber("0123459").withStatus(ApplicationUser.UserStatus.ACTIVE)
                 .withAddress(Address.AddressBuilder.anAddress().withName(TEST_ADDRESS_NAME + "Organizer")
                     .withLineOne("line " + "Organizer").withCity(TEST_ADDRESS_CITY)
