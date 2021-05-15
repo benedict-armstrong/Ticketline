@@ -16,12 +16,13 @@ export class NewsComponent implements OnInit {
 
   news: News[] = [];
   heldNews: News[] = [];
-  noNews = true;
+  noNews = false;
+  loadingOnlyUnread = true;
+  finishedAfter = false;
+  lastReadNews = null;
 
   wasError = false;
   errorMessage: string;
-
-  loadingOnlyUnread = true;
 
   private page = 0;
   private size = 8; // Determines how many news entries are loaded at the beginning and with each click on Load More
@@ -31,16 +32,21 @@ export class NewsComponent implements OnInit {
               private userService: UserService) { }
 
   ngOnInit(): void {
-    this.loadBatch();
-    this.userService.getUserByEmail(
-      this.authService.getUserEmail()
-    ).subscribe(
-      user => {
-        this.user = user;
-      }, error => {
-        console.log(error);
-      }
-    );
+    const email = this.authService.getUserEmail();
+
+    if (email == null) {
+      this.user = null;
+      this.loadBatch();
+    } else {
+      this.userService.getUserByEmail(email).subscribe(
+        user => {
+          this.user = user;
+          this.loadBatch();
+        }, error => {
+          console.log(error);
+        }
+      );
+    }
   }
 
   /**
@@ -49,39 +55,63 @@ export class NewsComponent implements OnInit {
    * Offsetting is done with the help of IDs.
    */
   loadBatch() {
-    if (!this.loadingOnlyUnread && this.heldNews.length > 0) {
+    this.wasError = false;
+
+    // Fill up batch of unread with read news
+    if (this.heldNews.length > 0) {
       this.news.push(...this.heldNews);
       this.heldNews = [];
+      this.noNews = this.finishedAfter;
+    } else {
+      this.newsService.getNews(this.page, this.size).subscribe(
+        response => {
+          if (response.length > 0) {
+            this.page++;
+            let unread = [];
+            let read = [];
+
+            // Set unread and read according to LastReadNews
+            if (this.user != null) {
+              this.lastReadNews = this.user.lastReadNews;
+              unread = response.filter(item => item.id > this.user.lastReadNews.id);
+              read = response.filter(item => item.id <= this.user.lastReadNews.id);
+            } else {
+              read = response;
+              this.lastReadNews = response[0];
+            }
+
+            // push response and set variables for UI
+            if (unread.length === this.size) {
+              // Only unread
+              this.news.push(...unread);
+            } else if (unread.length < this.size && unread.length !== 0) {
+              // Mixed
+              this.loadingOnlyUnread = false;
+              this.news.push(...unread);
+              this.heldNews.push(...read);
+              if (response.length < this.size) {
+                this.finishedAfter = true;
+              }
+            } else if (read.length <= this.size) {
+              // Read
+              this.news.push(...read);
+              if (read.length < this.size) {
+                this.noNews = true;
+              }
+            }
+          } else {
+           this.noNews = true;
+          }
+
+        }, error => {
+          this.handleError(error);
+        }
+      );
     }
-    this.wasError = false;
-    this.newsService.getNews(this.page, this.size).subscribe(
-      response => {
-        const unread = response.filter(item => item.id > this.user.lastReadNews.id);
-        const read = response.filter(item => item.id <= this.user.lastReadNews.id);
-        this.news.push(...unread);
-
-        if (unread.length < this.size) {
-          this.loadingOnlyUnread = false;
-          this.heldNews.push(...read);
-        } else {
-          this.loadingOnlyUnread = true;
-        }
-
-        if (response.length > 0) {
-          this.page++;
-          this.noNews = false;
-        }
-        if (response.length < this.size) {
-          this.noNews = true;
-        }
-
-      }, error => {
-        this.handleError(error);
-      }
-    );
   }
 
   markAllAsRead() {
+    this.loadingOnlyUnread = false;
     this.user.lastReadNews = this.news[0];
     console.log('USR', this.user);
     this.userService.updateUser(this.user).subscribe(

@@ -1,19 +1,24 @@
-<div *ngIf="!noNews" id="read-btn-div">
-  <button class="secondary" (click)="markAllAsRead()">Mark all as read</button>
-</div>
 <div class="row row-cols-1 row-cols-md-4 g-4">
   <div *ngFor="let entry of news" class="col">
-    <app-news-item [newsItem]="entry" [lastRead]="user.lastReadNews"></app-news-item>
+    <app-news-item [newsItem]="entry" [lastRead]="lastReadNews"></app-news-item>
   </div>
 </div>
+
+<div *ngIf="!wasError" class="text-center more">
+  <!-- Unread and mixed news -->
+  <h3 *ngIf="!noNews && loadingOnlyUnread">Load More Unread News</h3>
+  <h3 *ngIf="!noNews && !loadingOnlyUnread">Load Older News</h3>
+  <!-- No more unread news -->
+  <h3 *ngIf="!noNews"><i class="bi bi-arrow-bar-down" (click)="loadBatch()"></i></h3>
+  <h3 *ngIf="noNews">You're all caught up.</h3>
+</div>
+
 <div *ngIf="wasError" class="alert alert-danger alert-dismissible" role="alert">
   {{errorMessage}}
   <button type="button" (click)="loadBatch()" class="btn-close" data-dismiss="alert" aria-label="Close">
   </button>
 </div>
-<div *ngIf="!wasError" class="text-center more" (click)="loadBatch()">
-  <h3 *ngIf="!noNews && !loadingOnlyUnread">Load Older News</h3>
-  <h3 *ngIf="!noNews && loadingOnlyUnread">Load More Unread News</h3>
-  <h3 *ngIf="noNews">You're all caught up</h3>
-  <h3 *ngIf="!noNews"><i class="bi bi-arrow-bar-down"></i></h3>
+
+<div *ngIf="!wasError && user != null" id="read-btn-div">
+  <button class="secondary" (click)="markAllAsRead()">Mark all as read</button>
 </div>

@@ -50,7 +50,7 @@ public class NewsEndpoint {
     }
 
     @GetMapping
-    @Secured("ROLE_USER")
+    @PermitAll
     @Operation(summary = "Get all news")
     public List<NewsDto> getAll(PaginationDto paginationDto) {
         LOGGER.info("GET /api/v1/news?{}", paginationDto);
