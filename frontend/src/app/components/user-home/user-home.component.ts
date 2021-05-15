@@ -34,7 +34,9 @@ export class UserHomeComponent implements OnInit {
     private authService: AuthService,
     private router: Router,
     private formBuilder: FormBuilder
-  ) {
+  ) { }
+
+  ngOnInit(): void {
     if (this.authService.isLoggedIn()) {
       this.loadUser(this.authService.getUserEmail());
     } else {
@@ -46,8 +48,6 @@ export class UserHomeComponent implements OnInit {
       passwordRepeat: ['', [Validators.required, Validators.minLength(8)]],
     });
   }
-
-  ngOnInit(): void {}
 
   /**
    * Load User with email from Backend.
