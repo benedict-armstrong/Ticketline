@@ -38,8 +38,8 @@
 
     <div class="form-group">
       <label id="fileLabel" for="files">Picture Upload</label>
-      <p id="file-info">Supported formats: jpg, jpeg, png. The maximum file size is 83MB.</p>
-      <input formControlName="files" id="files" type="file" class="form-control" (change)="onFileChange($event)">
+      <p id="file-info">Supported formats: jpg, jpeg, png. The maximum file size is 1MB.</p>
+      <input formControlName="files" lang="en" id="files" type="file" class="form-control" (change)="onFileChange($event)">
       <div *ngIf="fileNoImage" class="alert alert-danger">
         <div>The uploaded file is no image</div>
       </div>

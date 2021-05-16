@@ -19,7 +19,7 @@ export class NewsComponent implements OnInit {
   noNews = false;
   loadingOnlyUnread = true;
   finishedAfter = false;
-  lastReadNews = null;
+  lastReadNews = null; // Local copy used for comparison - should not be uploaded
 
   wasError = false;
   errorMessage: string;
