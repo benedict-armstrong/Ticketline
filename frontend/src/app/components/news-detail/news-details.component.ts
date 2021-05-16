@@ -3,6 +3,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { News } from 'src/app/dtos/news';
 import { FileService } from 'src/app/services/file.service';
 import { ApplicationNewsService } from 'src/app/services/news.service';
+import {AuthService} from '../../services/auth.service';
+import {UserService} from '../../services/user.service';
 
 @Component({
   selector: 'app-news-detail',
@@ -19,7 +21,11 @@ export class NewsDetailComponent implements OnInit {
   imgURL = [];
   date: Date;
 
-  constructor(private newsService: ApplicationNewsService,  private route: Router, private actRoute: ActivatedRoute) {
+  constructor(private newsService: ApplicationNewsService,
+              private route: Router,
+              private actRoute: ActivatedRoute,
+              private authService: AuthService,
+              private userService: UserService) {
   }
 
   ngOnInit(): void {
@@ -29,13 +35,14 @@ export class NewsDetailComponent implements OnInit {
         this.newsItem = response;
         this.date = new Date(response.publishedAt);
         if (this.newsItem.images.length > 0) {
-          for(let i=0; i<this.newsItem.images.length; i++){
+          for (let i = 0; i < this.newsItem.images.length; i++) {
             const img = FileService.asFile(this.newsItem.images[i].data, this.newsItem.images[i].type);
             this.setURL(img, i);
           }
 
           console.log(this.imgURL);
         }
+        this.markOlderAsRead();
       },
       error => {
         this.defaultServiceErrorHandling(error);
@@ -49,6 +56,27 @@ export class NewsDetailComponent implements OnInit {
     this.success = false;
   }
 
+  markOlderAsRead() {
+    const email = this.authService.getUserEmail();
+    let userToChange;
+
+    if (email != null) {
+      this.userService.getUserByEmail(email).subscribe(
+        user => {
+          userToChange = user;
+          userToChange.lastReadNews = this.newsItem;
+          this.userService.updateUser(userToChange).subscribe(
+            () => {
+            }, error => {
+              this.defaultServiceErrorHandling(error);
+            }
+          );
+        }, error => {
+          this.defaultServiceErrorHandling(error);
+        }
+      );
+    }
+  }
 
 
   private defaultServiceErrorHandling(error: any) {
