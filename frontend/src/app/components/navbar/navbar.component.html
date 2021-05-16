@@ -13,33 +13,36 @@
       <span class="navbar-toggler-icon"></span>
     </button>
 
-    <div class="navbar-collapse collapse" id="collapsingNavbar">
-      <ul class="nav navbar-nav ms-auto">
+        <div class="navbar-collapse collapse" id="collapsingNavbar">
+            <ul class="nav navbar-nav ms-auto">
 
-        <li *ngIf="hasAdminPermission()" class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button"
-            data-bs-toggle="dropdown" aria-expanded="false">
-            Add
-          </a>
-          <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-            <li><a class="dropdown-item" [routerLink]="['add-user']">Add User</a></li>
-            <li><a class="dropdown-item" [routerLink]="['add-news']">Add News</a></li>
-          </ul>
-        </li>
+                <li *ngIf="hasAdminPermission()" class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button"
+                        data-bs-toggle="dropdown" aria-expanded="false">
+                        Add
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                        <li><a class="dropdown-item" [routerLink]="['add-user']">Add User</a></li>
+                        <li><a class="dropdown-item" [routerLink]="['add-news']">Add News</a></li>
+                    </ul>
+                </li>
 
-        <li class="nav-item">
-          <a class="nav-link" [routerLink]="['events']">Events</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" [routerLink]="['news']">News</a>
-        </li>
-        <li class="nav-item" *ngIf="!this.isLoggedIn()">
-          <a class="nav-link" [routerLink]="['login']">Sign In</a>
-        </li>
-        <li class="nav-item" *ngIf="this.isLoggedIn()">
-          <a class="nav-link" (click)="this.logoutUser();" [routerLink]="['']">Logout</a>
-        </li>
-      </ul>
+                <li class="nav-item">
+                    <a class="nav-link" [routerLink]="['events']">Events</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" [routerLink]="['news']">News</a>
+                </li>
+                <li class="nav-item" *ngIf="this.isLoggedIn()">
+                    <a class="nav-link" [routerLink]="['/user']">My Account</a>
+                </li>
+                <li class="nav-item" *ngIf="!this.isLoggedIn()">
+                    <a class="nav-link" [routerLink]="['login']">Sign In</a>
+                </li>
+                <li class="nav-item" *ngIf="this.isLoggedIn()">
+                    <a class="nav-link" (click)="this.logoutUser();" [routerLink]="['']">Logout</a>
+                </li>
+            </ul>
+        </div>
     </div>
-  </div>
 </nav>
