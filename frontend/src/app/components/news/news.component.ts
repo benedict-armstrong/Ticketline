@@ -97,6 +97,7 @@ export class NewsComponent implements OnInit {
               }
             } else if (read.length <= this.size) {
               // Read
+              this.loadingOnlyUnread = false;
               this.news.push(...read);
               if (read.length < this.size) {
                 this.noNews = true;
