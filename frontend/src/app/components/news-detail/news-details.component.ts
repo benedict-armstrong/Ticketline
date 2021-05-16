@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { News } from 'src/app/dtos/news';
 import { FileService } from 'src/app/services/file.service';
@@ -77,7 +77,6 @@ export class NewsDetailComponent implements OnInit {
       );
     }
   }
-
 
   private defaultServiceErrorHandling(error: any) {
     console.log(error);

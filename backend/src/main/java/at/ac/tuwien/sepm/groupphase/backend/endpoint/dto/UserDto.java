@@ -183,7 +183,7 @@ public class UserDto  {
             + ", email='" + email + '\''
             + ", password='" + password + '\''
             + ", lastLogin=" + lastLogin
-            + ", lastReadNews" + lastReadNews.getId()
+            + ", lastReadNews" + (lastReadNews.getId() == null ? "null" : lastReadNews.getId())
             + ", points=" + points
             + ", status=" + status
             + ", role=" + role

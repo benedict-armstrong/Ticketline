@@ -73,8 +73,11 @@ export class NewsComponent implements OnInit {
             // Set unread and read according to LastReadNews
             if (this.user != null) {
               this.lastReadNews = this.user.lastReadNews;
-              unread = response.filter(item => item.id > this.user.lastReadNews.id);
-              read = response.filter(item => item.id <= this.user.lastReadNews.id);
+              if (this.lastReadNews == null) {
+                this.lastReadNews = {id: 0};
+              }
+              unread = response.filter(item => item.id > this.lastReadNews.id);
+              read = response.filter(item => item.id <= this.lastReadNews.id);
             } else {
               read = response;
               this.lastReadNews = response[0];
