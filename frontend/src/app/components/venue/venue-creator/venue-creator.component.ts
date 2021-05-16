@@ -1,7 +1,7 @@
 import { Component, OnInit } from "@angular/core";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
-import { seatUnit } from "../models/seatUnit";
-import { sector } from "../models/sector";
+import { SeatUnit } from "../models/seatUnit";
+import { Sector } from "../models/sector";
 
 @Component({
   selector: "app-venue-creator",
@@ -11,20 +11,20 @@ import { sector } from "../models/sector";
 export class VenueCreatorComponent implements OnInit {
   venueLayoutForm: FormGroup;
   submitted = false;
-  venueLayout: seatUnit[][];
-  sectors: sector[];
+  venueLayout: SeatUnit[][];
+  sectors: Sector[];
 
   constructor(private formBuilder: FormBuilder) {}
 
   ngOnInit(): void {
     this.venueLayoutForm = this.formBuilder.group({
       gridSizeX: [
-        50,
-        [Validators.required, Validators.min(10), Validators.max(100)],
+        20,
+        [Validators.required, Validators.min(10), Validators.max(50)],
       ],
       gridSizeY: [
-        50,
-        [Validators.required, Validators.min(10), Validators.max(100)],
+        20,
+        [Validators.required, Validators.min(10), Validators.max(50)],
       ],
     });
 
@@ -37,6 +37,7 @@ export class VenueCreatorComponent implements OnInit {
         new Array(this.venueLayoutForm.value.gridSizeY).fill({
           sectorId: 0,
           type: "seating",
+          available: true,
         })
       );
     }

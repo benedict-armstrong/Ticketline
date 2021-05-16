@@ -27,6 +27,8 @@ import { AddVenueComponent } from "./components/venue/add-venue/add-venue.compon
 import { VenueCreatorComponent } from "./components/venue/venue-creator/venue-creator.component";
 import { VenueLayoutGridComponent } from "./components/venue/venue-layout-grid/venue-layout-grid.component";
 import { VenueAddSectorComponent } from "./components/venue/venue-add-sector/venue-add-sector.component";
+import { VenueSectorListComponent } from "./components/venue/venue-sector-list/venue-sector-list.component";
+import { VenueGridUnitComponent } from "./components/venue/venue-grid-unit/venue-grid-unit.component";
 
 @NgModule({
   declarations: [
@@ -53,6 +55,8 @@ import { VenueAddSectorComponent } from "./components/venue/venue-add-sector/ven
     VenueCreatorComponent,
     VenueLayoutGridComponent,
     VenueAddSectorComponent,
+    VenueSectorListComponent,
+    VenueGridUnitComponent,
   ],
   imports: [
     BrowserModule,

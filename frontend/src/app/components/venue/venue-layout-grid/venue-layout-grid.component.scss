@@ -9,16 +9,5 @@
 .venue-layout-grid > div {
   display: flex;
   width: 100%;
-}
-
-.seat-unit {
-  margin: 0.5px;
-  width: 100%;
-  min-height: 7px;
-  min-width: 7px;
-  background-color: rgb(241, 241, 241);
-}
-
-.seat-unit:hover {
-  background-color: $primary;
+  cursor: none;
 }

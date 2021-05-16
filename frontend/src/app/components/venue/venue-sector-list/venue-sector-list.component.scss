@@ -1,0 +1,12 @@
+.sector {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 10px;
+  margin: 0px 0px;
+  border-bottom: 1pt solid lightgray;
+}
+
+.sector .options button {
+  margin: 0px 5px;
+}

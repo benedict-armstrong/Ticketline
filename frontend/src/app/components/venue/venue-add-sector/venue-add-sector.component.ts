@@ -1,7 +1,7 @@
 import { Component, OnInit } from "@angular/core";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
-import { seatUnit } from "../models/seatUnit";
-import { sector } from "../models/sector";
+import { SeatUnit } from "../models/seatUnit";
+import { Sector } from "../models/sector";
 @Component({
   selector: "app-venue-add-sector",
   templateUrl: "./venue-add-sector.component.html",
@@ -9,7 +9,8 @@ import { sector } from "../models/sector";
 })
 export class VenueAddSectorComponent implements OnInit {
   venueAddSectorForm: FormGroup;
-  sectors: sector[] = [];
+  sectors: Sector[] = [];
+  submitted = false;
 
   constructor(private formBuilder: FormBuilder) {}
 
@@ -22,13 +23,24 @@ export class VenueAddSectorComponent implements OnInit {
   }
 
   createSector() {
+    this.submitted = true;
     if (this.venueAddSectorForm.valid) {
+      this.submitted = false;
       this.sectors.push({
         name: this.venueAddSectorForm.value.name,
         description: this.venueAddSectorForm.value.description,
         type: this.venueAddSectorForm.value.type,
         sectorId: this.sectors.length + 1,
       });
+      this.venueAddSectorForm.reset();
+      this.venueAddSectorForm.controls["type"].setValue("seated");
+    }
+  }
+
+  removeSector(sector: Sector) {
+    const index = this.sectors.indexOf(sector);
+    if (index > -1) {
+      this.sectors.splice(index, 1);
     }
   }
 }

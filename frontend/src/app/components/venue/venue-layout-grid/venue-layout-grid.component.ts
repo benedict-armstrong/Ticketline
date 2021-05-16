@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from "@angular/core";
-import { seatUnit } from "../models/seatUnit";
+import { SeatUnit } from "../models/seatUnit";
 
 @Component({
   selector: "app-venue-layout-grid",
@@ -8,7 +8,7 @@ import { seatUnit } from "../models/seatUnit";
 })
 export class VenueLayoutGridComponent implements OnInit {
   @Input()
-  venueLayout: seatUnit[][];
+  venueLayout: SeatUnit[][];
 
   constructor() {}
 
