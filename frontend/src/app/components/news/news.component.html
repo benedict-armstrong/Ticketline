@@ -1,3 +1,7 @@
+<div id="title-wrap">
+  <h3>Latest News</h3>
+</div>
+
 <div class="row row-cols-1 row-cols-md-4 g-4">
   <div *ngFor="let entry of news" class="col">
     <app-news-item [newsItem]="entry" [lastRead]="lastReadNews"></app-news-item>
@@ -19,6 +23,6 @@
   </button>
 </div>
 
-<div *ngIf="!wasError && user != null" id="read-btn-div">
+<div *ngIf="!wasError && user != null && (news.length + heldNews.length != 0)" id="read-btn-div">
   <button class="secondary" (click)="markAllAsRead()">Mark all as read</button>
 </div>

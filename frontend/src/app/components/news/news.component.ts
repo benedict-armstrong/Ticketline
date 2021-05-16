@@ -116,7 +116,6 @@ export class NewsComponent implements OnInit {
   markAllAsRead() {
     this.loadingOnlyUnread = false;
     this.user.lastReadNews = this.news[0];
-    console.log('USR', this.user);
     this.userService.updateUser(this.user).subscribe(
       user => {
         this.user = user;
