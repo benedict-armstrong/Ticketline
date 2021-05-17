@@ -1,9 +1,12 @@
 package at.ac.tuwien.sepm.groupphase.backend.datagenerator;
 
-//import at.ac.tuwien.sepm.groupphase.backend.entity.Event;
+import at.ac.tuwien.sepm.groupphase.backend.entity.Address;
+import at.ac.tuwien.sepm.groupphase.backend.entity.Artist;
+import at.ac.tuwien.sepm.groupphase.backend.entity.Event;
 import at.ac.tuwien.sepm.groupphase.backend.entity.File;
 import at.ac.tuwien.sepm.groupphase.backend.entity.News;
-//import at.ac.tuwien.sepm.groupphase.backend.repository.EventRepository;
+import at.ac.tuwien.sepm.groupphase.backend.entity.SectorType;
+import at.ac.tuwien.sepm.groupphase.backend.repository.EventRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.FileRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.NewsRepository;
 import org.slf4j.Logger;
@@ -31,23 +34,26 @@ public class NewsDataGenerator {
     private static final String TEST_AUTHOR_NAME = "Test Author";
     private static final String TEST_TITLE = "Test Title";
     private static final String TEST_TEXT = "Test Test Test";
-    // private static final String TEST_EVENT = "Test Event for News";
+    private static final String TEST_EVENT = "Testevent";
+    private static final String TEST_EVENT_DESCRIPTION = "This is a test description! Part";
+    private static final LocalDateTime TEST_DATE = LocalDateTime.parse("2025-06-30T12:00:00");
 
     private final NewsRepository newsRepository;
-    // private final EventRepository eventRepository;
+    private final EventRepository eventRepository;
     private final FileRepository fileRepository;
 
-    public NewsDataGenerator(NewsRepository newsRepository, FileRepository fileRepository) {
+    public NewsDataGenerator(NewsRepository newsRepository, FileRepository fileRepository, EventRepository eventRepository) {
         this.newsRepository = newsRepository;
         this.fileRepository = fileRepository;
+        this.eventRepository = eventRepository;
     }
 
     @PostConstruct
-    private void generateNewsWithoutPictures() {
+    private void generateNewsWithoutPictures() throws Exception {
         if (newsRepository.findAll().size() > 0) {
             LOGGER.debug("news already generated");
         } else {
-            /*List<Event> events = new LinkedList<>();
+            List<Event> events;
 
             if (eventRepository.findAll().size() > 4) {
                 LOGGER.debug("events for news already generated");
@@ -55,21 +61,14 @@ public class NewsDataGenerator {
             } else {
                 LOGGER.debug("generating {} event entries for news", NUMBER_OF_NEWS_TO_GENERATE);
 
-                for (int i = 0; i < NUMBER_OF_NEWS_TO_GENERATE; i++) {
-                    Event event = Event.EventBuilder.aEvent().withTitle(TEST_EVENT + (i)).build();
-
-                    events.add(event);
-
-                    LOGGER.debug("saving event {} for news", event);
-                    eventRepository.save(event);
-                }
-            }*/
+                events = this.generateEventsForNews();
+            }
 
             LOGGER.debug("generating {} news entries with events and without pictures", NUMBER_OF_NEWS_TO_GENERATE);
 
             for (int i = 0; i < NUMBER_OF_NEWS_TO_GENERATE; i++) {
                 News news = News.NewsBuilder.aNews().withPublishedAt(LocalDateTime.now()).withAuthor(TEST_AUTHOR_NAME)
-                    .withTitle(TEST_TITLE + i).withText(TEST_TEXT + i) // .withEvent(events.get(i))
+                    .withTitle(TEST_TITLE + i).withText(TEST_TEXT + i).withEvent(events.get(i))
                     .build();
 
                 LOGGER.debug("saving news {}", news);
@@ -98,7 +97,7 @@ public class NewsDataGenerator {
         if (newsRepository.findAll().size() > 5) {
             LOGGER.debug("news already generated");
         } else {
-            /*List<Event> events = new LinkedList<>();
+            List<Event> events;
 
             if (eventRepository.findAll().size() > 4) {
                 LOGGER.debug("events for news already generated");
@@ -106,15 +105,8 @@ public class NewsDataGenerator {
             } else {
                 LOGGER.debug("generating {} event entries for news", NUMBER_OF_NEWS_TO_GENERATE);
 
-                for (int i = 0; i < NUMBER_OF_NEWS_TO_GENERATE; i++) {
-                    Event event = Event.EventBuilder.aEvent().withTitle(TEST_EVENT + (i)).build();
-
-                    events.add(event);
-
-                    LOGGER.debug("saving event {} for news", event);
-                    eventRepository.save(event);
-                }
-            }*/
+                events = this.generateEventsForNews();
+            }
 
             LOGGER.debug("generating {} news entries with events and with pictures", NUMBER_OF_NEWS_TO_GENERATE);
 
@@ -144,7 +136,7 @@ public class NewsDataGenerator {
                 fileRepository.save(file3);
 
                 News news = News.NewsBuilder.aNews().withPublishedAt(LocalDateTime.now()).withAuthor(TEST_AUTHOR_NAME)
-                    .withTitle(TEST_TITLE + (i + 10)).withText(TEST_TEXT + (i + 10)) //.withEvent(events.get(i))
+                    .withTitle(TEST_TITLE + (i + 10)).withText(TEST_TEXT + (i + 10)).withEvent(events.get(i))
                     .withImages(set).build();
 
                 LOGGER.debug("saving news {}", news);
@@ -152,6 +144,37 @@ public class NewsDataGenerator {
             }
 
         }
+    }
+
+    private List<Event> generateEventsForNews() throws Exception {
+        List<Event> events = new LinkedList<>();
+        byte[] imgBuffer1 = recoverImageFromUrl("https://cdn.pixabay.com/photo/2013/07/12/17/47/test-pattern-152459_960_720.png");
+
+        for (int i = 0; i < NUMBER_OF_NEWS_TO_GENERATE; i++) {
+            Set<File> set = new HashSet<>();
+            File file = EventDataGenerator.generateImage(imgBuffer1, File.Type.IMAGE_JPG);
+            LOGGER.debug("saving file {} for event for news", file);
+            fileRepository.save(file);
+            set.add(file);
+
+            Event event = Event.EventBuilder.aEvent()
+                .withTitle(TEST_EVENT + (i))
+                .withDescription(TEST_EVENT_DESCRIPTION + (i))
+                .withEventType(Event.EventType.CONCERT)
+                .withDuration(100 + i * 50)
+                .withDate(TEST_DATE.plusDays(i * 10))
+                .withSectorTypes(EventDataGenerator.generateSectorTypes(i))
+                .withArtist(EventDataGenerator.generateArtist(i))
+                .withLocation(EventDataGenerator.generateLocation(i))
+                .withImages(set).build();
+
+            events.add(event);
+
+            LOGGER.debug("saving event {} for news", event);
+            eventRepository.save(event);
+        }
+
+        return events;
     }
 
 }
