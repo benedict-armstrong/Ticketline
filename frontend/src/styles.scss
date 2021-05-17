@@ -5,7 +5,8 @@ body {
   font-family: "Roboto", sans-serif !important;
 }
 
-button.primary, button.secondary {
+button.primary,
+button.secondary {
   width: 100%;
   min-width: 45px;
   margin: 10px 0;
@@ -18,11 +19,7 @@ button.primary, button.secondary {
 
 button.primary {
   background: $primary;
-  background: linear-gradient(
-    261deg,
-    $primary 19%,
-    $primary-darker 80%
-  );
+  background: linear-gradient(261deg, $primary 19%, $primary-darker 80%);
   color: white;
 }
 
@@ -53,14 +50,23 @@ select.select-input {
   border-radius: 3px;
 }
 
-input.text-input:focus {
+textarea.text-input {
+  border: none;
+  font-size: 12pt;
+  background-color: $gray-242;
+  border-radius: 3px;
+}
+
+input.text-input:focus,
+textarea.text-input:focus {
   background-color: $gray-242;
   outline: none;
   border: none;
   box-shadow: none;
 }
 
-input.text-input::placeholder {
+input.text-input::placeholder,
+textarea.text-input::placeholder {
   opacity: 0.6;
 }
 
