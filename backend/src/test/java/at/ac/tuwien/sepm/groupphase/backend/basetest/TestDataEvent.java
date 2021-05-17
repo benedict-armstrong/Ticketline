@@ -33,6 +33,6 @@ public interface TestDataEvent extends TestData {
     }
 
     static Address getTestEventLocation() {
-        return Address.AddressBuilder.anAddress().withName("Max Mustermann").withLineOne("Teststraße 1").withCity("Wien").withPostcode("1010").withCountry("Österreich").build();
+        return Address.builder().name("Max Mustermann").lineOne("Teststraße 1").city("Wien").postcode("1010").country("Österreich").build();
     }
 }
