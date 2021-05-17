@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepm.groupphase.backend.basetest;
 
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserLoginDto;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepm.groupphase.backend.repository.UserRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -65,7 +66,7 @@ public interface TestAuthentification extends TestDataUser {
             post(AUTH_BASE_URI)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(
-                    objectMapper.writeValueAsString(new AuthDto(user.getEmail(), user.getPassword()))
+                    objectMapper.writeValueAsString(new UserLoginDto(user.getEmail(), user.getPassword()))
                 )
         ).andReturn();
         MockHttpServletResponse response = mvcResult.getResponse();
@@ -96,26 +97,6 @@ public interface TestAuthentification extends TestDataUser {
             .withTelephoneNumber(user.getTelephoneNumber())
             .build();
         return userRepository.save(userWithEncodedPassword);
-    }
-
-}
-
-class AuthDto {
-
-    private final String email;
-    private final String password;
-
-    public AuthDto(String email, String password) {
-        this.email = email;
-        this.password = password;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public String getPassword() {
-        return password;
     }
 
 }
