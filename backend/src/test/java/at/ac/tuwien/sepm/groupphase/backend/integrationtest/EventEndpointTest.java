@@ -65,9 +65,9 @@ public class EventEndpointTest implements TestDataEvent, TestAuthentification {
     private SecurityProperties securityProperties;
 
 
-    private final File file = File.FileBuilder.aFile()
-        .withData(TestDataFile.TEST_FILE_DATA)
-        .withType(TestDataFile.TEST_FILE_TYPE)
+    private final File file = File.builder()
+        .data(TestDataFile.TEST_FILE_DATA)
+        .type(TestDataFile.TEST_FILE_TYPE)
         .build();
 
     private Set<File> images = new HashSet<>();

@@ -33,9 +33,9 @@ public class FileDataGenerator {
         } else {
             LOGGER.debug("Generating {} files", NUMBER_OF_FILES_TO_GENERATE);
             for (int i = 0; i < NUMBER_OF_FILES_TO_GENERATE; i++) {
-                File file = File.FileBuilder.aFile()
-                    .withData(randomData())
-                    .withType(randomFileType())
+                File file = File.builder()
+                    .data(randomData())
+                    .type(randomFileType())
                     .build();
                 LOGGER.debug("Saving file {}", file);
                 fileRepository.save(file);
