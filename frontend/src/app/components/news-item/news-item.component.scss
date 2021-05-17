@@ -1,7 +1,27 @@
+@import "../../../colors.scss";
+
 .card:hover {
   box-shadow: rgba(0, 0, 0, 0.1) 0 4px 12px;
 }
 
 img {
   height: 200px;
+  object-fit: cover;
+}
+
+#unread-badge-wrap {
+  display: flex;
+  justify-content: flex-end;
+  position: relative;
+  left: 10px;
+  bottom: 10px;
+}
+
+#unread-badge {
+  width: 20px;
+  height: 20px;
+  border-radius: 10px;
+  position: absolute;
+  background-color: $primary;
+  z-index: 10;
 }

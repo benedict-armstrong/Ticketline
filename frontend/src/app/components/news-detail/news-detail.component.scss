@@ -38,3 +38,8 @@
 .carousel-inner {
   height: 500px;
 }
+
+.carousel-inner img {
+  object-fit: cover;
+  -webkit-transform: translateY(calc(-50% + 250px));
+}

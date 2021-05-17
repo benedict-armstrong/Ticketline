@@ -1,4 +1,4 @@
-// import { Event } from './event';
+import { Event } from './event';
 import {CustomFile} from './customFile';
 
 export class News {
@@ -8,7 +8,7 @@ export class News {
     public author: string,
     public title: string,
     public text: string,
-    //public event: Event,
+    public event: Event,
     public images: CustomFile[]
   ) {}
 }

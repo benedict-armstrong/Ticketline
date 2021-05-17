@@ -1,4 +1,3 @@
-/*
 package at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper;
 
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventDto;
@@ -8,7 +7,7 @@ import org.mapstruct.Mapper;
 import java.util.List;
 
 @Mapper
-public interface EventMapper {
+public interface EventMapper extends FileTypeMapper {
 
     Event eventDtoToEvent(EventDto eventDto);
 
@@ -17,5 +16,3 @@ public interface EventMapper {
     List<EventDto> eventToEventDto(List<Event> event);
 
 }
-
- */

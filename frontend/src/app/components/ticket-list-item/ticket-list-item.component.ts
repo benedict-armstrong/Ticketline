@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
+import {SectorType} from '../../dtos/sectortype';
 
 @Component({
   selector: 'app-ticket-list-item',
@@ -6,6 +7,8 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./ticket-list-item.component.scss']
 })
 export class TicketListItemComponent implements OnInit {
+  @Input()
+  sectorType: SectorType;
 
   constructor() { }
 
