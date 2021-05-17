@@ -24,7 +24,7 @@ public interface TestDataEvent extends TestData {
 
     static Set<SectorType> getTestEventSectortypes() {
         Set<SectorType> sectorTypes = new HashSet<>();
-        sectorTypes.add(SectorType.SectorTypeBuilder.aSectorType().withName("Sector").withNumberOfTickets(100).build());
+        sectorTypes.add(SectorType.builder().name("Sector").numberOfTickets(100).build());
         return sectorTypes;
     }
 
