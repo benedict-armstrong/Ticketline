@@ -35,7 +35,7 @@ export class FileService {
   }
   private static bytesToBlob(bytes: Uint8Array, type: string): Blob {
     return new Blob([bytes], {type});
-  };
+  }
   private static blobToFile(blob: Blob): File {
     const b: any = blob;
     b.lastModifiedDate = new Date();

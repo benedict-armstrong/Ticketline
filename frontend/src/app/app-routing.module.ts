@@ -12,7 +12,7 @@ import {AddNewsComponent} from './components/add-news/add-news.component';
 import { NewsDetailComponent } from './components/news-detail/news-details.component';
 import { AddUserComponent } from './components/add-user/add-user.component';
 import {AuthGuard} from './guards/auth.guard';
-import {AddEventComponent} from './components/add-event/add-event.component';
+import {AddEventComponent} from './components/event/add-event/add-event.component';
 
 const routes: Routes = [
   { path: '', component: HomePageComponent },

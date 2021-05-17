@@ -1,12 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import {ApplicationEventService} from '../../services/event.service';
-import {FormBuilder, FormControl, FormGroup, ValidatorFn, Validators} from '@angular/forms';
-import {FileService} from '../../services/file.service';
-import {Event} from '../../dtos/event';
+import {ApplicationEventService} from '../../../services/event.service';
+import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
+import {FileService} from '../../../services/file.service';
+import {Event} from '../../../dtos/event';
 import {Router} from '@angular/router';
-import {Address} from '../../dtos/address';
-import {Artist} from '../../dtos/artist';
-import {SectorType} from '../../dtos/sectortype';
+import {Address} from '../../../dtos/address';
+import {Artist} from '../../../dtos/artist';
 
 @Component({
   selector: 'app-add-event',
@@ -21,10 +20,6 @@ export class AddEventComponent implements OnInit {
   fileTooBig = false;
   files = [];
   sectorTypes = [];
-  sectorError = {
-    name: false,
-    numberOfTickets: false
-  };
   error = false;
   errorMessage: string;
   success = false;
@@ -43,8 +38,6 @@ export class AddEventComponent implements OnInit {
       files: [''],
       date: ['', [Validators.required, this.dateValidator]],
       eventType: ['CONCERT', [Validators.required]],
-      sectorName: [''],
-      sectorNumberOfTickets: [''],
       artistFirstName: ['', [Validators.required]],
       artistLastName: ['', [Validators.required]],
       addressName: ['', [Validators.required]],
@@ -85,7 +78,7 @@ export class AddEventComponent implements OnInit {
       );
       this.event.sectorTypes = this.sectorTypes;
 
-      // New Imageupload
+      // // New Imageupload
       let count = this.files.length;
 
       this.files.forEach(file => {
@@ -112,28 +105,6 @@ export class AddEventComponent implements OnInit {
     }
   }
 
-  addSectorType() {
-    this.sectorError.name = false;
-    this.sectorError.numberOfTickets = false;
-    const sectorName = this.addEventForm.value.sectorName;
-    const sectorNumberOfTickets = this.addEventForm.value.sectorNumberOfTickets;
-
-    if (sectorName === '') {
-      this.sectorError.name = true;
-    }
-
-    if (sectorNumberOfTickets === '' || sectorNumberOfTickets === 0) {
-      this.sectorError.numberOfTickets = true;
-    }
-
-    if (this.sectorError.name || this.sectorError.numberOfTickets) {
-      return;
-    }
-
-    const sectorType = new SectorType(null, sectorName, sectorNumberOfTickets);
-    this.sectorTypes.push(sectorType);
-  }
-
   onFileChange(event) {
     this.fileNoImage = false;
     this.tooManyFiles = false;
@@ -157,12 +128,6 @@ export class AddEventComponent implements OnInit {
   removeImage(index) {
     if (index > -1) {
       this.files.splice(index, 1);
-    }
-  }
-
-  removeSectorType(index) {
-    if (index > -1) {
-      this.sectorTypes.splice(index, 1);
     }
   }
 
@@ -195,5 +160,4 @@ export class AddEventComponent implements OnInit {
 
     return null;
   }
-
 }
