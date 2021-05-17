@@ -22,6 +22,7 @@ export class AddNewsComponent implements OnInit {
   errorMessage = '';
   fileNoImage = false;
   tooManyFiles = false;
+  fileTooBig = false;
   success = false;
   files = [];
 
@@ -119,12 +120,15 @@ export class AddNewsComponent implements OnInit {
   onFileChange(event) {
     this.fileNoImage = false;
     this.tooManyFiles = false;
+    this.fileTooBig = false;
     if (event.target.files.length > 0) {
       const file = event.target.files[0];
       if (!file.type.includes('image')) {
         this.fileNoImage = true;
       } else if (this.files.length >= 10) {
         this.tooManyFiles = true;
+      } else if (file.size > 1000000) {
+        this.fileTooBig = true;
       } else {
         this.files.push(file);
       }

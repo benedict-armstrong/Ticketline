@@ -46,6 +46,9 @@
       <div *ngIf="tooManyFiles" class="alert alert-danger">
         <div>Max. 10 images per news</div>
       </div>
+      <div *ngIf="fileTooBig" class="alert alert-danger">
+        <div>File must be smaller than 1MB</div>
+      </div>
     </div>
 
     <div *ngIf="files.length > 0">
