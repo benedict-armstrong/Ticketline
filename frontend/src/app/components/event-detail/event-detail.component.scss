@@ -1,6 +1,16 @@
+@import "../../../colors.scss";
+
 .event {
   box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
   margin: 10px;
+}
+
+.event-info {
+  margin: 20px 0;
+}
+
+.additional-event-info {
+  background-color: $gray-242;
 }
 
 .jumbotron img {
@@ -72,4 +82,8 @@
 
 .checkout-buttons button {
   width: clamp(100px, 200px, 200px);
+}
+
+h4 {
+  margin: 10px 0;
 }

@@ -17,18 +17,18 @@ public class SectorType {
     private String name;
 
     @Column
-    int amountOfTickets;
+    int numberOfTickets;
 
     public String getName() {
         return name;
     }
 
-    public int getAmountOfTickets() {
-        return amountOfTickets;
+    public int getNumberOfTickets() {
+        return numberOfTickets;
     }
 
-    public void setAmountOfTickets(int amountOfTickets) {
-        this.amountOfTickets = amountOfTickets;
+    public void setNumberOfTickets(int amountOfTickets) {
+        this.numberOfTickets = amountOfTickets;
     }
 
     public void setName(String name) {
@@ -52,12 +52,12 @@ public class SectorType {
             return false;
         }
         SectorType that = (SectorType) o;
-        return amountOfTickets == that.amountOfTickets && Objects.equals(id, that.id) && Objects.equals(name, that.name);
+        return numberOfTickets == that.numberOfTickets && Objects.equals(id, that.id) && Objects.equals(name, that.name);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, amountOfTickets);
+        return Objects.hash(id, name, numberOfTickets);
     }
 
     @Override
@@ -65,14 +65,14 @@ public class SectorType {
         return "SectorType{"
             + "id=" + id
             + ", name='" + name + '\''
-            + ", amountOfTickets=" + amountOfTickets
+            + ", numberOfTickets=" + numberOfTickets
             + '}';
     }
 
     public static final class SectorTypeBuilder {
         private Long id;
         private String name;
-        private int amountOfTickets;
+        private int numberOfTickets;
 
         private SectorTypeBuilder() {}
 
@@ -90,8 +90,8 @@ public class SectorType {
             return this;
         }
 
-        public SectorTypeBuilder withAmountOfTickets(int amountOfTickets) {
-            this.amountOfTickets = amountOfTickets;
+        public SectorTypeBuilder withNumberOfTickets(int numberOfTickets) {
+            this.numberOfTickets = numberOfTickets;
             return this;
         }
 
@@ -99,7 +99,7 @@ public class SectorType {
             SectorType sectorType = new SectorType();
             sectorType.setId(id);
             sectorType.setName(name);
-            sectorType.setAmountOfTickets(amountOfTickets);
+            sectorType.setNumberOfTickets(numberOfTickets);
             return sectorType;
         }
     }

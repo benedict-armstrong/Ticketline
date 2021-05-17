@@ -64,18 +64,15 @@ public class NewsEndpointTest implements TestDataNews, TestDataFile, TestAuthent
     @Autowired
     private ObjectMapper objectMapper;
 
-    private Event event;
     @Autowired
     private PasswordEncoder passwordEncoder;
 
     @Autowired
     private SecurityProperties securityProperties;
 
-    //    private final Event event = Event.EventBuilder.aEvent()
-    //        .withTitle("Testevent")
-    //        .build();
-
     private Set<File> images = new HashSet<>();
+
+    private Event event;
 
     private final News news = News.NewsBuilder.aNews()
         .withTitle("Testtitle")
@@ -111,8 +108,6 @@ public class NewsEndpointTest implements TestDataNews, TestDataFile, TestAuthent
         images.add(IMAGE_FILE);
 
         eventRepository.save(event);
-        fileRepository.save(file);
-        //eventRepository.save(event);
 
         userRepository.deleteAll();
         saveUser(AUTH_USER_ORGANIZER, userRepository, passwordEncoder);

@@ -12,7 +12,7 @@ public class SectorTypeDto {
     private String name;
 
     @Range(min = 1, message = "Atleast 1 ticket per sector")
-    private int amountOfTickets;
+    private int numberOfTickets;
 
     public void setId(Long id) {
         this.id = id;
@@ -30,12 +30,12 @@ public class SectorTypeDto {
         this.name = name;
     }
 
-    public int getAmountOfTickets() {
-        return amountOfTickets;
+    public int getNumberOfTickets() {
+        return numberOfTickets;
     }
 
-    public void setAmountOfTickets(int amountOfTickets) {
-        this.amountOfTickets = amountOfTickets;
+    public void setNumberOfTickets(int numberOfTickets) {
+        this.numberOfTickets = numberOfTickets;
     }
 
     @Override
@@ -47,12 +47,12 @@ public class SectorTypeDto {
             return false;
         }
         SectorTypeDto that = (SectorTypeDto) o;
-        return amountOfTickets == that.amountOfTickets && Objects.equals(id, that.id) && Objects.equals(name, that.name);
+        return numberOfTickets == that.numberOfTickets && Objects.equals(id, that.id) && Objects.equals(name, that.name);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, amountOfTickets);
+        return Objects.hash(id, name, numberOfTickets);
     }
 
     @Override
@@ -60,14 +60,14 @@ public class SectorTypeDto {
         return "SectorTypeDto{"
             + "id=" + id
             + ", name='" + name + '\''
-            + ", amountOfTickets=" + amountOfTickets
+            + ", amountOfTickets=" + numberOfTickets
             + '}';
     }
 
     public static final class SectorTypeDtoBuilder {
         private Long id;
         private String name;
-        private int amountOfTickets;
+        private int numberOfTickets;
 
         private SectorTypeDtoBuilder() {
         }
@@ -86,8 +86,8 @@ public class SectorTypeDto {
             return this;
         }
 
-        public SectorTypeDtoBuilder withAmountOfTickets(int amountOfTickets) {
-            this.amountOfTickets = amountOfTickets;
+        public SectorTypeDtoBuilder withNumberOfTickets(int numberOfTickets) {
+            this.numberOfTickets = numberOfTickets;
             return this;
         }
 
@@ -95,7 +95,7 @@ public class SectorTypeDto {
             SectorTypeDto sectorTypeDto = new SectorTypeDto();
             sectorTypeDto.setId(id);
             sectorTypeDto.setName(name);
-            sectorTypeDto.setAmountOfTickets(amountOfTickets);
+            sectorTypeDto.setNumberOfTickets(numberOfTickets);
             return sectorTypeDto;
         }
     }

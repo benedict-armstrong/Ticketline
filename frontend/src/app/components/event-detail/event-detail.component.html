@@ -24,16 +24,26 @@
             <div class="col-2 add-news" *ngIf="hasOrganizerPermission()">
                 <button class="col-2 primary" [routerLink]="['/add-news', eventItem.id]">Add News</button>
             </div>
-            <p class="info">{{eventItem.date | date:'EEEE, MMM d, y HH:mm'}} <br>
-              Duration: {{eventItem.duration}} Minutes</p>
-            <p class="info">Performer: {{eventItem.artist.firstName}} {{eventItem.artist.lastName}}</p>
-            <p class="info">Location: <br>
-              {{this.eventItem.location.name}}<br>
-              {{this.eventItem.location.lineOne}}<br>
-              {{this.eventItem.location.postcode}} {{this.eventItem.location.city}} <br>
-              {{this.eventItem.location.country}}
-            </p>
-            <p>{{eventItem.description}}</p>
+            <div class="row event-info">
+              <div class="col-8">
+
+                <p>{{eventItem.description}}</p>
+              </div>
+              <div class="col-4 additional-event-info">
+                <h4>Time</h4>
+                <p class="info">{{eventItem.date | date:'EEEE, MMM d, y HH:mm'}} <br>
+                  Duration: {{eventItem.duration}} Minutes</p> <br>
+                <h4>Performer</h4>
+                <p>{{eventItem.artist.firstName}} {{eventItem.artist.lastName}}</p> <br>
+                <h4>Location</h4>
+                <p>
+                  {{this.eventItem.location.name}}<br>
+                  {{this.eventItem.location.lineOne}}<br>
+                  {{this.eventItem.location.postcode}} {{this.eventItem.location.city}} <br>
+                  {{this.eventItem.location.country}}
+                </p>
+              </div>
+            </div>
         </div>
         <div class="body">
             <div class="options row row-cols-1 row-cols-md-4 g-4">

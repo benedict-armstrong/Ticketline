@@ -1,12 +1,15 @@
 package at.ac.tuwien.sepm.groupphase.backend.integrationtest;
 
+import at.ac.tuwien.sepm.groupphase.backend.basetest.TestAuthentification;
 import at.ac.tuwien.sepm.groupphase.backend.basetest.TestDataEvent;
 import at.ac.tuwien.sepm.groupphase.backend.basetest.TestDataFile;
+import at.ac.tuwien.sepm.groupphase.backend.config.properties.SecurityProperties;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventDto;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Event;
 import at.ac.tuwien.sepm.groupphase.backend.entity.File;
 import at.ac.tuwien.sepm.groupphase.backend.repository.EventRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.FileRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.UserRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -18,6 +21,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
@@ -37,7 +41,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 @SpringBootTest
 @ActiveProfiles("test")
 @AutoConfigureMockMvc
-public class EventEndpointTest implements TestDataEvent {
+public class EventEndpointTest implements TestDataEvent, TestAuthentification {
 
     @Autowired
     private MockMvc mockMvc;
@@ -49,7 +53,17 @@ public class EventEndpointTest implements TestDataEvent {
     private FileRepository fileRepository;
 
     @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
     private ObjectMapper objectMapper;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private SecurityProperties securityProperties;
+
 
     private final File file = File.FileBuilder.aFile()
         .withData(TestDataFile.TEST_FILE_DATA)
@@ -58,10 +72,12 @@ public class EventEndpointTest implements TestDataEvent {
 
     private Set<File> images = new HashSet<>();
 
+    private String authToken;
+
     private Event event;
 
     @BeforeEach
-    public void beforeEach() {
+    public void beforeEach() throws Exception {
         eventRepository.deleteAll();
         fileRepository.deleteAll();
 
@@ -81,6 +97,10 @@ public class EventEndpointTest implements TestDataEvent {
             .build();
 
         fileRepository.save(file);
+
+        userRepository.deleteAll();
+        saveUser(AUTH_USER_ORGANIZER, userRepository, passwordEncoder);
+        authToken = authenticate(AUTH_USER_ORGANIZER, mockMvc, objectMapper);
     }
 
     @Test
@@ -90,6 +110,7 @@ public class EventEndpointTest implements TestDataEvent {
             get(TestDataEvent.EVENT_BASE_URI)
                 .param("page", "0")
                 .param("size", "10")
+                .header(securityProperties.getAuthHeader(), authToken)
         ).andReturn();
         MockHttpServletResponse response = mvcResult.getResponse();
         assertEquals(HttpStatus.OK.value(), response.getStatus());
@@ -124,6 +145,7 @@ public class EventEndpointTest implements TestDataEvent {
             get(TestDataEvent.EVENT_BASE_URI)
                 .param("page", String.valueOf(1))
                 .param("size", String.valueOf(pageSize))
+                .header(securityProperties.getAuthHeader(), authToken)
         ).andReturn();
         MockHttpServletResponse response = mvcResult.getResponse();
         assertEquals(HttpStatus.OK.value(), response.getStatus());
@@ -140,6 +162,7 @@ public class EventEndpointTest implements TestDataEvent {
             get(TestDataEvent.EVENT_BASE_URI)
                 .param("page", "-1")
                 .param("size", "-2")
+                .header(securityProperties.getAuthHeader(), authToken)
         ).andReturn();
         MockHttpServletResponse response = mvcResult.getResponse();
         assertEquals(HttpStatus.UNPROCESSABLE_ENTITY.value(), response.getStatus());
@@ -179,6 +202,7 @@ public class EventEndpointTest implements TestDataEvent {
             post(TestDataEvent.EVENT_BASE_URI)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(event))
+                .header(securityProperties.getAuthHeader(), authToken)
         ).andReturn();
 
         MockHttpServletResponse response = mvcResult.getResponse();
@@ -239,4 +263,20 @@ public class EventEndpointTest implements TestDataEvent {
         MockHttpServletResponse response = mvcResult.getResponse();
         assertEquals(HttpStatus.BAD_REQUEST.value(), response.getStatus());
     }
+
+//    @Test
+//    @DisplayName("Should return 403 on trying to create a new event without needed permission")
+//    public void whenCreateEvent_withOutPermission_returns403() throws Exception {
+//        String invalidAuthToken = authenticate(AUTH_USER_CLIENT, mockMvc, objectMapper);
+//        MvcResult mvcResult = this.mockMvc.perform(
+//            post(TestDataEvent.EVENT_BASE_URI)
+//                .contentType(MediaType.APPLICATION_JSON)
+//                .content(objectMapper.writeValueAsString(event))
+//                .header(securityProperties.getAuthHeader(), invalidAuthToken)
+//        ).andReturn();
+//
+//        MockHttpServletResponse response = mvcResult.getResponse();
+//        assertEquals(HttpStatus.FORBIDDEN.value(), response.getStatus());
+//        assertEquals("", response.getContentAsString());
+//    }
 }

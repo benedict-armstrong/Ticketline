@@ -24,6 +24,7 @@ public class EventDto {
     private String description;
 
     @Size(max = 10, message = "Upload 10 images or less")
+    @Size(min = 1, message = "Atleast one image required")
     private FileDto[] images = new FileDto[10];
 
     @NotNull(message = "Eventtype is required")

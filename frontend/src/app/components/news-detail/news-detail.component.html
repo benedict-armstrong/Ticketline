@@ -36,8 +36,8 @@
                             </div>
                         </div>
                         <h4><strong>{{correspondingEvent.title}}</strong></h4>
-                        <p id="performer">Performer?</p>
-                        <p>Venue?</p>
+                        <p id="performer" *ngIf="correspondingEvent.artist">{{correspondingEvent.artist.firstName}} {{correspondingEvent.artist.lastName}}</p>
+                        <p *ngIf="correspondingEvent.location">{{correspondingEvent.location.name}}</p>
                         <p>38€</p>
                     </div>
                     <button class="primary" id="get-tickets" [routerLink]="['/event-detail', correspondingEvent.id]">Get tickets</button>

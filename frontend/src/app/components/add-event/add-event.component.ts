@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {ApplicationEventService} from '../../services/event.service';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {FormBuilder, FormControl, FormGroup, ValidatorFn, Validators} from '@angular/forms';
 import {FileService} from '../../services/file.service';
 import {Event} from '../../dtos/event';
 import {Router} from '@angular/router';
@@ -18,11 +18,12 @@ export class AddEventComponent implements OnInit {
   submitted = false;
   fileNoImage = false;
   tooManyFiles = false;
+  fileTooBig = false;
   files = [];
   sectorTypes = [];
   sectorError = {
     name: false,
-    amountTickets: false
+    numberOfTickets: false
   };
   error = false;
   errorMessage: string;
@@ -33,15 +34,17 @@ export class AddEventComponent implements OnInit {
   constructor(private applicationEventService: ApplicationEventService,
               private formBuilder: FormBuilder, private fileService: FileService,
               private router: Router) {
+  }
 
+  ngOnInit(): void {
     this.addEventForm = this.formBuilder.group({
       eventName: ['', [Validators.required, Validators.maxLength(100)]],
       description: ['', [Validators.required, Validators.maxLength(10000)]],
       files: [''],
-      date: ['', [Validators.required]],
+      date: ['', [Validators.required, this.dateValidator]],
       eventType: ['CONCERT', [Validators.required]],
       sectorName: [''],
-      sectorAmountTickets: [''],
+      sectorNumberOfTickets: [''],
       artistFirstName: ['', [Validators.required]],
       artistLastName: ['', [Validators.required]],
       addressName: ['', [Validators.required]],
@@ -54,13 +57,12 @@ export class AddEventComponent implements OnInit {
     });
   }
 
-  ngOnInit(): void {
-  }
-
   addEvent() {
     this.submitted = true;
 
-    if (this.addEventForm.valid && this.sectorTypes.length !== 0) {
+    if (this.addEventForm.valid &&
+      this.sectorTypes.length !== 0 &&
+      this.files.length !== 0) {
       // Add additional event data
       this.event.title = this.addEventForm.value.eventName;
       this.event.description = this.addEventForm.value.description;
@@ -84,39 +86,27 @@ export class AddEventComponent implements OnInit {
       this.event.sectorTypes = this.sectorTypes;
 
       // New Imageupload
-      const fileService = this.fileService;
       let count = this.files.length;
-      if (count === 0) {
-        // Normal event without images
-        this.applicationEventService.addEvent(this.event).subscribe(
-          (response) => {
-            this.success = true;
-            this.router.navigate(['event-detail', response.id]);
-          },
-          error => {
-            this.defaultServiceErrorHandling(error);
+
+      this.files.forEach(file => {
+        this.fileService.upload(file).subscribe(f => {
+          this.event.images.push(f);
+          count--;
+          if (count === 0) {
+            this.applicationEventService.addEvent(this.event).subscribe(
+              (response) => {
+                this.success = true;
+                this.router.navigate(['event-detail', response.id]);
+              },
+              error => {
+                this.defaultServiceErrorHandling(error);
+              }
+            );
           }
-        );
-      } else {
-        // With images
-        this.files.forEach(file => {
-          fileService.upload(file).subscribe(f => {
-            this.event.images.push(f);
-            count--;
-            if (count === 0) {
-              this.applicationEventService.addEvent(this.event).subscribe(
-                (response) => {
-                  this.success = true;
-                  this.router.navigate(['event-detail', response.id]);
-                },
-                error => {
-                  this.defaultServiceErrorHandling(error);
-                }
-              );
-            }
-          });
+        }, fileError => {
+          this.defaultServiceErrorHandling(fileError);
         });
-      }
+      });
     } else {
       console.log('Invalid input');
     }
@@ -124,35 +114,39 @@ export class AddEventComponent implements OnInit {
 
   addSectorType() {
     this.sectorError.name = false;
-    this.sectorError.amountTickets = false;
+    this.sectorError.numberOfTickets = false;
     const sectorName = this.addEventForm.value.sectorName;
-    const sectorAmountTickets = this.addEventForm.value.sectorAmountTickets;
+    const sectorNumberOfTickets = this.addEventForm.value.sectorNumberOfTickets;
 
     if (sectorName === '') {
       this.sectorError.name = true;
     }
 
-    if (sectorAmountTickets === '' || sectorAmountTickets === 0) {
-      this.sectorError.amountTickets = true;
+    if (sectorNumberOfTickets === '' || sectorNumberOfTickets === 0) {
+      this.sectorError.numberOfTickets = true;
     }
 
-    if (this.sectorError.name || this.sectorError.amountTickets) {
+    if (this.sectorError.name || this.sectorError.numberOfTickets) {
       return;
     }
 
-    const sectorType = new SectorType(null, sectorName, sectorAmountTickets);
+    const sectorType = new SectorType(null, sectorName, sectorNumberOfTickets);
     this.sectorTypes.push(sectorType);
   }
 
   onFileChange(event) {
     this.fileNoImage = false;
     this.tooManyFiles = false;
+    this.fileTooBig = false;
     if (event.target.files.length > 0) {
       const file = event.target.files[0];
+      console.log(file.size);
       if (!file.type.includes('image')) {
         this.fileNoImage = true;
       } else if (this.event.images.length >= 10) {
         this.tooManyFiles = true;
+      } else if (file.size > 1000000) {
+        this.fileTooBig = true;
       } else {
         this.files.push(file);
         console.log(this.event.images);
@@ -186,6 +180,20 @@ export class AddEventComponent implements OnInit {
     } else {
       this.errorMessage = error.error;
     }
+  }
+
+  private dateValidator(control: FormControl): { invalidDate: boolean } {
+    if (control.value) {
+      const date = new Date(control.value);
+
+      if (date.valueOf() < Date.now()) {
+        return {invalidDate: true};
+      }
+
+      return null;
+    }
+
+    return null;
   }
 
 }

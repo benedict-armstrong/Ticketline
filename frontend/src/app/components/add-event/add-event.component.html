@@ -19,8 +19,8 @@
 
     <div class="form-group">
       <label for="description">Description</label>
-      <input type="text" name="description" formControlName="description" class="text-input form-control" id="description"
-             placeholder="Enter description">
+      <textarea name="description" formControlName="description" rows="3" class="form-control" id="description"
+                placeholder="Enter description"></textarea>
       <div *ngIf="submitted && addEventForm.controls.description.errors" class="error">
         <small class="form-text text-danger" *ngIf="addEventForm.controls.description.errors.required">
           Description is required!
@@ -38,7 +38,7 @@
         <small class="form-text text-danger" *ngIf="addEventForm.controls.date.errors.required">
           Date is required!
         </small>
-        <small class="form-text text-danger" *ngIf="addEventForm.controls.date.errors.min">
+        <small class="form-text text-danger" *ngIf="addEventForm.controls.date.errors.invalidDate">
           Date must be in the future!
         </small>
       </div>
@@ -76,12 +76,19 @@
 
     <div class="form-group">
       <label for="files">Picture Upload</label>
+      <p id="file-info">Supported formats: jpg, jpeg, png. The maximum file size is 1MB.</p>
       <input formControlName="files" id="files" type="file" class="form-control" (change)="onFileChange($event)">
+      <div *ngIf="submitted && files.length === 0" class="alert alert-danger">
+        <div>Atleast one image required</div>
+      </div>
       <div *ngIf="fileNoImage" class="alert alert-danger">
         <div>The uploaded file is no image</div>
       </div>
       <div *ngIf="tooManyFiles" class="alert alert-danger">
         <div>Max. 10 images per event</div>
+      </div>
+      <div *ngIf="fileTooBig" class="alert alert-danger">
+        <div>File must be smaller than 1MB</div>
       </div>
     </div>
 
@@ -94,7 +101,7 @@
         <tbody>
         <tr *ngFor="let image of files; let i = index">
           <td>{{image.name}}</td>
-          <td><button type="button" class="btn btn-primary" style="width: 100%" (click)="removeImage(i)">X</button></td>
+          <td><button type="button" class="btn btn-secondary" style="width: 100%" (click)="removeImage(i)">X</button></td>
         </tr>
         </tbody>
       </table>
@@ -120,18 +127,18 @@
 
         <div class="col-6">
           <div class="form-group">
-            <label for="sectorAmountTickets">Amount of tickets in sector</label>
-            <input type="number" name="sectorAmountTickets" formControlName="sectorAmountTickets" class="text-input form-control" id="sectorAmountTickets"
-                   placeholder="Enter amount of tickets">
-            <div *ngIf="sectorError.amountTickets" class="error">
+            <label for="sectorNumberOfTickets">Number of tickets in sector</label>
+            <input type="number" name="sectorNumberOfTickets" formControlName="sectorNumberOfTickets" class="text-input form-control" id="sectorNumberOfTickets"
+                   placeholder="Enter number of tickets">
+            <div *ngIf="sectorError.numberOfTickets" class="error">
               <small class="form-text text-danger">
-                Amount of tickets must be greater than 0!
+                Number of tickets must be greater than 0!
               </small>
             </div>
           </div>
         </div>
       </div>
-      <div class="form-group col-3">
+      <div class="col-3">
         <button class="primary" type="button" (click)="addSectorType()">Add sector type</button>
       </div>
 
@@ -139,13 +146,13 @@
         <table class="table">
           <tr>
           <th>Name</th>
-          <th>Amount of Tickets</th>
+          <th>Number of Tickets</th>
           </tr>
           <tbody>
           <tr *ngFor="let sectorType of sectorTypes; let i = index">
             <td>{{sectorType.name}}</td>
-            <td>{{sectorType.amountOfTickets}}</td>
-            <td><button type="button" class="btn btn-primary" style="width: 100%" (click)="removeSectorType(i)">X</button></td>
+            <td>{{sectorType.numberOfTickets}}</td>
+            <td><button type="button" class="btn btn-secondary" style="width: 100%" (click)="removeSectorType(i)">X</button></td>
           </tr>
           </tbody>
         </table>
