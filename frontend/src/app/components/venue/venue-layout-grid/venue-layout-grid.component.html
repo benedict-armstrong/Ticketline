@@ -1,5 +1,7 @@
 <div class="venue-layout-grid">
   <div *ngFor="let row of venueLayout">
-    <app-venue-grid-unit *ngFor="let seatUnit of row" [seatUnit]="seatUnit"></app-venue-grid-unit>
+    <app-venue-grid-unit *ngFor="let seatUnit of row" [seatUnit]="seatUnit" [activeTool]="activeTool"
+      (clickedUnit)="this.seatUnitClicked($event)">
+    </app-venue-grid-unit>
   </div>
 </div>

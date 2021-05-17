@@ -1,3 +1,4 @@
-<div class="grid-unit-wrapper noselect" (click)="this.toggle()">
-  <div class="grid-unit" [ngClass]="{'available': this.seatUnit.available}"></div>
+<div class="grid-unit-wrapper" (click)="this.toggle()" (mouseenter)="this.toggleEvent($event)">
+  <div class="grid-unit" [ngClass]="{'available': this.seatUnit.available, 'sector0': this.seatUnit.sectorId == 0}">
+  </div>
 </div>

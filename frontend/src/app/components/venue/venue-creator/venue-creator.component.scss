@@ -1,5 +1,32 @@
+@import "../../../../colors.scss";
+
 .venue-creator {
   padding: 10px;
+}
+
+.options {
+  display: flex;
+}
+
+.toolbar {
+  display: flex;
+  align-items: center;
+}
+
+.divider {
+  font-weight: 100;
+  font-size: 20pt;
+  color: lightgray;
+  margin: 0px 5px;
+}
+
+.toolbar button {
+  margin: 0px 5px;
+  width: 80px;
+}
+
+.toolbar button.active {
+  border: 1px solid $primary;
 }
 
 .grid-size {
