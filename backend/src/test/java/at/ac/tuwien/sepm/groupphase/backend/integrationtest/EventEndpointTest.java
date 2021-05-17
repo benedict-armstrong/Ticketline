@@ -84,16 +84,16 @@ public class EventEndpointTest implements TestDataEvent, TestAuthentification {
         images = new HashSet<>();
         images.add(file);
 
-        event = Event.EventBuilder.aEvent()
-            .withTitle(TestDataEvent.TEST_EVENT_TITLE)
-            .withDescription(TestDataEvent.TEST_EVENT_DESCRIPTION)
-            .withDate(TestDataEvent.TEST_EVENT_DATE_FUTURE)
-            .withDuration(TestDataEvent.TEST_EVENT_DURATION)
-            .withEventType(TestDataEvent.TEST_EVENT_EVENT_TYPE)
-            .withArtist(TestDataEvent.getTestEventArtist())
-            .withLocation(TestDataEvent.getTestEventLocation())
-            .withSectorTypes(TestDataEvent.getTestEventSectortypes())
-            .withImages(images)
+        event = Event.builder()
+            .title(TestDataEvent.TEST_EVENT_TITLE)
+            .description(TestDataEvent.TEST_EVENT_DESCRIPTION)
+            .date(TestDataEvent.TEST_EVENT_DATE_FUTURE)
+            .duration(TestDataEvent.TEST_EVENT_DURATION)
+            .eventType(TestDataEvent.TEST_EVENT_EVENT_TYPE)
+            .artist(TestDataEvent.getTestEventArtist())
+            .location(TestDataEvent.getTestEventLocation())
+            .sectorTypes(TestDataEvent.getTestEventSectortypes())
+            .images(images)
             .build();
 
         fileRepository.save(file);
@@ -128,15 +128,15 @@ public class EventEndpointTest implements TestDataEvent, TestAuthentification {
         int amountOfEventsToGenerate = 15;
         int pageSize = 5;
         for (int i = 0; i < amountOfEventsToGenerate; i++) {
-            Event e = Event.EventBuilder.aEvent()
-                .withTitle(TestDataEvent.TEST_EVENT_TITLE)
-                .withDescription(TestDataEvent.TEST_EVENT_DESCRIPTION)
-                .withDate(TestDataEvent.TEST_EVENT_DATE_FUTURE)
-                .withDuration(TestDataEvent.TEST_EVENT_DURATION)
-                .withEventType(TestDataEvent.TEST_EVENT_EVENT_TYPE)
-                .withArtist(TestDataEvent.getTestEventArtist())
-                .withLocation(TestDataEvent.getTestEventLocation())
-                .withSectorTypes(TestDataEvent.getTestEventSectortypes())
+            Event e = Event.builder()
+                .title(TestDataEvent.TEST_EVENT_TITLE)
+                .description(TestDataEvent.TEST_EVENT_DESCRIPTION)
+                .date(TestDataEvent.TEST_EVENT_DATE_FUTURE)
+                .duration(TestDataEvent.TEST_EVENT_DURATION)
+                .eventType(TestDataEvent.TEST_EVENT_EVENT_TYPE)
+                .artist(TestDataEvent.getTestEventArtist())
+                .location(TestDataEvent.getTestEventLocation())
+                .sectorTypes(TestDataEvent.getTestEventSectortypes())
                 .build();
             eventRepository.save(e);
         }
@@ -219,15 +219,15 @@ public class EventEndpointTest implements TestDataEvent, TestAuthentification {
     @Test
     @DisplayName("Should return 400 when Date is in past")
     public void whenCreateEventWithPastDate_then400() throws Exception {
-        Event invalidEvent = Event.EventBuilder.aEvent()
-            .withTitle(TestDataEvent.TEST_EVENT_TITLE)
-            .withDescription(TestDataEvent.TEST_EVENT_DESCRIPTION)
-            .withDate(TestDataEvent.TEST_EVENT_DATE_PAST)
-            .withDuration(TestDataEvent.TEST_EVENT_DURATION)
-            .withEventType(TestDataEvent.TEST_EVENT_EVENT_TYPE)
-            .withArtist(TestDataEvent.getTestEventArtist())
-            .withLocation(TestDataEvent.getTestEventLocation())
-            .withSectorTypes(TestDataEvent.getTestEventSectortypes())
+        Event invalidEvent = Event.builder()
+            .title(TestDataEvent.TEST_EVENT_TITLE)
+            .description(TestDataEvent.TEST_EVENT_DESCRIPTION)
+            .date(TestDataEvent.TEST_EVENT_DATE_PAST)
+            .duration(TestDataEvent.TEST_EVENT_DURATION)
+            .eventType(TestDataEvent.TEST_EVENT_EVENT_TYPE)
+            .artist(TestDataEvent.getTestEventArtist())
+            .location(TestDataEvent.getTestEventLocation())
+            .sectorTypes(TestDataEvent.getTestEventSectortypes())
             .build();
 
         MvcResult mvcResult = this.mockMvc.perform(
@@ -243,15 +243,15 @@ public class EventEndpointTest implements TestDataEvent, TestAuthentification {
     @Test
     @DisplayName("Should return 400 when Date is in past")
     public void whenCreateEventWithNoSectorTypes_then400() throws Exception {
-        Event invalidEvent = Event.EventBuilder.aEvent()
-            .withTitle(TestDataEvent.TEST_EVENT_TITLE)
-            .withDescription(TestDataEvent.TEST_EVENT_DESCRIPTION)
-            .withDate(TestDataEvent.TEST_EVENT_DATE_FUTURE)
-            .withDuration(TestDataEvent.TEST_EVENT_DURATION)
-            .withEventType(TestDataEvent.TEST_EVENT_EVENT_TYPE)
-            .withArtist(TestDataEvent.getTestEventArtist())
-            .withLocation(TestDataEvent.getTestEventLocation())
-            .withSectorTypes(new HashSet<>())
+        Event invalidEvent = Event.builder()
+            .title(TestDataEvent.TEST_EVENT_TITLE)
+            .description(TestDataEvent.TEST_EVENT_DESCRIPTION)
+            .date(TestDataEvent.TEST_EVENT_DATE_FUTURE)
+            .duration(TestDataEvent.TEST_EVENT_DURATION)
+            .eventType(TestDataEvent.TEST_EVENT_EVENT_TYPE)
+            .artist(TestDataEvent.getTestEventArtist())
+            .location(TestDataEvent.getTestEventLocation())
+            .sectorTypes(new HashSet<>())
             .build();
 
         MvcResult mvcResult = this.mockMvc.perform(

@@ -29,7 +29,7 @@ public interface TestDataEvent extends TestData {
     }
 
     static Artist getTestEventArtist() {
-        return Artist.ArtistBuilder.anArtist().withFirstName("Max").withLastName("Mustermann").build();
+        return Artist.builder().firstName("Max").lastName("Mustermann").build();
     }
 
     static Address getTestEventLocation() {
