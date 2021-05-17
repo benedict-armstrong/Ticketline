@@ -68,8 +68,8 @@ public class NewsDataGenerator {
             LOGGER.debug("generating {} news entries with events and without pictures", NUMBER_OF_NEWS_TO_GENERATE);
 
             for (int i = 0; i < NUMBER_OF_NEWS_TO_GENERATE; i++) {
-                News news = News.NewsBuilder.aNews().withPublishedAt(LocalDateTime.now()).withAuthor(TEST_AUTHOR_NAME)
-                    .withTitle(TEST_TITLE + i).withText(TEST_TEXT + i) // .withEvent(events.get(i))
+                News news = News.builder().publishedAt(LocalDateTime.now()).author(TEST_AUTHOR_NAME)
+                    .title(TEST_TITLE + i).text(TEST_TEXT + i) // .withEvent(events.get(i))
                     .build();
 
                 LOGGER.debug("saving news {}", news);
@@ -143,9 +143,9 @@ public class NewsDataGenerator {
                 LOGGER.debug("saving file {} for news", file3);
                 fileRepository.save(file3);
 
-                News news = News.NewsBuilder.aNews().withPublishedAt(LocalDateTime.now()).withAuthor(TEST_AUTHOR_NAME)
-                    .withTitle(TEST_TITLE + (i + 10)).withText(TEST_TEXT + (i + 10)) //.withEvent(events.get(i))
-                    .withImages(set).build();
+                News news = News.builder().publishedAt(LocalDateTime.now()).author(TEST_AUTHOR_NAME)
+                    .title(TEST_TITLE + (i + 10)).text(TEST_TEXT + (i + 10)) //.withEvent(events.get(i))
+                    .images(set).build();
 
                 LOGGER.debug("saving news {}", news);
                 newsRepository.save(news);

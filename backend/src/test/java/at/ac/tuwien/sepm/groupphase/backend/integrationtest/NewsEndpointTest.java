@@ -74,13 +74,13 @@ public class NewsEndpointTest implements TestDataNews, TestDataFile, TestAuthent
 
     private Event event;
 
-    private final News news = News.NewsBuilder.aNews()
-        .withTitle("Testtitle")
-        .withText("Testtext")
-        .withAuthor("Testuser")
-        .withEvent(event)
-        .withImages(images)
-        .withPublishedAt(TEST_NEWS_PUBLISHED_AT)
+    private final News news = News.builder()
+        .title("Testtitle")
+        .text("Testtext")
+        .author("Testuser")
+        .event(event)
+        .images(images)
+        .publishedAt(TEST_NEWS_PUBLISHED_AT)
         .build();
 
     private String authToken;
@@ -139,12 +139,12 @@ public class NewsEndpointTest implements TestDataNews, TestDataFile, TestAuthent
         int amountOfNewsToGenerate = 15;
         int pageSize = 5;
         for (int i = 0; i < amountOfNewsToGenerate; i++) {
-            News n = News.NewsBuilder.aNews()
-                .withTitle(news.getTitle() + i)
-                .withText(news.getText())
-                .withAuthor(news.getAuthor())
-                .withEvent(news.getEvent())
-                .withPublishedAt(news.getPublishedAt())
+            News n = News.builder()
+                .title(news.getTitle() + i)
+                .text(news.getText())
+                .author(news.getAuthor())
+                .event(news.getEvent())
+                .publishedAt(news.getPublishedAt())
                 .build();
             newsRepository.save(n);
         }
@@ -230,12 +230,12 @@ public class NewsEndpointTest implements TestDataNews, TestDataFile, TestAuthent
     @Test
     @DisplayName("Should return 200 and news with the given ID on get by ID")
     public void givenNews_whenGetOneById_then200AndNewsWithId() throws Exception {
-        News n = News.NewsBuilder.aNews()
-            .withTitle(news.getTitle())
-            .withText(news.getText())
-            .withAuthor(news.getAuthor())
-            .withEvent(news.getEvent())
-            .withPublishedAt(news.getPublishedAt())
+        News n = News.builder()
+            .title(news.getTitle())
+            .text(news.getText())
+            .author(news.getAuthor())
+            .event(news.getEvent())
+            .publishedAt(news.getPublishedAt())
             .build();
         News saved = newsRepository.save(n);
 

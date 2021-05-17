@@ -52,20 +52,20 @@ public class NewsRepositoryTest implements TestDataNews {
             .build();
         eventRepository.save(event);
 
-        news = News.NewsBuilder.aNews()
-            .withTitle(TEST_NEWS_TITLE)
-            .withText(TEST_NEWS_TEXT)
-            .withAuthor("Testuser")
-            .withEvent(event)
-            .withPublishedAt(TEST_NEWS_PUBLISHED_AT)
+        news = News.builder()
+            .title(TEST_NEWS_TITLE)
+            .text(TEST_NEWS_TEXT)
+            .author("Testuser")
+            .event(event)
+            .publishedAt(TEST_NEWS_PUBLISHED_AT)
             .build();
 
-        news2 = News.NewsBuilder.aNews()
-            .withTitle(TEST_NEWS_TITLE + "2")
-            .withText(TEST_NEWS_TEXT)
-            .withAuthor("TestAuthor")
-            .withEvent(event)
-            .withPublishedAt(TEST_NEWS_PUBLISHED_AT)
+        news2 = News.builder()
+            .title(TEST_NEWS_TITLE + "2")
+            .text(TEST_NEWS_TEXT)
+            .author("TestAuthor")
+            .event(event)
+            .publishedAt(TEST_NEWS_PUBLISHED_AT)
             .build();
     }
 
