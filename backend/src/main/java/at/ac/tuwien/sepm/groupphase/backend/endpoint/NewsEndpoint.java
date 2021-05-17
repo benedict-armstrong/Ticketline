@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -39,18 +40,17 @@ public class NewsEndpoint {
         this.paginationMapper = paginationMapper;
     }
 
-    //@Secured("ROLE_ADMIN")
-    @PermitAll
-    @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
+    @Secured("ROLE_ORGANIZER")
+    @ResponseStatus(HttpStatus.CREATED)
     @Operation(summary = "Publish a news article")
     public NewsDto create(@Valid @RequestBody NewsDto newsDto) {
         LOGGER.info("POST /api/v1/news body: {}", newsDto);
         return newsMapper.newsToNewsDto(newsService.addNews(newsMapper.newsDtoToNews(newsDto)));
     }
 
-    @PermitAll
     @GetMapping
+    @PermitAll
     @Operation(summary = "Get all news")
     public List<NewsDto> getAll(PaginationDto paginationDto) {
         LOGGER.info("GET /api/v1/news?{}", paginationDto);
@@ -60,7 +60,7 @@ public class NewsEndpoint {
     }
 
     @GetMapping(value = {"/{id}"})
-    @PermitAll
+    @Secured("ROLE_USER")
     @Operation(summary = "Get a news article by id")
     public NewsDto getOneById(@Valid @PathVariable("id") Long id) {
         LOGGER.info("GET /api/v1/news/{}", id);

@@ -37,6 +37,8 @@ public class UserDto  {
 
     private LocalDateTime lastLogin;
 
+    private NewsDto lastReadNews;
+
     @PositiveOrZero(message = "Negative points values are not allowed")
     private int points;
 
@@ -102,6 +104,14 @@ public class UserDto  {
 
     public void setLastLogin(LocalDateTime lastLogin) {
         this.lastLogin = lastLogin;
+    }
+
+    public NewsDto getLastReadNews() {
+        return lastReadNews;
+    }
+
+    public void setLastReadNews(NewsDto lastReadNews) {
+        this.lastReadNews = lastReadNews;
     }
 
     public int getPoints() {
@@ -173,6 +183,7 @@ public class UserDto  {
             + ", email='" + email + '\''
             + ", password='" + password + '\''
             + ", lastLogin=" + lastLogin
+            + ", lastReadNews" + (lastReadNews == null ? "null" : lastReadNews.getId())
             + ", points=" + points
             + ", status=" + status
             + ", role=" + role

@@ -59,6 +59,7 @@ export class AddUserComponent implements OnInit {
         this.addUserForm.value.email,
         this.addUserForm.value.password,
         new Date(),
+        null,
         this.addUserForm.value.points,
         this.addUserForm.value.status,
         this.addUserForm.value.role,

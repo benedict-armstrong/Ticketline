@@ -67,6 +67,9 @@ export class AddNewsComponent implements OnInit {
         this.applicationNewsService.publishNews(this.news).subscribe(
           () => {
             this.success = true;
+            setTimeout(() => {
+              this.router.navigate(['/']);
+            }, 3000);
           },
           error => {
             this.defaultServiceErrorHandling(error);
@@ -82,6 +85,9 @@ export class AddNewsComponent implements OnInit {
               this.applicationNewsService.publishNews(this.news).subscribe(
                 () => {
                   this.success = true;
+                  setTimeout(() => {
+                    this.router.navigate(['/']);
+                  }, 3000);
                 },
                 error => {
                   this.defaultServiceErrorHandling(error);
@@ -117,7 +123,7 @@ export class AddNewsComponent implements OnInit {
       const file = event.target.files[0];
       if (!file.type.includes('image')) {
         this.fileNoImage = true;
-      } else if (this.news.images.length >= 10) {
+      } else if (this.files.length >= 10) {
         this.tooManyFiles = true;
       } else {
         this.files.push(file);

@@ -3,6 +3,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { News } from 'src/app/dtos/news';
 import { FileService } from 'src/app/services/file.service';
 import { ApplicationNewsService } from 'src/app/services/news.service';
+import {AuthService} from '../../services/auth.service';
+import {UserService} from '../../services/user.service';
 import {Event} from '../../dtos/event';
 
 @Component({
@@ -21,7 +23,11 @@ export class NewsDetailComponent implements OnInit {
   imgURL = [];
   date: Date;
 
-  constructor(private newsService: ApplicationNewsService,  private route: Router, private actRoute: ActivatedRoute) {
+  constructor(private newsService: ApplicationNewsService,
+              private route: Router,
+              private actRoute: ActivatedRoute,
+              private authService: AuthService,
+              private userService: UserService) {
   }
 
   ngOnInit(): void {
@@ -39,6 +45,7 @@ export class NewsDetailComponent implements OnInit {
 
           console.log(this.imgURL);
         }
+        this.markOlderAsRead();
       },
       error => {
         this.defaultServiceErrorHandling(error);
@@ -52,7 +59,27 @@ export class NewsDetailComponent implements OnInit {
     this.success = false;
   }
 
+  markOlderAsRead() {
+    const email = this.authService.getUserEmail();
+    let userToChange;
 
+    if (email != null) {
+      this.userService.getUserByEmail(email).subscribe(
+        user => {
+          userToChange = user;
+          userToChange.lastReadNews = this.newsItem;
+          this.userService.updateUser(userToChange).subscribe(
+            () => {
+            }, error => {
+              this.defaultServiceErrorHandling(error);
+            }
+          );
+        }, error => {
+          this.defaultServiceErrorHandling(error);
+        }
+      );
+    }
+  }
 
   private defaultServiceErrorHandling(error: any) {
     console.log(error);

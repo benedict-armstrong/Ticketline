@@ -10,6 +10,6 @@ public interface FileService {
      * @param file the file to be persisted.
      * @return the file entity with set ID.
      */
-    File upload(File file);
+    File addFile(File file);
 
 }
