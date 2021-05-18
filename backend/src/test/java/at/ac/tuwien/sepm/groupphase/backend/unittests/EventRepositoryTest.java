@@ -31,7 +31,14 @@ public class EventRepositoryTest implements TestDataEvent {
         eventRepository.deleteAll();
 
         event = Event.EventBuilder.aEvent()
-            .withTitle(TEST_EVENT_TITLE)
+            .withTitle(TestDataEvent.TEST_EVENT_TITLE)
+            .withDescription(TestDataEvent.TEST_EVENT_DESCRIPTION)
+            .withDate(TestDataEvent.TEST_EVENT_DATE_FUTURE)
+            .withDuration(TestDataEvent.TEST_EVENT_DURATION)
+            .withEventType(TestDataEvent.TEST_EVENT_EVENT_TYPE)
+            .withArtist(TestDataEvent.getTestEventArtist())
+            .withLocation(TestDataEvent.getTestEventLocation())
+            .withSectorTypes(TestDataEvent.getTestEventSectortypes())
             .build();
     }
 
@@ -55,4 +62,9 @@ public class EventRepositoryTest implements TestDataEvent {
         );
     }
 
+    @Test
+    @DisplayName("Should return null when searching for negative id")
+    public void givenNothing_whenFindOnyById_ShouldBeNull() {
+        assertNull(eventRepository.findOneById(-1L));
+    }
 }

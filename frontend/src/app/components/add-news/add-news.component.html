@@ -4,8 +4,14 @@
     <h3>Publish News</h3>
 
     <div class="form-group">
+      <label for="eventName">Event</label>
+      <input type="text" name="eventName" formControlName="eventName" class="text-input form-control" id="eventName"
+             placeholder="" disabled>
+    </div>
+
+    <div class="form-group">
       <label for="title">Title</label>
-      <input type="title" name="title" formControlName="title" class="text-input form-control" id="title"
+      <input type="text" name="title" formControlName="title" class="text-input form-control" id="title"
              placeholder="Enter Title">
       <div *ngIf="submitted && addNewsForm.controls.title.errors" class="error">
         <small class="form-text text-danger" *ngIf="addNewsForm.controls.title.errors.required">
@@ -18,15 +24,8 @@
     </div>
 
     <div class="form-group">
-      <label for="eventName">Event</label>
-      <input type="text" name="eventName" formControlName="eventName" class="text-input form-control" id="eventName"
-             placeholder="" disabled>
-    </div>
-
-    <div class="form-group">
       <label for="text">Text</label>
-      <input type="text" name="text" formControlName="text" class="text-input form-control" id="text"
-             placeholder="Enter Text">
+      <textarea class="form-control" formControlName="text" id="text" rows="3" placeholder="Enter Text"></textarea>
       <div *ngIf="submitted && addNewsForm.controls.text.errors" class="error">
         <small class="form-text text-danger" *ngIf="addNewsForm.controls.text.errors.required">
           Text is required!
@@ -38,13 +37,17 @@
     </div>
 
     <div class="form-group">
-      <label for="files">Picture Upload</label>
-      <input formControlName="files" id="files" type="file" class="form-control" (change)="onFileChange($event)">
+      <label id="fileLabel" for="files">Picture Upload</label>
+      <p id="file-info">Supported formats: jpg, jpeg, png. The maximum file size is 1MB.</p>
+      <input formControlName="files" lang="en" id="files" type="file" class="form-control" (change)="onFileChange($event)">
       <div *ngIf="fileNoImage" class="alert alert-danger">
         <div>The uploaded file is no image</div>
       </div>
       <div *ngIf="tooManyFiles" class="alert alert-danger">
         <div>Max. 10 images per news</div>
+      </div>
+      <div *ngIf="fileTooBig" class="alert alert-danger">
+        <div>File must be smaller than 1MB</div>
       </div>
     </div>
 
@@ -57,24 +60,36 @@
         <tbody>
         <tr *ngFor="let image of files; let i = index">
           <td>{{image.name}}</td>
-          <td><button type="button" class="btn btn-primary" style="width: 100%" (click)="removeImage(i)">X</button></td>
+          <td><button type="button" class="secondary deleteButton" style="width: 100%" (click)="removeImage(i)">X</button></td>
         </tr>
         </tbody>
       </table>
     </div>
 
-    <button type="button" (click)="addNews()" id="publish">Publish</button>
+    <div class="form-group">
+      <label for="author">Author</label>
+      <input type="text" name="author" formControlName="author" class="text-input form-control" id="author"
+             placeholder="Enter Name">
+      <div *ngIf="submitted && addNewsForm.controls.author.errors" class="error">
+        <small class="form-text text-danger" *ngIf="addNewsForm.controls.author.errors.required">
+          Author is required!
+        </small>
+        <small class="form-text text-danger" *ngIf="addNewsForm.controls.author.errors.maxlength">
+          Author name cannot be more than 100 characters!
+        </small>
+      </div>
+    </div>
+
+    <button class="primary" type="button" (click)="addNews()" id="publish">Publish</button>
 
     <div *ngIf="error" class="col-12 alert alert-danger alert-dismissible fade show" role="alert">
       <strong>Error! </strong> {{ errorMessage }}
-      <button type="button" (click)="vanishAlert()" class="close" data-dismiss="alert" aria-label="Close">
-        <span aria-hidden="true">&times;</span>
+      <button type="button" (click)="vanishAlert()" class="btn-close" data-dismiss="alert" aria-label="Close">
       </button>
     </div>
     <div *ngIf="success" class="col-12 alert alert-success alert-dismissible fade show" role="alert">
-      <strong>Success</strong> The news is published.
-      <button type="button" (click)="vanishAlert()" class="close" data-dismiss="alert" aria-label="Close">
-        <span aria-hidden="true">&times;</span>
+      <strong>Success</strong> The article has been successfully published. Redirect in 3...
+      <button type="button" (click)="vanishAlert()" class="btn-close" data-dismiss="alert" aria-label="Close">
       </button>
     </div>
   </form>

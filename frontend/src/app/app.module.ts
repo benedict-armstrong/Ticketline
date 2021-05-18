@@ -1,5 +1,8 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { HttpClientModule } from '@angular/common/http';
+
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HomePageComponent } from './components/home-page/home-page.component';
@@ -19,10 +22,11 @@ import { TicketDetailComponent } from './components/ticket-detail/ticket-detail.
 import { TicketListItemComponent } from './components/ticket-list-item/ticket-list-item.component';
 import { ShoppingcartTestingComponent } from './components/shoppingcart-testing/shoppingcart-testing.component';
 import { ShoppingcartComponent } from './components/shoppingcart/shoppingcart.component';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
 import { AddNewsComponent } from './components/add-news/add-news.component';
+import { AddEventComponent } from './components/event/add-event/add-event.component';
 import { AddUserComponent } from './components/add-user/add-user.component';
+import { httpInterceptorProviders } from './interceptors';
+import { AddSectortypeComponent } from './components/event/add-sectortype/add-sectortype.component';
 
 @NgModule({
   declarations: [
@@ -44,9 +48,10 @@ import { AddUserComponent } from './components/add-user/add-user.component';
     TicketListItemComponent,
     ShoppingcartTestingComponent,
     ShoppingcartComponent,
-    AddUserComponent,
     AddNewsComponent,
+    AddEventComponent,
     AddUserComponent,
+    AddSectortypeComponent
   ],
   imports: [
     BrowserModule,
@@ -55,7 +60,7 @@ import { AddUserComponent } from './components/add-user/add-user.component';
     HttpClientModule,
     FormsModule,
   ],
-  providers: [],
+  providers: [httpInterceptorProviders], // Interceptors defined in interceptors/index.ts
   bootstrap: [AppComponent],
 })
 export class AppModule {}

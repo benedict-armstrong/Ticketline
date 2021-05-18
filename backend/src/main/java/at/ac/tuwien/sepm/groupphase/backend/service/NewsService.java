@@ -1,6 +1,8 @@
 package at.ac.tuwien.sepm.groupphase.backend.service;
 
 import at.ac.tuwien.sepm.groupphase.backend.entity.News;
+import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
@@ -9,11 +11,10 @@ public interface NewsService {
     /**
      * Find all message entries ordered by published at date (descending).
      *
-     * @param limit the amount of news entries to be returned
-     * @param offset the maximum ID that the news must have
+     * @param pageRequest a Pageable page request
      * @return ordered list of all satisfying message entries
      */
-    List<News> getAll(Long limit, Long offset);
+    List<News> getAll(Pageable pageRequest);
 
     /**
      * Adds a single news entry.
@@ -28,6 +29,7 @@ public interface NewsService {
      *
      * @param id of the news to get
      * @return complete news entry
+     * @throws NotFoundException if no news article with given ID exists
      */
     News getOneById(Long id);
 

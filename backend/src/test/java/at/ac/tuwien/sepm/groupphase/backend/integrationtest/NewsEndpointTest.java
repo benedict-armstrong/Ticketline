@@ -1,15 +1,18 @@
 package at.ac.tuwien.sepm.groupphase.backend.integrationtest;
 
+import at.ac.tuwien.sepm.groupphase.backend.basetest.TestDataEvent;
+import at.ac.tuwien.sepm.groupphase.backend.basetest.TestAuthentification;
 import at.ac.tuwien.sepm.groupphase.backend.basetest.TestDataFile;
 import at.ac.tuwien.sepm.groupphase.backend.basetest.TestDataNews;
+import at.ac.tuwien.sepm.groupphase.backend.config.properties.SecurityProperties;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.NewsDto;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.NewsMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Event;
 import at.ac.tuwien.sepm.groupphase.backend.entity.File;
 import at.ac.tuwien.sepm.groupphase.backend.entity.News;
 import at.ac.tuwien.sepm.groupphase.backend.repository.EventRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.FileRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.NewsRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.UserRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -21,12 +24,12 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
-import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
@@ -41,7 +44,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest
 @ActiveProfiles("test")
 @AutoConfigureMockMvc
-public class NewsEndpointTest implements TestDataNews, TestDataFile {
+public class NewsEndpointTest implements TestDataNews, TestDataFile, TestAuthentification {
 
     @Autowired
     private MockMvc mockMvc;
@@ -56,18 +59,20 @@ public class NewsEndpointTest implements TestDataNews, TestDataFile {
     private FileRepository fileRepository;
 
     @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
     private ObjectMapper objectMapper;
 
-    private final Event event = Event.EventBuilder.aEvent()
-        .withTitle("Testevent")
-        .build();
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
-    private final File file = File.FileBuilder.aFile()
-        .withData(TEST_FILE_DATA)
-        .withType(TEST_FILE_TYPE)
-        .build();
+    @Autowired
+    private SecurityProperties securityProperties;
 
     private Set<File> images = new HashSet<>();
+
+    private Event event;
 
     private final News news = News.NewsBuilder.aNews()
         .withTitle("Testtitle")
@@ -78,17 +83,35 @@ public class NewsEndpointTest implements TestDataNews, TestDataFile {
         .withPublishedAt(TEST_NEWS_PUBLISHED_AT)
         .build();
 
+    private String authToken;
+
     @BeforeEach
-    public void beforeEach() {
+    public void beforeEach() throws Exception {
         newsRepository.deleteAll();
         eventRepository.deleteAll();
         fileRepository.deleteAll();
 
+        event = Event.EventBuilder.aEvent()
+            .withTitle(TestDataEvent.TEST_EVENT_TITLE)
+            .withDescription(TestDataEvent.TEST_EVENT_DESCRIPTION)
+            .withDate(TestDataEvent.TEST_EVENT_DATE_FUTURE)
+            .withDuration(TestDataEvent.TEST_EVENT_DURATION)
+            .withEventType(TestDataEvent.TEST_EVENT_EVENT_TYPE)
+            .withArtist(TestDataEvent.getTestEventArtist())
+            .withLocation(TestDataEvent.getTestEventLocation())
+            .withSectorTypes(TestDataEvent.getTestEventSectortypes())
+            .build();
+        news.setEvent(event);
+
+        fileRepository.save(IMAGE_FILE);
         images = new HashSet<>();
-        images.add(file);
+        images.add(IMAGE_FILE);
 
         eventRepository.save(event);
-        fileRepository.save(file);
+
+        userRepository.deleteAll();
+        saveUser(AUTH_USER_ORGANIZER, userRepository, passwordEncoder);
+        authToken = authenticate(AUTH_USER_ORGANIZER, mockMvc, objectMapper);
     }
 
     @Test
@@ -96,6 +119,9 @@ public class NewsEndpointTest implements TestDataNews, TestDataFile {
     public void givenNothing_whenGetAllNews_thenReturnEmptyList() throws Exception {
         MvcResult mvcResult = this.mockMvc.perform(
             get(NEWS_BASE_URI)
+                .param("page", "0")
+                .param("size", "10")
+                .header(securityProperties.getAuthHeader(), authToken)
         ).andReturn();
         MockHttpServletResponse response = mvcResult.getResponse();
         assertEquals(HttpStatus.OK.value(), response.getStatus());
@@ -108,42 +134,11 @@ public class NewsEndpointTest implements TestDataNews, TestDataFile {
     }
 
     @Test
-    @DisplayName("Should return 8 freshest news on get all with no arguments")
-    public void givenManyNews_whenGetAllWithNoArguments_thenReturnListWith8FreshNews() throws Exception {
-        LocalDateTime freshest = null;
-        for (int i = 0; i < 15; i++) {
-            News n = News.NewsBuilder.aNews()
-                .withTitle(news.getTitle() + i)
-                .withText(news.getText())
-                .withAuthor(news.getAuthor())
-                .withEvent(news.getEvent())
-                .withPublishedAt(news.getPublishedAt().plusDays(i))
-                .build();
-            freshest = n.getPublishedAt();
-            newsRepository.save(n);
-        }
-        assertNotNull(freshest);
-
-        MvcResult mvcResult = this.mockMvc.perform(
-            get(NEWS_BASE_URI)
-        ).andReturn();
-        MockHttpServletResponse response = mvcResult.getResponse();
-        assertEquals(HttpStatus.OK.value(), response.getStatus());
-        assertEquals(MediaType.APPLICATION_JSON_VALUE, response.getContentType());
-
-        NewsDto[] newsDtos = objectMapper.readValue(response.getContentAsString(), NewsDto[].class);
-        assertEquals(8, newsDtos.length);
-        for (int i = 0; i < newsDtos.length; i++) {
-            assertEquals(freshest.minusDays(i), newsDtos[i].getPublishedAt());
-        }
-    }
-
-    @Test
-    @DisplayName("Should return list of news with IDs smaller than offset on get all")
-    public void givenNews_whenGetAllWithOnlyOffset_thenReturnListWithNews_AllIdsSmallerThanOffset() throws Exception {
-        long limit = 4L;
-        Long offset = null;
-        for (int i = 0; i < limit + 4; i++) {
+    @DisplayName("Should return correctly sized chunk of news on get all")
+    public void givenNews_whenGetAll_thenGetCorrectChunk() throws Exception {
+        int amountOfNewsToGenerate = 15;
+        int pageSize = 5;
+        for (int i = 0; i < amountOfNewsToGenerate; i++) {
             News n = News.NewsBuilder.aNews()
                 .withTitle(news.getTitle() + i)
                 .withText(news.getText())
@@ -151,35 +146,31 @@ public class NewsEndpointTest implements TestDataNews, TestDataFile {
                 .withEvent(news.getEvent())
                 .withPublishedAt(news.getPublishedAt())
                 .build();
-            News saved = newsRepository.save(n);
-            if (i == limit + 2) {
-               offset = saved.getId();
-            }
+            newsRepository.save(n);
         }
-        assertNotNull(offset);
 
         MvcResult mvcResult = this.mockMvc.perform(
             get(NEWS_BASE_URI)
-            .param("limit", Long.toString(limit))
-            .param("offset", offset.toString())
+                .param("page", String.valueOf(1))
+                .param("size", String.valueOf(pageSize))
+                .header(securityProperties.getAuthHeader(), authToken)
         ).andReturn();
         MockHttpServletResponse response = mvcResult.getResponse();
         assertEquals(HttpStatus.OK.value(), response.getStatus());
         assertEquals(MediaType.APPLICATION_JSON_VALUE, response.getContentType());
 
         NewsDto[] newsDtos = objectMapper.readValue(response.getContentAsString(), NewsDto[].class);
-        assertEquals(limit, newsDtos.length);
-        for (NewsDto newsDto : newsDtos) {
-            assertTrue(newsDto.getId() < offset);
-        }
+        assertEquals(pageSize, newsDtos.length);
     }
 
     @Test
-    @DisplayName("Should return 422 on get all with negative limit")
+    @DisplayName("Should return 422 on get all with negative parameters")
     public void whenGetAllWithNegativeLimit_then422() throws Exception {
         MvcResult mvcResult = this.mockMvc.perform(
             get(NEWS_BASE_URI)
-                .param("limit", "-1")
+                .param("page", "-1")
+                .param("size", "-2")
+                .header(securityProperties.getAuthHeader(), authToken)
         ).andReturn();
         MockHttpServletResponse response = mvcResult.getResponse();
         assertEquals(HttpStatus.UNPROCESSABLE_ENTITY.value(), response.getStatus());
@@ -190,25 +181,28 @@ public class NewsEndpointTest implements TestDataNews, TestDataFile {
     public void whenGetAllWithNonNumericParams_then422() throws Exception {
         MvcResult mvcResultL = this.mockMvc.perform(
             get(NEWS_BASE_URI)
-                .param("limit", "A")
+                .param("page", "A")
+                .header(securityProperties.getAuthHeader(), authToken)
         ).andReturn();
         MvcResult mvcResultO = this.mockMvc.perform(
             get(NEWS_BASE_URI)
-                .param("offset", "-")
+                .param("size", "-")
+                .header(securityProperties.getAuthHeader(), authToken)
         ).andReturn();
         MvcResult mvcResultLO = this.mockMvc.perform(
             get(NEWS_BASE_URI)
-                .param("limit", "~")
-                .param("offset", "B")
+                .param("page", "~")
+                .param("size", "B")
+                .header(securityProperties.getAuthHeader(), authToken)
         ).andReturn();
 
         MockHttpServletResponse responseL = mvcResultL.getResponse();
         MockHttpServletResponse responseO = mvcResultO.getResponse();
         MockHttpServletResponse responseLO = mvcResultLO.getResponse();
         assertAll(
-            () -> assertEquals(HttpStatus.UNPROCESSABLE_ENTITY.value(), responseL.getStatus()),
-            () -> assertEquals(HttpStatus.UNPROCESSABLE_ENTITY.value(), responseO.getStatus()),
-            () -> assertEquals(HttpStatus.UNPROCESSABLE_ENTITY.value(), responseLO.getStatus())
+            () -> assertEquals(HttpStatus.BAD_REQUEST.value(), responseL.getStatus()),
+            () -> assertEquals(HttpStatus.BAD_REQUEST.value(), responseO.getStatus()),
+            () -> assertEquals(HttpStatus.BAD_REQUEST.value(), responseLO.getStatus())
         );
     }
 
@@ -219,6 +213,7 @@ public class NewsEndpointTest implements TestDataNews, TestDataFile {
             post(NEWS_BASE_URI)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(news))
+                .header(securityProperties.getAuthHeader(), authToken)
         ).andReturn();
 
         MockHttpServletResponse response = mvcResult.getResponse();
@@ -248,6 +243,7 @@ public class NewsEndpointTest implements TestDataNews, TestDataFile {
 
         MvcResult mvcResult = this.mockMvc.perform(
             get(NEWS_BASE_URI + "/" + saved.getId())
+                .header(securityProperties.getAuthHeader(), authToken)
         ).andReturn();
 
         MockHttpServletResponse response = mvcResult.getResponse();
@@ -265,6 +261,7 @@ public class NewsEndpointTest implements TestDataNews, TestDataFile {
 
         MvcResult mvcResult = this.mockMvc.perform(
             get(NEWS_BASE_URI + "/" + -1)
+                .header(securityProperties.getAuthHeader(), authToken)
         ).andReturn();
 
         MockHttpServletResponse response = mvcResult.getResponse();

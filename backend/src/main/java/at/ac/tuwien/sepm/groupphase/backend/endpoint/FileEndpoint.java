@@ -2,24 +2,21 @@ package at.ac.tuwien.sepm.groupphase.backend.endpoint;
 
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.FileDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.FileMapper;
-import at.ac.tuwien.sepm.groupphase.backend.entity.File;
-import at.ac.tuwien.sepm.groupphase.backend.exception.BadFileException;
 import at.ac.tuwien.sepm.groupphase.backend.service.FileService;
 import io.swagger.v3.oas.annotations.Operation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.server.ResponseStatusException;
 
 import javax.annotation.security.PermitAll;
-import java.io.IOException;
 import java.lang.invoke.MethodHandles;
 
 @RestController
@@ -40,27 +37,13 @@ public class FileEndpoint {
         this.fileMapper = fileMapper;
     }
 
-    @PermitAll
     @PostMapping
+    @Secured("ROLE_ORGANIZER")
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(summary = "Upload a file")
     public FileDto uploadFile(@RequestParam("file") MultipartFile file) {
-        LOGGER.info("POST /files {}", file);
-        if (file != null && file.getContentType() != null) {
-            File fileEntity;
-            try {
-                fileEntity = new File(file.getBytes(), File.Type.fromMime(file.getContentType()));
-            } catch (IOException e) {
-                throw new BadFileException("Cannot retrieve bytes from file", e);
-            } catch (IllegalArgumentException e) {
-                throw new BadFileException("Format \"" + file.getContentType() + "\" not supported", e);
-            }
-            FileDto dto = fileMapper.fileToFileDto(fileService.save(fileEntity));
-            dto.setData(null); // avoid sending big files back
-            return dto;
-        } else {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "No file received");
-        }
+        LOGGER.info("POST /files (size={}, type={})", file.getSize(), file.getContentType());
+        return fileMapper.fileToFileDto(fileService.addFile(fileMapper.multipartFileToFile(file)));
     }
 
 }

@@ -5,7 +5,7 @@ import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
 import org.mapstruct.Mapper;
 
 @Mapper
-public interface UserMapper {
+public interface UserMapper extends FileTypeMapper {
 
     ApplicationUser userDtoToApplicationUser(UserDto userDto);
 

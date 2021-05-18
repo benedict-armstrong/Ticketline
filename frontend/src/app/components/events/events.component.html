@@ -1,40 +1,16 @@
 <app-search></app-search>
 
-<div class="day">
-    <div class="header">
-        <h5>Mon. Apr 26</h5>
-    </div>
-    <div class="events">
-        <app-event-list-item></app-event-list-item>
-        <app-event-list-item></app-event-list-item>
-        <app-event-list-item></app-event-list-item>
-        <app-event-list-item></app-event-list-item>
-    </div>
-</div>
-<div class="day">
-    <div class="header">
-        <h5>Tue. Apr 27</h5>
-    </div>
-    <div class="events">
-        <app-event-list-item></app-event-list-item>
-        <app-event-list-item></app-event-list-item>
-        <app-event-list-item></app-event-list-item>
-        <app-event-list-item></app-event-list-item>
-    </div>
-</div>
-<div class="day">
-    <div class="header">
-        <h5>Wed. Apr 28</h5>
-    </div>
-    <div class="events">
-        <app-event-list-item></app-event-list-item>
-        <app-event-list-item></app-event-list-item>
-        <app-event-list-item></app-event-list-item>
-        <app-event-list-item></app-event-list-item>
-    </div>
+<div class="day" *ngFor="let date of dates">
+  <div class="header">
+    <h5>{{date | date:'EEE. MMM d y'}}</h5>
+  </div>
+  <div *ngFor="let entry of getEventsForDate(date)" class="events">
+    <app-event-list-item [eventItem]="entry"></app-event-list-item>
+  </div>
 </div>
 
-<div class="text-center more">
-    <h4>Load More</h4>
-    <h3><a href=""><i class="bi bi-arrow-bar-down"></i></a></h3>
+<div class="text-center more" (click)="loadBatch()">
+  <h3 *ngIf="!noEvent">Load More</h3>
+  <h3 *ngIf="noEvent">You're all caught up</h3>
+  <h3 *ngIf="!noEvent"><i class="bi bi-arrow-bar-down"></i></h3>
 </div>

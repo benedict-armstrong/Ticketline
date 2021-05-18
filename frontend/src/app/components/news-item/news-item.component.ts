@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
 import {News} from '../../dtos/news';
 import {FileService} from '../../services/file.service';
 
@@ -7,10 +7,13 @@ import {FileService} from '../../services/file.service';
   templateUrl: './news-item.component.html',
   styleUrls: ['./news-item.component.scss']
 })
-export class NewsItemComponent implements OnInit {
+export class NewsItemComponent implements OnInit, OnChanges {
+
+  @Input() lastRead: News = null;
 
   item: News;
   imgURL: any;
+  read = false;
 
   @Input() set newsItem(item: News) {
     this.item = item;
@@ -23,6 +26,14 @@ export class NewsItemComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (this.lastRead == null) {
+      this.read = false;
+    } else if (this.lastRead.id >= this.item.id) {
+      this.read = true;
+    }
   }
 
   /**

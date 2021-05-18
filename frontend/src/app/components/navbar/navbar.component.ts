@@ -5,14 +5,13 @@ import { ShoppingcartService } from 'src/app/services/shoppingcart.service';
 @Component({
   selector: 'app-navbar',
   templateUrl: './navbar.component.html',
-  styleUrls: ['./navbar.component.scss']
+  styleUrls: ['./navbar.component.scss'],
 })
 export class NavbarComponent implements OnInit {
 
   constructor(private authService: AuthService, private cartService: ShoppingcartService) {}
 
-  ngOnInit(): void {
-  }
+  ngOnInit(): void {}
 
   toggleCart() {
     this.cartService.status = !this.cartService.status;
@@ -34,5 +33,9 @@ export class NavbarComponent implements OnInit {
 
   hasAdminPermission(): boolean {
     return this.authService.getUserRole() === 'ADMIN';
+  }
+
+  hasOrganizerPermission(): boolean {
+    return this.authService.getUserRole() === 'ORGANIZER' || this.hasAdminPermission();
   }
 }

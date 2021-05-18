@@ -1,5 +1,7 @@
+@import "../../../colors.scss";
+
 .addNews {
-  margin: 0px 10%;
+  margin: 0 10%;
 }
 
 label {
@@ -9,5 +11,16 @@ label {
 }
 
 .form-group {
-  margin: 20px 0px;
+  margin: 20px 0;
+}
+
+td {
+  vertical-align: middle;
+  .deleteButton {
+    margin: 0;
+  }
+}
+
+#file-info {
+  font-size: 9pt;
 }

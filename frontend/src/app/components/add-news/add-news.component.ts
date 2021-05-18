@@ -22,12 +22,13 @@ export class AddNewsComponent implements OnInit {
   errorMessage = '';
   fileNoImage = false;
   tooManyFiles = false;
+  fileTooBig = false;
   success = false;
   files = [];
 
   news: News = new News(null
     , null
-    , 'Moritz' // TODO add Username
+    , null
     , null
     , null
     , null
@@ -42,6 +43,7 @@ export class AddNewsComponent implements OnInit {
     this.addNewsForm = this.formBuilder.group({
       title: ['', [Validators.required, Validators.maxLength(100)]],
       eventName: [''],
+      author: ['', [Validators.required, Validators.maxLength(100)]],
       text: ['', [Validators.required, Validators.maxLength(10000)]],
       files: ['']
     });
@@ -57,8 +59,8 @@ export class AddNewsComponent implements OnInit {
       this.news.title = this.addNewsForm.value.title;
       this.news.text = this.addNewsForm.value.text;
       this.news.event = this.event;
+      this.news.author = this.addNewsForm.value.author;
 
-      // New Imageupload
       const fileService = this.fileService;
       let count = this.files.length;
       if (count === 0) {
@@ -66,6 +68,9 @@ export class AddNewsComponent implements OnInit {
         this.applicationNewsService.publishNews(this.news).subscribe(
           () => {
             this.success = true;
+            setTimeout(() => {
+              this.router.navigate(['/']);
+            }, 3000);
           },
           error => {
             this.defaultServiceErrorHandling(error);
@@ -81,6 +86,9 @@ export class AddNewsComponent implements OnInit {
               this.applicationNewsService.publishNews(this.news).subscribe(
                 () => {
                   this.success = true;
+                  setTimeout(() => {
+                    this.router.navigate(['/']);
+                  }, 3000);
                 },
                 error => {
                   this.defaultServiceErrorHandling(error);
@@ -112,12 +120,15 @@ export class AddNewsComponent implements OnInit {
   onFileChange(event) {
     this.fileNoImage = false;
     this.tooManyFiles = false;
+    this.fileTooBig = false;
     if (event.target.files.length > 0) {
       const file = event.target.files[0];
       if (!file.type.includes('image')) {
         this.fileNoImage = true;
-      } else if (this.news.images.length >= 10) {
+      } else if (this.files.length >= 10) {
         this.tooManyFiles = true;
+      } else if (file.size > 1000000) {
+        this.fileTooBig = true;
       } else {
         this.files.push(file);
       }

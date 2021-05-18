@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
+import {HttpClient, HttpParams} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {Globals} from '../global/globals';
 import {Event} from '../dtos/event';
@@ -15,10 +15,13 @@ export class ApplicationEventService {
   }
 
   /**
-   * Loads all events from the backend
+   * Loads all events from the backend with pagination
    */
-  getEvents(): Observable<Event[]> {
-    return this.httpClient.get<Event[]>(this.eventBaseUri);
+  getEvents(page: number, size: number): Observable<Event[]> {
+    let params = new HttpParams();
+    params = params.set('page', String(page));
+    params = params.set('size', String(size));
+    return this.httpClient.get<Event[]>(this.eventBaseUri, { params });
   }
 
   /**
@@ -26,5 +29,13 @@ export class ApplicationEventService {
    */
   getEventById(id: number): Observable<Event> {
     return this.httpClient.get<Event>(this.eventBaseUri + '/' + id);
+  }
+
+  /**
+   * Add a new event
+   */
+  addEvent(event: Event): Observable<Event> {
+    console.log(event);
+    return this.httpClient.post<Event>(this.eventBaseUri, event);
   }
 }

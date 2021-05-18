@@ -1,12 +1,12 @@
 package at.ac.tuwien.sepm.groupphase.backend.service.impl;
 
 import at.ac.tuwien.sepm.groupphase.backend.entity.Event;
-import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepm.groupphase.backend.repository.EventRepository;
 import at.ac.tuwien.sepm.groupphase.backend.service.EventService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.lang.invoke.MethodHandles;
@@ -25,19 +25,20 @@ public class CustomEventService implements EventService {
     }
 
     @Override
-    public List<Event> findAll() {
+    public List<Event> findAllByDate(Pageable pageable) {
         LOGGER.debug("Get all events");
-        return eventRepository.findAll();
+        return eventRepository.findAllByOrderByDateAsc(pageable).getContent();
     }
 
     @Override
     public Event findById(long id) {
         LOGGER.debug("Get event by id {}", id);
-        Optional<Event> temp = eventRepository.findById(id);
-        if (temp.isPresent()) {
-            return temp.get();
-        } else {
-            throw new NotFoundException();
-        }
+        return eventRepository.findOneById(id);
+    }
+
+    @Override
+    public Event addEvent(Event event) {
+        LOGGER.trace("addEvent({})", event);
+        return eventRepository.save(event);
     }
 }

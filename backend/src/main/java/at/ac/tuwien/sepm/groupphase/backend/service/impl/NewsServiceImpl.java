@@ -7,6 +7,7 @@ import at.ac.tuwien.sepm.groupphase.backend.service.NewsService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.lang.invoke.MethodHandles;
@@ -25,9 +26,9 @@ public class NewsServiceImpl implements NewsService {
     }
 
     @Override
-    public List<News> getAll(Long limit, Long offset) {
-        LOGGER.trace("getAll({}, {})", limit, offset);
-        return newsRepository.getAll(limit, offset);
+    public List<News> getAll(Pageable pageRequest) {
+        LOGGER.trace("getAll({})", pageRequest);
+        return newsRepository.findAllByOrderByPublishedAtDesc(pageRequest).getContent();
     }
 
     @Override
@@ -38,15 +39,12 @@ public class NewsServiceImpl implements NewsService {
     }
 
     @Override
-    public News getOneById(Long id) {
-        LOGGER.debug("Get one news by id");
-
+    public News getOneById(Long id) throws NotFoundException {
+        LOGGER.trace("getOneById({})", id);
         News news = newsRepository.findOneById(id);
-
         if (news != null) {
             return news;
         }
-
         throw new NotFoundException(String.format("Could not find the news with the id %d", id));
     }
 }

@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepm.groupphase.backend.unittests;
 
+import at.ac.tuwien.sepm.groupphase.backend.basetest.TestDataEvent;
 import at.ac.tuwien.sepm.groupphase.backend.basetest.TestDataNews;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Event;
 import at.ac.tuwien.sepm.groupphase.backend.entity.News;
@@ -11,6 +12,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
@@ -39,7 +41,14 @@ public class NewsRepositoryTest implements TestDataNews {
         newsRepository.deleteAll();
         eventRepository.deleteAll();
         Event event = Event.EventBuilder.aEvent()
-            .withTitle("Testevent")
+            .withTitle(TestDataEvent.TEST_EVENT_TITLE)
+            .withDescription(TestDataEvent.TEST_EVENT_DESCRIPTION)
+            .withDate(TestDataEvent.TEST_EVENT_DATE_FUTURE)
+            .withDuration(TestDataEvent.TEST_EVENT_DURATION)
+            .withEventType(TestDataEvent.TEST_EVENT_EVENT_TYPE)
+            .withArtist(TestDataEvent.getTestEventArtist())
+            .withLocation(TestDataEvent.getTestEventLocation())
+            .withSectorTypes(TestDataEvent.getTestEventSectortypes())
             .build();
         eventRepository.save(event);
 
@@ -74,36 +83,21 @@ public class NewsRepositoryTest implements TestDataNews {
     @DisplayName("Should return test news by id")
     public void givenNothing_whenSaveNews_thenFindNewsById() {
         newsRepository.save(news);
-
         assertAll(
             () -> assertNotNull(newsRepository.findById(news.getId()))
         );
     }
 
     @Test
-    @DisplayName("Should not include news with ID when offset is equal to that ID")
-    public void givenNews_whenOffsetIsEqualToId_thenExpectNoNewsWithIdInList() {
-        News savedNews = newsRepository.save(news);
-        assertFalse(newsRepository.getAll(10L, savedNews.getId()).contains(savedNews));
-    }
-
-    @Test
-    @DisplayName("Should return list with all news when offset is larger than any ID")
-    public void givenNews_whenGetAll_OffsetLargerThanAnyId_thenReturnEmptyList() {
+    @DisplayName("Should return correct page of news")
+    public void givenNews_whenGetAll_thenGetCorrectPage() {
         News savedNews1 = newsRepository.save(news);
-        News savedNews2 = newsRepository.save(news2);
-        List<News> allNews = newsRepository.getAll(10L, Long.MAX_VALUE);
+        newsRepository.save(news2);
+        List<News> allNews = newsRepository.findAllByOrderByPublishedAtDesc(PageRequest.of(1, 1)).getContent();
         assertAll(
-            () -> assertTrue(allNews.contains(savedNews1)),
-            () -> assertTrue(allNews.contains(savedNews2))
+            () -> assertEquals(1, allNews.size()),
+            () -> assertEquals(savedNews1.getId(), allNews.get(0).getId())
         );
-    }
-
-    @Test
-    @DisplayName("Should return empty list when getting all news with limit zero")
-    public void givenNews_whenGetAll_LimitIsZero_thenReturnEmptyList() {
-        newsRepository.save(news);
-        assertTrue(newsRepository.getAll(0L, Long.MAX_VALUE).isEmpty());
     }
 
     @Test
