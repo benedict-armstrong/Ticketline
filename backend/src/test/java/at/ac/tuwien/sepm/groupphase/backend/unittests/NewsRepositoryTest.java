@@ -40,32 +40,32 @@ public class NewsRepositoryTest implements TestDataNews {
     public void beforeEach(){
         newsRepository.deleteAll();
         eventRepository.deleteAll();
-        Event event = Event.EventBuilder.aEvent()
-            .withTitle(TestDataEvent.TEST_EVENT_TITLE)
-            .withDescription(TestDataEvent.TEST_EVENT_DESCRIPTION)
-            .withDate(TestDataEvent.TEST_EVENT_DATE_FUTURE)
-            .withDuration(TestDataEvent.TEST_EVENT_DURATION)
-            .withEventType(TestDataEvent.TEST_EVENT_EVENT_TYPE)
-            .withArtist(TestDataEvent.getTestEventArtist())
-            .withLocation(TestDataEvent.getTestEventLocation())
-            .withSectorTypes(TestDataEvent.getTestEventSectortypes())
+        Event event = Event.builder()
+            .title(TestDataEvent.TEST_EVENT_TITLE)
+            .description(TestDataEvent.TEST_EVENT_DESCRIPTION)
+            .date(TestDataEvent.TEST_EVENT_DATE_FUTURE)
+            .duration(TestDataEvent.TEST_EVENT_DURATION)
+            .eventType(TestDataEvent.TEST_EVENT_EVENT_TYPE)
+            .artist(TestDataEvent.getTestEventArtist())
+            .location(TestDataEvent.getTestEventLocation())
+            .sectorTypes(TestDataEvent.getTestEventSectortypes())
             .build();
         eventRepository.save(event);
 
-        news = News.NewsBuilder.aNews()
-            .withTitle(TEST_NEWS_TITLE)
-            .withText(TEST_NEWS_TEXT)
-            .withAuthor("Testuser")
-            .withEvent(event)
-            .withPublishedAt(TEST_NEWS_PUBLISHED_AT)
+        news = News.builder()
+            .title(TEST_NEWS_TITLE)
+            .text(TEST_NEWS_TEXT)
+            .author("Testuser")
+            .event(event)
+            .publishedAt(TEST_NEWS_PUBLISHED_AT)
             .build();
 
-        news2 = News.NewsBuilder.aNews()
-            .withTitle(TEST_NEWS_TITLE + "2")
-            .withText(TEST_NEWS_TEXT)
-            .withAuthor("TestAuthor")
-            .withEvent(event)
-            .withPublishedAt(TEST_NEWS_PUBLISHED_AT)
+        news2 = News.builder()
+            .title(TEST_NEWS_TITLE + "2")
+            .text(TEST_NEWS_TEXT)
+            .author("TestAuthor")
+            .event(event)
+            .publishedAt(TEST_NEWS_PUBLISHED_AT)
             .build();
     }
 

@@ -24,15 +24,15 @@ public interface TestDataEvent extends TestData {
 
     static Set<SectorType> getTestEventSectortypes() {
         Set<SectorType> sectorTypes = new HashSet<>();
-        sectorTypes.add(SectorType.SectorTypeBuilder.aSectorType().withName("Sector").withNumberOfTickets(100).build());
+        sectorTypes.add(SectorType.builder().name("Sector").numberOfTickets(100).build());
         return sectorTypes;
     }
 
     static Artist getTestEventArtist() {
-        return Artist.ArtistBuilder.anArtist().withFirstName("Max").withLastName("Mustermann").build();
+        return Artist.builder().firstName("Max").lastName("Mustermann").build();
     }
 
     static Address getTestEventLocation() {
-        return Address.AddressBuilder.anAddress().withName("Max Mustermann").withLineOne("Teststraße 1").withCity("Wien").withPostcode("1010").withCountry("Österreich").build();
+        return Address.builder().name("Max Mustermann").lineOne("Teststraße 1").city("Wien").postcode("1010").country("Österreich").build();
     }
 }

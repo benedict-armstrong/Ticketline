@@ -22,9 +22,9 @@ public class FileRepositoryTest implements TestDataFile {
     @Autowired
     private FileRepository fileRepository;
 
-    private final File file = File.FileBuilder.aFile()
-        .withData(TEST_FILE_DATA)
-        .withType(TEST_FILE_TYPE)
+    private final File file = File.builder()
+        .data(TEST_FILE_DATA)
+        .type(TEST_FILE_TYPE)
         .build();
 
     @BeforeEach

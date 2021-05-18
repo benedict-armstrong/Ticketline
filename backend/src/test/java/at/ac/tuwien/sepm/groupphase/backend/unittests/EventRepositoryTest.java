@@ -30,15 +30,15 @@ public class EventRepositoryTest implements TestDataEvent {
     public void beforeEach(){
         eventRepository.deleteAll();
 
-        event = Event.EventBuilder.aEvent()
-            .withTitle(TestDataEvent.TEST_EVENT_TITLE)
-            .withDescription(TestDataEvent.TEST_EVENT_DESCRIPTION)
-            .withDate(TestDataEvent.TEST_EVENT_DATE_FUTURE)
-            .withDuration(TestDataEvent.TEST_EVENT_DURATION)
-            .withEventType(TestDataEvent.TEST_EVENT_EVENT_TYPE)
-            .withArtist(TestDataEvent.getTestEventArtist())
-            .withLocation(TestDataEvent.getTestEventLocation())
-            .withSectorTypes(TestDataEvent.getTestEventSectortypes())
+        event = Event.builder()
+            .title(TestDataEvent.TEST_EVENT_TITLE)
+            .description(TestDataEvent.TEST_EVENT_DESCRIPTION)
+            .date(TestDataEvent.TEST_EVENT_DATE_FUTURE)
+            .duration(TestDataEvent.TEST_EVENT_DURATION)
+            .eventType(TestDataEvent.TEST_EVENT_EVENT_TYPE)
+            .artist(TestDataEvent.getTestEventArtist())
+            .location(TestDataEvent.getTestEventLocation())
+            .sectorTypes(TestDataEvent.getTestEventSectortypes())
             .build();
     }
 
