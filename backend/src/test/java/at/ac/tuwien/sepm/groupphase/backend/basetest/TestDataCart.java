@@ -1,7 +1,6 @@
 package at.ac.tuwien.sepm.groupphase.backend.basetest;
 
 import at.ac.tuwien.sepm.groupphase.backend.entity.*;
-import org.apache.tomcat.jni.Local;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
@@ -10,27 +9,27 @@ import java.util.Set;
 public interface TestDataCart extends TestData {
     String CART_BASE_URI = BASE_URI + "/carts";
 
-    Address CART_ADDRESS = Address.AddressBuilder.anAddress()
-        .withName("Cart Test")
-        .withLineOne("Teststraße 2")
-        .withCity("Wien")
-        .withPostcode("1010")
-        .withCountry("Österreich").build();
+    Address CART_ADDRESS = Address.builder()
+        .name("Cart Test")
+        .lineOne("Teststraße 2")
+        .lineTwo("Wien")
+        .postcode("1010")
+        .country("Österreich").build();
 
-    ApplicationUser CART_USER = ApplicationUser.UserBuilder.anUser()
-        .withFirstName("Cart")
-        .withLastName("Test")
-        .withTelephoneNumber("+43 660 123456789")
-        .withEmail("cartTest@email.com")
-        .withPassword("password")
-        .withLastLogin(LocalDateTime.now())
-        .withPoints(0)
-        .withStatus(ApplicationUser.UserStatus.ACTIVE)
-        .withRole(ApplicationUser.UserRole.CLIENT)
-        .withAddress(CART_ADDRESS)
+    ApplicationUser CART_USER = ApplicationUser.builder()
+        .firstName("Cart")
+        .lastName("Test")
+        .telephoneNumber("+43 660 123456789")
+        .email("cartTest@email.com")
+        .password("password")
+        .lastLogin(LocalDateTime.now())
+        .points(0)
+        .status(ApplicationUser.UserStatus.ACTIVE)
+        .role(ApplicationUser.UserRole.CLIENT)
+        .address(CART_ADDRESS)
         .build();
 
-    SectorType CART_SECTOR_TYPE = SectorType.SectorTypeBuilder.aSectorType().withName("Normal").withNumberOfTickets(10).build();
+    SectorType CART_SECTOR_TYPE = SectorType.builder().name("Normal").numberOfTickets(10).build();
 
     static Set<SectorType> getTestCartSectorTypes() {
         Set<SectorType> sectorTypes = new HashSet<>();
@@ -38,15 +37,15 @@ public interface TestDataCart extends TestData {
         return sectorTypes;
     }
 
-    Event CART_EVENT = Event.EventBuilder.aEvent()
-        .withEventType(Event.EventType.CINEMA)
-        .withArtist(Artist.ArtistBuilder.anArtist().withFirstName("Artist").withLastName("Artisto").build())
-        .withDate(LocalDateTime.now())
-        .withDescription("CartTest Event")
-        .withDuration(5)
-        .withLocation(CART_ADDRESS)
-        .withSectorTypes(getTestCartSectorTypes())
-        .withTitle("CART TEST EVENT")
+    Event CART_EVENT = Event.builder()
+        .eventType(Event.EventType.CINEMA)
+        .artist(Artist.builder().firstName("Artist").lastName("Artisto").build())
+        .date(LocalDateTime.now())
+        .description("CartTest Event")
+        .duration(5)
+        .location(CART_ADDRESS)
+        .sectorTypes(getTestCartSectorTypes())
+        .title("CART TEST EVENT")
         .build();
 
     Integer CART_AMOUNT = 3;

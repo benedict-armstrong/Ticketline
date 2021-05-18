@@ -43,11 +43,11 @@ public class CartRepositoryTest implements TestDataCart {
         userRepository.save(CART_USER);
         eventRepository.save(CART_EVENT);
 
-        cart.add(CartItem.CartItemBuilder.aCartItem()
-            .withUser(CART_USER)
-            .withEvent(CART_EVENT)
-            .withSectorType(CART_SECTOR_TYPE)
-            .withAmount(CART_AMOUNT)
+        cart.add(CartItem.builder()
+            .user(CART_USER)
+            .event(CART_EVENT)
+            .sectorType(CART_SECTOR_TYPE)
+            .amount(CART_AMOUNT)
             .build()
         );
     }
