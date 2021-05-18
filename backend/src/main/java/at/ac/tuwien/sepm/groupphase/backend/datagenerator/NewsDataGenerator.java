@@ -68,8 +68,8 @@ public class NewsDataGenerator {
             LOGGER.debug("generating {} news entries with events and without pictures", NUMBER_OF_NEWS_TO_GENERATE);
 
             for (int i = 0; i < NUMBER_OF_NEWS_TO_GENERATE; i++) {
-                News news = News.NewsBuilder.aNews().withPublishedAt(LocalDateTime.now()).withAuthor(TEST_AUTHOR_NAME)
-                    .withTitle(TEST_TITLE + i).withText(TEST_TEXT + i) // .withEvent(events.get(i))
+                News news = News.builder().publishedAt(LocalDateTime.now()).author(TEST_AUTHOR_NAME)
+                    .title(TEST_TITLE + i).text(TEST_TEXT + i) // .withEvent(events.get(i))
                     .build();
 
                 LOGGER.debug("saving news {}", news);
@@ -128,24 +128,24 @@ public class NewsDataGenerator {
 
             for (int i = 0; i < NUMBER_OF_NEWS_TO_GENERATE; i++) {
                 Set<File> set = new HashSet<>();
-                File file1 = File.FileBuilder.aFile().withData(imgBuffer1).withType(File.Type.IMAGE_PNG).build();
+                File file1 = File.builder().data(imgBuffer1).type(File.Type.IMAGE_PNG).build();
                 set.add(file1);
                 LOGGER.debug("saving file {} for news", file1);
                 fileRepository.save(file1);
 
-                File file2 = File.FileBuilder.aFile().withData(imgBuffer2).withType(File.Type.IMAGE_JPG).build();
+                File file2 = File.builder().data(imgBuffer2).type(File.Type.IMAGE_JPG).build();
                 set.add(file2);
                 LOGGER.debug("saving file {} for news", file2);
                 fileRepository.save(file2);
 
-                File file3 = File.FileBuilder.aFile().withData(imgBuffer3).withType(File.Type.IMAGE_JPG).build();
+                File file3 = File.builder().data(imgBuffer3).type(File.Type.IMAGE_JPG).build();
                 set.add(file3);
                 LOGGER.debug("saving file {} for news", file3);
                 fileRepository.save(file3);
 
-                News news = News.NewsBuilder.aNews().withPublishedAt(LocalDateTime.now()).withAuthor(TEST_AUTHOR_NAME)
-                    .withTitle(TEST_TITLE + (i + 10)).withText(TEST_TEXT + (i + 10)) //.withEvent(events.get(i))
-                    .withImages(set).build();
+                News news = News.builder().publishedAt(LocalDateTime.now()).author(TEST_AUTHOR_NAME)
+                    .title(TEST_TITLE + (i + 10)).text(TEST_TEXT + (i + 10)) //.withEvent(events.get(i))
+                    .images(set).build();
 
                 LOGGER.debug("saving news {}", news);
                 newsRepository.save(news);

@@ -28,9 +28,9 @@ public interface FileMapper extends FileTypeMapper {
             throw new BadFileException("The file is missing content type");
         }
         try {
-            file = File.FileBuilder.aFile()
-                .withData(multipartFile.getBytes())
-                .withType(File.Type.fromMime(multipartFile.getContentType()))
+            file = File.builder()
+                .data(multipartFile.getBytes())
+                .type(File.Type.fromMime(multipartFile.getContentType()))
                 .build();
         } catch (IOException e) {
             throw new BadFileException("Couldn't retrieve bytes from file", e);
