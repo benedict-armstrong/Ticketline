@@ -1,6 +1,7 @@
 import { Component, OnInit } from "@angular/core";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { Router } from "@angular/router";
+import { Sector } from "../models/sector";
 
 @Component({
   selector: "app-add-venue",
@@ -11,7 +12,9 @@ export class AddVenueComponent implements OnInit {
   venueForm: FormGroup;
   submitted = false;
 
-  constructor(private formBuilder: FormBuilder, private router: Router) {}
+  sectors: Sector[] = [];
+
+  constructor(private formBuilder: FormBuilder) {}
 
   ngOnInit(): void {
     this.venueForm = this.formBuilder.group({
@@ -23,6 +26,10 @@ export class AddVenueComponent implements OnInit {
       postcode: ["", [Validators.required]],
       country: ["", [Validators.required]],
     });
+  }
+
+  updateSector(sectors: Sector[]) {
+    this.sectors = sectors;
   }
 
   add() {}

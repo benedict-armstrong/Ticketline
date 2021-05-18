@@ -1,6 +1,7 @@
 export interface Sector {
-  sectorId: number;
-  type: "seated" | "standing";
+  id: number;
+  type: "seated" | "standing" | "stage";
   name: string;
   description: string;
+  color: string; // Hex code
 }

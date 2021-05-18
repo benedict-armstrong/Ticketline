@@ -4,29 +4,29 @@
   padding: 10px;
 }
 
-.options {
-  display: flex;
+.toolbar-header {
+  margin-bottom: 10px;
+  border-bottom: 1px solid lightgray;
 }
 
-.toolbar {
+.toolbar-body {
   display: flex;
   align-items: center;
 }
 
-.divider {
-  font-weight: 100;
-  font-size: 20pt;
-  color: lightgray;
+.select-sector {
   margin: 0px 5px;
+  width: 150px;
 }
 
 .toolbar button {
   margin: 0px 5px;
-  width: 80px;
+  width: 90px;
 }
 
 .toolbar button.active {
-  border: 1px solid $primary;
+  border: 2px solid $primary;
+  box-shadow: none;
 }
 
 .grid-size {

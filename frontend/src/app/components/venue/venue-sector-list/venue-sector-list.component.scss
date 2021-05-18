@@ -2,9 +2,11 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 10px 10px;
-  margin: 0px 0px;
-  border-bottom: 1pt solid lightgray;
+  padding: 15px 20px;
+  margin: 5px 10px;
+  //border-bottom: 1pt solid lightgray;
+  box-shadow: rgba(0, 0, 0, 0.1) 0 4px 12px;
+  border-radius: 10px;
 }
 
 .sector .options button {

@@ -2,6 +2,17 @@
   padding: 1.5px;
 }
 
+.grid-unit-wrapper.standing,
+.grid-unit-wrapper.stage {
+  padding: 0px;
+}
+
+.grid-unit-wrapper.standing > .grid-unit,
+.grid-unit-wrapper.stage > .grid-unit {
+  min-height: 15px;
+  min-width: 15px;
+}
+
 .grid-unit {
   min-height: 12px;
   min-width: 12px;
@@ -11,8 +22,8 @@
   background-color: rgb(221, 255, 210);
 }
 
-.grid-unit.available {
-  background-color: rgb(238, 238, 238);
+.grid-unit.unavailable {
+  background-color: none !important;
 }
 
 .grid-unit.available:hover {
@@ -21,4 +32,8 @@
 
 .grid-unit.sector0 {
   background-color: red;
+}
+
+.hide {
+  opacity: 0;
 }

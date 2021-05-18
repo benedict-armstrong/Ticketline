@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, Input, OnInit } from "@angular/core";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { GridTool } from "../models/gridTool";
 import { SeatUnit } from "../models/seatUnit";
@@ -13,12 +13,16 @@ export class VenueCreatorComponent implements OnInit {
   venueLayoutForm: FormGroup;
   submitted = false;
   venueLayout: SeatUnit[][];
-  sectors: Sector[];
+  front_text: string = "Front";
+
+  @Input()
+  sectors: Sector[] = [];
 
   activeTool: GridTool = {
-    action: "add",
+    action: "remove",
     scope: "single",
-    sectorId: 0,
+    reassign: true,
+    sector: null,
   };
 
   constructor(private formBuilder: FormBuilder) {}
@@ -27,29 +31,36 @@ export class VenueCreatorComponent implements OnInit {
     this.venueLayoutForm = this.formBuilder.group({
       gridSizeX: [
         20,
-        [Validators.required, Validators.min(10), Validators.max(50)],
+        [Validators.required, Validators.min(10), Validators.max(500)],
       ],
       gridSizeY: [
         20,
-        [Validators.required, Validators.min(10), Validators.max(50)],
+        [Validators.required, Validators.min(10), Validators.max(500)],
       ],
     });
+
+    if (this.sectors.length > 0) {
+      this.activeTool.sector = this.sectors[0];
+    }
 
     this.makeGrid();
   }
 
   makeGrid(): void {
     if (this.venueLayoutForm.valid) {
-      this.activeTool.action = "add";
-
+      if (this.submitted && !confirm("Update? All changes will be lost.")) {
+        this.submitted = true;
+        return;
+      }
+      this.submitted = true;
+      this.activeTool.action = "remove";
       this.venueLayout = new Array(this.venueLayoutForm.value.gridSizeX);
 
       for (let i = 0; i < this.venueLayoutForm.value.gridSizeX; i++) {
         this.venueLayout[i] = new Array(this.venueLayoutForm.value.gridSizeY);
         for (let j = 0; j < this.venueLayoutForm.value.gridSizeY; j++) {
           this.venueLayout[i][j] = {
-            sectorId: null,
-            type: "seating",
+            sector: null,
             available: true,
           };
         }
@@ -79,5 +90,9 @@ export class VenueCreatorComponent implements OnInit {
 
   toggleSector() {
     this.activeTool.action = "assignSector";
+  }
+
+  toggleReassign() {
+    this.activeTool.reassign = !this.activeTool.reassign;
   }
 }

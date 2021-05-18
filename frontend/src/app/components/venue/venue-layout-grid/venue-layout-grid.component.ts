@@ -1,6 +1,7 @@
 import { Component, Input, OnInit } from "@angular/core";
 import { GridTool } from "../models/gridTool";
 import { SeatUnit } from "../models/seatUnit";
+import { Sector } from "../models/sector";
 
 @Component({
   selector: "app-venue-layout-grid",
@@ -26,23 +27,42 @@ export class VenueLayoutGridComponent implements OnInit {
         found = true;
         if (this.activeTool.scope == "row") {
           if (this.activeTool.action == "remove") {
-            this.venueLayout[i].map((su) => (su.available = false));
+            this.venueLayout[i].map(
+              (su) => ((su.available = false), (su.sector = null))
+            );
           } else if (this.activeTool.action == "add") {
             this.venueLayout[i].map((su) => (su.available = true));
           } else if (this.activeTool.action == "assignSector") {
-            this.venueLayout[i].map(
-              (su) => (su.sectorId = this.activeTool.sectorId)
-            );
+            this.venueLayout[i].map((su) => {
+              if (su.available) {
+                if (this.activeTool.reassign) {
+                  su.sector = this.activeTool.sector;
+                } else {
+                  if (su.sector == null) {
+                    su.sector = this.activeTool.sector;
+                  }
+                }
+              }
+            });
           }
         } else if (this.activeTool.scope == "column") {
           found = true;
           for (let j = 0; j < this.venueLayout.length; j++) {
             if (this.activeTool.action == "remove") {
               this.venueLayout[j][index].available = false;
+              this.venueLayout[j][index].sector = null;
             } else if (this.activeTool.action == "add") {
               this.venueLayout[j][index].available = true;
             } else if (this.activeTool.action == "assignSector") {
-              this.venueLayout[j][index].sectorId = this.activeTool.sectorId;
+              if (this.venueLayout[j][index].available) {
+                if (this.activeTool.reassign) {
+                  this.venueLayout[j][index].sector = this.activeTool.sector;
+                } else {
+                  if (this.venueLayout[j][index].sector == null) {
+                    this.venueLayout[j][index].sector = this.activeTool.sector;
+                  }
+                }
+              }
             }
           }
         }

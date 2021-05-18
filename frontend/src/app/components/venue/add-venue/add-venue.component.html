@@ -79,10 +79,13 @@
 
   <h5>Venue Sectors</h5>
 
-  <app-venue-add-sector></app-venue-add-sector>
+  <app-venue-add-sector (newSector)="updateSector($event)"></app-venue-add-sector>
 
-  <h5>Venue Layout</h5>
-
-  <app-venue-creator></app-venue-creator>
+  <div *ngIf="sectors">
+    <app-venue-creator [sectors]="this.sectors"></app-venue-creator>
+  </div>
+  <div *ngIf="!sectors" class="text-center">
+    <h5>Add at least one sector</h5>
+  </div>
   <button type="submit" name="signin" id="signin" class="primary">Add</button>
 </form>

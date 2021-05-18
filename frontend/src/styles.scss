@@ -5,7 +5,8 @@ body {
   font-family: "Roboto", sans-serif !important;
 }
 
-button.primary, button.secondary {
+button.primary,
+button.secondary {
   width: 100%;
   min-width: 45px;
   margin: 10px 0;
@@ -18,11 +19,7 @@ button.primary, button.secondary {
 
 button.primary {
   background: $primary;
-  background: linear-gradient(
-    261deg,
-    $primary 19%,
-    $primary-darker 80%
-  );
+  background: linear-gradient(261deg, $primary 19%, $primary-darker 80%);
   color: white;
 }
 

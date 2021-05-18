@@ -1,4 +1,9 @@
-<div class="grid-unit-wrapper" (click)="this.toggle()" (mouseenter)="this.toggleEvent($event)">
-  <div class="grid-unit" [ngClass]="{'available': this.seatUnit.available, 'sector0': this.seatUnit.sectorId == 0}">
+<div class="grid-unit-wrapper" (click)="this.toggle()" (mouseenter)="this.toggleEvent($event)" [ngClass]="{
+    'standing': this.seatUnit.sector && (this.seatUnit.sector.type == 'standing'),
+    'stage': this.seatUnit.sector && (this.seatUnit.sector.type == 'stage'),
+    'hide': !this.seatUnit.available
+  }">
+  <div class="grid-unit" [ngClass]="{'available': this.seatUnit.available}"
+    [ngStyle]="{'background-color': this.seatUnit.sector ? this.seatUnit.sector.color : '#EEEEEE'}">
   </div>
 </div>

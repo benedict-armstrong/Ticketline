@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, EventEmitter, OnInit, Output } from "@angular/core";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { SeatUnit } from "../models/seatUnit";
 import { Sector } from "../models/sector";
@@ -9,20 +9,50 @@ import { Sector } from "../models/sector";
 })
 export class VenueAddSectorComponent implements OnInit {
   venueAddSectorForm: FormGroup;
-  sectors: Sector[] = [];
+  sectors: Sector[] = [
+    {
+      name: "Stage",
+      id: 0,
+      description: "This is the Stage",
+      color: "#CCCCCC",
+      type: "stage",
+    },
+  ];
   submitted = false;
+
+  colors: string[] = [
+    "#CCCCCC",
+    "#FF6633",
+    "#B3B31A",
+    "#FF33FF",
+    "#FFFF99",
+    "#00B3E6",
+    "#E6B333",
+    "#3366E6",
+    "#999966",
+    "#99FF99",
+    "#B34D4D",
+    "#991AFF",
+  ];
+
+  @Output() newSector = new EventEmitter<Sector[]>();
 
   constructor(private formBuilder: FormBuilder) {}
 
   ngOnInit(): void {
     this.venueAddSectorForm = this.formBuilder.group({
       name: ["", [Validators.required]],
-      description: ["", [Validators.required]],
+      description: [""],
       type: ["seated", [Validators.required]],
     });
+    this.newSector.emit(this.sectors);
   }
 
   createSector() {
+    if (this.sectors.length > 9) {
+      alert("Maximum of 10 sectors allowed");
+      return;
+    }
     this.submitted = true;
     if (this.venueAddSectorForm.valid) {
       this.submitted = false;
@@ -30,10 +60,12 @@ export class VenueAddSectorComponent implements OnInit {
         name: this.venueAddSectorForm.value.name,
         description: this.venueAddSectorForm.value.description,
         type: this.venueAddSectorForm.value.type,
-        sectorId: this.sectors.length + 1,
+        id: this.sectors.length,
+        color: this.colors[this.sectors.length],
       });
       this.venueAddSectorForm.reset();
       this.venueAddSectorForm.controls["type"].setValue("seated");
+      this.newSector.emit(this.sectors);
     }
   }
 
@@ -41,6 +73,8 @@ export class VenueAddSectorComponent implements OnInit {
     const index = this.sectors.indexOf(sector);
     if (index > -1) {
       this.sectors.splice(index, 1);
+      sector = null;
+      this.newSector.emit(this.sectors);
     }
   }
 }

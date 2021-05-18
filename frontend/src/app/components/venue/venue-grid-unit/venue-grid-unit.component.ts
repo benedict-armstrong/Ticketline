@@ -18,6 +18,21 @@ export class VenueGridUnitComponent implements OnInit {
   @Output()
   clickedUnit = new EventEmitter<SeatUnit>();
 
+  colors: string[] = [
+    "#CCCCCC",
+    "#FF6633",
+    "#B3B31A",
+    "#FF33FF",
+    "#FFFF99",
+    "#00B3E6",
+    "#E6B333",
+    "#3366E6",
+    "#999966",
+    "#99FF99",
+    "#B34D4D",
+    "#991AFF",
+  ];
+
   constructor() {}
 
   ngOnInit(): void {}
@@ -25,14 +40,15 @@ export class VenueGridUnitComponent implements OnInit {
   toggle() {
     if (this.activeTool.action == "assignSector") {
       if (this.activeTool.scope == "single") {
-        this.seatUnit.sectorId = this.activeTool.sectorId;
+        this.seatUnit.available = true;
+        this.seatUnit.sector = this.activeTool.sector;
       } else {
         this.toggleEvent();
       }
     } else {
       if (this.activeTool.scope == "single") {
         this.seatUnit.available = !this.seatUnit.available;
-        this.seatUnit.sectorId = null;
+        this.seatUnit.sector = null;
       } else {
         this.toggleEvent();
       }
@@ -46,9 +62,12 @@ export class VenueGridUnitComponent implements OnInit {
           this.seatUnit.available = true;
         } else if (this.activeTool.action == "remove") {
           this.seatUnit.available = false;
-          this.seatUnit.sectorId = null;
-        } else if (this.activeTool.action == "assignSector") {
-          this.seatUnit.sectorId = this.activeTool.sectorId;
+          this.seatUnit.sector = null;
+        } else if (
+          this.activeTool.action == "assignSector" &&
+          this.seatUnit.available
+        ) {
+          this.seatUnit.sector = this.activeTool.sector;
         }
       } else {
         this.clickedUnit.emit(this.seatUnit);

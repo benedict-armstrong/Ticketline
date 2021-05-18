@@ -1,5 +1,6 @@
+import { Sector } from "./sector";
+
 export interface SeatUnit {
-  sectorId: number;
-  type: "seating" | "standing";
+  sector: Sector;
   available: boolean;
 }
