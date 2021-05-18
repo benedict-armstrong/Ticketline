@@ -5,7 +5,7 @@
 }
 
 #sidebar-cart {
-	top: 0;
+	top: 56px;
     right: 0;
 	background: white;
 	color: black;
@@ -13,7 +13,7 @@
 	position: fixed;
 	display: block;
 	width: 320px;
-	height: 100%;
+	height: calc(100% - 56px);
 	z-index: 1000000;
 	box-shadow: -10px 0 15px rgba(0, 0, 0, 0.1);
 
@@ -66,8 +66,8 @@
             color: $primary;
             margin: 0px !important;
             padding: 0px;
-            width: min-content;
-            height: min-content;
+            width: 30px;
+            height: 30px;
             border: 1px black !important;
             border-radius: 0px !important;
         }
