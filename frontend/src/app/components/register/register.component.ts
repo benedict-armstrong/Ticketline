@@ -56,6 +56,7 @@ export class RegisterComponent implements OnInit {
         this.registerForm.value.email,
         this.registerForm.value.password,
         new Date(),
+        null,
         0,
         'ACTIVE',
         'CLIENT',

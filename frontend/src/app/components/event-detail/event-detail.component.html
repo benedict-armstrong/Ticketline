@@ -1,15 +1,49 @@
-<div class="event">
-    <div class="jumbotron">
-        <img src="assets/placeholder_event.jpg" alt="">
+<div class="event" *ngIf="eventItem">
+    <div id="carouselExampleControls" class="carousel slide col-md-8" data-bs-ride="carousel">
+      <div class="carousel-inner">
+        <div *ngIf="eventItem.images.length > 0">
+          <div  class="carousel-item active" *ngFor="let img of imgURL let i = index" [ngClass]="{'active': i == 0 }">
+            <img class="card-img-top" [src]="img" alt="">
+          </div>
+        </div>
+      </div>
+      <div *ngIf="eventItem.images.length > 1">
+        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
+          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
+          <span class="carousel-control-next-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Next</span>
+        </button>
+      </div>
     </div>
     <div class="main">
         <div class="header">
-            <h3>Titel of Event</h3>
-            <p class="info">Subtitle with Date, Time and Venue</p>
-            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Maiores laboriosam voluptatum nam amet ipsam
-                blanditiis deserunt numquam dicta tempora molestias optio, iusto expedita enim, quisquam natus sapiente.
-                Ullam deserunt quos repellendus ut, dolor eius aspernatur, nisi voluptates, praesentium accusamus quidem
-                odio totam non nostrum dicta.</p>
+            <h3 class="col-10">{{eventItem.title}}</h3>
+            <div class="col-2 add-news" *ngIf="hasOrganizerPermission()">
+                <button class="col-2 primary" [routerLink]="['/add-news', eventItem.id]">Add News</button>
+            </div>
+            <div class="row event-info">
+              <div class="col-8">
+
+                <p>{{eventItem.description}}</p>
+              </div>
+              <div class="col-4 additional-event-info">
+                <h4>Time</h4>
+                <p class="info">{{eventItem.date | date:'EEEE, MMM d, y HH:mm'}} <br>
+                  Duration: {{eventItem.duration}} Minutes</p> <br>
+                <h4>Performer</h4>
+                <p>{{eventItem.artist.firstName}} {{eventItem.artist.lastName}}</p> <br>
+                <h4>Location</h4>
+                <p>
+                  {{this.eventItem.location.name}}<br>
+                  {{this.eventItem.location.lineOne}}<br>
+                  {{this.eventItem.location.postcode}} {{this.eventItem.location.city}} <br>
+                  {{this.eventItem.location.country}}
+                </p>
+              </div>
+            </div>
         </div>
         <div class="body">
             <div class="options row row-cols-1 row-cols-md-4 g-4">
@@ -31,9 +65,9 @@
 
             <div class="tickets">
                 <p class="text-center">We will try to find seats next to each other</p>
-                <app-ticket-list-item></app-ticket-list-item>
-                <app-ticket-list-item></app-ticket-list-item>
-                <app-ticket-list-item></app-ticket-list-item>
+                <div *ngFor="let sectorType of eventItem.sectorTypes">
+                    <app-ticket-list-item [sectorType]="sectorType"></app-ticket-list-item>
+                </div>
             </div>
 
             <div class="selected-items row">

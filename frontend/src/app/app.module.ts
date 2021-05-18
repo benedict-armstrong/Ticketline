@@ -21,6 +21,7 @@ import { UserHomeComponent } from './components/user-home/user-home.component';
 import { TicketDetailComponent } from './components/ticket-detail/ticket-detail.component';
 import { TicketListItemComponent } from './components/ticket-list-item/ticket-list-item.component';
 import { AddNewsComponent } from './components/add-news/add-news.component';
+import { AddEventComponent } from './components/event/add-event/add-event.component';
 import { AddUserComponent } from './components/add-user/add-user.component';
 import { httpInterceptorProviders } from './interceptors';
 import { AddVenueComponent } from './components/venue/add-venue/add-venue.component';
@@ -29,6 +30,7 @@ import { VenueLayoutGridComponent } from './components/venue/venue-layout-grid/v
 import { VenueAddSectorComponent } from './components/venue/venue-add-sector/venue-add-sector.component';
 import { VenueSectorListComponent } from './components/venue/venue-sector-list/venue-sector-list.component';
 import { VenueGridUnitComponent } from './components/venue/venue-grid-unit/venue-grid-unit.component';
+import { AddSectortypeComponent } from './components/event/add-sectortype/add-sectortype.component';
 
 @NgModule({
   declarations: [
@@ -49,8 +51,9 @@ import { VenueGridUnitComponent } from './components/venue/venue-grid-unit/venue
     TicketDetailComponent,
     TicketListItemComponent,
     AddNewsComponent,
+    AddEventComponent,
     AddUserComponent,
-    AddUserComponent,
+    AddSectortypeComponent,
     AddVenueComponent,
     VenueCreatorComponent,
     VenueLayoutGridComponent,

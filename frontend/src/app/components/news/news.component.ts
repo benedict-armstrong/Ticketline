@@ -1,6 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {ApplicationNewsService} from '../../services/news.service';
 import {News} from '../../dtos/news';
+import {AuthService} from '../../services/auth.service';
+import {User} from '../../dtos/user';
+import {UserService} from '../../services/user.service';
 
 @Component({
   selector: 'app-news',
@@ -9,16 +12,41 @@ import {News} from '../../dtos/news';
 })
 export class NewsComponent implements OnInit {
 
+  user: User;
+
   news: News[] = [];
+  heldNews: News[] = [];
   noNews = false;
+  loadingOnlyUnread = true;
+  finishedAfter = false;
+  lastReadNews = null; // Local copy used for comparison - should not be uploaded
+
+  wasError = false;
+  errorMessage: string;
 
   private page = 0;
   private size = 8; // Determines how many news entries are loaded at the beginning and with each click on Load More
 
-  constructor(private newsService: ApplicationNewsService) { }
+  constructor(private newsService: ApplicationNewsService,
+              private authService: AuthService,
+              private userService: UserService) { }
 
   ngOnInit(): void {
-    this.loadBatch();
+    const email = this.authService.getUserEmail();
+
+    if (email == null) {
+      this.user = null;
+      this.loadBatch();
+    } else {
+      this.userService.getUserByEmail(email).subscribe(
+        user => {
+          this.user = user;
+          this.loadBatch();
+        }, error => {
+          console.log(error);
+        }
+      );
+    }
   }
 
   /**
@@ -27,19 +55,80 @@ export class NewsComponent implements OnInit {
    * Offsetting is done with the help of IDs.
    */
   loadBatch() {
-    this.newsService.getNews(this.page, this.size).subscribe(
-      response => {
-        this.news.push(...response);
-        if (response.length > 0) {
-          this.page++;
-          this.noNews = false;
-        } else {
-          this.noNews = true;
+    this.wasError = false;
+
+    // Fill up batch of unread with read news
+    if (this.heldNews.length > 0) {
+      this.news.push(...this.heldNews);
+      this.heldNews = [];
+      this.noNews = this.finishedAfter;
+    } else {
+      this.newsService.getNews(this.page, this.size).subscribe(
+        response => {
+          if (response.length > 0) {
+            this.page++;
+            let unread = [];
+            let read = [];
+
+            // Set unread and read according to LastReadNews
+            if (this.user != null) {
+              this.lastReadNews = this.user.lastReadNews;
+              if (this.lastReadNews == null) {
+                this.lastReadNews = {id: 0};
+              }
+              unread = response.filter(item => item.id > this.lastReadNews.id);
+              read = response.filter(item => item.id <= this.lastReadNews.id);
+            } else {
+              read = response;
+              this.lastReadNews = response[0];
+            }
+
+            // push response and set variables for UI
+            if (unread.length === this.size) {
+              // Only unread
+              this.news.push(...unread);
+            } else if (unread.length < this.size && unread.length !== 0) {
+              // Mixed
+              this.loadingOnlyUnread = false;
+              this.news.push(...unread);
+              this.heldNews.push(...read);
+              if (response.length < this.size) {
+                this.finishedAfter = true;
+              }
+            } else if (read.length <= this.size) {
+              // Read
+              this.loadingOnlyUnread = false;
+              this.news.push(...read);
+              if (read.length < this.size) {
+                this.noNews = true;
+              }
+            }
+          } else {
+           this.noNews = true;
+          }
+
+        }, error => {
+          this.handleError(error);
         }
+      );
+    }
+  }
+
+  markAllAsRead() {
+    this.loadingOnlyUnread = false;
+    this.user.lastReadNews = this.news[0];
+    this.userService.updateUser(this.user).subscribe(
+      user => {
+        this.user = user;
       }, error => {
-        console.error(error);
+        this.handleError(error);
       }
     );
+  }
+
+  private handleError(error: Error) {
+    this.wasError = true;
+    this.errorMessage = error.message;
   }
 
 }

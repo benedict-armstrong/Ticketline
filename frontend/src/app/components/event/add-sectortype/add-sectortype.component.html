@@ -1,0 +1,55 @@
+<div id="sectorTypeGroup">
+  <h5>Sector Types</h5>
+  <form class="form" [formGroup]="addSectorTypeForm" (ngSubmit)="addSectorType()">
+    <div class="row">
+      <div class="col-6">
+        <div class="form-group">
+          <label for="sectorName">Sector Name</label>
+          <input type="text" name="sectorName" formControlName="sectorName" class="text-input form-control"
+                 id="sectorName" placeholder="Enter sector name">
+          <div *ngIf="submitted && addSectorTypeForm.controls.sectorName.errors" class="error">
+            <small *ngIf="addSectorTypeForm.controls.sectorName.errors.required" class="form-text text-danger">
+              Sector Name is required!
+            </small>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-6">
+        <div class="form-group">
+          <label for="sectorNumberOfTickets">Number of tickets in sector</label>
+          <input type="number" name="sectorNumberOfTickets" formControlName="sectorNumberOfTickets"
+                 class="text-input form-control" id="sectorNumberOfTickets" placeholder="Enter number of tickets">
+          <div *ngIf="submitted && addSectorTypeForm.controls.sectorNumberOfTickets.errors" class="error">
+            <small *ngIf="addSectorTypeForm.controls.sectorNumberOfTickets.errors.required" class="form-text text-danger">
+              Number of tickets is required!
+            </small>
+            <small *ngIf="addSectorTypeForm.controls.sectorNumberOfTickets.errors.min" class="form-text text-danger">
+              Number of tickets must be greater than 0!
+            </small>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-3">
+      <button class="primary" type="submit">Add sector type</button>
+    </div>
+  </form>
+
+  <div *ngIf="sectorTypes.length > 0">
+    <table class="table">
+      <tr>
+        <th>Name</th>
+        <th>Number of Tickets</th>
+      </tr>
+      <tbody>
+      <tr *ngFor="let sectorType of sectorTypes; let i = index">
+        <td>{{sectorType.name}}</td>
+        <td>{{sectorType.numberOfTickets}}</td>
+        <td><button type="button" class="btn btn-secondary" style="width: 100%"
+                    (click)="removeSectorType(i)">X</button></td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

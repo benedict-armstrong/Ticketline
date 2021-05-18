@@ -35,11 +35,9 @@ public class News {
     @Column(nullable = false, length = 10000)
     private String text;
 
-    /*
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "EVENT_ID")
     private Event event;
-     */
 
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
     private Set<File> images = new HashSet<>();
@@ -84,7 +82,6 @@ public class News {
         this.text = text;
     }
 
-    /*
     public Event getEvent() {
         return event;
     }
@@ -92,7 +89,6 @@ public class News {
     public void setEvent(Event event) {
         this.event = event;
     }
-     */
 
     public Set<File> getImages() {
         return images;
@@ -140,7 +136,7 @@ public class News {
         private String author;
         private String title;
         private String text;
-        //private Event event;
+        private Event event;
         private Set<File> images = new HashSet<>();
 
         private NewsBuilder() {
@@ -175,12 +171,10 @@ public class News {
             return this;
         }
 
-        /*
         public NewsBuilder withEvent(Event event) {
             this.event = event;
             return this;
         }
-        */
 
         public NewsBuilder withImages(Set<File> images) {
             this.images = images;
@@ -194,7 +188,7 @@ public class News {
             news.setAuthor(author);
             news.setTitle(title);
             news.setText(text);
-            //news.setEvent(event);
+            news.setEvent(event);
             news.setImages(images);
             return news;
         }

@@ -24,11 +24,8 @@ public class NewsDto {
     @Size(max = 10000, message = "Information text must be 10000 characters or less")
     private String text;
 
-    /*
-    @NotNull
+    @NotNull(message = "Event is required")
     private EventDto eventDto;
-
-     */
 
     @Size(max = 10, message = "Upload 10 images or less")
     private FileDto[] images = new FileDto[10];
@@ -73,7 +70,6 @@ public class NewsDto {
         this.text = text;
     }
 
-    /*
     public EventDto getEvent() {
         return eventDto;
     }
@@ -81,8 +77,6 @@ public class NewsDto {
     public void setEvent(EventDto eventDto) {
         this.eventDto = eventDto;
     }
-
-     */
 
     public FileDto[] getImages() {
         return images;
@@ -131,7 +125,7 @@ public class NewsDto {
         private String author;
         private String title;
         private String text;
-        //private EventDto eventDto;
+        private EventDto eventDto;
         private FileDto[] images = new FileDto[10];
 
         private NewsDtoBuilder() {
@@ -166,13 +160,10 @@ public class NewsDto {
             return this;
         }
 
-        /*
         public NewsDtoBuilder withEvent(EventDto eventDto) {
             this.eventDto = eventDto;
             return this;
         }
-
-         */
 
         public NewsDtoBuilder withImages(FileDto[] images) {
             this.images = images;
@@ -186,7 +177,7 @@ public class NewsDto {
             newsDto.setAuthor(author);
             newsDto.setTitle(title);
             newsDto.setText(text);
-            //newsDto.setEvent(eventDto);
+            newsDto.setEvent(eventDto);
             newsDto.setImages(images);
             return newsDto;
         }

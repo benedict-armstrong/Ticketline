@@ -13,6 +13,7 @@ import { NewsDetailComponent } from './components/news-detail/news-details.compo
 import { AddUserComponent } from './components/add-user/add-user.component';
 import { AuthGuard } from './guards/auth.guard';
 import { AddVenueComponent } from './components/venue/add-venue/add-venue.component';
+import { AddEventComponent } from './components/event/add-event/add-event.component';
 
 const routes: Routes = [
   { path: '', component: HomePageComponent },
@@ -21,16 +22,12 @@ const routes: Routes = [
   { path: 'news', component: NewsComponent },
   { path: 'events', component: EventsComponent },
   { path: 'news-detail/:id', component: NewsDetailComponent },
-  { path: 'event', component: EventDetailComponent },
+  { path: 'event-detail/:id', component: EventDetailComponent },
   { path: 'user', component: UserHomeComponent },
   { path: 'ticket', component: TicketDetailComponent },
-  { path: 'add-news', component: AddNewsComponent },
-  {
-    path: 'add-user',
-    component: AddUserComponent,
-    canActivate: [AuthGuard],
-    data: { roles: ['ADMIN'] },
-  },
+  { path: 'add-news/:id', component: AddNewsComponent, canActivate: [AuthGuard], data: { roles: ['ADMIN', 'ORGANIZER']} },
+  { path: 'add-user', component: AddUserComponent, canActivate: [AuthGuard], data: { roles: ['ADMIN']} },
+  { path: 'add-event', component: AddEventComponent, canActivate: [AuthGuard], data: { roles: ['ADMIN', 'ORGANIZER']} },
   {
     path: 'add-venue',
     component: AddVenueComponent,

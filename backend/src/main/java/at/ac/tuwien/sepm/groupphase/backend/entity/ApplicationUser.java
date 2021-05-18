@@ -10,6 +10,8 @@ import javax.persistence.Enumerated;
 import javax.persistence.EnumType;
 import javax.persistence.CascadeType;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
+import javax.persistence.JoinColumn;
 import java.time.LocalDateTime;
 
 @Entity
@@ -36,6 +38,10 @@ public class ApplicationUser {
 
     @Column(nullable = false, name = "last_login")
     private LocalDateTime lastLogin;
+
+    @OneToOne
+    @JoinColumn(name = "last_read_news")
+    private News lastReadNews;
 
     @Column()
     private int points;
@@ -113,6 +119,14 @@ public class ApplicationUser {
 
     public void setLastLogin(LocalDateTime lastLogin) {
         this.lastLogin = lastLogin;
+    }
+
+    public News getLastReadNews() {
+        return lastReadNews;
+    }
+
+    public void setLastReadNews(News lastReadNews) {
+        this.lastReadNews = lastReadNews;
     }
 
     public int getPoints() {

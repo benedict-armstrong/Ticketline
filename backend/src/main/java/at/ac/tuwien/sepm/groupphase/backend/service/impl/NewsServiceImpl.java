@@ -39,15 +39,12 @@ public class NewsServiceImpl implements NewsService {
     }
 
     @Override
-    public News getOneById(Long id) {
-        LOGGER.trace("Get one news by id");
-
+    public News getOneById(Long id) throws NotFoundException {
+        LOGGER.trace("getOneById({})", id);
         News news = newsRepository.findOneById(id);
-
         if (news != null) {
             return news;
         }
-
         throw new NotFoundException(String.format("Could not find the news with the id %d", id));
     }
 }

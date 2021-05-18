@@ -1,9 +1,9 @@
-<div class="event" [routerLink]="['/event']">
+<div class="event" [routerLink]="['/event-detail', eventItem.id]">
     <div class="info">
-        <img src="assets/placeholder_event.jpg" alt="">
+        <img src="{{previewImageUrl}}" alt="">
         <div class="detail">
-            <h5>Super exciting event that you wouldn't want to miss</h5>
-            <p class="date-time">Mon, Apr 26, 2021 21:00</p>
+            <h5>{{eventItem.title}}</h5>
+            <p class="date-time">{{eventItem.date | date:'EEEE, MMM d, y HH:mm'}}</p>
         </div>
     </div>
     <!-- <button class="tickets">Buy Tickets</button> -->
