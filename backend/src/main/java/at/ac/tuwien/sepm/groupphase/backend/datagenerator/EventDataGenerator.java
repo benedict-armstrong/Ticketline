@@ -74,16 +74,16 @@ public class EventDataGenerator {
                 fileRepository.save(file);
                 set.add(file);
 
-                Event event = Event.EventBuilder.aEvent()
-                    .withTitle(TEST_EVENT + (i))
-                    .withDescription(TEST_EVENT_DESCRIPTION + (i))
-                    .withEventType(Event.EventType.CONCERT)
-                    .withDuration(100 + i * 50)
-                    .withDate(TEST_DATE.plusDays(i * 10))
-                    .withSectorTypes(generateSectorTypes(i))
-                    .withArtist(generateArtist(i))
-                    .withLocation(generateLocation(i))
-                    .withImages(set).build();
+                Event event = Event.builder()
+                    .title(TEST_EVENT + (i))
+                    .description(TEST_EVENT_DESCRIPTION + (i))
+                    .eventType(Event.EventType.CONCERT)
+                    .duration(100 + i * 50)
+                    .date(TEST_DATE.plusDays(i * 10))
+                    .sectorTypes(generateSectorTypes(i))
+                    .artist(generateArtist(i))
+                    .location(generateLocation(i))
+                    .images(set).build();
 
                 LOGGER.debug("saving event {}", event);
                 eventRepository.save(event);
@@ -107,28 +107,27 @@ public class EventDataGenerator {
     }
 
     public static Artist generateArtist(int index) {
-        return Artist.ArtistBuilder.anArtist()
-            .withFirstName(TEST_ARTIST_FIRSTNAME + index)
-            .withLastName(TEST_ARTIST_LASTNAME + index)
+        return Artist.builder()
+            .firstName(TEST_ARTIST_FIRSTNAME + index)
+            .lastName(TEST_ARTIST_LASTNAME + index)
             .build();
     }
 
     public static Address generateLocation(int index) {
-        return Address.AddressBuilder.anAddress().withName(TEST_LOCATION_NAME + index)
-            .withLineOne("line " + index).withCity(TEST_LOCATION_CITY)
-            .withPostcode(TEST_LOCATION_POSTCODE).withCountry(TEST_LOCATION_COUNTRY).build();
+        return Address.builder().name(TEST_LOCATION_NAME + index)
+            .lineOne("line " + index).city(TEST_LOCATION_CITY)
+            .postcode(TEST_LOCATION_POSTCODE).country(TEST_LOCATION_COUNTRY).build();
     }
 
     public static Set<SectorType> generateSectorTypes(int index) {
         Set<SectorType> sectorTypes = new HashSet<>();
-        sectorTypes.add(SectorType.SectorTypeBuilder.aSectorType().withName("Standing").withNumberOfTickets(100 + index * 50).build());
-        sectorTypes.add(SectorType.SectorTypeBuilder.aSectorType().withName("Sitting").withNumberOfTickets(100 + index * 50).build());
+        sectorTypes.add(SectorType.builder().name("Standing").numberOfTickets(100 + index * 50).build());
+        sectorTypes.add(SectorType.builder().name("Sitting").numberOfTickets(100 + index * 50).build());
         return sectorTypes;
     }
 
     public static File generateImage(byte[] imgBuffer, File.Type imageType) {
-        File file = File.FileBuilder.aFile().withData(imgBuffer).withType(imageType).build();
-
+        File file = File.builder().data(imgBuffer).type(imageType).build();
         return file;
     }
 }

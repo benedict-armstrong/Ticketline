@@ -1,11 +1,8 @@
 package at.ac.tuwien.sepm.groupphase.backend.datagenerator;
 
-import at.ac.tuwien.sepm.groupphase.backend.entity.Address;
-import at.ac.tuwien.sepm.groupphase.backend.entity.Artist;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Event;
 import at.ac.tuwien.sepm.groupphase.backend.entity.File;
 import at.ac.tuwien.sepm.groupphase.backend.entity.News;
-import at.ac.tuwien.sepm.groupphase.backend.entity.SectorType;
 import at.ac.tuwien.sepm.groupphase.backend.repository.EventRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.FileRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.NewsRepository;
@@ -15,7 +12,6 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 import javax.annotation.PostConstruct;
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.lang.invoke.MethodHandles;
 import java.net.URL;
@@ -68,10 +64,7 @@ public class NewsDataGenerator {
 
             for (int i = 0; i < NUMBER_OF_NEWS_TO_GENERATE; i++) {
                 News news = News.builder().publishedAt(LocalDateTime.now()).author(TEST_AUTHOR_NAME)
-                    .title(TEST_TITLE + i).text(TEST_TEXT + i) // .withEvent(events.get(i))
-                News news = News.NewsBuilder.aNews().withPublishedAt(LocalDateTime.now()).withAuthor(TEST_AUTHOR_NAME)
-                    .withTitle(TEST_TITLE + i).withText(TEST_TEXT + i).withEvent(events.get(i))
-                    .build();
+                    .title(TEST_TITLE + i).text(TEST_TEXT + i).event(events.get(i)).build();
 
                 LOGGER.debug("saving news {}", news);
                 newsRepository.save(news);
@@ -138,11 +131,8 @@ public class NewsDataGenerator {
                 fileRepository.save(file3);
 
                 News news = News.builder().publishedAt(LocalDateTime.now()).author(TEST_AUTHOR_NAME)
-                    .title(TEST_TITLE + (i + 10)).text(TEST_TEXT + (i + 10)) //.withEvent(events.get(i))
+                    .title(TEST_TITLE + (i + 10)).text(TEST_TEXT + (i + 10)).event(events.get(i)) //.withEvent(events.get(i))
                     .images(set).build();
-                News news = News.NewsBuilder.aNews().withPublishedAt(LocalDateTime.now()).withAuthor(TEST_AUTHOR_NAME)
-                    .withTitle(TEST_TITLE + (i + 10)).withText(TEST_TEXT + (i + 10)).withEvent(events.get(i))
-                    .withImages(set).build();
 
                 LOGGER.debug("saving news {}", news);
                 newsRepository.save(news);
@@ -162,16 +152,16 @@ public class NewsDataGenerator {
             fileRepository.save(file);
             set.add(file);
 
-            Event event = Event.EventBuilder.aEvent()
-                .withTitle(TEST_EVENT + (i))
-                .withDescription(TEST_EVENT_DESCRIPTION + (i))
-                .withEventType(Event.EventType.CONCERT)
-                .withDuration(100 + i * 50)
-                .withDate(TEST_DATE.plusDays(i * 10))
-                .withSectorTypes(EventDataGenerator.generateSectorTypes(i))
-                .withArtist(EventDataGenerator.generateArtist(i))
-                .withLocation(EventDataGenerator.generateLocation(i))
-                .withImages(set).build();
+            Event event = Event.builder()
+                .title(TEST_EVENT + (i))
+                .description(TEST_EVENT_DESCRIPTION + (i))
+                .eventType(Event.EventType.CONCERT)
+                .duration(100 + i * 50)
+                .date(TEST_DATE.plusDays(i * 10))
+                .sectorTypes(EventDataGenerator.generateSectorTypes(i))
+                .artist(EventDataGenerator.generateArtist(i))
+                .location(EventDataGenerator.generateLocation(i))
+                .images(set).build();
 
             events.add(event);
 
