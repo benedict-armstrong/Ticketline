@@ -11,9 +11,9 @@ public interface TestDataFile extends TestData {
     byte[] TEST_FILE_DATA = new byte[]{0x1, 0x2, 0x3, 0x4, 0x5, 0x6, 0x7, 0x8, 0x9, 0xa};
     File.Type TEST_FILE_TYPE = File.Type.IMAGE_JPEG;
 
-    File IMAGE_FILE = File.FileBuilder.aFile()
-        .withData(TEST_FILE_DATA)
-        .withType(File.Type.IMAGE_JPEG)
+    File IMAGE_FILE = File.builder()
+        .data(TEST_FILE_DATA)
+        .type(File.Type.IMAGE_JPEG)
         .build();
 
     MockMultipartFile MOCK_FILE = new MockMultipartFile(

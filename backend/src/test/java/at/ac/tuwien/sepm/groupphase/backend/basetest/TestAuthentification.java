@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepm.groupphase.backend.basetest;
 
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserLoginDto;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepm.groupphase.backend.repository.UserRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -15,40 +16,40 @@ public interface TestAuthentification extends TestDataUser {
 
     String AUTH_BASE_URI = BASE_URI + "/authentication";
 
-    ApplicationUser AUTH_USER_ADMIN = ApplicationUser.UserBuilder.anUser()
-        .withFirstName(DEFAULT_FIRST_NAME)
-        .withLastName(DEFAULT_LAST_NAME)
-        .withEmail(DEFAULT_EMAIL)
-        .withLastLogin(DEFAULT_LAST_LOGIN)
-        .withRole(ApplicationUser.UserRole.ADMIN)
-        .withStatus(DEFAULT_STATUS)
-        .withPassword(DEFAULT_PASSWORD)
-        .withPoints(DEFAULT_POINTS)
-        .withTelephoneNumber(DEFAULT_PHONE_NUMBER)
+    ApplicationUser AUTH_USER_ADMIN = ApplicationUser.builder()
+        .firstName(DEFAULT_FIRST_NAME)
+        .lastName(DEFAULT_LAST_NAME)
+        .email(DEFAULT_EMAIL)
+        .lastLogin(DEFAULT_LAST_LOGIN)
+        .role(ApplicationUser.UserRole.ADMIN)
+        .status(DEFAULT_STATUS)
+        .password(DEFAULT_PASSWORD)
+        .points(DEFAULT_POINTS)
+        .telephoneNumber(DEFAULT_PHONE_NUMBER)
         .build();
 
-    ApplicationUser AUTH_USER_ORGANIZER = ApplicationUser.UserBuilder.anUser()
-        .withFirstName(DEFAULT_FIRST_NAME)
-        .withLastName(DEFAULT_LAST_NAME)
-        .withEmail(DEFAULT_EMAIL)
-        .withLastLogin(DEFAULT_LAST_LOGIN)
-        .withRole(ApplicationUser.UserRole.ORGANIZER)
-        .withStatus(DEFAULT_STATUS)
-        .withPassword(DEFAULT_PASSWORD)
-        .withPoints(DEFAULT_POINTS)
-        .withTelephoneNumber(DEFAULT_PHONE_NUMBER)
+    ApplicationUser AUTH_USER_ORGANIZER = ApplicationUser.builder()
+        .firstName(DEFAULT_FIRST_NAME)
+        .lastName(DEFAULT_LAST_NAME)
+        .email(DEFAULT_EMAIL)
+        .lastLogin(DEFAULT_LAST_LOGIN)
+        .role(ApplicationUser.UserRole.ORGANIZER)
+        .status(DEFAULT_STATUS)
+        .password(DEFAULT_PASSWORD)
+        .points(DEFAULT_POINTS)
+        .telephoneNumber(DEFAULT_PHONE_NUMBER)
         .build();
 
-    ApplicationUser AUTH_USER_CLIENT = ApplicationUser.UserBuilder.anUser()
-        .withFirstName(DEFAULT_FIRST_NAME)
-        .withLastName(DEFAULT_LAST_NAME)
-        .withEmail(DEFAULT_EMAIL)
-        .withLastLogin(DEFAULT_LAST_LOGIN)
-        .withRole(ApplicationUser.UserRole.CLIENT)
-        .withStatus(DEFAULT_STATUS)
-        .withPassword(DEFAULT_PASSWORD)
-        .withPoints(DEFAULT_POINTS)
-        .withTelephoneNumber(DEFAULT_PHONE_NUMBER)
+    ApplicationUser AUTH_USER_CLIENT = ApplicationUser.builder()
+        .firstName(DEFAULT_FIRST_NAME)
+        .lastName(DEFAULT_LAST_NAME)
+        .email(DEFAULT_EMAIL)
+        .lastLogin(DEFAULT_LAST_LOGIN)
+        .role(ApplicationUser.UserRole.ADMIN)
+        .status(DEFAULT_STATUS)
+        .password(DEFAULT_PASSWORD)
+        .points(DEFAULT_POINTS)
+        .telephoneNumber(DEFAULT_PHONE_NUMBER)
         .build();
 
     /**
@@ -65,7 +66,7 @@ public interface TestAuthentification extends TestDataUser {
             post(AUTH_BASE_URI)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(
-                    objectMapper.writeValueAsString(new AuthDto(user.getEmail(), user.getPassword()))
+                    objectMapper.writeValueAsString(new UserLoginDto(user.getEmail(), user.getPassword()))
                 )
         ).andReturn();
         MockHttpServletResponse response = mvcResult.getResponse();
@@ -83,39 +84,19 @@ public interface TestAuthentification extends TestDataUser {
     default ApplicationUser saveUser(ApplicationUser user,
                                      UserRepository userRepository,
                                      PasswordEncoder passwordEncoder) {
-        ApplicationUser userWithEncodedPassword = ApplicationUser.UserBuilder.anUser()
-            .withFirstName(user.getFirstName())
-            .withLastName(user.getLastName())
-            .withEmail(user.getEmail())
-            .withLastLogin(user.getLastLogin())
-            .withRole(user.getRole())
-            .withStatus(user.getStatus())
-            .withPassword(passwordEncoder.encode(user.getPassword()))
-            .withPoints(user.getPoints())
-            .withAddress(user.getAddress())
-            .withTelephoneNumber(user.getTelephoneNumber())
+        ApplicationUser userWithEncodedPassword = ApplicationUser.builder()
+            .firstName(user.getFirstName())
+            .lastName(user.getLastName())
+            .email(user.getEmail())
+            .lastLogin(user.getLastLogin())
+            .role(user.getRole())
+            .status(user.getStatus())
+            .password(passwordEncoder.encode(user.getPassword()))
+            .points(user.getPoints())
+            .address(user.getAddress())
+            .telephoneNumber(user.getTelephoneNumber())
             .build();
         return userRepository.save(userWithEncodedPassword);
-    }
-
-}
-
-class AuthDto {
-
-    private final String email;
-    private final String password;
-
-    public AuthDto(String email, String password) {
-        this.email = email;
-        this.password = password;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public String getPassword() {
-        return password;
     }
 
 }

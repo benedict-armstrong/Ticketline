@@ -60,7 +60,7 @@ public class NewsEndpoint {
     }
 
     @GetMapping(value = {"/{id}"})
-    @Secured("ROLE_USER")
+    @PermitAll
     @Operation(summary = "Get a news article by id")
     public NewsDto getOneById(@Valid @PathVariable("id") Long id) {
         LOGGER.info("GET /api/v1/news/{}", id);
