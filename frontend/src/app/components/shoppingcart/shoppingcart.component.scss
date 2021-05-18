@@ -1,3 +1,5 @@
+@import "../../../colors.scss";
+
 #hideCart {
 	right: -340px;
 }
@@ -21,13 +23,13 @@
 		box-shadow: 0px 3px 2px -2px rgba(0, 0, 0, 0.2);
 
 		h3 {
-			margin: 0px;
+			margin: 0;
 		}
 
 		button.close-button {
 			height: 100%;
 			width: min-content;
-			margin: 0px 0px !important;
+			margin: 0;
 		}
 	}
 
@@ -47,19 +49,13 @@
 .card {
     margin-bottom: 13px;
     padding: 8px;
-    background: #f7eaeb;
+    background: $gray-242;
 
     div.cardHeader {
         button {
-            background: none;
-            box-shadow: none;
-            color: #cb676f;
-            margin: 0px 0px 0px 10px !important;
-            padding: 0px;
-            width: min-content;
-            height: min-content;
-            border: 1px black !important;
-            border-radius: 0px !important;
+			color: $primary;
+			top: 5px;
+			right: 5px;
         }
     }
     
@@ -67,7 +63,7 @@
         button {
             background: none;
             box-shadow: none;
-            color: #cb676f;
+            color: $primary;
             margin: 0px !important;
             padding: 0px;
             width: min-content;
