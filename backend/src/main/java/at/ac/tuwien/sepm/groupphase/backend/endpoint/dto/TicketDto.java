@@ -32,7 +32,7 @@ public class TicketDto {
     private List<Long> seats; // TODO: map to Venue's seats
 
     @NotNull(message = "Ticket type is missing")
-    private TicketType ticketType;
+    private TicketTypeDto ticketType;
 
     @PositiveOrZero(message = "Total price must be at least zero")
     private Long totalPrice; // 1 = 100 Cents
