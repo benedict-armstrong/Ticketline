@@ -47,7 +47,6 @@ public class UserEndpoint {
 
     @GetMapping(value = {"/{email}"})
     @PermitAll
-    //TODO: Change!!!
     @Operation(summary = "Find User by Email")
     public UserDto findByEmail(@Valid @PathVariable("email") String email) {
         LOGGER.info("GET /api/v1/users/{}", email);
@@ -56,7 +55,6 @@ public class UserEndpoint {
 
     @PutMapping
     @PermitAll
-    //TODO: Change!!!
     @Operation(summary = "Update User")
     public UserDto update(@Valid @RequestBody UserDto userDto) {
         LOGGER.info("PUT /api/v1/users body:{}", userDto);
