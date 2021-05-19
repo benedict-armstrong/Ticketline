@@ -1,4 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { FormGroup } from '@angular/forms';
 import { ShoppingcartService } from 'src/app/services/shoppingcart.service';
 
 @Component({
@@ -17,4 +18,15 @@ export class ShoppingcartComponent implements OnInit {
     this.cartService.status = false;
   }
 
+  removeFromCart(index): void {
+    this.cartService.removeFromCart(index);
+  }
+
+  incAmount(index): void {
+    this.cartService.incAmount(index);
+  }
+
+  decAmount(index): void {
+    this.cartService.decAmount(index);
+  }
 }

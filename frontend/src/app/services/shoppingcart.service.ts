@@ -5,8 +5,25 @@ import { Injectable } from '@angular/core';
 })
 export class ShoppingcartService {
 
-  cart = [{name: 'test1', count: 1, price: 5.1}, {name: 'test2', count: 3, price: 10}, {name: 'test3', count: 10, price: 1.4}, {name: 'test4', count: 5000, price: 7.7}];
-  status = true;
+  cart = [];
+  status = false;
 
   constructor() { }
+
+  addToCart(item): void {
+    this.cart.push(item);
+  }
+
+  removeFromCart(index): void {
+    this.cart.splice(index, 1);
+  }
+
+  incAmount(index): void {
+    this.cart[index].amount += 1;
+  }
+
+  decAmount(index): void {
+    this.cart[index].amount -= 1;
+    console.log(this.cart);
+  }
 }
