@@ -24,6 +24,27 @@ export class ApplicationEventService {
     return this.httpClient.get<Event[]>(this.eventBaseUri, { params });
   }
 
+    /**
+   * Loads all events from the backend with pagination
+   */
+     searchEvents(page: number, size: number, title: string, description: string, duration: number): Observable<Event[]> {
+      let params = new HttpParams();
+      params = params.set('page', String(page));
+      params = params.set('size', String(size));
+      
+      if(title != ""){
+        params = params.set('title', title);
+      }
+      if(description != ""){
+        params = params.set('description', description);
+      }
+      if(String(duration) != ""){
+        params = params.set('duration', String(duration));
+      }
+
+      return this.httpClient.get<Event[]>(this.eventBaseUri, { params });
+    }
+
   /**
    * Loads all events from the backend
    */

@@ -1,4 +1,4 @@
-<app-search></app-search>
+<app-search (searchedEvents)="setSearchEvents($event)" (searchedDates)="setSearchDates($event)" (searchedNoEvent)="setNoEvents($event)"></app-search>
 
 <div class="day" *ngFor="let date of dates">
   <div class="header">
