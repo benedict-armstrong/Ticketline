@@ -22,17 +22,11 @@
               <input type="number" id="gridSizeX" name="gridSizeX" formControlName="gridSizeX"
                 class="text-input form-control" placeholder="X" aria-label="grid size X" min="10" max="500">
             </div>
-            <div for="grid-size-x">X</div>
+            <div>X</div>
             <input type="number" id="gridSizeY" name="gridSizeY" formControlName="gridSizeY"
               class="text-input form-control" min="10" max="500" placeholder="Y" aria-label="grid size Y">
 
             <button class="primary" type="button" (click)="makeGrid()" id="make-grid">Update</button>
-
-            <div *ngIf="venueLayoutForm.controls.gridSizeX.errors || venueLayoutForm.controls.gridSizeY.errors"
-              class="error">
-              <small class="form-text text-warning">
-                Grid size must be between 10 and 50</small>
-            </div>
           </div>
         </form>
       </div>
@@ -93,12 +87,14 @@
         </div>
       </div>
     </div>
-
+    <div *ngIf="venueLayoutForm.controls.gridSizeX.errors || venueLayoutForm.controls.gridSizeY.errors" class="error">
+      <small class="form-text text-warning">
+        Grid size must be between 10 and 50</small>
+    </div>
   </div>
 
   <div class="venue-layout-grid">
     <div>Front</div>
     <app-venue-layout-grid [venueLayout]="this.venueLayout" [activeTool]="this.activeTool"></app-venue-layout-grid>
   </div>
-
 </div>

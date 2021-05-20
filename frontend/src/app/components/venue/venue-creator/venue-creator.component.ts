@@ -67,8 +67,13 @@ export class VenueCreatorComponent implements OnInit {
         this.venueLayout[i] = new Array(this.venueLayoutForm.value.gridSizeY);
         for (let j = 0; j < this.venueLayoutForm.value.gridSizeY; j++) {
           this.venueLayout[i][j] = {
+            id: this.venueLayoutForm.value.gridSizeX * i + j,
             sector: null,
             available: true,
+            customLabel: (
+              this.venueLayoutForm.value.gridSizeX * i +
+              j
+            ).toString(),
           };
         }
       }

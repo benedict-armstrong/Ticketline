@@ -2,7 +2,7 @@
     'standing': this.seatUnit.sector && (this.seatUnit.sector.type == 'standing'),
     'stage': this.seatUnit.sector && (this.seatUnit.sector.type == 'stage'),
     'hide': !this.seatUnit.available
-  }">
+  }" title="Seat number: {{this.seatUnit.customLabel}}">
   <div class="grid-unit" [ngClass]="{'available': this.seatUnit.available}"
     [ngStyle]="{'background-color': this.seatUnit.sector ? this.seatUnit.sector.color : '#EEEEEE'}">
   </div>
