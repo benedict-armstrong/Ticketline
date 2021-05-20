@@ -3,6 +3,9 @@ package at.ac.tuwien.sepm.groupphase.backend.service.impl;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Event;
 import at.ac.tuwien.sepm.groupphase.backend.repository.EventRepository;
 import at.ac.tuwien.sepm.groupphase.backend.service.EventService;
+import at.ac.tuwien.sepm.groupphase.backend.specification.EventSpecification;
+import at.ac.tuwien.sepm.groupphase.backend.specification.EventSearchCriteria;
+import at.ac.tuwien.sepm.groupphase.backend.specification.EventSpecificationBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +14,6 @@ import org.springframework.stereotype.Service;
 
 import java.lang.invoke.MethodHandles;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class CustomEventService implements EventService {
@@ -40,5 +42,24 @@ public class CustomEventService implements EventService {
     public Event addEvent(Event event) {
         LOGGER.trace("addEvent({})", event);
         return eventRepository.save(event);
+    }
+
+    @Override
+    public List<Event> search(Event event, Pageable pageable) {
+        LOGGER.debug("search({})", event);
+
+        EventSpecificationBuilder builder = new EventSpecificationBuilder();
+
+        if (event.getTitle() != null) {
+            builder.with("title", ":", event.getTitle());
+        }
+        if (event.getDescription() != null) {
+            builder.with("description", ":", event.getDescription());
+        }
+        if (event.getDuration() != 0) {
+            builder.with("duration", "+", event.getDuration());
+        }
+
+        return eventRepository.findAll(builder.build(), pageable).getContent();
     }
 }
