@@ -46,7 +46,7 @@ public class CustomEventService implements EventService {
 
     @Override
     public List<Event> search(Event event, Pageable pageable) {
-        LOGGER.debug("search({})", event);
+        LOGGER.debug("searchEvent({}, {}, {})", event.getTitle(), event.getDescription(), event.getDuration());
 
         EventSpecificationBuilder builder = new EventSpecificationBuilder();
 
