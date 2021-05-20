@@ -20,14 +20,7 @@ public class EventSpecification implements Specification<Event> {
 
     @Override
     public Predicate toPredicate(Root<Event> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
-        /* Needed if Search needs the Parameters
-        if (criteria.getOperation().equalsIgnoreCase(">")) {
-            return criteriaBuilder.greaterThanOrEqualTo(
-                root.get(criteria.getKey()), criteria.getValue().toString());
-        } else if (criteria.getOperation().equalsIgnoreCase("<")) {
-            return criteriaBuilder.lessThanOrEqualTo(
-                root.get(criteria.getKey()), criteria.getValue().toString());
-        } else */ if (criteria.getOperation().equalsIgnoreCase(":")) {
+        if (criteria.getOperation().equalsIgnoreCase(":")) {
             if (root.get(criteria.getKey()).getJavaType() == String.class) {
                 return criteriaBuilder.like(
                     root.get(criteria.getKey()), "%" + criteria.getValue() + "%");

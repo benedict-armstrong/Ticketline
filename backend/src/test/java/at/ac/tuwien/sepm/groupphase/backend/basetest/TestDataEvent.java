@@ -17,6 +17,7 @@ public interface TestDataEvent extends TestData {
     LocalDateTime TEST_EVENT_DATE_FUTURE = LocalDateTime.parse("2022-12-12T22:00:00");
     LocalDateTime TEST_EVENT_DATE_PAST = LocalDateTime.parse("2000-12-12T12:00:00");
     Event.EventType TEST_EVENT_EVENT_TYPE = Event.EventType.CINEMA;
+    Event.EventType TEST_EVENT_EVENT_TYPE2 = Event.EventType.CONCERT;
     int TEST_EVENT_DURATION = 100;
 
 

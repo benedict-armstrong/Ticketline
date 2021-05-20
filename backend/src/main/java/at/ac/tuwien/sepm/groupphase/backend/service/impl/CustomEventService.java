@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.lang.invoke.MethodHandles;
 import java.util.List;
+import java.util.Locale;
 
 @Service
 public class CustomEventService implements EventService {
@@ -46,7 +47,7 @@ public class CustomEventService implements EventService {
 
     @Override
     public List<Event> search(Event event, Pageable pageable) {
-        LOGGER.debug("searchEvent({}, {}, {})", event.getTitle(), event.getDescription(), event.getDuration());
+        LOGGER.debug("searchEvent({}, {}, {}, {})", event.getTitle(), event.getDescription(), event.getDuration(), event.getEventType());
 
         EventSpecificationBuilder builder = new EventSpecificationBuilder();
 
@@ -58,6 +59,10 @@ public class CustomEventService implements EventService {
         }
         if (event.getDuration() != 0) {
             builder.with("duration", "+", event.getDuration());
+        }
+        if (event.getEventType() != null) {
+            LOGGER.info("{}", event.getEventType());
+            builder.with("eventType", ":", event.getEventType());
         }
 
         return eventRepository.findAll(builder.build(), pageable).getContent();

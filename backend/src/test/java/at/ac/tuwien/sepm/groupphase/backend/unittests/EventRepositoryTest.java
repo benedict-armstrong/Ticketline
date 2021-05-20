@@ -3,6 +3,7 @@ package at.ac.tuwien.sepm.groupphase.backend.unittests;
 import at.ac.tuwien.sepm.groupphase.backend.basetest.TestDataEvent;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Event;
 import at.ac.tuwien.sepm.groupphase.backend.repository.EventRepository;
+import at.ac.tuwien.sepm.groupphase.backend.specification.EventSpecificationBuilder;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -66,5 +67,16 @@ public class EventRepositoryTest implements TestDataEvent {
     @DisplayName("Should return null when searching for negative id")
     public void givenNothing_whenFindOnyById_ShouldBeNull() {
         assertNull(eventRepository.findOneById(-1L));
+    }
+
+    @Test
+    @DisplayName("Should return event when searching for event")
+    public void givenEvent_whenSearch_ShouldReturnEvent() {
+        eventRepository.save(event);
+
+        EventSpecificationBuilder builder = new EventSpecificationBuilder();
+        builder.with("title", ":", event.getTitle());
+
+        assertEquals(event, eventRepository.findAll(builder.build()).get(0));
     }
 }
