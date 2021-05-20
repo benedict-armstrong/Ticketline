@@ -10,6 +10,10 @@ import { ApplicationEventService } from '../../services/event.service';
 })
 export class SearchComponent implements OnInit {
 
+  @Output() searchedEvents = new EventEmitter<Event[]>();
+  @Output() searchedDates = new EventEmitter<any>();
+  @Output() searchedNoEvent = new EventEmitter<any>();
+
   // Error flag
   error = false;
   errorMessage = '';
@@ -20,10 +24,6 @@ export class SearchComponent implements OnInit {
   events = [];
   dates = [];
   noEvent = true;
-
-  @Output() searchedEvents = new EventEmitter<Event[]>();
-  @Output() searchedDates = new EventEmitter<any>();
-  @Output() searchedNoEvent = new EventEmitter<any>();
 
   constructor(private formBuilder: FormBuilder, private eventService: ApplicationEventService) { }
 
@@ -40,7 +40,7 @@ export class SearchComponent implements OnInit {
 
     console.log(this.eventSearchForm.value);
 
-    if (this.eventSearchForm.value.title === "" && this.eventSearchForm.value.description === ""
+    if (this.eventSearchForm.value.title === '' && this.eventSearchForm.value.description === ''
       && this.eventSearchForm.value.duration === null) {
 
       this.eventService.getEvents(this.page, this.size).subscribe(
@@ -75,41 +75,37 @@ export class SearchComponent implements OnInit {
           console.error(error);
         }
       );
-
     } else {
+      this.eventService.searchEvents(this.page, this.size, this.eventSearchForm.value.title,
+        this.eventSearchForm.value.description, this.eventSearchForm.value.duration).subscribe(
+          response => {
+            console.log(response);
 
-      this.eventService.searchEvents(this.page, this.size, this.eventSearchForm.value.title, this.eventSearchForm.value.description, this.eventSearchForm.value.duration).subscribe(
-        response => {
-          console.log(response);
+            for (const event of response) {
+              const date = new Date(event.date).toDateString();
 
-          for (const event of response) {
-            const date = new Date(event.date).toDateString();
-
-            if (!this.dates.includes(date)) {
-              this.dates.push(date);
+              if (!this.dates.includes(date)) {
+                this.dates.push(date);
+              }
             }
-          }
-
-          console.log(this.dates);
-
-          this.events.push(...response);
-          if (response.length < this.size) {
+            console.log(this.dates);
+            this.events.push(...response);
+            if (response.length < this.size) {
+              this.noEvent = true;
+            } else {
+              this.page++;
+              this.noEvent = false;
+            }
+            this.searchedEvents.emit(this.events);
+            this.searchedDates.emit(this.dates);
+            this.searchedNoEvent.emit(this.noEvent);
+            this.events = [];
+            this.dates = [];
             this.noEvent = true;
-          } else {
-            this.page++;
-            this.noEvent = false;
+          }, error => {
+            console.error(error);
           }
-
-          this.searchedEvents.emit(this.events);
-          this.searchedDates.emit(this.dates);
-          this.searchedNoEvent.emit(this.noEvent);
-          this.events = [];
-          this.dates = [];
-          this.noEvent = true;
-        }, error => {
-          console.error(error);
-        }
-      );
+        );
     }
   }
   //TODO: pagination!!!
