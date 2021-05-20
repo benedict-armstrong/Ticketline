@@ -1,26 +1,33 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { GridTool } from '../models/gridTool';
-import { SeatUnit } from '../models/seatUnit';
-import { Sector } from '../models/sector';
+import { HostListener } from "@angular/core";
+import { Component, Input, OnInit } from "@angular/core";
+import { FormBuilder, FormGroup, Validators } from "@angular/forms";
+import { GridTool } from "../models/gridTool";
+import { SeatUnit } from "../models/seatUnit";
+import { Sector } from "../models/sector";
 
 @Component({
-  selector: 'app-venue-creator',
-  templateUrl: './venue-creator.component.html',
-  styleUrls: ['./venue-creator.component.scss'],
+  selector: "app-venue-creator",
+  templateUrl: "./venue-creator.component.html",
+  styleUrls: ["./venue-creator.component.scss"],
 })
 export class VenueCreatorComponent implements OnInit {
   @Input()
   sectors: Sector[] = [];
 
+  @HostListener("window:beforeunload", ["$event"])
+  doSomething($event) {
+    if (this.hasChanges) $event.returnValue = "Your data will be lost!";
+  }
+
+  hasChanges: boolean = true;
   venueLayoutForm: FormGroup;
   submitted = false;
   venueLayout: SeatUnit[][];
-  frontText = 'Front';
+  frontText = "Front";
 
   activeTool: GridTool = {
-    action: 'remove',
-    scope: 'single',
+    action: "remove",
+    scope: "single",
     reassign: true,
     sector: null,
   };
@@ -48,12 +55,12 @@ export class VenueCreatorComponent implements OnInit {
 
   makeGrid(): void {
     if (this.venueLayoutForm.valid) {
-      if (this.submitted && !confirm('Update? All changes will be lost.')) {
+      if (this.submitted && !confirm("Update? All changes will be lost.")) {
         this.submitted = true;
         return;
       }
       this.submitted = true;
-      this.activeTool.action = 'remove';
+      this.activeTool.action = "remove";
       this.venueLayout = new Array(this.venueLayoutForm.value.gridSizeX);
 
       for (let i = 0; i < this.venueLayoutForm.value.gridSizeX; i++) {
@@ -69,27 +76,27 @@ export class VenueCreatorComponent implements OnInit {
   }
 
   toggleAdd() {
-    this.activeTool.action = 'add';
+    this.activeTool.action = "add";
   }
 
   toggleRemove() {
-    this.activeTool.action = 'remove';
+    this.activeTool.action = "remove";
   }
 
   toggleSingle() {
-    this.activeTool.scope = 'single';
+    this.activeTool.scope = "single";
   }
 
   toggleColumn() {
-    this.activeTool.scope = 'column';
+    this.activeTool.scope = "column";
   }
 
   toggleRow() {
-    this.activeTool.scope = 'row';
+    this.activeTool.scope = "row";
   }
 
   toggleSector() {
-    this.activeTool.action = 'assignSector';
+    this.activeTool.action = "assignSector";
   }
 
   toggleReassign() {
