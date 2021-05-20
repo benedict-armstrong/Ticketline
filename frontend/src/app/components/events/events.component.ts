@@ -13,6 +13,7 @@ export class EventsComponent implements OnInit {
   page = 0;
   size = 8;
   noEvent = true;
+  search = false;
 
   constructor(private eventService: ApplicationEventService) { }
 
@@ -83,6 +84,10 @@ export class EventsComponent implements OnInit {
 
   setNoEvents(noEvent: boolean){
     this.noEvent = noEvent;
+  }
+
+  setSearchPagination(search: boolean){
+    this.search = search;
   }
 
 }

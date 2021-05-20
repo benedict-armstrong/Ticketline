@@ -13,6 +13,7 @@ export class SearchComponent implements OnInit {
   @Output() searchedEvents = new EventEmitter<Event[]>();
   @Output() searchedDates = new EventEmitter<any>();
   @Output() searchedNoEvent = new EventEmitter<any>();
+  @Output() searchPagination = new EventEmitter<any>();
 
   // Error flag
   error = false;
@@ -33,6 +34,7 @@ export class SearchComponent implements OnInit {
       title: ['', []],
       description: ['', []],
       duration: [null, []],
+      eventType: ['', []],
     });
   }
 
@@ -41,8 +43,9 @@ export class SearchComponent implements OnInit {
     console.log(this.eventSearchForm.value);
 
     if (this.eventSearchForm.value.title === '' && this.eventSearchForm.value.description === ''
-      && this.eventSearchForm.value.duration === null) {
-
+      && this.eventSearchForm.value.duration === null && this.eventSearchForm.value.eventType === '') {
+      this.page = 0;
+      this.size = 8;
       this.eventService.getEvents(this.page, this.size).subscribe(
         response => {
           console.log(response);
@@ -68,16 +71,13 @@ export class SearchComponent implements OnInit {
           this.searchedEvents.emit(this.events);
           this.searchedDates.emit(this.dates);
           this.searchedNoEvent.emit(this.noEvent);
-          this.events = [];
-          this.dates = [];
-          this.noEvent = true;
         }, error => {
           console.error(error);
         }
       );
     } else {
       this.eventService.searchEvents(this.page, this.size, this.eventSearchForm.value.title,
-        this.eventSearchForm.value.description, this.eventSearchForm.value.duration).subscribe(
+        this.eventSearchForm.value.description, this.eventSearchForm.value.duration, this.eventSearchForm.value.eventType).subscribe(
           response => {
             console.log(response);
 
@@ -99,15 +99,19 @@ export class SearchComponent implements OnInit {
             this.searchedEvents.emit(this.events);
             this.searchedDates.emit(this.dates);
             this.searchedNoEvent.emit(this.noEvent);
-            this.events = [];
-            this.dates = [];
-            this.noEvent = true;
+            this.searchPagination.emit(true);
           }, error => {
             console.error(error);
           }
         );
     }
   }
-  //TODO: pagination!!!
 
+  resetValues(){
+    this.events = [];
+    this.dates = [];
+    this.noEvent = true;
+    this.page = 0;
+    this.size = 8;
+  }
 }

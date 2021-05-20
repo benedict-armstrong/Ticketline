@@ -1,8 +1,8 @@
-import {Injectable} from '@angular/core';
-import {HttpClient, HttpParams} from '@angular/common/http';
-import {Observable} from 'rxjs';
-import {Globals} from '../global/globals';
-import {Event} from '../dtos/event';
+import { Injectable } from '@angular/core';
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { Globals } from '../global/globals';
+import { Event } from '../dtos/event';
 
 @Injectable({
   providedIn: 'root'
@@ -27,22 +27,25 @@ export class ApplicationEventService {
   /**
    * Searches for all events in the backend with pagination
    */
-     searchEvents(page: number, size: number, title: string, description: string, duration: number): Observable<Event[]> {
-      let params = new HttpParams();
-      params = params.set('page', String(page));
-      params = params.set('size', String(size));
-      if(title !== ''){
-        params = params.set('title', title);
-      }
-      if(description !== ''){
-        params = params.set('description', description);
-      }
-      if(String(duration) !== null){
-        params = params.set('duration', String(duration));
-      }
-
-      return this.httpClient.get<Event[]>(this.eventBaseUri, { params });
+  searchEvents(page: number, size: number, title: string, description: string, duration: number, eventType: string): Observable<Event[]> {
+    let params = new HttpParams();
+    params = params.set('page', String(page));
+    params = params.set('size', String(size));
+    if (title !== '') {
+      params = params.set('title', title);
     }
+    if (description !== '') {
+      params = params.set('description', description);
+    }
+    if (duration !== null) {
+      params = params.set('duration', String(duration));
+    }
+    if (eventType !== '') {
+      params = params.set('eventType', eventType);
+    }
+
+    return this.httpClient.get<Event[]>(this.eventBaseUri, { params });
+  }
 
   /**
    * Loads all events from the backend
