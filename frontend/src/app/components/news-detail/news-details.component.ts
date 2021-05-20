@@ -67,7 +67,7 @@ export class NewsDetailComponent implements OnInit {
       this.userService.getUserByEmail(email).subscribe(
         user => {
           userToChange = user;
-          if (userToChange.lastReadNews.id < this.newsItem.id){
+          if (userToChange.lastReadNews == null || userToChange.lastReadNews.id < this.newsItem.id) {
             userToChange.lastReadNews = this.newsItem;
           }
           this.userService.updateUser(userToChange).subscribe(
