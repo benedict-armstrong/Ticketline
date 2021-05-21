@@ -25,7 +25,7 @@ import java.util.Set;
 @Component
 public class EventDataGenerator {
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
-    private static final int NUMBER_OF_EVENTS_TO_GENERATE = 5;
+    private static final int NUMBER_OF_EVENTS_TO_GENERATE = 10;
     private static final String TEST_EVENT = "Test Event";
     private static final String TEST_EVENT_DESCRIPTION = "This is a test description! Part";
     private static final String TEST_ARTIST_FIRSTNAME = "Artist";
