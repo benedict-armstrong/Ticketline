@@ -8,12 +8,12 @@ import at.ac.tuwien.sepm.groupphase.backend.config.properties.SecurityProperties
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.NewsDto;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Address;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Artist;
-import at.ac.tuwien.sepm.groupphase.backend.entity.Event;
+import at.ac.tuwien.sepm.groupphase.backend.entity.Performance;
 import at.ac.tuwien.sepm.groupphase.backend.entity.File;
 import at.ac.tuwien.sepm.groupphase.backend.entity.News;
 import at.ac.tuwien.sepm.groupphase.backend.repository.AddressRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.ArtistRepository;
-import at.ac.tuwien.sepm.groupphase.backend.repository.EventRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.PerformanceRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.FileRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.NewsRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.UserRepository;
@@ -57,7 +57,7 @@ public class NewsEndpointTest implements TestDataNews, TestDataFile, TestAuthent
     private NewsRepository newsRepository;
 
     @Autowired
-    private EventRepository eventRepository;
+    private PerformanceRepository performanceRepository;
 
     @Autowired
     private FileRepository fileRepository;
@@ -82,13 +82,13 @@ public class NewsEndpointTest implements TestDataNews, TestDataFile, TestAuthent
 
     private Set<File> images = new HashSet<>();
 
-    private Event event;
+    private Performance performance;
 
     private final News news = News.builder()
         .title("Testtitle")
         .text("Testtext")
         .author("Testuser")
-        .event(event)
+        .performance(performance)
         .images(images)
         .publishedAt(TEST_NEWS_PUBLISHED_AT)
         .build();
@@ -98,7 +98,7 @@ public class NewsEndpointTest implements TestDataNews, TestDataFile, TestAuthent
     @BeforeEach
     public void beforeEach() throws Exception {
         newsRepository.deleteAll();
-        eventRepository.deleteAll();
+        performanceRepository.deleteAll();
         fileRepository.deleteAll();
         addressRepository.deleteAll();
         artistRepository.deleteAll();
@@ -106,23 +106,21 @@ public class NewsEndpointTest implements TestDataNews, TestDataFile, TestAuthent
         Address address = addressRepository.save(TestDataEvent.TEST_EVENT_LOCATION);
         Artist artist = artistRepository.save(TestDataEvent.TEST_EVENT_ARTIST);
 
-        event = Event.builder()
+        performance = Performance.builder()
             .title(TestDataEvent.TEST_EVENT_TITLE)
             .description(TestDataEvent.TEST_EVENT_DESCRIPTION)
             .date(TestDataEvent.TEST_EVENT_DATE_FUTURE)
-            .duration(TestDataEvent.TEST_EVENT_DURATION)
-            .eventType(TestDataEvent.TEST_EVENT_EVENT_TYPE)
             .artist(artist)
             .location(address)
             .sectorTypes(TestDataEvent.getTestEventSectortypes())
             .build();
-        news.setEvent(event);
+        news.setPerformance(performance);
 
         fileRepository.save(IMAGE_FILE);
         images = new HashSet<>();
         images.add(IMAGE_FILE);
 
-        eventRepository.save(event);
+        performanceRepository.save(performance);
 
         userRepository.deleteAll();
         saveUser(AUTH_USER_ORGANIZER, userRepository, passwordEncoder);
@@ -158,7 +156,7 @@ public class NewsEndpointTest implements TestDataNews, TestDataFile, TestAuthent
                 .title(news.getTitle() + i)
                 .text(news.getText())
                 .author(news.getAuthor())
-                .event(news.getEvent())
+                .performance(news.getPerformance())
                 .publishedAt(news.getPublishedAt())
                 .build();
             newsRepository.save(n);
@@ -249,7 +247,7 @@ public class NewsEndpointTest implements TestDataNews, TestDataFile, TestAuthent
             .title(news.getTitle())
             .text(news.getText())
             .author(news.getAuthor())
-            .event(news.getEvent())
+            .performance(news.getPerformance())
             .publishedAt(news.getPublishedAt())
             .build();
         News saved = newsRepository.save(n);

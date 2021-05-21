@@ -33,5 +33,5 @@ public class Artist {
 
     @OneToMany(mappedBy = "artist")
     @Fetch(FetchMode.JOIN)
-    private Set<Event> events;
+    private Set<Performance> performances;
 }

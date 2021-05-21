@@ -39,7 +39,7 @@ public class AddressEndpoint {
 
     @PermitAll
     @GetMapping
-    @Operation(summary = "Get all event locations")
+    @Operation(summary = "Get all performance locations")
     public List<AddressDto> findAllByCriteria(PaginationDto paginationDto) {
         LOGGER.info("GET /api/v1/addresses");
         return addressMapper.addressListToAddressListDto(addressService.findAllByCriteria(paginationMapper.paginationDtoToPageable(paginationDto)));

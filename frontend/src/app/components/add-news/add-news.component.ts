@@ -3,8 +3,8 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {ActivatedRoute, Router} from '@angular/router';
 import {ApplicationNewsService} from '../../services/news.service';
 import {News} from '../../dtos/news';
-import {Event} from '../../dtos/event';
-import {ApplicationEventService} from '../../services/event.service';
+import {Performance} from '../../dtos/performance';
+import {ApplicationPerformanceService} from '../../services/performance.service';
 import {FileService} from '../../services/file.service';
 
 @Component({
@@ -34,7 +34,7 @@ export class AddNewsComponent implements OnInit {
     , null
     , []);
 
-  constructor(private applicationNewsService: ApplicationNewsService, private applicationEventService: ApplicationEventService,
+  constructor(private applicationNewsService: ApplicationNewsService, private applicationEventService: ApplicationPerformanceService,
               private formBuilder: FormBuilder, private router: Router, private actRoute: ActivatedRoute,
               private fileService: FileService) {
     this.eventId = this.actRoute.snapshot.params.id;
@@ -105,7 +105,7 @@ export class AddNewsComponent implements OnInit {
 
   loadEvent(id) {
     this.applicationEventService.getEventById(id).subscribe(
-      (event: Event) => {
+      (event: Performance) => {
         this.event = event;
         this.addNewsForm.patchValue({
           eventName: event.title

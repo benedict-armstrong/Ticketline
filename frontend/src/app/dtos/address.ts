@@ -1,4 +1,4 @@
-import {Event} from './event';
+import {Performance} from './performance';
 
 export class Address {
     constructor(
@@ -9,7 +9,7 @@ export class Address {
       public city: string,
       public postcode: string,
       public country: string,
-      public events: Event[],
+      public events: Performance[],
       public eventLocation: boolean) {
     }
   }

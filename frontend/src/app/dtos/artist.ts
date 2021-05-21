@@ -1,10 +1,10 @@
-import {Event} from './event';
+import {Performance} from './performance';
 
 export class Artist {
   constructor(
     public id: number,
     public firstName: string,
     public lastName: string,
-    public events: Event[]
+    public events: Performance[]
   ) {}
 }

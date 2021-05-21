@@ -1,5 +1,5 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {Event} from '../../dtos/event';
+import {Performance} from '../../dtos/performance';
 import {FileService} from '../../services/file.service';
 
 @Component({
@@ -9,7 +9,7 @@ import {FileService} from '../../services/file.service';
 })
 export class EventListItemComponent implements OnInit {
   @Input()
-  eventItem: Event;
+  eventItem: Performance;
   previewImageUrl: string | ArrayBuffer;
 
   constructor() { }

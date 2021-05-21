@@ -13,6 +13,7 @@ import { NewsDetailComponent } from './components/news-detail/news-details.compo
 import { AddUserComponent } from './components/add-user/add-user.component';
 import {AuthGuard} from './guards/auth.guard';
 import {AddEventComponent} from './components/event/add-event/add-event.component';
+import {PerformanceDetailComponent} from './components/performance-detail/performance-detail.component';
 
 const routes: Routes = [
   { path: '', component: HomePageComponent },
@@ -22,6 +23,7 @@ const routes: Routes = [
   { path: 'events', component: EventsComponent },
   { path: 'news-detail/:id', component: NewsDetailComponent },
   { path: 'event-detail/:id', component: EventDetailComponent },
+  { path: 'performance-detail/:id', component: PerformanceDetailComponent },
   { path: 'user', component: UserHomeComponent, canActivate: [AuthGuard], data: { roles: ['ADMIN', 'ORGANIZER', 'USER']} },
   { path: 'ticket', component: TicketDetailComponent, canActivate: [AuthGuard], data: { roles: ['ADMIN', 'ORGANIZER', 'USER']} },
   { path: 'add-news/:id', component: AddNewsComponent, canActivate: [AuthGuard], data: { roles: ['ADMIN', 'ORGANIZER']} },

@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import {ApplicationEventService} from '../../services/event.service';
+import {EventService} from '../../services/event.service';
+import {Event} from '../../dtos/event';
 
 @Component({
   selector: 'app-events',
@@ -8,13 +9,13 @@ import {ApplicationEventService} from '../../services/event.service';
 })
 export class EventsComponent implements OnInit {
 
-  events = [];
+  events: Event[] = [];
   dates = [];
   page = 0;
   size = 8;
   noEvent = true;
 
-  constructor(private eventService: ApplicationEventService) { }
+  constructor(private eventService: EventService) { }
 
   ngOnInit(): void {
     this.loadBatch();
@@ -30,15 +31,15 @@ export class EventsComponent implements OnInit {
       response => {
         console.log(response);
 
-        for (const event of response) {
-          const date = new Date(event.date).toDateString();
-
-          if (!this.dates.includes(date)) {
-            this.dates.push(date);
-          }
-        }
-
-        console.log(this.dates);
+        // for (const event of response) {
+        //   const date = new Date(event.date).toDateString();
+        //
+        //   if (!this.dates.includes(date)) {
+        //     this.dates.push(date);
+        //   }
+        // }
+        //
+        // console.log(this.dates);
 
         this.events.push(...response);
         if (response.length < this.size) {
@@ -53,24 +54,24 @@ export class EventsComponent implements OnInit {
     );
   }
 
-  /**
-   * get all Events for a certain date
-   */
-  getEventsForDate(date: string): any[] {
-    const eventsForDate = [];
-    let isAfter = false;
-    for (const event of this.events) {
-      const eventDate = new Date(event.date);
-      if (eventDate.toDateString() === date) {
-        isAfter = true;
-        eventsForDate.push(event);
-        // ignore the events after the date
-      } else if (isAfter) {
-        return eventsForDate;
-      }
-    }
-
-    return eventsForDate;
-  }
+  // /**
+  //  * get all Events for a certain date
+  //  */
+  // getEventsForDate(date: string): any[] {
+  //   const eventsForDate = [];
+  //   let isAfter = false;
+  //   for (const event of this.events) {
+  //     const eventDate = new Date(event.date);
+  //     if (eventDate.toDateString() === date) {
+  //       isAfter = true;
+  //       eventsForDate.push(event);
+  //       // ignore the events after the date
+  //     } else if (isAfter) {
+  //       return eventsForDate;
+  //     }
+  //   }
+  //
+  //   return eventsForDate;
+  // }
 
 }

@@ -5,7 +5,7 @@ import { FileService } from 'src/app/services/file.service';
 import { ApplicationNewsService } from 'src/app/services/news.service';
 import {AuthService} from '../../services/auth.service';
 import {UserService} from '../../services/user.service';
-import {Event} from '../../dtos/event';
+import {Performance} from '../../dtos/performance';
 
 @Component({
   selector: 'app-news-detail',
@@ -19,7 +19,7 @@ export class NewsDetailComponent implements OnInit {
   success = false;
   newsId = 0;
   newsItem: News;
-  correspondingEvent: Event;
+  correspondingEvent: Performance;
   imgURL = [];
   date: Date;
 

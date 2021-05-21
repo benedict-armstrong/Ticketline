@@ -3,11 +3,13 @@ package at.ac.tuwien.sepm.groupphase.backend.datagenerator;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Address;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Artist;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Event;
+import at.ac.tuwien.sepm.groupphase.backend.entity.Performance;
 import at.ac.tuwien.sepm.groupphase.backend.entity.File;
 import at.ac.tuwien.sepm.groupphase.backend.entity.SectorType;
 import at.ac.tuwien.sepm.groupphase.backend.repository.AddressRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.ArtistRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.EventRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.PerformanceRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.FileRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,6 +32,11 @@ public class EventDataGenerator {
     private static final int NUMBER_OF_EVENTS_TO_GENERATE = 5;
     private static final String TEST_EVENT = "Test Event";
     private static final String TEST_EVENT_DESCRIPTION = "This is a test description! Part";
+    private static final LocalDateTime TEST_EVENT_START_DATE = LocalDateTime.parse("2022-06-12T22:00:00");
+    private static final LocalDateTime TEST_EVENT_END_DATE = LocalDateTime.parse("2022-12-12T22:00:00");
+    private static final String TEST_PERFORMANCE_TITLE = "Performance";
+    private static final String TEST_PERFORMANCE_DESCRIPTION = "THis is a new performance part";
+
     private static final String TEST_ARTIST_FIRSTNAME = "Artist";
     private static final String TEST_ARTIST_LASTNAME = "Famous";
     private static final String TEST_LOCATION_NAME = "Address";
@@ -66,36 +73,50 @@ public class EventDataGenerator {
             byte[] imgBuffer3 = recoverImageFromUrl("https://cdn.pixabay.com/photo/2016/11/22/19/15/hand-1850120_960_720.jpg");
 
             for (int i = 0; i < NUMBER_OF_EVENTS_TO_GENERATE; i++) {
-                Set<File> set = new HashSet<>();
-                File file = generateImage(imgBuffer1, File.Type.IMAGE_JPG);
-                LOGGER.debug("saving file {} for event", file);
-                fileRepository.save(file);
-                set.add(file);
-                file = generateImage(imgBuffer2, File.Type.IMAGE_JPEG);
-                LOGGER.debug("saving file {} for event", file);
-                fileRepository.save(file);
-                set.add(file);
-                file = generateImage(imgBuffer3, File.Type.IMAGE_PNG);
-                LOGGER.debug("saving file {} for event", file);
-                fileRepository.save(file);
-                set.add(file);
+                Set<Performance> performances = new HashSet<>();
 
-                Address location = generateEventLocation(i);
-                addressRepository.save(location);
+                for (int j = 0; j <= i; j++) {
+                    Set<File> set = new HashSet<>();
+                    File file = generateImage(imgBuffer1, File.Type.IMAGE_JPG);
+                    LOGGER.debug("saving file {} for event", file);
+                    fileRepository.save(file);
+                    set.add(file);
+                    file = generateImage(imgBuffer2, File.Type.IMAGE_JPEG);
+                    LOGGER.debug("saving file {} for event", file);
+                    fileRepository.save(file);
+                    set.add(file);
+                    file = generateImage(imgBuffer3, File.Type.IMAGE_PNG);
+                    LOGGER.debug("saving file {} for event", file);
+                    fileRepository.save(file);
+                    set.add(file);
 
-                Artist artist = generateArtist(i);
-                artistRepository.save(artist);
+                    Address location = generateEventLocation(i);
+                    addressRepository.save(location);
+
+                    Artist artist = generateArtist(i);
+                    artistRepository.save(artist);
+
+                    Performance performance = Performance.builder()
+                        .title(TEST_PERFORMANCE_TITLE + (j + i))
+                        .description(TEST_PERFORMANCE_DESCRIPTION + (j + i))
+                        .date(TEST_DATE.plusDays(i * 10))
+                        .sectorTypes(generateSectorTypes(i))
+                        .artist(artist)
+                        .location(location)
+                        .images(set).build();
+
+                    performances.add(performance);
+                }
 
                 Event event = Event.builder()
-                    .title(TEST_EVENT + (i))
-                    .description(TEST_EVENT_DESCRIPTION + (i))
+                    .name(TEST_EVENT + i)
+                    .description(TEST_EVENT_DESCRIPTION + i)
                     .eventType(Event.EventType.CONCERT)
-                    .duration(100 + i * 50)
-                    .date(TEST_DATE.plusDays(i * 10))
-                    .sectorTypes(generateSectorTypes(i))
-                    .artist(artist)
-                    .location(location)
-                    .images(set).build();
+                    .duration(100 + 50 * i)
+                    .startDate(TEST_EVENT_START_DATE)
+                    .endDate(TEST_EVENT_END_DATE)
+                    .performances(performances)
+                    .build();
 
                 LOGGER.debug("saving event {}", event);
                 eventRepository.save(event);

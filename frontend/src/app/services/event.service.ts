@@ -1,13 +1,13 @@
-import {Injectable} from '@angular/core';
+import { Injectable } from '@angular/core';
 import {HttpClient, HttpParams} from '@angular/common/http';
-import {Observable} from 'rxjs';
 import {Globals} from '../global/globals';
+import {Observable} from 'rxjs';
 import {Event} from '../dtos/event';
 
 @Injectable({
   providedIn: 'root'
 })
-export class ApplicationEventService {
+export class EventService {
 
   private eventBaseUri: string = this.globals.backendUri + '/events';
 

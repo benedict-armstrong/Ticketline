@@ -54,7 +54,7 @@ public class EventEndpoint {
     @Operation(summary = "Get all events")
     public List<EventDto> findAllByDate(PaginationDto paginationDto) {
         LOGGER.info("GET /api/v1/events");
-        return eventMapper.eventListToEventDtoList(eventService.findAllByDate(paginationMapper.paginationDtoToPageable(paginationDto)));
+        return eventMapper.eventListToEventDtoList(eventService.findAllByCriteria(paginationMapper.paginationDtoToPageable(paginationDto)));
     }
 
     @PermitAll

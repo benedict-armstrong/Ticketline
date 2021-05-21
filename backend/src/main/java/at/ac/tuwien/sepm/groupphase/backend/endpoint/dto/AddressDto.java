@@ -41,5 +41,5 @@ public class AddressDto {
     @NotNull
     private boolean eventLocation;
 
-    private EventDto[] eventDtos;
+    private PerformanceDto[] performanceDtos;
 }

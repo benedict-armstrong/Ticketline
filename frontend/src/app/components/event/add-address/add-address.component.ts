@@ -59,6 +59,9 @@ export class AddAddressComponent implements OnInit {
         this.existingAddresses.push(
           response
         );
+        this.filteredAddresses.push(
+          response
+        );
 
         this.addNewAddress = false;
         this.selectAddressForm.value.selectedAddress = response;

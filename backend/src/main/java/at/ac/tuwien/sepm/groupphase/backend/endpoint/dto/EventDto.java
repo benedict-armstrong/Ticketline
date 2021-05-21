@@ -1,6 +1,6 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint.dto;
 
-import at.ac.tuwien.sepm.groupphase.backend.entity.Event.EventType;
+import at.ac.tuwien.sepm.groupphase.backend.entity.Event;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -18,37 +18,31 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Builder
 public class EventDto {
-
     private Long id;
 
-    @NotBlank(message = "A title is required")
-    @Size(max = 100, message = "Title must be 100 characters or less")
-    private String title;
+    @NotBlank(message = "Name is required")
+    private String name;
 
     @NotBlank(message = "A description is required")
     @Size(max = 10000, message = "Description must be 10000 characters or less")
     private String description;
 
-    @Size(max = 10, message = "Upload 10 images or less")
-    @Size(min = 1, message = "Atleast one image required")
-    private FileDto[] images = new FileDto[10];
-
-    @NotNull(message = "Eventtype is required")
-    private EventType eventType;
+    @NotNull
+    @Size(min = 1, message = "Event must have atleast one performance")
+    private PerformanceDto[] performances;
 
     @Range(min = 1, message = "Duration must be greater than 0")
     private int duration;
 
-    @NotNull(message = "Location is required")
-    private AddressDto location;
+    @NotNull(message = "Eventtype is required")
+    private Event.EventType eventType;
 
-    @NotNull(message = "Artist is required")
-    private ArtistDto artist;
+    @NotNull
+    @Future(message = "Start date must be in the future")
+    private LocalDateTime startDate;
 
-    @Size(min = 1, message = "Atleast one sectortype is required")
-    private SectorTypeDto[] sectorTypes;
-
-    @NotNull(message = "Event date is required")
-    @Future
-    private LocalDateTime date;
+    @NotNull
+    @Future(message = "End date must be in the future")
+    //TODO: Must be after startDate
+    private LocalDateTime endDate;
 }

@@ -46,7 +46,7 @@ public class Address {
 
     @OneToMany(mappedBy = "location")
     @Fetch(FetchMode.JOIN)
-    private Set<Event> events;
+    private Set<Performance> performances;
 
     @Column(nullable = false)
     private boolean eventLocation;

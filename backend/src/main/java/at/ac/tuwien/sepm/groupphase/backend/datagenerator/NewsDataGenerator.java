@@ -2,12 +2,12 @@ package at.ac.tuwien.sepm.groupphase.backend.datagenerator;
 
 import at.ac.tuwien.sepm.groupphase.backend.entity.Address;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Artist;
-import at.ac.tuwien.sepm.groupphase.backend.entity.Event;
+import at.ac.tuwien.sepm.groupphase.backend.entity.Performance;
 import at.ac.tuwien.sepm.groupphase.backend.entity.File;
 import at.ac.tuwien.sepm.groupphase.backend.entity.News;
 import at.ac.tuwien.sepm.groupphase.backend.repository.AddressRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.ArtistRepository;
-import at.ac.tuwien.sepm.groupphase.backend.repository.EventRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.PerformanceRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.FileRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.NewsRepository;
 import org.slf4j.Logger;
@@ -39,15 +39,15 @@ public class NewsDataGenerator {
     private static final LocalDateTime TEST_DATE = LocalDateTime.parse("2025-06-30T12:00:00");
 
     private final NewsRepository newsRepository;
-    private final EventRepository eventRepository;
+    private final PerformanceRepository performanceRepository;
     private final FileRepository fileRepository;
     private final ArtistRepository artistRepository;
     private final AddressRepository addressRepository;
 
-    public NewsDataGenerator(NewsRepository newsRepository, FileRepository fileRepository, EventRepository eventRepository, ArtistRepository artistRepository, AddressRepository addressRepository) {
+    public NewsDataGenerator(NewsRepository newsRepository, FileRepository fileRepository, PerformanceRepository performanceRepository, ArtistRepository artistRepository, AddressRepository addressRepository) {
         this.newsRepository = newsRepository;
         this.fileRepository = fileRepository;
-        this.eventRepository = eventRepository;
+        this.performanceRepository = performanceRepository;
         this.artistRepository = artistRepository;
         this.addressRepository = addressRepository;
     }
@@ -57,22 +57,22 @@ public class NewsDataGenerator {
         if (newsRepository.findAll().size() > 0) {
             LOGGER.debug("news already generated");
         } else {
-            List<Event> events;
+            List<Performance> performances;
 
-            if (eventRepository.findAll().size() > 4) {
+            if (performanceRepository.findAll().size() > 4) {
                 LOGGER.debug("events for news already generated");
-                events = eventRepository.findAll();
+                performances = performanceRepository.findAll();
             } else {
                 LOGGER.debug("generating {} event entries for news", NUMBER_OF_NEWS_TO_GENERATE);
 
-                events = this.generateEventsForNews();
+                performances = this.generateEventsForNews();
             }
 
             LOGGER.debug("generating {} news entries with events and without pictures", NUMBER_OF_NEWS_TO_GENERATE);
 
             for (int i = 0; i < NUMBER_OF_NEWS_TO_GENERATE; i++) {
                 News news = News.builder().publishedAt(LocalDateTime.now()).author(TEST_AUTHOR_NAME)
-                    .title(TEST_TITLE + i).text(TEST_TEXT + i).event(events.get(i)).build();
+                    .title(TEST_TITLE + i).text(TEST_TEXT + i).performance(performances.get(i)).build();
 
                 LOGGER.debug("saving news {}", news);
                 newsRepository.save(news);
@@ -100,15 +100,15 @@ public class NewsDataGenerator {
         if (newsRepository.findAll().size() > 5) {
             LOGGER.debug("news already generated");
         } else {
-            List<Event> events;
+            List<Performance> performances;
 
-            if (eventRepository.findAll().size() > 4) {
+            if (performanceRepository.findAll().size() > 4) {
                 LOGGER.debug("events for news already generated");
-                events = eventRepository.findAll();
+                performances = performanceRepository.findAll();
             } else {
                 LOGGER.debug("generating {} event entries for news", NUMBER_OF_NEWS_TO_GENERATE);
 
-                events = this.generateEventsForNews();
+                performances = this.generateEventsForNews();
             }
 
             LOGGER.debug("generating {} news entries with events and with pictures", NUMBER_OF_NEWS_TO_GENERATE);
@@ -139,7 +139,7 @@ public class NewsDataGenerator {
                 fileRepository.save(file3);
 
                 News news = News.builder().publishedAt(LocalDateTime.now()).author(TEST_AUTHOR_NAME)
-                    .title(TEST_TITLE + (i + 10)).text(TEST_TEXT + (i + 10)).event(events.get(i)) //.withEvent(events.get(i))
+                    .title(TEST_TITLE + (i + 10)).text(TEST_TEXT + (i + 10)).performance(performances.get(i)) //.withEvent(events.get(i))
                     .images(set).build();
 
                 LOGGER.debug("saving news {}", news);
@@ -149,8 +149,8 @@ public class NewsDataGenerator {
         }
     }
 
-    private List<Event> generateEventsForNews() throws Exception {
-        List<Event> events = new LinkedList<>();
+    private List<Performance> generateEventsForNews() throws Exception {
+        List<Performance> performances = new LinkedList<>();
         byte[] imgBuffer1 = recoverImageFromUrl("https://cdn.pixabay.com/photo/2013/07/12/17/47/test-pattern-152459_960_720.png");
 
         for (int i = 0; i < NUMBER_OF_NEWS_TO_GENERATE; i++) {
@@ -166,24 +166,22 @@ public class NewsDataGenerator {
             Artist artist = EventDataGenerator.generateArtist(i);
             artistRepository.save(artist);
 
-            Event event = Event.builder()
+            Performance performance = Performance.builder()
                 .title(TEST_EVENT + (i))
                 .description(TEST_EVENT_DESCRIPTION + (i))
-                .eventType(Event.EventType.CONCERT)
-                .duration(100 + i * 50)
                 .date(TEST_DATE.plusDays(i * 10))
                 .sectorTypes(EventDataGenerator.generateSectorTypes(i))
                 .artist(artist)
                 .location(location)
                 .images(set).build();
 
-            events.add(event);
+            performances.add(performance);
 
-            LOGGER.debug("saving event {} for news", event);
-            eventRepository.save(event);
+            LOGGER.debug("saving event {} for news", performance);
+            performanceRepository.save(performance);
         }
 
-        return events;
+        return performances;
     }
 
 }

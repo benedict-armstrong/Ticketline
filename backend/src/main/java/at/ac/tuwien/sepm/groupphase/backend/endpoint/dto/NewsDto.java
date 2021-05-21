@@ -9,7 +9,6 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
-import java.util.Objects;
 
 @Data
 @NoArgsConstructor
@@ -33,8 +32,8 @@ public class NewsDto {
     @Size(max = 10000, message = "Information text must be 10000 characters or less")
     private String text;
 
-    @NotNull(message = "Event is required")
-    private EventDto event;
+    @NotNull(message = "Performance is required")
+    private PerformanceDto performance;
 
     @Size(max = 10, message = "Upload 10 images or less")
     private FileDto[] images = new FileDto[10];

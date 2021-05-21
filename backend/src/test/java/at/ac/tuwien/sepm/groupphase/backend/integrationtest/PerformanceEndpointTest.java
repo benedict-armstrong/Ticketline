@@ -4,14 +4,14 @@ import at.ac.tuwien.sepm.groupphase.backend.basetest.TestAuthentification;
 import at.ac.tuwien.sepm.groupphase.backend.basetest.TestDataEvent;
 import at.ac.tuwien.sepm.groupphase.backend.basetest.TestDataFile;
 import at.ac.tuwien.sepm.groupphase.backend.config.properties.SecurityProperties;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.PerformanceDto;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Address;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Artist;
-import at.ac.tuwien.sepm.groupphase.backend.entity.Event;
+import at.ac.tuwien.sepm.groupphase.backend.entity.Performance;
 import at.ac.tuwien.sepm.groupphase.backend.entity.File;
 import at.ac.tuwien.sepm.groupphase.backend.repository.AddressRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.ArtistRepository;
-import at.ac.tuwien.sepm.groupphase.backend.repository.EventRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.PerformanceRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.FileRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.UserRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -27,7 +27,6 @@ import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.event.annotation.BeforeTestClass;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
@@ -46,13 +45,13 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 @SpringBootTest
 @ActiveProfiles("test")
 @AutoConfigureMockMvc
-public class EventEndpointTest implements TestDataEvent, TestAuthentification {
+public class PerformanceEndpointTest implements TestDataEvent, TestAuthentification {
 
     @Autowired
     private MockMvc mockMvc;
 
     @Autowired
-    private EventRepository eventRepository;
+    private PerformanceRepository performanceRepository;
 
     @Autowired
     private FileRepository fileRepository;
@@ -89,11 +88,11 @@ public class EventEndpointTest implements TestDataEvent, TestAuthentification {
 
     private String authToken;
 
-    private Event event;
+    private Performance performance;
 
     @BeforeEach
     public void beforeEach() throws Exception {
-        eventRepository.deleteAll();
+        performanceRepository.deleteAll();
         fileRepository.deleteAll();
         addressRepository.deleteAll();
         artistRepository.deleteAll();
@@ -104,12 +103,10 @@ public class EventEndpointTest implements TestDataEvent, TestAuthentification {
         images = new HashSet<>();
         images.add(file);
 
-        event = Event.builder()
+        performance = Performance.builder()
             .title(TestDataEvent.TEST_EVENT_TITLE)
             .description(TestDataEvent.TEST_EVENT_DESCRIPTION)
             .date(TestDataEvent.TEST_EVENT_DATE_FUTURE)
-            .duration(TestDataEvent.TEST_EVENT_DURATION)
-            .eventType(TestDataEvent.TEST_EVENT_EVENT_TYPE)
             .artist(artist)
             .location(address)
             .sectorTypes(TestDataEvent.getTestEventSectortypes())
@@ -136,10 +133,10 @@ public class EventEndpointTest implements TestDataEvent, TestAuthentification {
         assertEquals(HttpStatus.OK.value(), response.getStatus());
         assertEquals(MediaType.APPLICATION_JSON_VALUE, response.getContentType());
 
-        List<EventDto> eventDtos = Arrays.asList(
-            objectMapper.readValue(response.getContentAsString(), EventDto[].class)
+        List<PerformanceDto> performanceDtos = Arrays.asList(
+            objectMapper.readValue(response.getContentAsString(), PerformanceDto[].class)
         );
-        assertEquals(0, eventDtos.size());
+        assertEquals(0, performanceDtos.size());
     }
 
     @Test
@@ -148,17 +145,15 @@ public class EventEndpointTest implements TestDataEvent, TestAuthentification {
         int amountOfEventsToGenerate = 15;
         int pageSize = 5;
         for (int i = 0; i < amountOfEventsToGenerate; i++) {
-            Event e = Event.builder()
+            Performance e = Performance.builder()
                 .title(TestDataEvent.TEST_EVENT_TITLE)
                 .description(TestDataEvent.TEST_EVENT_DESCRIPTION)
                 .date(TestDataEvent.TEST_EVENT_DATE_FUTURE)
-                .duration(TestDataEvent.TEST_EVENT_DURATION)
-                .eventType(TestDataEvent.TEST_EVENT_EVENT_TYPE)
                 .artist(artist)
                 .location(address)
                 .sectorTypes(TestDataEvent.getTestEventSectortypes())
                 .build();
-            eventRepository.save(e);
+            performanceRepository.save(e);
         }
 
         MvcResult mvcResult = this.mockMvc.perform(
@@ -171,8 +166,8 @@ public class EventEndpointTest implements TestDataEvent, TestAuthentification {
         assertEquals(HttpStatus.OK.value(), response.getStatus());
         assertEquals(MediaType.APPLICATION_JSON_VALUE, response.getContentType());
 
-        EventDto[] eventDtos = objectMapper.readValue(response.getContentAsString(), EventDto[].class);
-        assertEquals(pageSize, eventDtos.length);
+        PerformanceDto[] performanceDtos = objectMapper.readValue(response.getContentAsString(), PerformanceDto[].class);
+        assertEquals(pageSize, performanceDtos.length);
     }
 
     @Test
@@ -221,7 +216,7 @@ public class EventEndpointTest implements TestDataEvent, TestAuthentification {
         MvcResult mvcResult = this.mockMvc.perform(
             post(TestDataEvent.EVENT_BASE_URI)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(event))
+                .content(objectMapper.writeValueAsString(performance))
                 .header(securityProperties.getAuthHeader(), authToken)
         ).andReturn();
 
@@ -229,7 +224,7 @@ public class EventEndpointTest implements TestDataEvent, TestAuthentification {
         assertEquals(HttpStatus.CREATED.value(), response.getStatus());
         assertEquals(MediaType.APPLICATION_JSON_VALUE, response.getContentType());
 
-        EventDto savedDto = objectMapper.readValue(response.getContentAsString(), EventDto.class);
+        PerformanceDto savedDto = objectMapper.readValue(response.getContentAsString(), PerformanceDto.class);
         assertAll(
             () -> assertNotNull(savedDto.getId())
         );
@@ -239,12 +234,10 @@ public class EventEndpointTest implements TestDataEvent, TestAuthentification {
     @Test
     @DisplayName("Should return 400 when Date is in past")
     public void whenCreateEventWithPastDate_then400() throws Exception {
-        Event invalidEvent = Event.builder()
+        Performance invalidPerformance = Performance.builder()
             .title(TestDataEvent.TEST_EVENT_TITLE)
             .description(TestDataEvent.TEST_EVENT_DESCRIPTION)
             .date(TestDataEvent.TEST_EVENT_DATE_PAST)
-            .duration(TestDataEvent.TEST_EVENT_DURATION)
-            .eventType(TestDataEvent.TEST_EVENT_EVENT_TYPE)
             .artist(TestDataEvent.TEST_EVENT_ARTIST)
             .location(TestDataEvent.TEST_EVENT_LOCATION)
             .sectorTypes(TestDataEvent.getTestEventSectortypes())
@@ -253,7 +246,7 @@ public class EventEndpointTest implements TestDataEvent, TestAuthentification {
         MvcResult mvcResult = this.mockMvc.perform(
             post(TestDataEvent.EVENT_BASE_URI)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(invalidEvent))
+                .content(objectMapper.writeValueAsString(invalidPerformance))
         ).andReturn();
 
         MockHttpServletResponse response = mvcResult.getResponse();
@@ -263,12 +256,10 @@ public class EventEndpointTest implements TestDataEvent, TestAuthentification {
     @Test
     @DisplayName("Should return 400 when Date is in past")
     public void whenCreateEventWithNoSectorTypes_then400() throws Exception {
-        Event invalidEvent = Event.builder()
+        Performance invalidPerformance = Performance.builder()
             .title(TestDataEvent.TEST_EVENT_TITLE)
             .description(TestDataEvent.TEST_EVENT_DESCRIPTION)
             .date(TestDataEvent.TEST_EVENT_DATE_FUTURE)
-            .duration(TestDataEvent.TEST_EVENT_DURATION)
-            .eventType(TestDataEvent.TEST_EVENT_EVENT_TYPE)
             .artist(TestDataEvent.TEST_EVENT_ARTIST)
             .location(TestDataEvent.TEST_EVENT_LOCATION)
             .sectorTypes(new HashSet<>())
@@ -277,7 +268,7 @@ public class EventEndpointTest implements TestDataEvent, TestAuthentification {
         MvcResult mvcResult = this.mockMvc.perform(
             post(TestDataEvent.EVENT_BASE_URI)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(invalidEvent))
+                .content(objectMapper.writeValueAsString(invalidPerformance))
         ).andReturn();
 
         MockHttpServletResponse response = mvcResult.getResponse();

@@ -1,13 +1,24 @@
 <app-search></app-search>
 
-<div class="day" *ngFor="let date of dates">
-  <div class="header">
-    <h5>{{date | date:'EEE. MMM d y'}}</h5>
+<!--<div class="day" *ngFor="let date of dates">-->
+<!--  <div class="header">-->
+<!--    <h5>{{date | date:'EEE. MMM d y'}}</h5>-->
+<!--  </div>-->
+<!--  <div *ngFor="let entry of getEventsForDate(date)" class="performances">-->
+<!--    <app-event-list-item [eventItem]="entry"></app-event-list-item>-->
+<!--  </div>-->
+<!--</div>-->
+
+  <div *ngFor="let event of events">
+    <div class="header">
+      <h5 [routerLink]="['/event-detail', event.id]">{{event.name}}</h5>
+    </div>
+    <hr/>
+    <div *ngFor="let performance of event.performances">
+      <app-event-list-item [eventItem]="performance"></app-event-list-item>
+    </div>
+
   </div>
-  <div *ngFor="let entry of getEventsForDate(date)" class="events">
-    <app-event-list-item [eventItem]="entry"></app-event-list-item>
-  </div>
-</div>
 
 <div class="text-center more" (click)="loadBatch()">
   <h3 *ngIf="!noEvent">Load More</h3>

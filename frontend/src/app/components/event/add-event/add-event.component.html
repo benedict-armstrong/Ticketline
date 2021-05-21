@@ -1,26 +1,24 @@
 <div class="addEvent">
   <form class="form" [formGroup]="addEventForm" (ngSubmit)="addEvent()">
-
-    <h3>Add new Event</h3>
+    <h3>Add new event</h3>
 
     <div class="form-group">
-      <label for="eventName" class="required">Event name</label>
-      <input type="text" name="eventName" formControlName="eventName" class="text-input form-control" id="eventName"
-        placeholder="Enter event name">
-      <div *ngIf="submitted && addEventForm.controls.eventName.errors" class="error">
-        <small class="form-text text-danger" *ngIf="addEventForm.controls.eventName.errors.required">
+      <label for="name" class="required">Event name</label>
+      <input type="text" name="name" formControlName="name" class="text-input form-control" id="name"
+             placeholder="Enter event name">
+      <div *ngIf="submitted && addEventForm.controls.name.errors" class="error">
+        <small class="form-text text-danger" *ngIf="addEventForm.controls.name.errors.required">
           Event name is required!
         </small>
-        <small class="form-text text-danger" *ngIf="addEventForm.controls.eventName.errors.maxLength">
+        <small class="form-text text-danger" *ngIf="addEventForm.controls.name.errors.maxLength">
           Event name cannot be more than 100 characters!
         </small>
       </div>
     </div>
-
     <div class="form-group">
       <label for="description" class="required">Description</label>
       <textarea name="description" formControlName="description" rows="3" class="text-input form-control"
-        id="description" placeholder="Enter description"></textarea>
+                id="description" placeholder="Enter description"></textarea>
       <div *ngIf="submitted && addEventForm.controls.description.errors" class="error">
         <small class="form-text text-danger" *ngIf="addEventForm.controls.description.errors.required">
           Description is required!
@@ -30,20 +28,19 @@
         </small>
       </div>
     </div>
-
     <div class="form-group">
-      <label for="date" class="required">Date</label>
-      <input type="datetime-local" name="date" formControlName="date" class="text-input form-control" id="date">
-      <div *ngIf="submitted && addEventForm.controls.date.errors" class="error">
-        <small class="form-text text-danger" *ngIf="addEventForm.controls.date.errors.required">
-          Date is required!
+      <label for="duration" class="required">Duration (in minutes)</label>
+      <input type="number" name="duration" formControlName="duration" class="text-input form-control" id="duration">
+      <div *ngIf="submitted && addEventForm.controls.duration.errors" class="error">
+        <small class="form-text text-danger" *ngIf="addEventForm.controls.duration.errors.required">
+          Duration is
+          required!
         </small>
-        <small class="form-text text-danger" *ngIf="addEventForm.controls.date.errors.invalidDate">
-          Date must be in the future!
+        <small class="form-text text-danger" *ngIf="addEventForm.controls.duration.errors.min">
+          Duration must be greater than 0!
         </small>
       </div>
     </div>
-
     <div class="form-group">
       <label for="eventType" class="required">Eventtype</label>
       <select name="eventType" id="eventType" formControlName="eventType" class="select-input form-select">
@@ -60,100 +57,70 @@
       </div>
     </div>
 
-    <div class="form-group">
-      <label for="duration" class="required">Duration</label>
-      <input type="number" name="duration" formControlName="duration" class="text-input form-control" id="duration">
-      <div *ngIf="submitted && addEventForm.controls.duration.errors" class="error">
-        <small class="form-text text-danger" *ngIf="addEventForm.controls.duration.errors.required">
-          Duration is
-          required!
-        </small>
-        <small class="form-text text-danger" *ngIf="addEventForm.controls.duration.errors.min">
-          Duration must be greater than 0!
-        </small>
+    <div class="row">
+      <div class="form-group col-6">
+        <label for="startDate" class="required">Start date</label>
+        <input type="datetime-local" name="startDate" formControlName="startDate" class="text-input form-control" id="startDate">
+        <div *ngIf="submitted && addEventForm.controls.startDate.errors" class="error">
+          <small class="form-text text-danger" *ngIf="addEventForm.controls.startDate.errors.required">
+            Start date is required!
+          </small>
+          <small class="form-text text-danger" *ngIf="addEventForm.controls.startDate.errors.invalidDate">
+            Start date must be in the future!
+          </small>
+        </div>
       </div>
-    </div>
+      <div class="form-group col-6">
+        <label for="endDate" class="required">End date</label>
+        <input type="datetime-local" name="endDate" formControlName="endDate" class="text-input form-control" id="endDate">
+        <div *ngIf="submitted && addEventForm.controls.endDate.errors" class="error">
+          <small class="form-text text-danger" *ngIf="addEventForm.controls.endDate.errors.required">
+            End date is required!
+          </small>
+          <small class="form-text text-danger" *ngIf="addEventForm.controls.endDate.errors.invalidDate">
+            End date must be after start date!
+          </small>
+        </div>
+      </div>
 
-    <div class="form-group">
-      <label for="files" class="required">Picture Upload</label>
-      <p id="file-info">Supported formats: jpg, jpeg, png. The maximum file size is 1MB.</p>
-      <input formControlName="files" id="files" type="file" class="form-control" (change)="onFileChange($event)">
-      <div *ngIf="submitted && files.length === 0" class="alert alert-danger">
-        <div>Atleast one image required</div>
-      </div>
-      <div *ngIf="fileNoImage" class="alert alert-danger">
-        <div>The uploaded file is no image</div>
-      </div>
-      <div *ngIf="tooManyFiles" class="alert alert-danger">
-        <div>Max. 10 images per event</div>
-      </div>
-      <div *ngIf="fileTooBig" class="alert alert-danger">
-        <div>File must be smaller than 1MB</div>
-      </div>
-    </div>
+      <hr/>
 
-    <div *ngIf="files.length > 0">
-      <table class="table">
-        <thead>
-          <tr>Name</tr>
-          <tr style="width: 5%"></tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let image of files; let i = index">
-            <td>{{image.name}}</td>
-            <td><button type="button" class="btn btn-secondary" style="width: 100%" (click)="removeImage(i)">X</button>
-            </td>
+      <h4>Performances</h4>
+      <div *ngIf="performances.length === 0" class="fst-italic">
+        No performances added yet
+      </div>
+      <div *ngIf="performances.length > 0">
+        <table class="table">
+          <tr>
+            <th>Name</th>
+            <th>Date</th>
+            <th>Artist</th>
           </tr>
-        </tbody>
-      </table>
-    </div>
-
-    <hr />
-
-    <app-add-sectortype [(sectorTypes)]="sectorTypes"></app-add-sectortype>
-    <div *ngIf="sectorTypes.length === 0 && submitted" class="alert alert-danger">
-        Atleast one sector type required!
-    </div>
-
-    <hr />
-
-    <div id="artistGroup">
-      <app-add-artist (artistChanged)="changeArtist($event)"></app-add-artist>
-      <div *ngIf="artist === undefined && submitted" class="alert alert-danger">
-        Artist is required!
+          <tbody>
+          <tr *ngFor="let performance of performances; let i = index">
+            <td>{{performance.title}}</td>
+            <td>{{performance.date}}</td>
+            <td>{{performance.artist.firstName}} {{performance.artist.lastName}}</td>
+            <td><button type="button" class="btn btn-secondary" style="width: 100%"
+                        (click)="removePerformance(i)">X</button></td>
+          </tr>
+          </tbody>
+        </table>
       </div>
-      <div class="row" id="currentArtist">
-        <h5 class="col-3">Current Artist:</h5>
-        <div class="col-6" *ngIf="artist">{{artist.firstName}} {{artist.lastName}}</div>
-      </div>
-    </div>
 
-    <hr />
-
-    <div id="addressGroup">
-      <app-add-address (locationChanged)="changeLocation($event)"></app-add-address>
-      <div *ngIf="location === undefined && submitted" class="alert alert-danger">
-        Location is required!
+      <div *ngIf="performances.length === 0 && submitted" class="alert alert-danger">
+        Atleast one performance required!
       </div>
-      <div class="row" id="currentLocation">
-        <h5 class="col-3">Current Location:</h5>
-        <div class="col-6" *ngIf="location">{{location.name}}</div>
+
+      <div class="col-3">
+        <button *ngIf="!addingPerformance" class="primary" type="button" (click)="addingPerformance = true">Add performance</button>
+      </div>
+      <div *ngIf="addingPerformance">
+        <app-add-performance [event]="event" (performanceAdded)="addPerformance($event)"></app-add-performance>
       </div>
     </div>
-
-    <button type="button" (click)="addEvent()" class="primary" id="create">Create</button>
-
-    <div *ngIf="error" class="col-12 alert alert-danger alert-dismissible fade show" role="alert">
-      <strong>Error! </strong> {{ errorMessage }}
-      <button type="button" (click)="vanishAlert()" class="close" data-dismiss="alert" aria-label="Close">
-        <span aria-hidden="true">&times;</span>
-      </button>
-    </div>
-    <div *ngIf="success" class="col-12 alert alert-success alert-dismissible fade show" role="alert">
-      <strong>Success</strong> The event is added.
-      <button type="button" (click)="vanishAlert()" class="close" data-dismiss="alert" aria-label="Close">
-        <span aria-hidden="true">&times;</span>
-      </button>
+    <div class="offset-4 col-4">
+      <button type="submit" class="primary">Create new event</button>
     </div>
   </form>
 </div>
