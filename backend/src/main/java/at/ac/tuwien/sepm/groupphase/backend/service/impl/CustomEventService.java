@@ -1,6 +1,8 @@
 package at.ac.tuwien.sepm.groupphase.backend.service.impl;
 
+import at.ac.tuwien.sepm.groupphase.backend.entity.Artist;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Event;
+import at.ac.tuwien.sepm.groupphase.backend.repository.ArtistRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.EventRepository;
 import at.ac.tuwien.sepm.groupphase.backend.service.EventService;
 import org.slf4j.Logger;
@@ -10,18 +12,21 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.lang.invoke.MethodHandles;
+import java.util.HashSet;
 import java.util.List;
-import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class CustomEventService implements EventService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final EventRepository eventRepository;
+    private final ArtistRepository artistRepository;
 
     @Autowired
-    public CustomEventService(EventRepository eventRepository) {
+    public CustomEventService(EventRepository eventRepository, ArtistRepository artistRepository) {
         this.eventRepository = eventRepository;
+        this.artistRepository = artistRepository;
     }
 
     @Override
@@ -39,6 +44,20 @@ public class CustomEventService implements EventService {
     @Override
     public Event addEvent(Event event) {
         LOGGER.trace("addEvent({})", event);
+
+        /*
+        Artist artist = artistRepository.getOne(event.getArtist().getId());
+        Set<Event> artistEvents;
+        if (artist.getEvents() == null) {
+            artistEvents = new HashSet<>();
+        } else {
+            artistEvents = artist.getEvents();
+        }
+
+        artistEvents.add(event);
+        artist.setEvents(artistEvents);
+         */
+
         return eventRepository.save(event);
     }
 }

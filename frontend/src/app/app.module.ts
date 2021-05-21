@@ -25,6 +25,8 @@ import { AddEventComponent } from './components/event/add-event/add-event.compon
 import { AddUserComponent } from './components/add-user/add-user.component';
 import { httpInterceptorProviders } from './interceptors';
 import { AddSectortypeComponent } from './components/event/add-sectortype/add-sectortype.component';
+import { AddArtistComponent } from './components/event/add-artist/add-artist.component';
+import { AddAddressComponent } from './components/event/add-address/add-address.component';
 
 @NgModule({
   declarations: [
@@ -47,7 +49,9 @@ import { AddSectortypeComponent } from './components/event/add-sectortype/add-se
     AddNewsComponent,
     AddEventComponent,
     AddUserComponent,
-    AddSectortypeComponent
+    AddSectortypeComponent,
+    AddArtistComponent,
+    AddAddressComponent
   ],
   imports: [
     BrowserModule,

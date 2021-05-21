@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
+
 import javax.annotation.security.PermitAll;
 import javax.validation.Valid;
 import java.lang.invoke.MethodHandles;
@@ -54,7 +54,7 @@ public class EventEndpoint {
     @Operation(summary = "Get all events")
     public List<EventDto> findAllByDate(PaginationDto paginationDto) {
         LOGGER.info("GET /api/v1/events");
-        return eventMapper.eventToEventDto(eventService.findAllByDate(paginationMapper.paginationDtoToPageable(paginationDto)));
+        return eventMapper.eventListToEventDtoList(eventService.findAllByDate(paginationMapper.paginationDtoToPageable(paginationDto)));
     }
 
     @PermitAll
@@ -62,8 +62,6 @@ public class EventEndpoint {
     @Operation(summary = "Get a specific event")
     public EventDto find(@PathVariable Long id) {
         LOGGER.info("GET /api/v1/events/{}", id);
-        EventDto test = eventMapper.eventToEventDto(eventService.findById(id));
-        LOGGER.info(test.toString());
-        return test;
+        return eventMapper.eventToEventDto(eventService.findById(id));
     }
 }

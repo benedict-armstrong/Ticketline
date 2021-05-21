@@ -1,8 +1,12 @@
 package at.ac.tuwien.sepm.groupphase.backend.datagenerator;
 
+import at.ac.tuwien.sepm.groupphase.backend.entity.Address;
+import at.ac.tuwien.sepm.groupphase.backend.entity.Artist;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Event;
 import at.ac.tuwien.sepm.groupphase.backend.entity.File;
 import at.ac.tuwien.sepm.groupphase.backend.entity.News;
+import at.ac.tuwien.sepm.groupphase.backend.repository.AddressRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.ArtistRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.EventRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.FileRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.NewsRepository;
@@ -37,11 +41,15 @@ public class NewsDataGenerator {
     private final NewsRepository newsRepository;
     private final EventRepository eventRepository;
     private final FileRepository fileRepository;
+    private final ArtistRepository artistRepository;
+    private final AddressRepository addressRepository;
 
-    public NewsDataGenerator(NewsRepository newsRepository, FileRepository fileRepository, EventRepository eventRepository) {
+    public NewsDataGenerator(NewsRepository newsRepository, FileRepository fileRepository, EventRepository eventRepository, ArtistRepository artistRepository, AddressRepository addressRepository) {
         this.newsRepository = newsRepository;
         this.fileRepository = fileRepository;
         this.eventRepository = eventRepository;
+        this.artistRepository = artistRepository;
+        this.addressRepository = addressRepository;
     }
 
     @PostConstruct
@@ -152,6 +160,12 @@ public class NewsDataGenerator {
             fileRepository.save(file);
             set.add(file);
 
+            Address location = EventDataGenerator.generateEventLocation(i);
+            addressRepository.save(location);
+
+            Artist artist = EventDataGenerator.generateArtist(i);
+            artistRepository.save(artist);
+
             Event event = Event.builder()
                 .title(TEST_EVENT + (i))
                 .description(TEST_EVENT_DESCRIPTION + (i))
@@ -159,8 +173,8 @@ public class NewsDataGenerator {
                 .duration(100 + i * 50)
                 .date(TEST_DATE.plusDays(i * 10))
                 .sectorTypes(EventDataGenerator.generateSectorTypes(i))
-                .artist(EventDataGenerator.generateArtist(i))
-                .location(EventDataGenerator.generateLocation(i))
+                .artist(artist)
+                .location(location)
                 .images(set).build();
 
             events.add(event);

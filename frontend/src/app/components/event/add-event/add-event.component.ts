@@ -4,8 +4,10 @@ import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {FileService} from '../../../services/file.service';
 import {Event} from '../../../dtos/event';
 import {Router} from '@angular/router';
-import {Address} from '../../../dtos/address';
 import {Artist} from '../../../dtos/artist';
+import {Address} from '../../../dtos/address';
+import {ArtistService} from '../../../services/artist.service';
+import {AddressService} from '../../../services/address.service';
 
 @Component({
   selector: 'app-add-event',
@@ -25,9 +27,12 @@ export class AddEventComponent implements OnInit {
   success = false;
 
   event = new Event(null, null, null, null, null, [], null, null, null, []);
+  location: Address;
+  artist: Artist;
 
   constructor(private applicationEventService: ApplicationEventService,
               private formBuilder: FormBuilder, private fileService: FileService,
+              private artistService: ArtistService, private addressService: AddressService,
               private router: Router) {
   }
 
@@ -38,14 +43,6 @@ export class AddEventComponent implements OnInit {
       files: [''],
       date: ['', [Validators.required, this.dateValidator]],
       eventType: ['CONCERT', [Validators.required]],
-      artistFirstName: ['', [Validators.required]],
-      artistLastName: ['', [Validators.required]],
-      addressName: ['', [Validators.required]],
-      lineOne: ['', [Validators.required]],
-      lineTwo: [''],
-      city: ['', [Validators.required]],
-      postcode: ['', [Validators.required]],
-      country: ['', [Validators.required]],
       duration: ['', [Validators.required, Validators.min(1)]]
     });
   }
@@ -55,27 +52,17 @@ export class AddEventComponent implements OnInit {
 
     if (this.addEventForm.valid &&
       this.sectorTypes.length !== 0 &&
-      this.files.length !== 0) {
+      this.files.length !== 0 &&
+      this.artist !== undefined &&
+      this.location !== undefined) {
       // Add additional event data
       this.event.title = this.addEventForm.value.eventName;
       this.event.description = this.addEventForm.value.description;
       this.event.date = this.addEventForm.value.date;
       this.event.duration = this.addEventForm.value.duration;
       this.event.eventType = this.addEventForm.value.eventType;
-      this.event.location = new Address(
-        null,
-        this.addEventForm.value.addressName,
-        this.addEventForm.value.lineOne,
-        this.addEventForm.value.lineTwo,
-        this.addEventForm.value.city,
-        this.addEventForm.value.postcode,
-        this.addEventForm.value.country
-      );
-      this.event.artist = new Artist(
-        null,
-        this.addEventForm.value.artistFirstName,
-        this.addEventForm.value.artistLastName
-      );
+      this.event.location = this.location;
+      this.event.artist = this.artist;
       this.event.sectorTypes = this.sectorTypes;
 
       // // New Imageupload
@@ -136,6 +123,14 @@ export class AddEventComponent implements OnInit {
     this.success = false;
   }
 
+  changeLocation(location: Address) {
+    this.location = location;
+  }
+
+  changeArtist(artist: Artist) {
+    this.artist = artist;
+  }
+
   private defaultServiceErrorHandling(error: any) {
     console.log(error);
     this.error = true;
@@ -147,6 +142,12 @@ export class AddEventComponent implements OnInit {
     }
   }
 
+  /**
+   * validate the date to be in the future.
+   *
+   * @param control where the date is picked
+   * @private
+   */
   private dateValidator(control: FormControl): { invalidDate: boolean } {
     if (control.value) {
       const date = new Date(control.value);

@@ -37,4 +37,9 @@ public class AddressDto {
     @NotNull
     @NotEmpty
     private String country;
+
+    @NotNull
+    private boolean eventLocation;
+
+    private EventDto[] eventDtos;
 }

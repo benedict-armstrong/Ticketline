@@ -13,6 +13,6 @@ public interface EventMapper extends FileTypeMapper {
 
     EventDto eventToEventDto(Event event);
 
-    List<EventDto> eventToEventDto(List<Event> event);
+    List<EventDto> eventListToEventDtoList(List<Event> event);
 
 }

@@ -6,9 +6,13 @@ import at.ac.tuwien.sepm.groupphase.backend.basetest.TestDataFile;
 import at.ac.tuwien.sepm.groupphase.backend.basetest.TestDataNews;
 import at.ac.tuwien.sepm.groupphase.backend.config.properties.SecurityProperties;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.NewsDto;
+import at.ac.tuwien.sepm.groupphase.backend.entity.Address;
+import at.ac.tuwien.sepm.groupphase.backend.entity.Artist;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Event;
 import at.ac.tuwien.sepm.groupphase.backend.entity.File;
 import at.ac.tuwien.sepm.groupphase.backend.entity.News;
+import at.ac.tuwien.sepm.groupphase.backend.repository.AddressRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.ArtistRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.EventRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.FileRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.NewsRepository;
@@ -62,6 +66,12 @@ public class NewsEndpointTest implements TestDataNews, TestDataFile, TestAuthent
     private UserRepository userRepository;
 
     @Autowired
+    private ArtistRepository artistRepository;
+
+    @Autowired
+    private AddressRepository addressRepository;
+
+    @Autowired
     private ObjectMapper objectMapper;
 
     @Autowired
@@ -90,6 +100,11 @@ public class NewsEndpointTest implements TestDataNews, TestDataFile, TestAuthent
         newsRepository.deleteAll();
         eventRepository.deleteAll();
         fileRepository.deleteAll();
+        addressRepository.deleteAll();
+        artistRepository.deleteAll();
+
+        Address address = addressRepository.save(TestDataEvent.TEST_EVENT_LOCATION);
+        Artist artist = artistRepository.save(TestDataEvent.TEST_EVENT_ARTIST);
 
         event = Event.builder()
             .title(TestDataEvent.TEST_EVENT_TITLE)
@@ -97,8 +112,8 @@ public class NewsEndpointTest implements TestDataNews, TestDataFile, TestAuthent
             .date(TestDataEvent.TEST_EVENT_DATE_FUTURE)
             .duration(TestDataEvent.TEST_EVENT_DURATION)
             .eventType(TestDataEvent.TEST_EVENT_EVENT_TYPE)
-            .artist(TestDataEvent.getTestEventArtist())
-            .location(TestDataEvent.getTestEventLocation())
+            .artist(artist)
+            .location(address)
             .sectorTypes(TestDataEvent.getTestEventSectortypes())
             .build();
         news.setEvent(event);

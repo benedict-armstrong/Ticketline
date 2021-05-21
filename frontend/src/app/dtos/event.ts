@@ -1,7 +1,7 @@
 import {CustomFile} from './customFile';
 import {SectorType} from './sectortype';
-import {Address} from './address';
 import {Artist} from './artist';
+import {Address} from './address';
 
 export class Event {
   constructor(

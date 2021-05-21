@@ -5,8 +5,12 @@ import at.ac.tuwien.sepm.groupphase.backend.basetest.TestDataEvent;
 import at.ac.tuwien.sepm.groupphase.backend.basetest.TestDataFile;
 import at.ac.tuwien.sepm.groupphase.backend.config.properties.SecurityProperties;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventDto;
+import at.ac.tuwien.sepm.groupphase.backend.entity.Address;
+import at.ac.tuwien.sepm.groupphase.backend.entity.Artist;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Event;
 import at.ac.tuwien.sepm.groupphase.backend.entity.File;
+import at.ac.tuwien.sepm.groupphase.backend.repository.AddressRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.ArtistRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.EventRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.FileRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.UserRepository;
@@ -23,6 +27,7 @@ import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.event.annotation.BeforeTestClass;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
@@ -56,6 +61,12 @@ public class EventEndpointTest implements TestDataEvent, TestAuthentification {
     private UserRepository userRepository;
 
     @Autowired
+    private ArtistRepository artistRepository;
+
+    @Autowired
+    private AddressRepository addressRepository;
+
+    @Autowired
     private ObjectMapper objectMapper;
 
     @Autowired
@@ -70,6 +81,10 @@ public class EventEndpointTest implements TestDataEvent, TestAuthentification {
         .type(TestDataFile.TEST_FILE_TYPE)
         .build();
 
+    private Address address;
+
+    private Artist artist;
+
     private Set<File> images = new HashSet<>();
 
     private String authToken;
@@ -80,6 +95,11 @@ public class EventEndpointTest implements TestDataEvent, TestAuthentification {
     public void beforeEach() throws Exception {
         eventRepository.deleteAll();
         fileRepository.deleteAll();
+        addressRepository.deleteAll();
+        artistRepository.deleteAll();
+
+        address = addressRepository.save(TestDataEvent.TEST_EVENT_LOCATION);
+        artist = artistRepository.save(TestDataEvent.TEST_EVENT_ARTIST);
 
         images = new HashSet<>();
         images.add(file);
@@ -90,8 +110,8 @@ public class EventEndpointTest implements TestDataEvent, TestAuthentification {
             .date(TestDataEvent.TEST_EVENT_DATE_FUTURE)
             .duration(TestDataEvent.TEST_EVENT_DURATION)
             .eventType(TestDataEvent.TEST_EVENT_EVENT_TYPE)
-            .artist(TestDataEvent.getTestEventArtist())
-            .location(TestDataEvent.getTestEventLocation())
+            .artist(artist)
+            .location(address)
             .sectorTypes(TestDataEvent.getTestEventSectortypes())
             .images(images)
             .build();
@@ -134,8 +154,8 @@ public class EventEndpointTest implements TestDataEvent, TestAuthentification {
                 .date(TestDataEvent.TEST_EVENT_DATE_FUTURE)
                 .duration(TestDataEvent.TEST_EVENT_DURATION)
                 .eventType(TestDataEvent.TEST_EVENT_EVENT_TYPE)
-                .artist(TestDataEvent.getTestEventArtist())
-                .location(TestDataEvent.getTestEventLocation())
+                .artist(artist)
+                .location(address)
                 .sectorTypes(TestDataEvent.getTestEventSectortypes())
                 .build();
             eventRepository.save(e);
@@ -225,8 +245,8 @@ public class EventEndpointTest implements TestDataEvent, TestAuthentification {
             .date(TestDataEvent.TEST_EVENT_DATE_PAST)
             .duration(TestDataEvent.TEST_EVENT_DURATION)
             .eventType(TestDataEvent.TEST_EVENT_EVENT_TYPE)
-            .artist(TestDataEvent.getTestEventArtist())
-            .location(TestDataEvent.getTestEventLocation())
+            .artist(TestDataEvent.TEST_EVENT_ARTIST)
+            .location(TestDataEvent.TEST_EVENT_LOCATION)
             .sectorTypes(TestDataEvent.getTestEventSectortypes())
             .build();
 
@@ -249,8 +269,8 @@ public class EventEndpointTest implements TestDataEvent, TestAuthentification {
             .date(TestDataEvent.TEST_EVENT_DATE_FUTURE)
             .duration(TestDataEvent.TEST_EVENT_DURATION)
             .eventType(TestDataEvent.TEST_EVENT_EVENT_TYPE)
-            .artist(TestDataEvent.getTestEventArtist())
-            .location(TestDataEvent.getTestEventLocation())
+            .artist(TestDataEvent.TEST_EVENT_ARTIST)
+            .location(TestDataEvent.TEST_EVENT_LOCATION)
             .sectorTypes(new HashSet<>())
             .build();
 

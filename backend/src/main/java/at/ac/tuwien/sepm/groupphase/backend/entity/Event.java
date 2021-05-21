@@ -3,7 +3,9 @@ package at.ac.tuwien.sepm.groupphase.backend.entity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -11,16 +13,15 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Column;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.FetchType;
 import javax.persistence.CascadeType;
 import javax.persistence.Enumerated;
 import javax.persistence.EnumType;
-import javax.persistence.OneToOne;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.HashSet;
-import java.util.Objects;
 import java.util.Set;
 
 @Data
@@ -53,15 +54,20 @@ public class Event {
     @Column(nullable = false)
     private int duration;
 
-    @OneToOne(cascade = {CascadeType.ALL})
-    @JoinColumn(name = "LOCATION_ID")
+    @ManyToOne(cascade = {CascadeType.MERGE}, optional = false)
+    @JoinColumn
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
     private Address location;
 
-    @OneToOne(cascade = {CascadeType.ALL})
-    @JoinColumn(name = "ARTIST_ID")
+    @ManyToOne(cascade = {CascadeType.MERGE}, optional = false)
+    @JoinColumn
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
     private Artist artist;
 
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
+    @ToString.Exclude
     private Set<File> images = new HashSet<>();
 
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)

@@ -5,6 +5,8 @@ import at.ac.tuwien.sepm.groupphase.backend.entity.Artist;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Event;
 import at.ac.tuwien.sepm.groupphase.backend.entity.File;
 import at.ac.tuwien.sepm.groupphase.backend.entity.SectorType;
+import at.ac.tuwien.sepm.groupphase.backend.repository.AddressRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.ArtistRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.EventRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.FileRepository;
 import org.slf4j.Logger;
@@ -38,10 +40,14 @@ public class EventDataGenerator {
 
     private final EventRepository eventRepository;
     private final FileRepository fileRepository;
+    private final AddressRepository addressRepository;
+    private final ArtistRepository artistRepository;
 
-    public EventDataGenerator(EventRepository eventRepository, FileRepository fileRepository) {
+    public EventDataGenerator(EventRepository eventRepository, FileRepository fileRepository, AddressRepository addressRepository, ArtistRepository artistRepository) {
         this.eventRepository = eventRepository;
         this.fileRepository = fileRepository;
+        this.addressRepository = addressRepository;
+        this.artistRepository = artistRepository;
     }
 
     @PostConstruct
@@ -74,6 +80,12 @@ public class EventDataGenerator {
                 fileRepository.save(file);
                 set.add(file);
 
+                Address location = generateEventLocation(i);
+                addressRepository.save(location);
+
+                Artist artist = generateArtist(i);
+                artistRepository.save(artist);
+
                 Event event = Event.builder()
                     .title(TEST_EVENT + (i))
                     .description(TEST_EVENT_DESCRIPTION + (i))
@@ -81,8 +93,8 @@ public class EventDataGenerator {
                     .duration(100 + i * 50)
                     .date(TEST_DATE.plusDays(i * 10))
                     .sectorTypes(generateSectorTypes(i))
-                    .artist(generateArtist(i))
-                    .location(generateLocation(i))
+                    .artist(artist)
+                    .location(location)
                     .images(set).build();
 
                 LOGGER.debug("saving event {}", event);
@@ -113,10 +125,10 @@ public class EventDataGenerator {
             .build();
     }
 
-    public static Address generateLocation(int index) {
+    public static Address generateEventLocation(int index) {
         return Address.builder().name(TEST_LOCATION_NAME + index)
             .lineOne("line " + index).city(TEST_LOCATION_CITY)
-            .postcode(TEST_LOCATION_POSTCODE).country(TEST_LOCATION_COUNTRY).build();
+            .postcode(TEST_LOCATION_POSTCODE).country(TEST_LOCATION_COUNTRY).eventLocation(true).build();
     }
 
     public static Set<SectorType> generateSectorTypes(int index) {

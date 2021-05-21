@@ -1,0 +1,88 @@
+<h5 class="col-6">Location</h5>
+<div class="col-3">
+  <button type="button" class="primary" (click)="addNewAddress = !addNewAddress" *ngIf="addNewAddress">Select existing address</button>
+  <button type="button" class="primary" (click)="addNewAddress = !addNewAddress" *ngIf="!addNewAddress">Add new address</button>
+</div>
+<form [formGroup]="selectAddressForm" *ngIf="!addNewAddress">
+  <div class="col-6" id="addressFilter">
+    <label for="nameFilter">Location name</label>
+    <input type="text" name="nameFilter" formControlName="nameFilter" class="text-input form-control col-6"
+           id="nameFilter" placeholder="Search by name..." (input)="filterAddresses()">
+  </div>
+  <label for="selectedAddress">Select existing address:</label>
+  <select (change)="addressSelected()" size="5" [compareWith]="" class="form-select" id="selectedAddress" formControlName="selectedAddress" name="selectedAddress" *ngIf="existingAddresses">
+    <option *ngFor="let address of filteredAddresses" [ngValue]="address">
+      {{address.name}}
+    </option>
+  </select>
+</form>
+
+<form [formGroup]="addAddressForm" (submit)="addAddress()" *ngIf="addNewAddress">
+  <div class="form-group">
+    <label for="addressName" class="required">Address Name</label>
+    <input type="text" name="addressName" formControlName="addressName" class="text-input form-control"
+           id="addressName" aria-describedby="addressNameHelp" placeholder="Enter Address Name">
+    <div *ngIf="submitted && addAddressForm.controls.addressName.errors" class="error">
+      <small class="form-text text-danger" *ngIf="addAddressForm.controls.addressName.errors.required"> Address Name
+        is
+        required!
+      </small>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label for="lineOne" class="required">Line One</label>
+    <input type="text" name="lineOne" formControlName="lineOne" class="text-input form-control" id="lineOne"
+           aria-describedby="lineOneHelp" placeholder="Enter line one">
+    <div *ngIf="submitted && addAddressForm.controls.lineOne.errors" class="error">
+      <small class="form-text text-danger" *ngIf="addAddressForm.controls.lineOne.errors.required"> Line one is
+        required!
+      </small>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label for="lineTwo">Line Two</label>
+    <input type="text" name="lineTwo" formControlName="lineTwo" class="text-input form-control" id="lineTwo"
+           aria-describedby="lineTwoHelp" placeholder="Enter line two">
+  </div>
+
+  <div class="row">
+    <div class="col-6">
+      <div class="form-group">
+        <label for="city" class="required">City Name</label>
+        <input type="text" name="city" formControlName="city" class="text-input form-control" id="city"
+               aria-describedby="cityHelp" placeholder="Enter City name">
+        <div *ngIf="submitted && addAddressForm.controls.city.errors" class="error">
+          <small class="form-text text-danger" *ngIf="addAddressForm.controls.city.errors.required"> City Name is
+            required!
+          </small>
+        </div>
+      </div>
+    </div>
+    <div class="col-6">
+      <div class="form-group">
+        <label for="postcode" class="required">Postcode</label>
+        <input type="text" name="postcode" formControlName="postcode" class="text-input form-control" id="postcode"
+               aria-describedby="postcodeHelp" placeholder="Enter Postcode">
+        <div *ngIf="submitted && addAddressForm.controls.postcode.errors" class="error">
+          <small class="form-text text-danger" *ngIf="addAddressForm.controls.postcode.errors.required"> Postcode is
+            required!
+          </small>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label for="country" class="required">Country</label>
+    <input type="text" name="country" formControlName="country" class="text-input form-control" id="country"
+           aria-describedby="countryHelp" placeholder="Enter Country">
+    <div *ngIf="submitted && addAddressForm.controls.country.errors" class="error">
+      <small class="form-text text-danger" *ngIf="addAddressForm.controls.country.errors.required"> Country is
+        required!
+      </small>
+    </div>
+  </div>
+  <button class="primary" type="submit">Add new address</button>
+</form>
