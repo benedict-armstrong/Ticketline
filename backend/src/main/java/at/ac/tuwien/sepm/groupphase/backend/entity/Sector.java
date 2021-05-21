@@ -18,6 +18,9 @@ public class Sector {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column
+    private Long localId;
+
     @Column(nullable = false, length = 200)
     private String name;
 

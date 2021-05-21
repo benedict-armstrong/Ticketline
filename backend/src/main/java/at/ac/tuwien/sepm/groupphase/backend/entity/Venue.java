@@ -28,7 +28,10 @@ public class Venue {
     @OneToOne(cascade = {CascadeType.ALL})
     private Address address;
 
-    @OneToMany()
+    @OneToMany
+    private List<Sector> sectors;
+
+    @OneToMany(cascade = {CascadeType.ALL})
     private List<LayoutUnit> layout;
 
 }

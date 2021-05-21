@@ -1,5 +1,8 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint.dto;
 
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.validation.CustomLayoutConstraint;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -8,20 +11,28 @@ import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.util.List;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@JsonIdentityInfo(generator = ObjectIdGenerators.IntSequenceGenerator.class , property="id", scope=VenueDto.class)
 public class VenueDto {
 
-    @NotBlank(message = "A name is required")
+    @NotBlank
     private String name;
 
     @NotNull
-    private AddressDto addressDto;
+    private AddressDto address;
 
     @NotNull
+    @Size(min=1)
+    private List<SectorDto> sectors;
+
+    @NotNull
+    @Size(min=1)
+    @CustomLayoutConstraint(message = "Layout must be a well formed matrix")
     private List<List<LayoutUnitDto>> layout;
 }

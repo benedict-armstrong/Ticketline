@@ -16,10 +16,12 @@ import javax.validation.constraints.Size;
 @Builder
 public class LayoutUnitDto {
 
+    private Long id;
+
     @NotBlank()
     @Size(max = 10, message = "Custom label can't be more than 10 characters long.")
     private String customLabel;
 
     @NotNull
-    private SectorDto sectorDto;
+    private SectorDto sector;
 }

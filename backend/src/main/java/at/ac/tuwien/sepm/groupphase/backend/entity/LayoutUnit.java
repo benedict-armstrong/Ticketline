@@ -21,7 +21,7 @@ public class LayoutUnit {
     @Column(nullable = false, length = 10)
     private String customLabel;
 
-    @ManyToOne(cascade = {CascadeType.ALL})
+    @ManyToOne
     private Sector sector;
 
     @Column(nullable = false)
