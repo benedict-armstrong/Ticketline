@@ -22,10 +22,20 @@ public class TicketServiceImpl implements TicketService {
     }
 
     @Override
-    public Ticket saveTicket(Ticket ticket) {
+    public Ticket save(Ticket ticket, Ticket.Status status) {
         LOGGER.trace("saveTicket({})", ticket);
-        // TODO: Calculate and save price
+//        ticket.setTotalPrice(
+//            (long) Math.floor(100 * ticket.getTicketType().getPriceMultiplier() * ticket.getSectorType().getPrice()
+//                * ticket.getSeats().size())
+//        );
+        ticket.setTotalPrice(calculatePrice(ticket));
+        ticket.setStatus(status);
         return ticketRepository.save(ticket);
+    }
+
+    private Long calculatePrice(Ticket ticket) {
+        return (long) Math.floor(100 * ticket.getTicketType().getPriceMultiplier() * ticket.getSectorType().getPrice()
+            * ticket.getSeats().size());
     }
 
 }

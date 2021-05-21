@@ -10,6 +10,6 @@ public interface TicketService {
      * @param ticket the ticket to be saved.
      * @return the newly added ticket.
      */
-    Ticket saveTicket(Ticket ticket);
+    Ticket save(Ticket ticket, Ticket.Status status);
 
 }
