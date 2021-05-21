@@ -12,4 +12,12 @@ public interface TicketService {
      */
     Ticket save(Ticket ticket, Ticket.Status status);
 
+    /**
+     * Cancels an already existing ticket.
+     *
+     * @param id the id of the ticket to be cancelled.
+     * @return the new ticket.
+     */
+    Ticket cancel(Long id);
+
 }

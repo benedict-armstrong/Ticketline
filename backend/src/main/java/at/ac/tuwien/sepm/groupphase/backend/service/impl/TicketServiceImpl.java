@@ -29,6 +29,14 @@ public class TicketServiceImpl implements TicketService {
         return ticketRepository.save(ticket);
     }
 
+    @Override
+    public Ticket cancel(Long id) {
+        LOGGER.trace("cancel({})", id);
+        Ticket ticket = ticketRepository.findById(id).get();
+        ticket.setStatus(Ticket.Status.CANCELLED);
+        return ticketRepository.save(ticket);
+    }
+
     private Long calculatePrice(Ticket ticket) {
         return (long) Math.floor(100 * ticket.getTicketType().getPriceMultiplier() * ticket.getSectorType().getPrice()
             * ticket.getSeats().size());

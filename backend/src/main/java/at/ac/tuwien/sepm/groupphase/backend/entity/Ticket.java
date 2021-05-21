@@ -42,7 +42,7 @@ public class Ticket {
     @JoinColumn(name = "SECTOR_ID", nullable = false)
     private SectorType sectorType;
 
-    @ElementCollection // TODO: map to Venue's seat
+    @ElementCollection(fetch = FetchType.EAGER) // TODO: map to Venue's seat
     @Column(nullable = false)
     private List<Long> seats;
 

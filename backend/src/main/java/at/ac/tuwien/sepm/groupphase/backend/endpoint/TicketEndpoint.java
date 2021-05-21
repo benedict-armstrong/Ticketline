@@ -10,7 +10,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -45,6 +47,15 @@ public class TicketEndpoint {
         return ticketMapper.ticketToTicketDto(ticketService.save(
             ticketMapper.ticketDtoToTicket(ticket), ticketStatusMapper.modeToStatus(mode)
         ));
+    }
+
+    @PutMapping(path = "/{id}")
+    @Secured("ROLE_USER")
+    @ResponseStatus(HttpStatus.CREATED)
+    @Operation(summary = "Cancel a ticket")
+    public TicketDto cancelTicket(@PathVariable Long id) {
+        LOGGER.info("POST /api/v1/tickets/{}", id);
+        return ticketMapper.ticketToTicketDto(ticketService.cancel(id));
     }
 
 }
