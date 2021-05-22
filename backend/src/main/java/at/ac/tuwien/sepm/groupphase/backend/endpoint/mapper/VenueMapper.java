@@ -30,6 +30,7 @@ public interface VenueMapper {
         }
 
         return VenueDto.builder()
+            .id(venue.getId())
             .name(venue.getName())
             .address(AddressMapper.INSTANCE.addressToAddressDto(venue.getAddress()))
             .sectors(SectorMapper.INSTANCE.sectorListToSectorDtoList(venue.getSectors()))

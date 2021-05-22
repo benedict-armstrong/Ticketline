@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint;
 
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.NewsDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.VenueDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.VenueMapper;
 import at.ac.tuwien.sepm.groupphase.backend.service.VenueService;
@@ -11,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.security.PermitAll;
 import javax.validation.Valid;
 import java.lang.invoke.MethodHandles;
 
@@ -35,6 +37,14 @@ public class VenueEndpoint {
     public VenueDto create(@Valid @RequestBody VenueDto venueDto) {
         LOGGER.info("POST /api/v1/venue body: {}", venueDto);
         return venueMapper.venueToVenueDto(venueService.add(venueMapper.venueDtoToVenue(venueDto)));
+    }
+
+    @GetMapping(value = {"/{id}"})
+    @PermitAll
+    @Operation(summary = "Get a venue by id")
+    public VenueDto getOneById(@Valid @PathVariable("id") Long id) {
+        LOGGER.info("GET /api/v1/venue/{}", id);
+        return venueMapper.venueToVenueDto(venueService.getOneById(id));
     }
 
 }

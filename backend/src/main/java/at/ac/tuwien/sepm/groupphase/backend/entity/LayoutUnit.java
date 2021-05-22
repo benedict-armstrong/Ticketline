@@ -21,7 +21,7 @@ public class LayoutUnit {
     @Column(nullable = false, length = 10)
     private String customLabel;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     private Sector sector;
 
     @Column(nullable = false)

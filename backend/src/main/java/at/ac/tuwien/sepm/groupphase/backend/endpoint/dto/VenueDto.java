@@ -18,8 +18,9 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@JsonIdentityInfo(generator = ObjectIdGenerators.IntSequenceGenerator.class , property="id", scope=VenueDto.class)
 public class VenueDto {
+
+    private Long id;
 
     @NotBlank
     private String name;

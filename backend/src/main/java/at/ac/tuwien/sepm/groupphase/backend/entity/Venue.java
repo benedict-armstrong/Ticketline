@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 
 import javax.persistence.*;
 import java.util.List;
@@ -28,10 +30,11 @@ public class Venue {
     @OneToOne(cascade = {CascadeType.ALL})
     private Address address;
 
-    @OneToMany
+    @OneToMany(fetch = FetchType.EAGER)
     private List<Sector> sectors;
 
-    @OneToMany(cascade = {CascadeType.ALL})
+    @LazyCollection(LazyCollectionOption.FALSE)
+    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private List<LayoutUnit> layout;
 
 }
