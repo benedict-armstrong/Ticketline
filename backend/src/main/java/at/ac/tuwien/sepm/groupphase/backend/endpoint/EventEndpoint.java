@@ -52,9 +52,14 @@ public class EventEndpoint {
     @PermitAll
     @GetMapping
     @Operation(summary = "Get all events")
-    public List<EventDto> findAllByDate(PaginationDto paginationDto) {
+    public List<EventDto> findAll(PaginationDto paginationDto, EventDto event) {
         LOGGER.info("GET /api/v1/events");
-        return eventMapper.eventListToEventDtoList(eventService.findAllByCriteria(paginationMapper.paginationDtoToPageable(paginationDto)));
+
+        if (event != null) {
+            return eventMapper.eventToEventDto(eventService.search(eventMapper.eventDtoToEvent(event), paginationMapper.paginationDtoToPageable(paginationDto)));
+        }
+
+        return eventMapper.eventToEventDto(eventService.findAllOrderedByDate(paginationMapper.paginationDtoToPageable(paginationDto)));
     }
 
     @PermitAll

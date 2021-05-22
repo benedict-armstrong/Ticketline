@@ -1,12 +1,9 @@
 package at.ac.tuwien.sepm.groupphase.backend.unittests;
 
 import at.ac.tuwien.sepm.groupphase.backend.basetest.TestDataEvent;
-import at.ac.tuwien.sepm.groupphase.backend.entity.Address;
-import at.ac.tuwien.sepm.groupphase.backend.entity.Artist;
-import at.ac.tuwien.sepm.groupphase.backend.entity.Performance;
-import at.ac.tuwien.sepm.groupphase.backend.repository.AddressRepository;
-import at.ac.tuwien.sepm.groupphase.backend.repository.ArtistRepository;
-import at.ac.tuwien.sepm.groupphase.backend.repository.PerformanceRepository;
+import at.ac.tuwien.sepm.groupphase.backend.entity.Event;
+import at.ac.tuwien.sepm.groupphase.backend.repository.EventRepository;
+import at.ac.tuwien.sepm.groupphase.backend.specification.EventSpecificationBuilder;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -23,34 +20,25 @@ import static org.junit.jupiter.api.Assertions.*;
 // the entire application context
 @DataJpaTest
 @ActiveProfiles("test")
-public class PerformanceRepositoryTest implements TestDataEvent {
+public class EventRepositoryTest implements TestDataEvent {
 
     @Autowired
-    PerformanceRepository performanceRepository;
+    EventRepository eventRepository;
 
-    @Autowired
-    private ArtistRepository artistRepository;
-
-    @Autowired
-    private AddressRepository addressRepository;
-
-    private Performance performance;
+    private Event event;
 
     @BeforeEach
     public void beforeEach(){
-        performanceRepository.deleteAll();
-        artistRepository.deleteAll();
-        addressRepository.deleteAll();
+        eventRepository.deleteAll();
 
-        Address address = addressRepository.save(TestDataEvent.TEST_EVENT_LOCATION);
-        Artist artist = artistRepository.save(TestDataEvent.TEST_EVENT_ARTIST);
-
-        performance = Performance.builder()
+        event = Event.builder()
             .title(TestDataEvent.TEST_EVENT_TITLE)
             .description(TestDataEvent.TEST_EVENT_DESCRIPTION)
             .date(TestDataEvent.TEST_EVENT_DATE_FUTURE)
-            .artist(artist)
-            .location(address)
+            .duration(TestDataEvent.TEST_EVENT_DURATION)
+            .eventType(TestDataEvent.TEST_EVENT_EVENT_TYPE)
+            .artist(TestDataEvent.getTestEventArtist())
+            .location(TestDataEvent.getTestEventLocation())
             .sectorTypes(TestDataEvent.getTestEventSectortypes())
             .build();
     }
@@ -58,26 +46,37 @@ public class PerformanceRepositoryTest implements TestDataEvent {
     @Test
     @DisplayName("Check if one item is added")
     public void givenNothing_whenSaveNews_thenFindListWithOneElement() {
-        performanceRepository.save(performance);
+        eventRepository.save(event);
 
         assertAll(
-            () -> assertEquals(1, performanceRepository.findAll().size())
+            () -> assertEquals(1, eventRepository.findAll().size())
         );
     }
 
     @Test
     @DisplayName("Should return test event by id")
     public void givenNothing_whenSaveNews_thenFindNewsById() {
-        performanceRepository.save(performance);
+        eventRepository.save(event);
 
         assertAll(
-            () -> assertNotNull(performanceRepository.findById(performance.getId()))
+            () -> assertNotNull(eventRepository.findById(event.getId()))
         );
     }
 
     @Test
     @DisplayName("Should return null when searching for negative id")
     public void givenNothing_whenFindOnyById_ShouldBeNull() {
-        assertNull(performanceRepository.findOneById(-1L));
+        assertNull(eventRepository.findOneById(-1L));
+    }
+
+    @Test
+    @DisplayName("Should return event when searching for event")
+    public void givenEvent_whenSearch_ShouldReturnEvent() {
+        eventRepository.save(event);
+
+        EventSpecificationBuilder builder = new EventSpecificationBuilder();
+        builder.with("title", ":", event.getTitle());
+
+        assertEquals(event, eventRepository.findAll(builder.build()).get(0));
     }
 }
