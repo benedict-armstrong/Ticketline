@@ -1,4 +1,4 @@
-<app-search></app-search>
+<app-search #appSearch (searchedEvents)="setSearchEvents($event)" (searchedDates)="setSearchDates($event)" (searchedNoEvent)="setNoEvents($event)" (searchPagination)="setSearchPagination($event)"></app-search>
 
 <div class="day" *ngFor="let date of dates">
   <div class="header">
@@ -9,7 +9,13 @@
   </div>
 </div>
 
-<div class="text-center more" (click)="loadBatch()">
+<div *ngIf="!search" class="text-center more" (click)="loadBatch()">
+  <h3 *ngIf="!noEvent">Load More</h3>
+  <h3 *ngIf="noEvent">You're all caught up</h3>
+  <h3 *ngIf="!noEvent"><i class="bi bi-arrow-bar-down"></i></h3>
+</div>
+
+<div *ngIf="search" class="text-center more" (click)="appSearch.searchEvents()">
   <h3 *ngIf="!noEvent">Load More</h3>
   <h3 *ngIf="noEvent">You're all caught up</h3>
   <h3 *ngIf="!noEvent"><i class="bi bi-arrow-bar-down"></i></h3>

@@ -279,4 +279,259 @@ public class EventEndpointTest implements TestDataEvent, TestAuthentification {
 //        assertEquals(HttpStatus.FORBIDDEN.value(), response.getStatus());
 //        assertEquals("", response.getContentAsString());
 //    }
+
+    @Test
+    @DisplayName("Should return 200 and all events when no search params are given")
+    public void whenEventsGiven_SearchWithNoParams_ShouldReturn200AndEvents() throws Exception {
+        Event searchEvent = Event.builder()
+            .title(TestDataEvent.TEST_EVENT_TITLE)
+            .description(TestDataEvent.TEST_EVENT_DESCRIPTION)
+            .date(TestDataEvent.TEST_EVENT_DATE_FUTURE)
+            .duration(TestDataEvent.TEST_EVENT_DURATION)
+            .eventType(TestDataEvent.TEST_EVENT_EVENT_TYPE)
+            .artist(TestDataEvent.getTestEventArtist())
+            .location(TestDataEvent.getTestEventLocation())
+            .sectorTypes(TestDataEvent.getTestEventSectortypes())
+            .images(images)
+            .build();
+
+        eventRepository.save(searchEvent);
+
+        MvcResult mvcResult = this.mockMvc.perform(
+            get(TestDataEvent.EVENT_BASE_URI)
+                .param("page", "0")
+                .param("size", "10")
+                .header(securityProperties.getAuthHeader(), authToken)
+        ).andReturn();
+        MockHttpServletResponse response = mvcResult.getResponse();
+        assertEquals(HttpStatus.OK.value(), response.getStatus());
+        assertEquals(MediaType.APPLICATION_JSON_VALUE, response.getContentType());
+
+        List<EventDto> eventDtos = Arrays.asList(
+            objectMapper.readValue(response.getContentAsString(), EventDto[].class)
+        );
+        assertEquals(HttpStatus.OK.value(), response.getStatus());
+        assertEquals(1, eventDtos.size());
+    }
+
+    @Test
+    @DisplayName("Should return 200 and event with title from search")
+    public void whenEventsGiven_SearchWithTitle_ShouldReturn200AndEvent() throws Exception {
+        Event searchEvent = Event.builder()
+            .title(TestDataEvent.TEST_EVENT_TITLE)
+            .description(TestDataEvent.TEST_EVENT_DESCRIPTION)
+            .date(TestDataEvent.TEST_EVENT_DATE_FUTURE)
+            .duration(TestDataEvent.TEST_EVENT_DURATION)
+            .eventType(TestDataEvent.TEST_EVENT_EVENT_TYPE)
+            .artist(TestDataEvent.getTestEventArtist())
+            .location(TestDataEvent.getTestEventLocation())
+            .sectorTypes(TestDataEvent.getTestEventSectortypes())
+            .images(images)
+            .build();
+
+        eventRepository.save(searchEvent);
+
+        MvcResult mvcResult = this.mockMvc.perform(
+            get(TestDataEvent.EVENT_BASE_URI)
+                .param("page", "0")
+                .param("size", "10")
+                .param("title", TestDataEvent.TEST_EVENT_TITLE)
+                .header(securityProperties.getAuthHeader(), authToken)
+        ).andReturn();
+        MockHttpServletResponse response = mvcResult.getResponse();
+        assertEquals(HttpStatus.OK.value(), response.getStatus());
+        assertEquals(MediaType.APPLICATION_JSON_VALUE, response.getContentType());
+
+        List<EventDto> eventDtos = Arrays.asList(
+            objectMapper.readValue(response.getContentAsString(), EventDto[].class)
+        );
+        assertEquals(HttpStatus.OK.value(), response.getStatus());
+        assertEquals(searchEvent.getTitle(), eventDtos.get(0).getTitle());
+        assertEquals(1, eventDtos.size());
+    }
+
+    @Test
+    @DisplayName("Should return 200 and event with duration when duration minus 30 is given")
+    public void whenEventsGiven_SearchWithDurationMinus30_ShouldReturn200AndEvent() throws Exception {
+        Event searchEvent = Event.builder()
+            .title(TestDataEvent.TEST_EVENT_TITLE)
+            .description(TestDataEvent.TEST_EVENT_DESCRIPTION)
+            .date(TestDataEvent.TEST_EVENT_DATE_FUTURE)
+            .duration(TestDataEvent.TEST_EVENT_DURATION)
+            .eventType(TestDataEvent.TEST_EVENT_EVENT_TYPE)
+            .artist(TestDataEvent.getTestEventArtist())
+            .location(TestDataEvent.getTestEventLocation())
+            .sectorTypes(TestDataEvent.getTestEventSectortypes())
+            .images(images)
+            .build();
+
+        eventRepository.save(searchEvent);
+
+        MvcResult mvcResult = this.mockMvc.perform(
+            get(TestDataEvent.EVENT_BASE_URI)
+                .param("page", "0")
+                .param("size", "10")
+                .param("duration", Integer.toString(TestDataEvent.TEST_EVENT_DURATION - 30))
+                .header(securityProperties.getAuthHeader(), authToken)
+        ).andReturn();
+        MockHttpServletResponse response = mvcResult.getResponse();
+        assertEquals(HttpStatus.OK.value(), response.getStatus());
+        assertEquals(MediaType.APPLICATION_JSON_VALUE, response.getContentType());
+
+        List<EventDto> eventDtos = Arrays.asList(
+            objectMapper.readValue(response.getContentAsString(), EventDto[].class)
+        );
+        assertEquals(HttpStatus.OK.value(), response.getStatus());
+        assertEquals(searchEvent.getDuration(), eventDtos.get(0).getDuration());
+        assertEquals(1, eventDtos.size());
+    }
+
+    @Test
+    @DisplayName("Should return 200 and event description when word is in description")
+    public void whenEventsGiven_SearchWithDescription_ShouldReturn200AndEvent() throws Exception {
+        Event searchEvent = Event.builder()
+            .title(TestDataEvent.TEST_EVENT_TITLE)
+            .description(TestDataEvent.TEST_EVENT_DESCRIPTION)
+            .date(TestDataEvent.TEST_EVENT_DATE_FUTURE)
+            .duration(TestDataEvent.TEST_EVENT_DURATION)
+            .eventType(TestDataEvent.TEST_EVENT_EVENT_TYPE)
+            .artist(TestDataEvent.getTestEventArtist())
+            .location(TestDataEvent.getTestEventLocation())
+            .sectorTypes(TestDataEvent.getTestEventSectortypes())
+            .images(images)
+            .build();
+
+        eventRepository.save(searchEvent);
+
+        MvcResult mvcResult = this.mockMvc.perform(
+            get(TestDataEvent.EVENT_BASE_URI)
+                .param("page", "0")
+                .param("size", "10")
+                .param("description", TestDataEvent.TEST_EVENT_DESCRIPTION.substring(0,4))
+                .header(securityProperties.getAuthHeader(), authToken)
+        ).andReturn();
+        MockHttpServletResponse response = mvcResult.getResponse();
+        assertEquals(HttpStatus.OK.value(), response.getStatus());
+        assertEquals(MediaType.APPLICATION_JSON_VALUE, response.getContentType());
+
+        List<EventDto> eventDtos = Arrays.asList(
+            objectMapper.readValue(response.getContentAsString(), EventDto[].class)
+        );
+        assertEquals(HttpStatus.OK.value(), response.getStatus());
+        assertEquals(searchEvent.getDescription(), eventDtos.get(0).getDescription());
+        assertEquals(1, eventDtos.size());
+    }
+
+    @Test
+    @DisplayName("Should return 200 and event with event type")
+    public void whenEventsGiven_SearchWithEventType_ShouldReturn200AndEvent() throws Exception {
+        Event searchEvent = Event.builder()
+            .title(TestDataEvent.TEST_EVENT_TITLE)
+            .description(TestDataEvent.TEST_EVENT_DESCRIPTION)
+            .date(TestDataEvent.TEST_EVENT_DATE_FUTURE)
+            .duration(TestDataEvent.TEST_EVENT_DURATION)
+            .eventType(TestDataEvent.TEST_EVENT_EVENT_TYPE)
+            .artist(TestDataEvent.getTestEventArtist())
+            .location(TestDataEvent.getTestEventLocation())
+            .sectorTypes(TestDataEvent.getTestEventSectortypes())
+            .images(images)
+            .build();
+
+        eventRepository.save(searchEvent);
+
+        MvcResult mvcResult = this.mockMvc.perform(
+            get(TestDataEvent.EVENT_BASE_URI)
+                .param("page", "0")
+                .param("size", "10")
+                .param("eventType", TestDataEvent.TEST_EVENT_EVENT_TYPE.toString())
+                .header(securityProperties.getAuthHeader(), authToken)
+        ).andReturn();
+        MockHttpServletResponse response = mvcResult.getResponse();
+        assertEquals(HttpStatus.OK.value(), response.getStatus());
+        assertEquals(MediaType.APPLICATION_JSON_VALUE, response.getContentType());
+
+        List<EventDto> eventDtos = Arrays.asList(
+            objectMapper.readValue(response.getContentAsString(), EventDto[].class)
+        );
+        assertEquals(HttpStatus.OK.value(), response.getStatus());
+        assertEquals(searchEvent.getEventType(), eventDtos.get(0).getEventType());
+        assertEquals(1, eventDtos.size());
+    }
+
+    @Test
+    @DisplayName("Should return 200 and event with all search params")
+    public void whenEventsGiven_SearchWithAllParams_ShouldReturn200AndEvent() throws Exception {
+        Event searchEvent = Event.builder()
+            .title(TestDataEvent.TEST_EVENT_TITLE)
+            .description(TestDataEvent.TEST_EVENT_DESCRIPTION)
+            .date(TestDataEvent.TEST_EVENT_DATE_FUTURE)
+            .duration(TestDataEvent.TEST_EVENT_DURATION)
+            .eventType(TestDataEvent.TEST_EVENT_EVENT_TYPE)
+            .artist(TestDataEvent.getTestEventArtist())
+            .location(TestDataEvent.getTestEventLocation())
+            .sectorTypes(TestDataEvent.getTestEventSectortypes())
+            .images(images)
+            .build();
+
+        eventRepository.save(searchEvent);
+
+        MvcResult mvcResult = this.mockMvc.perform(
+            get(TestDataEvent.EVENT_BASE_URI)
+                .param("page", "0")
+                .param("size", "10")
+                .param("title", TestDataEvent.TEST_EVENT_TITLE)
+                .param("description", TestDataEvent.TEST_EVENT_DESCRIPTION)
+                .param("duration", Integer.toString(TestDataEvent.TEST_EVENT_DURATION))
+                .param("eventType", TestDataEvent.TEST_EVENT_EVENT_TYPE.toString())
+                .header(securityProperties.getAuthHeader(), authToken)
+        ).andReturn();
+        MockHttpServletResponse response = mvcResult.getResponse();
+        assertEquals(HttpStatus.OK.value(), response.getStatus());
+        assertEquals(MediaType.APPLICATION_JSON_VALUE, response.getContentType());
+
+        List<EventDto> eventDtos = Arrays.asList(
+            objectMapper.readValue(response.getContentAsString(), EventDto[].class)
+        );
+        assertEquals(HttpStatus.OK.value(), response.getStatus());
+        assertEquals(searchEvent.getTitle(), eventDtos.get(0).getTitle());
+        assertEquals(searchEvent.getDescription(), eventDtos.get(0).getDescription());
+        assertEquals(searchEvent.getDuration(), eventDtos.get(0).getDuration());
+        assertEquals(searchEvent.getEventType(), eventDtos.get(0).getEventType());
+        assertEquals(1, eventDtos.size());
+    }
+
+    @Test
+    @DisplayName("Should return nothing when event given and search with other event type")
+    public void whenEventsGiven_SearchWithOtherEventType_ShouldReturnNothing() throws Exception {
+        Event searchEvent = Event.builder()
+            .title(TestDataEvent.TEST_EVENT_TITLE)
+            .description(TestDataEvent.TEST_EVENT_DESCRIPTION)
+            .date(TestDataEvent.TEST_EVENT_DATE_FUTURE)
+            .duration(TestDataEvent.TEST_EVENT_DURATION)
+            .eventType(TestDataEvent.TEST_EVENT_EVENT_TYPE)
+            .artist(TestDataEvent.getTestEventArtist())
+            .location(TestDataEvent.getTestEventLocation())
+            .sectorTypes(TestDataEvent.getTestEventSectortypes())
+            .images(images)
+            .build();
+
+        eventRepository.save(searchEvent);
+
+        MvcResult mvcResult = this.mockMvc.perform(
+            get(TestDataEvent.EVENT_BASE_URI)
+                .param("page", "0")
+                .param("size", "10")
+                .param("eventType", TestDataEvent.TEST_EVENT_EVENT_TYPE2.toString())
+                .header(securityProperties.getAuthHeader(), authToken)
+        ).andReturn();
+        MockHttpServletResponse response = mvcResult.getResponse();
+        assertEquals(HttpStatus.OK.value(), response.getStatus());
+        assertEquals(MediaType.APPLICATION_JSON_VALUE, response.getContentType());
+
+        List<EventDto> eventDtos = Arrays.asList(
+            objectMapper.readValue(response.getContentAsString(), EventDto[].class)
+        );
+
+        assertEquals(0, eventDtos.size());
+    }
 }
