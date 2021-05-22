@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {Event} from '../../../dtos/event';
 import {Performance} from '../../../dtos/performance';
-import {EventService} from '../../../services/event.service';
+import {ApplicationEventService} from '../../../services/event.service';
 import {Router} from '@angular/router';
 
 @Component({
@@ -17,7 +17,7 @@ export class AddEventComponent implements OnInit {
   submitted = false;
   addingPerformance = false;
 
-  constructor(private formBuilder: FormBuilder, private eventService: EventService,
+  constructor(private formBuilder: FormBuilder, private eventService: ApplicationEventService,
               private router: Router) { }
 
   ngOnInit(): void {

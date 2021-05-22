@@ -50,15 +50,15 @@ export class SearchComponent implements OnInit {
         response => {
           console.log(response);
 
-          for (const event of response) {
-            const date = new Date(event.date).toDateString();
-
-            if (!this.dates.includes(date)) {
-              this.dates.push(date);
-            }
-          }
-
-          console.log(this.dates);
+          // for (const event of response) {
+          //   const date = new Date(event.date).toDateString();
+          //
+          //   if (!this.dates.includes(date)) {
+          //     this.dates.push(date);
+          //   }
+          // }
+          //
+          // console.log(this.dates);
 
           this.events.push(...response);
           if (response.length < this.size) {
@@ -81,14 +81,14 @@ export class SearchComponent implements OnInit {
           response => {
             console.log(response);
 
-            for (const event of response) {
-              const date = new Date(event.date).toDateString();
-
-              if (!this.dates.includes(date)) {
-                this.dates.push(date);
-              }
-            }
-            console.log(this.dates);
+            // for (const event of response) {
+            //   const date = new Date(event.date).toDateString();
+            //
+            //   if (!this.dates.includes(date)) {
+            //     this.dates.push(date);
+            //   }
+            // }
+            // console.log(this.dates);
             this.events.push(...response);
             if (response.length < this.size) {
               this.noEvent = true;
@@ -107,7 +107,7 @@ export class SearchComponent implements OnInit {
     }
   }
 
-  resetValues(){
+  resetValues() {
     this.events = [];
     this.dates = [];
     this.noEvent = true;

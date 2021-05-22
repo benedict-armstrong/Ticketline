@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import {EventService} from '../../services/event.service';
+import {ApplicationEventService} from '../../services/event.service';
 import {Event} from '../../dtos/event';
 
 @Component({
@@ -16,7 +16,7 @@ export class EventsComponent implements OnInit {
   noEvent = true;
   search = false;
 
-  constructor(private eventService: EventService) { }
+  constructor(private eventService: ApplicationEventService) { }
 
   ngOnInit(): void {
     this.loadBatch();
@@ -75,19 +75,19 @@ export class EventsComponent implements OnInit {
   //   return eventsForDate;
   // }
 
-  setSearchEvents(results: Event[]){
+  setSearchEvents(results: Event[]) {
     this.events = Object.assign([], results);
   }
 
-  setSearchDates(dates: string[]){
+  setSearchDates(dates: string[]) {
     this.dates = Object.assign([], dates);
   }
 
-  setNoEvents(noEvent: boolean){
+  setNoEvents(noEvent: boolean) {
     this.noEvent = noEvent;
   }
 
-  setSearchPagination(search: boolean){
+  setSearchPagination(search: boolean) {
     this.search = search;
   }
 

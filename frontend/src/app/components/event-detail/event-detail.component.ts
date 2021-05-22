@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 import {AuthService} from '../../services/auth.service';
 import {Event} from '../../dtos/event';
-import {EventService} from '../../services/event.service';
+import {ApplicationEventService} from '../../services/event.service';
 
 @Component({
   selector: 'app-event-detail',
@@ -16,7 +16,7 @@ export class EventDetailComponent implements OnInit {
   error = false;
   errorMessage = '';
 
-  constructor(private eventService: EventService,
+  constructor(private eventService: ApplicationEventService,
               private activeRoute: ActivatedRoute, private authService: AuthService) { }
 
   ngOnInit(): void {
