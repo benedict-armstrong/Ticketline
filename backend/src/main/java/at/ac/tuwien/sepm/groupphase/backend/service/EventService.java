@@ -13,7 +13,7 @@ public interface EventService {
      *
      * @return list of all events
      */
-    List<Event> findAllByDate(Pageable pageable);
+    List<Event> findAllOrderedByDate(Pageable pageable);
 
     /**
      * Find event by id.

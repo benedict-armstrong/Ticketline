@@ -28,14 +28,14 @@ public class CustomEventService implements EventService {
     }
 
     @Override
-    public List<Event> findAllByDate(Pageable pageable) {
-        LOGGER.debug("Get all events");
+    public List<Event> findAllOrderedByDate(Pageable pageable) {
+        LOGGER.trace("Get all events");
         return eventRepository.findAllByOrderByDateAsc(pageable).getContent();
     }
 
     @Override
     public Event findById(long id) {
-        LOGGER.debug("Get event by id {}", id);
+        LOGGER.trace("Get event by id {}", id);
         return eventRepository.findOneById(id);
     }
 
@@ -47,7 +47,7 @@ public class CustomEventService implements EventService {
 
     @Override
     public List<Event> search(Event event, Pageable pageable) {
-        LOGGER.debug("searchEvent({}, {}, {}, {})", event.getTitle(), event.getDescription(), event.getDuration(), event.getEventType());
+        LOGGER.trace("searchEvent({}, {}, {}, {})", event.getTitle(), event.getDescription(), event.getDuration(), event.getEventType());
 
         EventSpecificationBuilder builder = new EventSpecificationBuilder();
 
@@ -61,7 +61,6 @@ public class CustomEventService implements EventService {
             builder.with("duration", "+", event.getDuration());
         }
         if (event.getEventType() != null) {
-            LOGGER.info("{}", event.getEventType());
             builder.with("eventType", ":", event.getEventType());
         }
 
