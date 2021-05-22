@@ -28,9 +28,9 @@ public class CustomEventService implements EventService {
     }
 
     @Override
-    public List<Event> findAllOrderedByDate(Pageable pageable) {
+    public List<Event> findAllOrderedByStartDate(Pageable pageable) {
         LOGGER.trace("Get all events");
-        return eventRepository.findAllByOrderByDateAsc(pageable).getContent();
+        return eventRepository.findAllByOrderByStartDateAsc(pageable).getContent();
     }
 
     @Override
@@ -47,12 +47,12 @@ public class CustomEventService implements EventService {
 
     @Override
     public List<Event> search(Event event, Pageable pageable) {
-        LOGGER.trace("searchEvent({}, {}, {}, {})", event.getTitle(), event.getDescription(), event.getDuration(), event.getEventType());
+        LOGGER.trace("searchEvent({}, {}, {}, {})", event.getName(), event.getDescription(), event.getDuration(), event.getEventType());
 
         EventSpecificationBuilder builder = new EventSpecificationBuilder();
 
-        if (event.getTitle() != null) {
-            builder.with("title", ":", event.getTitle());
+        if (event.getName() != null) {
+            builder.with("name", ":", event.getName());
         }
         if (event.getDescription() != null) {
             builder.with("description", ":", event.getDescription());

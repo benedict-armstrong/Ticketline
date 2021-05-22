@@ -56,10 +56,10 @@ public class EventEndpoint {
         LOGGER.info("GET /api/v1/events");
 
         if (event != null) {
-            return eventMapper.eventToEventDto(eventService.search(eventMapper.eventDtoToEvent(event), paginationMapper.paginationDtoToPageable(paginationDto)));
+            return eventMapper.eventListToEventDtoList(eventService.search(eventMapper.eventDtoToEvent(event), paginationMapper.paginationDtoToPageable(paginationDto)));
         }
 
-        return eventMapper.eventToEventDto(eventService.findAllOrderedByDate(paginationMapper.paginationDtoToPageable(paginationDto)));
+        return eventMapper.eventListToEventDtoList(eventService.findAllOrderedByStartDate(paginationMapper.paginationDtoToPageable(paginationDto)));
     }
 
     @PermitAll
