@@ -39,8 +39,8 @@ public class NewsRepositoryTest implements TestDataNews {
 
     @BeforeEach
     public void beforeEach(){
-        newsRepository.deleteAll();
-        eventRepository.deleteAll();
+        //newsRepository.deleteAll();
+        //eventRepository.deleteAll();
         Event event = Event.builder()
             .title(TestDataEvent.TEST_EVENT_TITLE)
             .description(TestDataEvent.TEST_EVENT_DESCRIPTION)

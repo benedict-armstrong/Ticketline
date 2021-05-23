@@ -30,7 +30,7 @@ public class FileRepositoryTest implements TestDataFile {
 
     @BeforeEach
     public void beforeEach(){
-        fileRepository.deleteAll();
+        //fileRepository.deleteAll();
     }
 
     @AfterEach

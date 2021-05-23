@@ -79,8 +79,8 @@ public class EventEndpointTest implements TestDataEvent, TestAuthentification {
 
     @BeforeEach
     public void beforeEach() throws Exception {
-        eventRepository.deleteAll();
-        fileRepository.deleteAll();
+        //eventRepository.deleteAll();
+        //fileRepository.deleteAll();
 
         images = new HashSet<>();
         images.add(file);
@@ -99,7 +99,7 @@ public class EventEndpointTest implements TestDataEvent, TestAuthentification {
 
         fileRepository.save(file);
 
-        userRepository.deleteAll();
+        //userRepository.deleteAll();
         saveUser(AUTH_USER_ORGANIZER, userRepository, passwordEncoder);
         authToken = authenticate(AUTH_USER_ORGANIZER, mockMvc, objectMapper);
     }

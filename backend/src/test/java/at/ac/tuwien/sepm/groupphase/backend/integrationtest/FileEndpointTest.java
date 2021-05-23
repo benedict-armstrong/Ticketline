@@ -55,8 +55,8 @@ public class FileEndpointTest implements TestDataFile, TestAuthentification {
 
     @BeforeEach
     public void beforeEach() throws Exception {
-        fileRepository.deleteAll();
-        userRepository.deleteAll();
+//        fileRepository.deleteAll();
+//        userRepository.deleteAll();
         saveUser(AUTH_USER_ORGANIZER, userRepository, passwordEncoder);
         authToken = authenticate(AUTH_USER_ORGANIZER, mockMvc, objectMapper);
     }

@@ -38,7 +38,7 @@ public class UserRepositoryTest implements TestDataUser {
 
     @BeforeEach
     public void beforeEach() {
-        userRepository.deleteAll();
+        //userRepository.deleteAll();
         user = ApplicationUser.builder()
             .firstName(ADMIN_FIRST_NAME)
             .lastName(ADMIN_LAST_NAME)

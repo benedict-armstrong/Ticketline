@@ -88,9 +88,9 @@ public class NewsEndpointTest implements TestDataNews, TestDataFile, TestAuthent
 
     @BeforeEach
     public void beforeEach() throws Exception {
-        newsRepository.deleteAll();
-        eventRepository.deleteAll();
-        fileRepository.deleteAll();
+        //newsRepository.deleteAll();
+        //eventRepository.deleteAll();
+        //fileRepository.deleteAll();
 
         event = Event.builder()
             .title(TestDataEvent.TEST_EVENT_TITLE)
@@ -110,7 +110,7 @@ public class NewsEndpointTest implements TestDataNews, TestDataFile, TestAuthent
 
         eventRepository.save(event);
 
-        userRepository.deleteAll();
+        //userRepository.deleteAll();
         saveUser(AUTH_USER_ORGANIZER, userRepository, passwordEncoder);
         authToken = authenticate(AUTH_USER_ORGANIZER, mockMvc, objectMapper);
     }

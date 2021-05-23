@@ -79,7 +79,7 @@ public class UserEndpointTest implements TestDataUser {
 
     @BeforeEach
     public void beforeEach() {
-        userRepository.deleteAll();
+        //userRepository.deleteAll();
         defaultUser = ApplicationUser.builder()
             .firstName(DEFAULT_FIRST_NAME)
             .lastName(DEFAULT_LAST_NAME)
