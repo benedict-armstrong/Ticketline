@@ -29,11 +29,6 @@ public class PerformanceDto {
     @Size(max = 10000, message = "Description must be 10000 characters or less")
     private String description;
 
-    @Size(max = 10, message = "Upload 10 images or less")
-    @Size(min = 1, message = "Atleast one image required")
-    @ToString.Exclude
-    private FileDto[] images = new FileDto[10];
-
     @NotNull(message = "Location is required")
     private AddressDto location;
 

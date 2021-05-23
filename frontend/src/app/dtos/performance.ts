@@ -11,7 +11,6 @@ export class Performance {
     public date: Date,
     public sectorTypes: SectorType[],
     public location: Address,
-    public artist: Artist,
-    public images: CustomFile[]
+    public artist: Artist
   ) {}
 }

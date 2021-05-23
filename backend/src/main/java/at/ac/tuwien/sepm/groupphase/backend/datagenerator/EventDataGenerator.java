@@ -73,23 +73,22 @@ public class EventDataGenerator {
             byte[] imgBuffer3 = recoverImageFromUrl("https://cdn.pixabay.com/photo/2016/11/22/19/15/hand-1850120_960_720.jpg");
 
             for (int i = 0; i < NUMBER_OF_EVENTS_TO_GENERATE; i++) {
+                Set<File> set = new HashSet<>();
+                File file = generateImage(imgBuffer1, File.Type.IMAGE_JPG);
+                LOGGER.debug("saving file {} for event", file);
+                fileRepository.save(file);
+                set.add(file);
+                file = generateImage(imgBuffer2, File.Type.IMAGE_JPEG);
+                LOGGER.debug("saving file {} for event", file);
+                fileRepository.save(file);
+                set.add(file);
+                file = generateImage(imgBuffer3, File.Type.IMAGE_PNG);
+                LOGGER.debug("saving file {} for event", file);
+                fileRepository.save(file);
+                set.add(file);
+
                 Set<Performance> performances = new HashSet<>();
-
                 for (int j = 0; j <= i; j++) {
-                    Set<File> set = new HashSet<>();
-                    File file = generateImage(imgBuffer1, File.Type.IMAGE_JPG);
-                    LOGGER.debug("saving file {} for event", file);
-                    fileRepository.save(file);
-                    set.add(file);
-                    file = generateImage(imgBuffer2, File.Type.IMAGE_JPEG);
-                    LOGGER.debug("saving file {} for event", file);
-                    fileRepository.save(file);
-                    set.add(file);
-                    file = generateImage(imgBuffer3, File.Type.IMAGE_PNG);
-                    LOGGER.debug("saving file {} for event", file);
-                    fileRepository.save(file);
-                    set.add(file);
-
                     Address location = generateEventLocation(i);
                     addressRepository.save(location);
 
@@ -103,7 +102,7 @@ public class EventDataGenerator {
                         .sectorTypes(generateSectorTypes(i))
                         .artist(artist)
                         .location(location)
-                        .images(set).build();
+                        .build();
 
                     performances.add(performance);
                 }
@@ -115,6 +114,7 @@ public class EventDataGenerator {
                     .duration(100 + 50 * i)
                     .startDate(TEST_EVENT_START_DATE)
                     .endDate(TEST_EVENT_END_DATE)
+                    .images(set)
                     .performances(performances)
                     .build();
 

@@ -1,5 +1,5 @@
-import { Performance } from './performance';
 import {CustomFile} from './customFile';
+import {Event} from './event';
 
 export class News {
   constructor(
@@ -8,7 +8,7 @@ export class News {
     public author: string,
     public title: string,
     public text: string,
-    public event: Performance,
+    public event: Event,
     public images: CustomFile[]
   ) {}
 }

@@ -6,6 +6,7 @@ import { ApplicationNewsService } from 'src/app/services/news.service';
 import {AuthService} from '../../services/auth.service';
 import {UserService} from '../../services/user.service';
 import {Performance} from '../../dtos/performance';
+import {Event} from '../../dtos/event';
 
 @Component({
   selector: 'app-news-detail',
@@ -19,7 +20,7 @@ export class NewsDetailComponent implements OnInit {
   success = false;
   newsId = 0;
   newsItem: News;
-  correspondingEvent: Performance;
+  correspondingEvent: Event;
   imgURL = [];
   date: Date;
 

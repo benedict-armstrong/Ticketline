@@ -1,10 +1,23 @@
-<div class="performance" [routerLink]="['/performance-detail', eventItem.id]">
+<div class="event" [routerLink]="['/event-detail', eventItem.id]">
     <div class="info">
         <img src="{{previewImageUrl}}" alt="">
         <div class="detail">
-            <h5>{{eventItem.title}}</h5>
-            <p class="date-time">{{eventItem.date | date:'EEEE, MMM d, y HH:mm'}}</p>
+            <h5>{{eventItem.name}}</h5>
+            <p class="date-time">{{eventItem.startDate | date:'EEEE, MMM d, y HH:mm'}} - {{eventItem.endDate | date:'EEEE, MMM d, y HH:mm'}}</p>
         </div>
     </div>
-    <!-- <button class="tickets">Buy Tickets</button> -->
 </div>
+<div *ngFor="let performance of eventItem.performances">
+  <div class="performance offset-2" [routerLink]="['/performance-detail', performance.id]">
+    <div class="info">
+      <div class="detail">
+        <h5>{{performance.title}}</h5>
+        <span class="date-time">{{performance.date | date:'EEEE, MMM d, y HH:mm'}}: </span>
+        <span class="artist">{{performance.artist.firstName}} {{performance.artist.lastName}}, </span>
+        <span class="location">{{performance.location.name}}</span>
+      </div>
+    </div>
+  </div>
+</div>
+<hr/>
+

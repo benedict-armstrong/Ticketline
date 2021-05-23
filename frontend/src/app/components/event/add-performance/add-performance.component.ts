@@ -14,19 +14,16 @@ import {Event} from '../../../dtos/event';
 })
 export class AddPerformanceComponent implements OnInit {
   @Output() performanceAdded = new EventEmitter<Performance>();
+  @Output() cancelAdding = new EventEmitter();
   @Input() event: Event;
   addPerformanceForm: FormGroup;
   submitted = false;
-  fileNoImage = false;
-  tooManyFiles = false;
-  fileTooBig = false;
-  files = [];
   sectorTypes = [];
   error = false;
   errorMessage: string;
   success = false;
 
-  performance = new Performance(null, null, null, null, null, null, null, []);
+  performance = new Performance(null, null, null, null, null, null, null);
   location: Address;
   artist: Artist;
 
@@ -36,9 +33,8 @@ export class AddPerformanceComponent implements OnInit {
 
   ngOnInit(): void {
     this.addPerformanceForm = this.formBuilder.group({
-      eventName: ['', [Validators.required, Validators.maxLength(100)]],
+      title: ['', [Validators.required, Validators.maxLength(100)]],
       description: ['', [Validators.required, Validators.maxLength(10000)]],
-      files: [''],
       date: ['', [Validators.required, this.dateValidator]],
     });
   }
@@ -48,60 +44,20 @@ export class AddPerformanceComponent implements OnInit {
 
     if (this.addPerformanceForm.valid &&
       this.sectorTypes.length !== 0 &&
-      this.files.length !== 0 &&
       this.artist !== undefined &&
       this.location !== undefined) {
       // Add additional event data
-      this.performance.title = this.addPerformanceForm.value.eventName;
+      this.performance.title = this.addPerformanceForm.value.title;
       this.performance.description = this.addPerformanceForm.value.description;
       this.performance.date = this.addPerformanceForm.value.date;
       this.performance.location = this.location;
       this.performance.artist = this.artist;
       this.performance.sectorTypes = this.sectorTypes;
 
-      // // New Imageupload
-      let count = this.files.length;
-
-      this.files.forEach(file => {
-        this.fileService.upload(file).subscribe(f => {
-          this.performance.images.push(f);
-          count--;
-          if (count === 0) {
-            this.performanceAdded.emit(this.performance);
-            this.addPerformanceForm.reset();
-          }
-        }, fileError => {
-          this.defaultServiceErrorHandling(fileError);
-        });
-      });
+      this.performanceAdded.emit(this.performance);
+      this.addPerformanceForm.reset();
     } else {
       console.log('Invalid input');
-    }
-  }
-
-  onFileChange(event) {
-    this.fileNoImage = false;
-    this.tooManyFiles = false;
-    this.fileTooBig = false;
-    if (event.target.files.length > 0) {
-      const file = event.target.files[0];
-      console.log(file.size);
-      if (!file.type.includes('image')) {
-        this.fileNoImage = true;
-      } else if (this.performance.images.length >= 10) {
-        this.tooManyFiles = true;
-      } else if (file.size > 1000000) {
-        this.fileTooBig = true;
-      } else {
-        this.files.push(file);
-        console.log(this.performance.images);
-      }
-    }
-  }
-
-  removeImage(index) {
-    if (index > -1) {
-      this.files.splice(index, 1);
     }
   }
 
@@ -116,17 +72,6 @@ export class AddPerformanceComponent implements OnInit {
 
   changeArtist(artist: Artist) {
     this.artist = artist;
-  }
-
-  private defaultServiceErrorHandling(error: any) {
-    console.log(error);
-    this.error = true;
-    console.log(error.error);
-    if (typeof error.error === 'object') {
-      this.errorMessage = error.error.error;
-    } else {
-      this.errorMessage = error.error;
-    }
   }
 
   /**

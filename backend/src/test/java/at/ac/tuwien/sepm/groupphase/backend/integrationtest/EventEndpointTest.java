@@ -98,7 +98,7 @@ public class EventEndpointTest implements TestDataEvent, TestAuthentification {
         eventRepository.deleteAll();
         performanceRepository.deleteAll();
         fileRepository.deleteAll();
-        addressRepository.deleteAll();
+        addressRepository.deleteAllInBatch();
         artistRepository.deleteAll();
 
         address = addressRepository.save(TestDataEvent.TEST_EVENT_LOCATION);
@@ -115,7 +115,6 @@ public class EventEndpointTest implements TestDataEvent, TestAuthentification {
             .artist(artist)
             .location(address)
             .sectorTypes(TestDataEvent.getTestEventSectortypes())
-            .images(images)
             .build());
 
         event = Event.builder()
@@ -125,6 +124,7 @@ public class EventEndpointTest implements TestDataEvent, TestAuthentification {
             .endDate(TestDataEvent.TEST_EVENT_DATE_FUTURE2)
             .duration(TestDataEvent.TEST_EVENT_DURATION)
             .eventType(TestDataEvent.TEST_EVENT_EVENT_TYPE)
+            .images(images)
             .performances(performances)
             .build();
 
@@ -262,7 +262,6 @@ public class EventEndpointTest implements TestDataEvent, TestAuthentification {
             .artist(artist)
             .location(address)
             .sectorTypes(TestDataEvent.getTestEventSectortypes())
-            .images(images)
             .build());
 
         Event invalidEvent = Event.builder()
@@ -272,6 +271,7 @@ public class EventEndpointTest implements TestDataEvent, TestAuthentification {
             .endDate(TestDataEvent.TEST_EVENT_DATE_FUTURE2)
             .duration(TestDataEvent.TEST_EVENT_DURATION)
             .eventType(TestDataEvent.TEST_EVENT_EVENT_TYPE)
+            .images(images)
             .performances(performances)
             .build();
 
@@ -300,7 +300,6 @@ public class EventEndpointTest implements TestDataEvent, TestAuthentification {
             .artist(artist)
             .location(address)
             .sectorTypes(TestDataEvent.getTestEventSectortypes())
-            .images(images)
             .build());
 
         Event invalidEvent = Event.builder()
@@ -310,6 +309,7 @@ public class EventEndpointTest implements TestDataEvent, TestAuthentification {
             .endDate(TestDataEvent.TEST_EVENT_DATE_PAST)
             .duration(TestDataEvent.TEST_EVENT_DURATION)
             .eventType(TestDataEvent.TEST_EVENT_EVENT_TYPE)
+            .images(images)
             .performances(performances)
             .build();
         MvcResult mvcResult = this.mockMvc.perform(

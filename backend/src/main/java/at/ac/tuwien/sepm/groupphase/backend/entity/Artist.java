@@ -31,7 +31,7 @@ public class Artist {
     @Column(nullable = false, length = 200)
     private String lastName;
 
-    @OneToMany(mappedBy = "artist")
+    @OneToMany(mappedBy = "artist", orphanRemoval = true)
     @Fetch(FetchMode.JOIN)
     private Set<Performance> performances;
 }

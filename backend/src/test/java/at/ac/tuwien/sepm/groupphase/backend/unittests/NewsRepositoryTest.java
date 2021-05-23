@@ -4,10 +4,12 @@ import at.ac.tuwien.sepm.groupphase.backend.basetest.TestDataEvent;
 import at.ac.tuwien.sepm.groupphase.backend.basetest.TestDataNews;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Address;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Artist;
+import at.ac.tuwien.sepm.groupphase.backend.entity.Event;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Performance;
 import at.ac.tuwien.sepm.groupphase.backend.entity.News;
 import at.ac.tuwien.sepm.groupphase.backend.repository.AddressRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.ArtistRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.EventRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.PerformanceRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.NewsRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -35,7 +37,7 @@ public class NewsRepositoryTest implements TestDataNews {
     private NewsRepository newsRepository;
 
     @Autowired
-    private PerformanceRepository performanceRepository;
+    private EventRepository eventRepository;
 
     @Autowired
     private ArtistRepository artistRepository;
@@ -49,28 +51,28 @@ public class NewsRepositoryTest implements TestDataNews {
     @BeforeEach
     public void beforeEach(){
         newsRepository.deleteAll();
-        performanceRepository.deleteAll();
+        eventRepository.deleteAll();
         artistRepository.deleteAll();
         addressRepository.deleteAll();
 
         Address address = addressRepository.save(TestDataEvent.TEST_EVENT_LOCATION);
         Artist artist = artistRepository.save(TestDataEvent.TEST_EVENT_ARTIST);
 
-        Performance performance = Performance.builder()
-            .title(TestDataEvent.TEST_EVENT_TITLE)
+        Event event = Event.builder()
+            .name(TestDataEvent.TEST_EVENT_TITLE)
             .description(TestDataEvent.TEST_EVENT_DESCRIPTION)
-            .date(TestDataEvent.TEST_EVENT_DATE_FUTURE)
-            .artist(artist)
-            .location(address)
-            .sectorTypes(TestDataEvent.getTestEventSectortypes())
+            .startDate(TestDataEvent.TEST_EVENT_DATE_FUTURE)
+            .endDate(TestDataEvent.TEST_EVENT_DATE_FUTURE2)
+            .eventType(TestDataEvent.TEST_EVENT_EVENT_TYPE)
+            .duration(TestDataEvent.TEST_EVENT_DURATION)
             .build();
-        performanceRepository.save(performance);
+        eventRepository.save(event);
 
         news = News.builder()
             .title(TEST_NEWS_TITLE)
             .text(TEST_NEWS_TEXT)
             .author("Testuser")
-            .performance(performance)
+            .event(event)
             .publishedAt(TEST_NEWS_PUBLISHED_AT)
             .build();
 
@@ -78,7 +80,7 @@ public class NewsRepositoryTest implements TestDataNews {
             .title(TEST_NEWS_TITLE + "2")
             .text(TEST_NEWS_TEXT)
             .author("TestAuthor")
-            .performance(performance)
+            .event(event)
             .publishedAt(TEST_NEWS_PUBLISHED_AT)
             .build();
     }

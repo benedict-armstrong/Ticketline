@@ -10,14 +10,7 @@
 <!--</div>-->
 
   <div *ngFor="let event of events">
-    <div class="header">
-      <h5 [routerLink]="['/event-detail', event.id]">{{event.name}}</h5>
-    </div>
-    <hr/>
-    <div *ngFor="let performance of event.performances">
-      <app-event-list-item [eventItem]="performance"></app-event-list-item>
-    </div>
-
+    <app-event-list-item [eventItem]="event"></app-event-list-item>
   </div>
 
 <div *ngIf="!search" class="text-center more" (click)="loadBatch()">

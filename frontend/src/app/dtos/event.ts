@@ -1,4 +1,5 @@
 import {Performance} from './performance';
+import {CustomFile} from './customFile';
 
 export class Event {
   constructor(
@@ -9,6 +10,7 @@ export class Event {
     public endDate: Date,
     public eventType: 'CINEMA' | 'THEATRE' | 'OPERA' | 'CONCERT',
     public duration: number,
-    public performances: Performance[]
+    public performances: Performance[],
+    public images: CustomFile[]
   ) {}
 }

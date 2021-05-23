@@ -55,10 +55,6 @@ public class Performance {
     @ToString.Exclude
     private Artist artist;
 
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
-    @ToString.Exclude
-    private Set<File> images = new HashSet<>();
-
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @NotNull
     private Set<SectorType> sectorTypes = new HashSet<>();

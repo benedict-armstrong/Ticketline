@@ -1,39 +1,16 @@
 <div class="performance" *ngIf="eventItem">
-  <div id="carouselExampleControls" class="carousel slide col-md-8" data-bs-ride="carousel">
-    <div class="carousel-inner">
-      <div *ngIf="eventItem.images.length > 0">
-        <div  class="carousel-item active" *ngFor="let img of imgURL let i = index" [ngClass]="{'active': i == 0 }">
-          <img class="card-img-top" [src]="img" alt="">
-        </div>
-      </div>
-    </div>
-    <div *ngIf="eventItem.images.length > 1">
-      <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
-        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-        <span class="visually-hidden">Previous</span>
-      </button>
-      <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
-        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-        <span class="visually-hidden">Next</span>
-      </button>
-    </div>
-  </div>
   <div class="main">
     <div class="header">
-      <h3 class="col-10">{{eventItem.title}}</h3>
-      <div class="col-2 add-news" *ngIf="hasOrganizerPermission()">
-        <button class="col-2 primary" [routerLink]="['/add-news', eventItem.id]">Add News</button>
-      </div>
+      <h3>{{eventItem.title}}</h3>
       <div class="row performance-info">
         <div class="col-8">
-
           <p>{{eventItem.description}}</p>
         </div>
         <div class="col-4 additional-performance-info">
           <h4>Time</h4>
           <p class="info">{{eventItem.date | date:'EEEE, MMM d, y HH:mm'}} <br>
           <h4>Performer</h4>
-          <p>{{eventItem.artist.firstName}} {{eventItem.artist.lastName}}</p> <br>
+          <p>{{eventItem.artist.firstName}} {{eventItem.artist.lastName}}</p>
           <h4>Location</h4>
           <p>
             {{this.eventItem.location.name}}<br>

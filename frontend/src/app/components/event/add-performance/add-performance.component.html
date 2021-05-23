@@ -1,17 +1,17 @@
 <div class="addPerformance">
   <form class="form" [formGroup]="addPerformanceForm" (ngSubmit)="addPerformance()">
 
-    <h3>Add new Performance</h3>
+    <h3>Add new Performance <span *ngIf="event.name !== ''">for {{event.name}}</span></h3>
 
     <div class="form-group">
-      <label for="eventName" class="required">Performance name</label>
-      <input type="text" name="eventName" formControlName="eventName" class="text-input form-control" id="eventName"
+      <label for="title" class="required">Performance name</label>
+      <input type="text" name="title" formControlName="title" class="text-input form-control" id="title"
         placeholder="Enter performance name">
-      <div *ngIf="submitted && addPerformanceForm.controls.eventName.errors" class="error">
-        <small class="form-text text-danger" *ngIf="addPerformanceForm.controls.eventName.errors.required">
+      <div *ngIf="submitted && addPerformanceForm.controls.title.errors" class="error">
+        <small class="form-text text-danger" *ngIf="addPerformanceForm.controls.title.errors.required">
           Performance name is required!
         </small>
-        <small class="form-text text-danger" *ngIf="addPerformanceForm.controls.eventName.errors.maxLength">
+        <small class="form-text text-danger" *ngIf="addPerformanceForm.controls.title.errors.maxLength">
           Performance name cannot be more than 100 characters!
         </small>
       </div>
@@ -42,40 +42,6 @@
           Date must be in the future!
         </small>
       </div>
-    </div>
-
-    <div class="form-group">
-      <label for="files" class="required">Picture Upload</label>
-      <p id="file-info">Supported formats: jpg, jpeg, png. The maximum file size is 1MB.</p>
-      <input formControlName="files" id="files" type="file" class="form-control" (change)="onFileChange($event)">
-      <div *ngIf="submitted && files.length === 0" class="alert alert-danger">
-        <div>Atleast one image required</div>
-      </div>
-      <div *ngIf="fileNoImage" class="alert alert-danger">
-        <div>The uploaded file is no image</div>
-      </div>
-      <div *ngIf="tooManyFiles" class="alert alert-danger">
-        <div>Max. 10 images per performance</div>
-      </div>
-      <div *ngIf="fileTooBig" class="alert alert-danger">
-        <div>File must be smaller than 1MB</div>
-      </div>
-    </div>
-
-    <div *ngIf="files.length > 0">
-      <table class="table">
-        <thead>
-          <tr>Name</tr>
-          <tr style="width: 5%"></tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let image of files; let i = index">
-            <td>{{image.name}}</td>
-            <td><button type="button" class="btn btn-secondary" style="width: 100%" (click)="removeImage(i)">X</button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
     </div>
 
     <hr />
@@ -112,6 +78,7 @@
     </div>
 
     <button type="button" (click)="addPerformance()" class="primary" id="create">Add performance</button>
+    <button type="button" (click)="cancelAdding.emit()" class="secondary" id="cancel">Cancel</button>
 
     <div *ngIf="error" class="col-12 alert alert-danger alert-dismissible fade show" role="alert">
       <strong>Error! </strong> {{ errorMessage }}

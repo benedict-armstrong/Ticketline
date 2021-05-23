@@ -44,7 +44,7 @@ public class News {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn
-    private Performance performance;
+    private Event event;
 
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
     private Set<File> images = new HashSet<>();

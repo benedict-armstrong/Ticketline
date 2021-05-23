@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import org.hibernate.validator.constraints.Range;
 
 import javax.validation.constraints.Future;
@@ -45,4 +46,9 @@ public class EventDto {
     @Future(message = "End date must be in the future")
     //TODO: Must be after startDate
     private LocalDateTime endDate;
+
+    @Size(max = 10, message = "Upload 10 images or less")
+    @Size(min = 1, message = "Atleast one image required")
+    @ToString.Exclude
+    private FileDto[] images = new FileDto[10];
 }
