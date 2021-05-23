@@ -10,6 +10,7 @@ import at.ac.tuwien.sepm.groupphase.backend.repository.AddressRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.ArtistRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.EventRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.NewsRepository;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -48,10 +49,8 @@ public class NewsRepositoryTest implements TestDataNews {
 
     @BeforeEach
     public void beforeEach(){
-        newsRepository.deleteAll();
-        eventRepository.deleteAll();
-        artistRepository.deleteAll();
-        addressRepository.deleteAll();
+        //newsRepository.deleteAll();
+        //eventRepository.deleteAll();
 
         Address address = addressRepository.save(TestDataEvent.TEST_EVENT_LOCATION);
         Artist artist = artistRepository.save(TestDataEvent.TEST_EVENT_ARTIST);
@@ -81,6 +80,14 @@ public class NewsRepositoryTest implements TestDataNews {
             .event(event)
             .publishedAt(TEST_NEWS_PUBLISHED_AT)
             .build();
+    }
+
+    @AfterEach
+    public void afterEach() {
+        newsRepository.deleteAll();
+        eventRepository.deleteAll();
+        artistRepository.deleteAll();
+        addressRepository.deleteAll();
     }
 
     @Test

@@ -8,6 +8,7 @@ import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepm.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepm.groupphase.backend.security.JwtTokenizer;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -23,7 +24,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
@@ -79,7 +79,7 @@ public class UserEndpointTest implements TestDataUser {
 
     @BeforeEach
     public void beforeEach() {
-        userRepository.deleteAll();
+        //userRepository.deleteAll();
         defaultUser = ApplicationUser.builder()
             .firstName(DEFAULT_FIRST_NAME)
             .lastName(DEFAULT_LAST_NAME)
@@ -105,6 +105,11 @@ public class UserEndpointTest implements TestDataUser {
             .address(ADMIN_ADDRESS)
             .telephoneNumber(ADMIN_PHONE_NUMBER)
             .build();
+    }
+
+    @AfterEach
+    public void afterEach() {
+        userRepository.deleteAll();
     }
 
     @Test

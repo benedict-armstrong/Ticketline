@@ -5,6 +5,7 @@ import at.ac.tuwien.sepm.groupphase.backend.entity.Event;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Performance;
 import at.ac.tuwien.sepm.groupphase.backend.repository.EventRepository;
 import at.ac.tuwien.sepm.groupphase.backend.specification.EventSpecificationBuilder;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -33,7 +34,7 @@ public class EventRepositoryTest implements TestDataEvent {
 
     @BeforeEach
     public void beforeEach(){
-        eventRepository.deleteAll();
+        //eventRepository.deleteAll();
 
         event = Event.builder()
             .name(TestDataEvent.TEST_EVENT_TITLE)
@@ -43,6 +44,11 @@ public class EventRepositoryTest implements TestDataEvent {
             .duration(TestDataEvent.TEST_EVENT_DURATION)
             .eventType(TestDataEvent.TEST_EVENT_EVENT_TYPE)
             .build();
+    }
+
+    @AfterEach
+    public void afterEach() {
+        eventRepository.deleteAll();
     }
 
     @Test
