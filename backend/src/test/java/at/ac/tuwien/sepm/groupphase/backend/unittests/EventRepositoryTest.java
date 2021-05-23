@@ -4,6 +4,7 @@ import at.ac.tuwien.sepm.groupphase.backend.basetest.TestDataEvent;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Event;
 import at.ac.tuwien.sepm.groupphase.backend.repository.EventRepository;
 import at.ac.tuwien.sepm.groupphase.backend.specification.EventSpecificationBuilder;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -41,6 +42,11 @@ public class EventRepositoryTest implements TestDataEvent {
             .location(TestDataEvent.getTestEventLocation())
             .sectorTypes(TestDataEvent.getTestEventSectortypes())
             .build();
+    }
+
+    @AfterEach
+    public void afterEach() {
+        eventRepository.deleteAll();
     }
 
     @Test
