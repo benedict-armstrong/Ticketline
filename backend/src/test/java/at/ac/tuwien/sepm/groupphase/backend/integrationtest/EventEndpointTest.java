@@ -14,7 +14,6 @@ import at.ac.tuwien.sepm.groupphase.backend.repository.AddressRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.ArtistRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.EventRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.FileRepository;
-import at.ac.tuwien.sepm.groupphase.backend.repository.PerformanceRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.UserRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
@@ -52,9 +51,6 @@ public class EventEndpointTest implements TestDataEvent, TestAuthentification {
 
     @Autowired
     private EventRepository eventRepository;
-
-    @Autowired
-    private PerformanceRepository performanceRepository;
 
     @Autowired
     private FileRepository fileRepository;
@@ -96,7 +92,6 @@ public class EventEndpointTest implements TestDataEvent, TestAuthentification {
     @BeforeEach
     public void beforeEach() throws Exception {
         eventRepository.deleteAll();
-        performanceRepository.deleteAll();
         fileRepository.deleteAll();
         addressRepository.deleteAllInBatch();
         artistRepository.deleteAll();

@@ -9,7 +9,6 @@ import at.ac.tuwien.sepm.groupphase.backend.entity.SectorType;
 import at.ac.tuwien.sepm.groupphase.backend.repository.AddressRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.ArtistRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.EventRepository;
-import at.ac.tuwien.sepm.groupphase.backend.repository.PerformanceRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.FileRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
