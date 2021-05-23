@@ -1,6 +1,6 @@
 import { Component, EventEmitter, OnInit, Output } from "@angular/core";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
-import { Sector } from "../models/sector";
+import { Sector } from "src/app/dtos/sector";
 @Component({
   selector: "app-venue-add-sector",
   templateUrl: "./venue-add-sector.component.html",
@@ -16,7 +16,7 @@ export class VenueAddSectorComponent implements OnInit {
       id: 0,
       description: "This is the Stage",
       color: "#CCCCCC",
-      type: "stage",
+      type: "STAGE",
     },
   ];
   submitted = false;
@@ -42,7 +42,7 @@ export class VenueAddSectorComponent implements OnInit {
     this.venueAddSectorForm = this.formBuilder.group({
       name: ["", [Validators.required]],
       description: [""],
-      type: ["seated", [Validators.required]],
+      type: ["SEATED", [Validators.required]],
     });
     this.newSector.emit(this.sectors);
   }
@@ -63,7 +63,7 @@ export class VenueAddSectorComponent implements OnInit {
         color: this.colors[this.sectors.length],
       });
       this.venueAddSectorForm.reset();
-      this.venueAddSectorForm.controls["type"].setValue("seated");
+      this.venueAddSectorForm.controls["type"].setValue("SEATED");
       this.newSector.emit(this.sectors);
     }
   }

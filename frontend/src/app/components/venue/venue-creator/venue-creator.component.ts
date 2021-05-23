@@ -1,9 +1,10 @@
-import { HostListener } from "@angular/core";
+import { EventEmitter, HostListener, Output } from "@angular/core";
 import { Component, Input, OnInit } from "@angular/core";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { GridTool } from "../models/gridTool";
 import { SeatUnit } from "../models/seatUnit";
-import { Sector } from "../models/sector";
+import { Sector } from "src/app/dtos/sector";
+import { LayoutUnit } from "src/app/dtos/layoutUnit";
 
 @Component({
   selector: "app-venue-creator",
@@ -13,6 +14,8 @@ import { Sector } from "../models/sector";
 export class VenueCreatorComponent implements OnInit {
   @Input()
   sectors: Sector[] = [];
+
+  @Output() createdVenueLayout = new EventEmitter<LayoutUnit[][]>();
 
   @HostListener("window:beforeunload", ["$event"])
   doSomething($event) {
@@ -106,5 +109,24 @@ export class VenueCreatorComponent implements OnInit {
 
   toggleReassign() {
     this.activeTool.reassign = !this.activeTool.reassign;
+  }
+
+  save() {
+    let layout: LayoutUnit[][];
+    layout = this.venueLayout.map((row) =>
+      row.map((su) => {
+        if (su.available) {
+          return new LayoutUnit(
+            null,
+            su.customLabel,
+            su.sector ? su.sector.id : null
+          );
+        } else {
+          return null;
+        }
+      })
+    );
+
+    this.createdVenueLayout.emit(layout);
   }
 }

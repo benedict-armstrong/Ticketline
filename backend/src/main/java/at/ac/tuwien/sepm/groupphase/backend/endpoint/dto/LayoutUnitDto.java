@@ -1,6 +1,7 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint.dto;
 
 
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -23,5 +24,6 @@ public class LayoutUnitDto {
     private String customLabel;
 
     @NotNull
+    @JsonIdentityReference(alwaysAsId = true)
     private SectorDto sector;
 }

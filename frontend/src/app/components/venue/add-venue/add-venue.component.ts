@@ -1,6 +1,10 @@
 import { Component, OnInit } from "@angular/core";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
-import { Sector } from "../models/sector";
+import { Address } from "src/app/dtos/address";
+import { LayoutUnit } from "src/app/dtos/layoutUnit";
+import { Sector } from "src/app/dtos/sector";
+import { Venue } from "src/app/dtos/venue";
+import { VenueService } from "src/app/services/venue.service";
 
 @Component({
   selector: "app-add-venue",
@@ -10,10 +14,16 @@ import { Sector } from "../models/sector";
 export class AddVenueComponent implements OnInit {
   venueForm: FormGroup;
   submitted = false;
+  error = false;
+  errorMessage = "";
 
   sectors: Sector[] = [];
+  venueLayout: LayoutUnit[][];
 
-  constructor(private formBuilder: FormBuilder) {}
+  constructor(
+    private formBuilder: FormBuilder,
+    private venueService: VenueService
+  ) {}
 
   ngOnInit(): void {
     this.venueForm = this.formBuilder.group({
@@ -31,5 +41,54 @@ export class AddVenueComponent implements OnInit {
     this.sectors = sectors;
   }
 
-  add() {}
+  updateLayout(venueLayout: LayoutUnit[][]) {
+    console.log(venueLayout);
+    this.venueLayout = venueLayout;
+  }
+
+  add() {
+    this.submitted = true;
+    if (this.venueForm.valid) {
+      let venue: Venue = new Venue(
+        null,
+        this.venueForm.value.venueName,
+        new Address(
+          null,
+          this.venueForm.value.addressName,
+          this.venueForm.value.lineOne,
+          this.venueForm.value.lineTwo,
+          this.venueForm.value.city,
+          this.venueForm.value.postcode,
+          this.venueForm.value.country
+        ),
+        this.sectors,
+        this.venueLayout
+      );
+      this.venueService.create(venue).subscribe(
+        () => {
+          console.log("Success");
+        },
+        (error) => {
+          this.defaultServiceErrorHandling(error);
+        }
+      );
+    } else {
+      alert("Some values are not correct or missing");
+    }
+  }
+
+  vanishAlert() {
+    this.error = false;
+    this.errorMessage = "";
+  }
+
+  private defaultServiceErrorHandling(error: any) {
+    console.log(error);
+    this.error = true;
+    if (typeof error.error === "object") {
+      this.errorMessage = error.error.error;
+    } else {
+      this.errorMessage = error.error;
+    }
+  }
 }
