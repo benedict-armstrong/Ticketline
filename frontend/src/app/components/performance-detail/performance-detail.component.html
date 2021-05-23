@@ -1,22 +1,22 @@
-<div class="performance" *ngIf="eventItem">
+<div class="performance" *ngIf="performance">
   <div class="main">
     <div class="header">
-      <h3>{{eventItem.title}}</h3>
+      <h3>{{performance.title}}</h3>
       <div class="row performance-info">
         <div class="col-8">
-          <p>{{eventItem.description}}</p>
+          <p>{{performance.description}}</p>
         </div>
         <div class="col-4 additional-performance-info">
           <h4>Time</h4>
-          <p class="info">{{eventItem.date | date:'EEEE, MMM d, y HH:mm'}} <br>
+          <p class="info">{{performance.date | date:'EEEE, MMM d, y HH:mm'}} <br>
           <h4>Performer</h4>
-          <p>{{eventItem.artist.firstName}} {{eventItem.artist.lastName}}</p>
+          <p>{{performance.artist.firstName}} {{performance.artist.lastName}}</p>
           <h4>Location</h4>
           <p>
-            {{this.eventItem.location.name}}<br>
-            {{this.eventItem.location.lineOne}}<br>
-            {{this.eventItem.location.postcode}} {{this.eventItem.location.city}} <br>
-            {{this.eventItem.location.country}}
+            {{this.performance.location.name}}<br>
+            {{this.performance.location.lineOne}}<br>
+            {{this.performance.location.postcode}} {{this.performance.location.city}} <br>
+            {{this.performance.location.country}}
           </p>
         </div>
       </div>
@@ -41,7 +41,7 @@
 
       <div class="tickets">
         <p class="text-center">We will try to find seats next to each other</p>
-        <div *ngFor="let sectorType of eventItem.sectorTypes">
+        <div *ngFor="let sectorType of performance.sectorTypes">
           <app-ticket-list-item [sectorType]="sectorType"></app-ticket-list-item>
         </div>
       </div>

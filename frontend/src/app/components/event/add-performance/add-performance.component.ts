@@ -27,8 +27,7 @@ export class AddPerformanceComponent implements OnInit {
   location: Address;
   artist: Artist;
 
-  constructor(private applicationEventService: ApplicationPerformanceService,
-              private formBuilder: FormBuilder, private fileService: FileService) {
+  constructor(private formBuilder: FormBuilder) {
   }
 
   ngOnInit(): void {

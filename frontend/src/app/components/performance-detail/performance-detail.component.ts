@@ -2,8 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import {Performance} from '../../dtos/performance';
 import {ApplicationPerformanceService} from '../../services/performance.service';
 import {ActivatedRoute} from '@angular/router';
-import {AuthService} from '../../services/auth.service';
-import {FileService} from '../../services/file.service';
 
 @Component({
   selector: 'app-performance-detail',
@@ -12,19 +10,19 @@ import {FileService} from '../../services/file.service';
 })
 export class PerformanceDetailComponent implements OnInit {
 
-  eventItem: Performance;
+  performance: Performance;
   imgURL = [];
   error = false;
   errorMessage = '';
 
   constructor(private eventService: ApplicationPerformanceService,
-              private activeRoute: ActivatedRoute, private authService: AuthService) { }
+              private activeRoute: ActivatedRoute) { }
 
   ngOnInit(): void {
-    const eventId = this.activeRoute.snapshot.params.id;
-    this.eventService.getEventById(eventId).subscribe(
+    const performanceId = this.activeRoute.snapshot.params.id;
+    this.eventService.getPerformanceById(performanceId).subscribe(
       (response) => {
-        this.eventItem = response;
+        this.performance = response;
       },
       error => {
         this.defaultServiceErrorHandling(error);

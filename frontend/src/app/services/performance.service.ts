@@ -25,9 +25,9 @@ export class ApplicationPerformanceService {
   }
 
   /**
-   * Loads all events from the backend
+   * Loads a specific performance from the backend
    */
-  getEventById(id: number): Observable<Performance> {
+  getPerformanceById(id: number): Observable<Performance> {
     return this.httpClient.get<Performance>(this.eventBaseUri + '/' + id);
   }
 
