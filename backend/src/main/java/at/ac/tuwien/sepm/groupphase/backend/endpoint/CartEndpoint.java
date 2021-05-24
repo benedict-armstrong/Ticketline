@@ -2,15 +2,13 @@ package at.ac.tuwien.sepm.groupphase.backend.endpoint;
 
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.CartItemDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.CartItemMapper;
+import at.ac.tuwien.sepm.groupphase.backend.entity.CartItem;
 import at.ac.tuwien.sepm.groupphase.backend.service.CartService;
 import io.swagger.v3.oas.annotations.Operation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.security.PermitAll;
 import javax.validation.Valid;
@@ -34,9 +32,17 @@ public class CartEndpoint {
 
     @PostMapping
     @PermitAll
-    @Operation(summary = "Add Cart Items")
+    @Operation(summary = "Add Cart Item")
     public CartItemDto add(@Valid @RequestBody CartItemDto cartItemDto) {
         LOGGER.info("POST /api/v1/cart {}", cartItemDto);
         return cartItemMapper.cartItemToCartItemDto(cartService.addCart(cartItemMapper.cartItemDtoToCartItem(cartItemDto)));
+    }
+
+    @GetMapping
+    @PermitAll
+    @Operation(summary = "Get Cart Items")
+    public List<CartItemDto> getCart(@Valid @RequestBody Long userId) {
+        LOGGER.info("Get /api/v1/cart {}", userId);
+        return cartItemMapper.cartItemListToCartItemDtoList(cartService.getCart(userId));
     }
 }

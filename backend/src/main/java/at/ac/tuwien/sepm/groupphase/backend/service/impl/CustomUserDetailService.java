@@ -120,4 +120,14 @@ public class CustomUserDetailService implements UserService {
 
         throw new NotFoundException(String.format("Could not find the user with the email address %s", user.getEmail()));
     }
+
+    @Override
+    public ApplicationUser findUserById(Long id) {
+        LOGGER.debug("Find user by id");
+        ApplicationUser applicationUser = userRepository.getOne(id);
+        if (applicationUser != null) {
+            return applicationUser;
+        }
+        throw new NotFoundException(String.format("Could not find the user with the id %d", id));
+    }
 }

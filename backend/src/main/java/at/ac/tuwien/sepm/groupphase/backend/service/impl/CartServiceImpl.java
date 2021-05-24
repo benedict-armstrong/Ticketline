@@ -2,6 +2,7 @@ package at.ac.tuwien.sepm.groupphase.backend.service.impl;
 
 import at.ac.tuwien.sepm.groupphase.backend.entity.CartItem;
 import at.ac.tuwien.sepm.groupphase.backend.repository.CartRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepm.groupphase.backend.service.CartService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,10 +20,12 @@ public class CartServiceImpl implements CartService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final CartRepository cartRepository;
+    private final UserRepository userRepository;
 
     @Autowired
-    public CartServiceImpl(CartRepository cartRepository) {
+    public CartServiceImpl(CartRepository cartRepository, UserRepository userRepository) {
         this.cartRepository = cartRepository;
+        this.userRepository = userRepository;
     }
 
     @Override
@@ -30,6 +33,12 @@ public class CartServiceImpl implements CartService {
         LOGGER.trace("addCart({})", cartItem);
         cartItem.setCreationDate(LocalDateTime.now());
         return cartRepository.save(cartItem);
+    }
+
+    @Override
+    public List<CartItem> getCart(Long userId) {
+        LOGGER.trace("getCart({})", userId);
+        return cartRepository.findByUser(userRepository.getOne(userId));
     }
 
     @Scheduled(fixedDelay = 60000)

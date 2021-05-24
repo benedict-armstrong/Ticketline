@@ -25,6 +25,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
+import java.time.LocalDateTime;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -54,16 +55,16 @@ public class CartEndpointTest implements TestDataCart {
     @Autowired
     private ObjectMapper objectMapper;
 
-    private CartItemDto cartItemDto;
+    private CartItem cartItem;
 
     @BeforeEach
     public void beforeEach() {
         ApplicationUser user = userRepository.save(CART_USER);
-
-        cartItemDto = CartItemDto.builder()
-            .userId(user.getId())
+        cartItem = CartItem.builder()
+            .user(user)
             .ticketId(CART_TICKET_ID)
             .amount(CART_AMOUNT)
+            .creationDate(LocalDateTime.now())
             .build();
     }
 
@@ -76,7 +77,7 @@ public class CartEndpointTest implements TestDataCart {
     @Test
     public void whenPostCartItem_ThenCartItemWithId() throws Exception {
 
-        String body = objectMapper.writeValueAsString(cartItemDto);
+        String body = objectMapper.writeValueAsString(cartItemMapper.cartItemToCartItemDto(cartItem));
 
         MvcResult mvcResult = this.mockMvc.perform(post(CART_BASE_URI)
             .contentType(MediaType.APPLICATION_JSON)

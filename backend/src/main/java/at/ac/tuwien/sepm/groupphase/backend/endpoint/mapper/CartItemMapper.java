@@ -1,29 +1,25 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper;
 
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.CartItemDto;
-import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepm.groupphase.backend.entity.CartItem;
+import at.ac.tuwien.sepm.groupphase.backend.service.UserService;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
-@Mapper
-public interface CartItemMapper extends FileTypeMapper {
+@Mapper(componentModel = "spring")
+public abstract class CartItemMapper implements FileTypeMapper {
 
-    CartItem cartItemDtoToCartItem(CartItemDto cartItemDto);
+    @Autowired
+    protected UserService userService;
 
-    CartItemDto cartItemToCartItemDto(CartItem cartItem);
+    @Mapping(target = "user", expression = "java(userService.findUserById(cartItemDto.getUserId()))")
+    public abstract CartItem cartItemDtoToCartItem(CartItemDto cartItemDto);
 
-    List<CartItemDto> cartItemListToCartItemDtoList(List<CartItem> cartItems);
+    @Mapping(target = "userId", expression = "java(cartItem.getUser().getId())")
+    public abstract CartItemDto cartItemToCartItemDto(CartItem cartItem);
 
-    List<CartItem> cartItemDtoListToCartItemList(List<CartItemDto> cartItemDtos);
-
-    default Long map(ApplicationUser value) {
-        return value.getId();
-    }
-
-    default ApplicationUser mapToUser(Long value) {
-        return ApplicationUser.builder().id(value).build();
-    }
-
+    public abstract List<CartItemDto> cartItemListToCartItemDtoList(List<CartItem> cartItems);
 }
