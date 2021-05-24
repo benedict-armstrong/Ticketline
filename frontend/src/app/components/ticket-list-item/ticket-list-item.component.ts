@@ -22,9 +22,6 @@ export class TicketListItemComponent implements OnInit {
   // Success Flag
   success = false;
 
-  //TODO Change
-  price = 10.995;
-
   constructor(
     private formBuilder: FormBuilder,
     private cartService: ShoppingcartService

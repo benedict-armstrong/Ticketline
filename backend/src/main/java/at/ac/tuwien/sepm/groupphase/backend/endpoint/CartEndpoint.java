@@ -46,14 +46,6 @@ public class CartEndpoint {
         return cartItemMapper.cartItemListToCartItemDtoList(cartService.getCart(userId));
     }
 
-    @GetMapping("/{userId}")
-    @PermitAll
-    @Operation(summary = "Get Cart Items")
-    public List<CartItemDto> getCartPathVariable(@PathVariable Long userId) {
-        LOGGER.info("Get /api/v1/cart {}", userId);
-        return cartItemMapper.cartItemListToCartItemDtoList(cartService.getCart(userId));
-    }
-
     @PutMapping
     @PermitAll
     @Operation(summary = "Update Cart Item")

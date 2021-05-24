@@ -52,7 +52,7 @@ public class CartEndpointTest implements TestDataCart {
     @Autowired
     private ObjectMapper objectMapper;
 
-    private CartItem cartItem;
+    private CartItem cartItem, cartItem2;
 
     private ApplicationUser user;
     private ApplicationUser user2;
@@ -64,6 +64,12 @@ public class CartEndpointTest implements TestDataCart {
         cartItem = CartItem.builder()
             .user(user)
             .ticketId(CART_TICKET_ID)
+            .amount(CART_AMOUNT)
+            .creationDate(LocalDateTime.now())
+            .build();
+        cartItem2 = CartItem.builder()
+            .user(user)
+            .ticketId(CART_TICKET_ID + 1)
             .amount(CART_AMOUNT)
             .creationDate(LocalDateTime.now())
             .build();
@@ -134,35 +140,19 @@ public class CartEndpointTest implements TestDataCart {
     }
 
     @Test
-    public void AfterInsertingTwoCartItems_whenGetCart_ThenCartWithLengthOfTwo() throws Exception {
+    public void ivenTwoCartItems_WhenGetCart_ThenCartWithLengthOfTwo() throws Exception {
 
-        String body = objectMapper.writeValueAsString(cartItemMapper.cartItemToCartItemDto(cartItem));
+        cartRepository.save(cartItem);
+        cartRepository.save(cartItem2);
 
-        MvcResult mvcResult = this.mockMvc.perform(post(CART_BASE_URI)
+        String body = objectMapper.writeValueAsString(user.getId());
+
+        MvcResult mvcResult = this.mockMvc.perform(get(CART_BASE_URI)
             .contentType(MediaType.APPLICATION_JSON)
             .content(body))
             .andDo(print())
             .andReturn();
         MockHttpServletResponse response = mvcResult.getResponse();
-
-        cartItem.setTicketId(CART_TICKET_ID + 1);
-        body = objectMapper.writeValueAsString(cartItemMapper.cartItemToCartItemDto(cartItem));
-
-        mvcResult = this.mockMvc.perform(post(CART_BASE_URI)
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(body))
-            .andDo(print())
-            .andReturn();
-        response = mvcResult.getResponse();
-
-        body = objectMapper.writeValueAsString(user.getId());
-
-        mvcResult = this.mockMvc.perform(get(CART_BASE_URI)
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(body))
-            .andDo(print())
-            .andReturn();
-        response = mvcResult.getResponse();
 
         assertEquals(HttpStatus.OK.value(), response.getStatus());
         assertEquals(MediaType.APPLICATION_JSON_VALUE, response.getContentType());
@@ -177,72 +167,19 @@ public class CartEndpointTest implements TestDataCart {
     }
 
     @Test
-    public void AfterInsertingTwoCartItemsWithSameTicketId_whenGetCart_ThenCartWithLengthOfOne() throws Exception {
+    public void givenTwoCartItems_WhenGetCartButWrongUser_ThenCartEmpty() throws Exception {
 
-        String body = objectMapper.writeValueAsString(cartItemMapper.cartItemToCartItemDto(cartItem));
+        cartRepository.save(cartItem);
+        cartRepository.save(cartItem2);
 
-        MvcResult mvcResult = this.mockMvc.perform(post(CART_BASE_URI)
+        String body = objectMapper.writeValueAsString(user2.getId());
+
+        MvcResult mvcResult = this.mockMvc.perform(get(CART_BASE_URI)
             .contentType(MediaType.APPLICATION_JSON)
             .content(body))
             .andDo(print())
             .andReturn();
         MockHttpServletResponse response = mvcResult.getResponse();
-
-        mvcResult = this.mockMvc.perform(post(CART_BASE_URI)
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(body))
-            .andDo(print())
-            .andReturn();
-        response = mvcResult.getResponse();
-
-        body = objectMapper.writeValueAsString(user.getId());
-
-        mvcResult = this.mockMvc.perform(get(CART_BASE_URI)
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(body))
-            .andDo(print())
-            .andReturn();
-        response = mvcResult.getResponse();
-
-        assertEquals(HttpStatus.OK.value(), response.getStatus());
-        assertEquals(MediaType.APPLICATION_JSON_VALUE, response.getContentType());
-
-        List<CartItemDto> cartItemResponse = Arrays.asList(
-            objectMapper.readValue(response.getContentAsString(), CartItemDto[].class)
-        );
-        assertAll(
-            () -> assertEquals(1, cartItemResponse.size()),
-            () -> assertNotNull(cartItemResponse.get(0).getId())
-        );
-    }
-
-    @Test
-    public void AfterInsertingTwoCartItems_whenGetCartButWrongUser_ThenCartEmpty() throws Exception {
-
-        String body = objectMapper.writeValueAsString(cartItemMapper.cartItemToCartItemDto(cartItem));
-
-        MvcResult mvcResult = this.mockMvc.perform(post(CART_BASE_URI)
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(body))
-            .andDo(print())
-            .andReturn();
-        MockHttpServletResponse response = mvcResult.getResponse();
-
-        mvcResult = this.mockMvc.perform(post(CART_BASE_URI)
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(body))
-            .andDo(print())
-            .andReturn();
-        response = mvcResult.getResponse();
-
-        body = objectMapper.writeValueAsString(user2.getId());
-
-        mvcResult = this.mockMvc.perform(get(CART_BASE_URI)
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(body))
-            .andDo(print())
-            .andReturn();
-        response = mvcResult.getResponse();
 
         assertEquals(HttpStatus.OK.value(), response.getStatus());
         assertEquals(MediaType.APPLICATION_JSON_VALUE, response.getContentType());
@@ -256,7 +193,7 @@ public class CartEndpointTest implements TestDataCart {
     }
 
     @Test
-    public void GivenACartItem_whenUpdateAmount_ThenNewCartItemWithAmount() throws Exception {
+    public void givenACartItem_WhenUpdateAmount_ThenNewCartItemWithAmount() throws Exception {
         cartRepository.save(cartItem);
         cartItem.setAmount(CART_AMOUNT + 10);
         String body = objectMapper.writeValueAsString(cartItemMapper.cartItemToCartItemDto(cartItem));
@@ -274,6 +211,29 @@ public class CartEndpointTest implements TestDataCart {
         CartItemDto cartItemResponse = objectMapper.readValue(response.getContentAsString(), CartItemDto.class);
         assertAll(
             () -> assertEquals(CART_AMOUNT + 10, cartItemResponse.getAmount())
+        );
+    }
+
+    @Test
+    public void givenTwoCartItem_WhenDeleteOne_ThenOneCartItemLeft() throws Exception {
+        cartRepository.save(cartItem);
+        cartRepository.save(cartItem2);
+        String body = objectMapper.writeValueAsString(cartItemMapper.cartItemToCartItemDto(cartItem));
+
+        MvcResult mvcResult = this.mockMvc.perform(delete(CART_BASE_URI)
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(body))
+            .andDo(print())
+            .andReturn();
+        MockHttpServletResponse response = mvcResult.getResponse();
+
+        assertEquals(HttpStatus.OK.value(), response.getStatus());
+        assertEquals(MediaType.APPLICATION_JSON_VALUE, response.getContentType());
+
+        boolean success = objectMapper.readValue(response.getContentAsString(), boolean.class);
+        assertAll(
+            () -> assertTrue(success),
+            () -> assertEquals(1, cartRepository.findAll().size())
         );
     }
 }

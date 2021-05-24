@@ -8,16 +8,15 @@ import { Globals } from '../global/globals';
   providedIn: 'root'
 })
 export class ShoppingcartService {
-  private userBaseUri: string = this.globals.backendUri + '/cart';
-
   public cart: CartItem[] = [];
   public status = false;
   public total = 0;
   public success = false;
   public error = false;
-  public errorMessage = "";
-
+  public errorMessage = '';
   public price = 10;
+
+  private userBaseUri: string = this.globals.backendUri + '/cart';
 
   constructor(private httpClient: HttpClient, private globals: Globals) { }
 
@@ -33,11 +32,11 @@ export class ShoppingcartService {
                   this.cart[i] = cart[j];
                   cart.splice(j, 1);
                 }
-              }           
+              }
             }
-            for (let j = 0; j < cart.length; j++) {
-              this.cart.push(cart[j]);            
-            }
+            cart.forEach(cartItem => {
+              this.cart.push(cartItem);
+            });
           }
           this.updatePrice();
         },
@@ -122,7 +121,7 @@ export class ShoppingcartService {
   }
 
   getShoppingCart(): Observable<CartItem[]> {
-    return this.httpClient.get<CartItem[]>(this.userBaseUri + '/2');
+    return this.httpClient.request<CartItem[]>('get', this.userBaseUri, { body: 2});
   }
 
   postShoppingCart(cartItem: CartItem): Observable<CartItem> {
@@ -133,8 +132,8 @@ export class ShoppingcartService {
     return this.httpClient.put<CartItem>(this.userBaseUri, cartItem);
   }
 
-  deleteShoppingCart(cartItem: CartItem): Observable<Object> {
-    return this.httpClient.request<Object>('delete', this.userBaseUri, { body: cartItem});
+  deleteShoppingCart(cartItem: CartItem): Observable<boolean> {
+    return this.httpClient.request<boolean>('delete', this.userBaseUri, { body: cartItem});
   }
 
   private defaultServiceErrorHandling(error: any) {
