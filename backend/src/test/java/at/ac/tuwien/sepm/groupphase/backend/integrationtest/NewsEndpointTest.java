@@ -14,6 +14,7 @@ import at.ac.tuwien.sepm.groupphase.backend.repository.FileRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.NewsRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.UserRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -87,9 +88,9 @@ public class NewsEndpointTest implements TestDataNews, TestDataFile, TestAuthent
 
     @BeforeEach
     public void beforeEach() throws Exception {
-        newsRepository.deleteAll();
-        eventRepository.deleteAll();
-        fileRepository.deleteAll();
+        //newsRepository.deleteAll();
+        //eventRepository.deleteAll();
+        //fileRepository.deleteAll();
 
         event = Event.builder()
             .title(TestDataEvent.TEST_EVENT_TITLE)
@@ -109,9 +110,17 @@ public class NewsEndpointTest implements TestDataNews, TestDataFile, TestAuthent
 
         eventRepository.save(event);
 
-        userRepository.deleteAll();
+        //userRepository.deleteAll();
         saveUser(AUTH_USER_ORGANIZER, userRepository, passwordEncoder);
         authToken = authenticate(AUTH_USER_ORGANIZER, mockMvc, objectMapper);
+    }
+
+    @AfterEach
+    public void afterEach() {
+        newsRepository.deleteAll();
+        eventRepository.deleteAll();
+        fileRepository.deleteAll();
+        userRepository.deleteAll();
     }
 
     @Test

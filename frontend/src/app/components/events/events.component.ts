@@ -13,6 +13,7 @@ export class EventsComponent implements OnInit {
   page = 0;
   size = 8;
   noEvent = true;
+  search = false;
 
   constructor(private eventService: ApplicationEventService) { }
 
@@ -71,6 +72,22 @@ export class EventsComponent implements OnInit {
     }
 
     return eventsForDate;
+  }
+
+  setSearchEvents(results: Event[]){
+    this.events = Object.assign([], results);
+  }
+
+  setSearchDates(dates: string[]){
+    this.dates = Object.assign([], dates);
+  }
+
+  setNoEvents(noEvent: boolean){
+    this.noEvent = noEvent;
+  }
+
+  setSearchPagination(search: boolean){
+    this.search = search;
   }
 
 }
