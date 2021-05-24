@@ -12,4 +12,6 @@ public interface CartRepository extends JpaRepository<CartItem, Long> {
     List<CartItem> findByCreationDateBefore(LocalDateTime pruneDate);
 
     List<CartItem> findByUser(ApplicationUser user);
+
+    CartItem findByUserAndTicketId(ApplicationUser user, Long TicketId);
 }

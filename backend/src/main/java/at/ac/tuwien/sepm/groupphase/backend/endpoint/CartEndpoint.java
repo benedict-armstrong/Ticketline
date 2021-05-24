@@ -35,7 +35,7 @@ public class CartEndpoint {
     @Operation(summary = "Add Cart Item")
     public CartItemDto add(@Valid @RequestBody CartItemDto cartItemDto) {
         LOGGER.info("POST /api/v1/cart {}", cartItemDto);
-        return cartItemMapper.cartItemToCartItemDto(cartService.addCart(cartItemMapper.cartItemDtoToCartItem(cartItemDto)));
+        return cartItemMapper.cartItemToCartItemDto(cartService.addCartItem(cartItemMapper.cartItemDtoToCartItem(cartItemDto)));
     }
 
     @GetMapping
@@ -44,5 +44,13 @@ public class CartEndpoint {
     public List<CartItemDto> getCart(@Valid @RequestBody Long userId) {
         LOGGER.info("Get /api/v1/cart {}", userId);
         return cartItemMapper.cartItemListToCartItemDtoList(cartService.getCart(userId));
+    }
+
+    @PutMapping
+    @PermitAll
+    @Operation(summary = "Update Cart Item")
+    public CartItemDto update(@Valid @RequestBody CartItemDto cartItemDto) {
+        LOGGER.info("PUT /api/v1/cart {}", cartItemDto);
+        return cartItemMapper.cartItemToCartItemDto(cartService.updateCartItem(cartItemMapper.cartItemDtoToCartItem(cartItemDto)));
     }
 }

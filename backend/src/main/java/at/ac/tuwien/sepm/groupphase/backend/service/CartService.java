@@ -12,7 +12,7 @@ public interface CartService {
      * @param cartItem to add
      * @return the persisted cartItem
      */
-    CartItem addCart(CartItem cartItem);
+    CartItem addCartItem(CartItem cartItem);
 
     /**
      * Returns a list of all CartItems of a user with the given id.
@@ -20,4 +20,12 @@ public interface CartService {
      * @return List containing all the cart items
      */
     List<CartItem> getCart(Long userId);
+
+    /**
+     * Updates a item in the cart.
+     *
+     * @param cartItem to update
+     * @return the persisted cartItem
+     */
+    CartItem updateCartItem(CartItem cartItem);
 }

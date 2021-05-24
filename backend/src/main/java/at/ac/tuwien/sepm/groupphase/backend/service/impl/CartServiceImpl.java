@@ -29,9 +29,18 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
-    public CartItem addCart(CartItem cartItem) {
+    public CartItem addCartItem(CartItem cartItem) {
         LOGGER.trace("addCart({})", cartItem);
         cartItem.setCreationDate(LocalDateTime.now());
+
+        CartItem existingCartItem = cartRepository.findByUserAndTicketId(cartItem.getUser(), cartItem.getTicketId());
+
+        if (existingCartItem != null) {
+            existingCartItem.setAmount(cartItem.getAmount());
+            existingCartItem.setCreationDate(cartItem.getCreationDate());
+            return cartRepository.save(existingCartItem);
+        }
+
         return cartRepository.save(cartItem);
     }
 
@@ -39,6 +48,13 @@ public class CartServiceImpl implements CartService {
     public List<CartItem> getCart(Long userId) {
         LOGGER.trace("getCart({})", userId);
         return cartRepository.findByUser(userRepository.getOne(userId));
+    }
+
+    @Override
+    public CartItem updateCartItem(CartItem cartItem) {
+        LOGGER.trace("updateCartItem({})", cartItem);
+        cartItem.setCreationDate(LocalDateTime.now());
+        return cartRepository.save(cartItem);
     }
 
     @Scheduled(fixedDelay = 60000)

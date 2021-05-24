@@ -31,8 +31,7 @@ public class CartRepositoryTest implements TestDataCart {
     @Autowired
     private CartRepository cartRepository;
 
-    private CartItem cartItem;
-    private CartItem cartItem2;
+    private CartItem cartItem, cartItem2, cartItem3;
 
     private ApplicationUser user;
     private ApplicationUser user2;
@@ -51,6 +50,13 @@ public class CartRepositoryTest implements TestDataCart {
             .build();
 
         cartItem2 = CartItem.builder()
+            .user(user)
+            .ticketId(CART_TICKET_ID)
+            .amount(CART_AMOUNT)
+            .creationDate(CART_CREATION_DATE)
+            .build();
+
+        cartItem3 = CartItem.builder()
             .user(user2)
             .ticketId(CART_TICKET_ID)
             .amount(CART_AMOUNT)
@@ -78,14 +84,8 @@ public class CartRepositoryTest implements TestDataCart {
     @Test
     public void givenTwoCartItems_whenGettingCart_thenGetListOfCartItemsWithLengthOfTwo() {
         cartRepository.save(cartItem);
-        cartItem = CartItem.builder()
-            .user(user)
-            .ticketId(CART_TICKET_ID)
-            .amount(CART_AMOUNT)
-            .creationDate(CART_CREATION_DATE)
-            .build();
-        cartRepository.save(cartItem);
         cartRepository.save(cartItem2);
+        cartRepository.save(cartItem3);
 
         List<CartItem> response = cartRepository.findByUser(user);
 
