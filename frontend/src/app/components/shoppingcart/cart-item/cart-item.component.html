@@ -1,7 +1,7 @@
 <div class="cartItem">
     <div class="row ticketHeader">
         <div class="col-9">
-            <span>{{this.cartService.cart[this.i].name}}</span>
+            <span>{{this.cartService.cart[this.i].ticketId}}</span>
         </div>
         <div class="col-3 closeContainer">
             <button class="close" type="button" (click)="removeFromCart()">X</button>
@@ -18,7 +18,7 @@
             </form>
         </div>
         <div class="col-4 prices">
-            <span class="price">{{this.cartService.cart[this.i].price * cartItemForm.value.amount | currency:'EUR'}}</span>
+            <span class="price">{{10 * cartItemForm.value.amount | currency:'EUR'}}</span>
         </div>
     </div>
 </div>

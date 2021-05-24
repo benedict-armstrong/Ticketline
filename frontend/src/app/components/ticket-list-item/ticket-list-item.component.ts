@@ -50,9 +50,10 @@ export class TicketListItemComponent implements OnInit {
     if (this.ticketForm.valid) {
       this.error = false;
       this.cartService.addToCart({
-        name: this.sectorType.name,
-        amount: this.ticketForm.value.amount,
-        price: this.price
+        id: null,
+        userId: 2,
+        ticketId: this.sectorType.name.charCodeAt(0),
+        amount: this.ticketForm.value.amount
       });
     } else {
       this.error = true;

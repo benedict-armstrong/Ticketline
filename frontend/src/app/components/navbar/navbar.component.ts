@@ -14,7 +14,7 @@ export class NavbarComponent implements OnInit {
   ngOnInit(): void {}
 
   toggleCart() {
-    this.cartService.status = !this.cartService.status;
+    this.cartService.toggleStatus();
   }
 
   /**
