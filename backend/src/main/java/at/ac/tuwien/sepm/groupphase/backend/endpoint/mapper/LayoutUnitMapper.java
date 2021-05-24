@@ -3,7 +3,6 @@ package at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.LayoutUnitDto;
 import at.ac.tuwien.sepm.groupphase.backend.entity.LayoutUnit;
 import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
 import java.util.ArrayList;
@@ -21,9 +20,9 @@ public interface LayoutUnitMapper {
         int counter = 0;
         List<LayoutUnit> layout = new ArrayList<>();
         for (List<LayoutUnitDto> row : layoutUnitMatrix) {
-            for (LayoutUnitDto layoutUnitDto: row) {
+            for (LayoutUnitDto layoutUnitDto : row) {
                 if (layoutUnitDto != null) {
-                    layout.add(layoutUnitDTOToLayoutUnit(layoutUnitDto, counter));
+                    layout.add(layoutUnitDtoToLayoutUnit(layoutUnitDto, counter));
                 }
                 counter++;
             }
@@ -72,7 +71,7 @@ public interface LayoutUnitMapper {
             .build();
     }
 
-    default LayoutUnit layoutUnitDTOToLayoutUnit(LayoutUnitDto layoutUnitDto, int localId) {
+    default LayoutUnit layoutUnitDtoToLayoutUnit(LayoutUnitDto layoutUnitDto, int localId) {
         if (layoutUnitDto == null) {
             return null;
         }

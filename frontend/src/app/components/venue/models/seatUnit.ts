@@ -1,4 +1,4 @@
-import { Sector } from "src/app/dtos/sector";
+import { Sector } from 'src/app/dtos/sector';
 
 export interface SeatUnit {
   id: number;

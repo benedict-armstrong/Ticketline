@@ -1,6 +1,6 @@
-import { Address } from "./address";
-import { LayoutUnit } from "./layoutUnit";
-import { Sector } from "./sector";
+import { Address } from './address';
+import { LayoutUnit } from './layoutUnit';
+import { Sector } from './sector';
 
 export class Venue {
   constructor(

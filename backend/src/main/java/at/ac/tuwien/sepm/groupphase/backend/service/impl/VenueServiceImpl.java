@@ -1,20 +1,23 @@
 package at.ac.tuwien.sepm.groupphase.backend.service.impl;
 
+import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepm.groupphase.backend.entity.LayoutUnit;
-import at.ac.tuwien.sepm.groupphase.backend.entity.News;
-import at.ac.tuwien.sepm.groupphase.backend.entity.Sector;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Venue;
 import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepm.groupphase.backend.repository.SectorRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.VenueRepository;
+import at.ac.tuwien.sepm.groupphase.backend.security.AuthenticationFacade;
 import at.ac.tuwien.sepm.groupphase.backend.service.VenueService;
 import org.hibernate.Hibernate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.lang.invoke.MethodHandles;
+import java.util.List;
 import java.util.Optional;
 
 
@@ -24,11 +27,15 @@ public class VenueServiceImpl implements VenueService {
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final VenueRepository venueRepository;
     private final SectorRepository sectorRepository;
+    private final AuthenticationFacade authenticationFacade;
+    private final UserRepository userRepository;
 
     @Autowired
-    public VenueServiceImpl(VenueRepository venueRepository, SectorRepository sectorRepository) {
+    public VenueServiceImpl(VenueRepository venueRepository, SectorRepository sectorRepository, AuthenticationFacade authenticationFacade, UserRepository userRepository) {
         this.venueRepository = venueRepository;
         this.sectorRepository = sectorRepository;
+        this.authenticationFacade = authenticationFacade;
+        this.userRepository = userRepository;
     }
 
     @Override
@@ -37,10 +44,14 @@ public class VenueServiceImpl implements VenueService {
         venue.getSectors().forEach(sector -> sector.setId(null));
         venue.setSectors(sectorRepository.saveAll(venue.getSectors()));
 
-        for (LayoutUnit layoutUnit: venue.getLayout()) {
+        for (LayoutUnit layoutUnit : venue.getLayout()) {
             Long localId = layoutUnit.getSector().getLocalId();
             layoutUnit.setSector(venue.getSectors().stream().filter(layoutUnitFilter -> localId.equals(layoutUnitFilter.getLocalId())).findFirst().orElse(null));
         }
+
+        ApplicationUser user = userRepository.findUserByEmail((String) authenticationFacade.getAuthentication().getPrincipal());
+
+        venue.setOwner(user);
 
         return venueRepository.save(venue);
     }
@@ -57,5 +68,14 @@ public class VenueServiceImpl implements VenueService {
             return venue;
         }
         throw new NotFoundException(String.format("Could not find venue with id: %d", id));
+    }
+
+    @Override
+    public List<Venue> getAll() {
+
+        ApplicationUser user = userRepository.findUserByEmail((String) authenticationFacade.getAuthentication().getPrincipal());
+        LOGGER.trace("getAll({})", user.getEmail());
+
+        return venueRepository.findAllByOwnerIs(user);
     }
 }

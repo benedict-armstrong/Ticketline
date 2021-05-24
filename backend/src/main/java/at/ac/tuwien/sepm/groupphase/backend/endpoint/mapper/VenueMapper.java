@@ -4,8 +4,10 @@ import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.VenueDto;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Venue;
 import org.mapstruct.Mapper;
 
+import java.util.List;
 
-@Mapper(componentModel="spring", uses={LayoutUnitMapper.class, AddressMapper.class, SectorMapper.class})
+
+@Mapper(componentModel = "spring", uses = {LayoutUnitMapper.class, AddressMapper.class, SectorMapper.class})
 public interface VenueMapper {
 
     default Venue venueDtoToVenue(VenueDto venueDto) {
@@ -38,5 +40,7 @@ public interface VenueMapper {
             .build();
 
     }
+
+    List<VenueDto> venueToVenueDto(List<Venue> venues);
 
 }

@@ -2,6 +2,8 @@ package at.ac.tuwien.sepm.groupphase.backend.service;
 
 import at.ac.tuwien.sepm.groupphase.backend.entity.Venue;
 
+import java.util.List;
+
 public interface VenueService {
 
     /**
@@ -21,4 +23,12 @@ public interface VenueService {
      * @throws at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException when no Venue with given Id is found.
      */
     Venue getOneById(Long id);
+
+
+    /**
+     * Get all Venues in System.
+     *
+     * @return all Venues in System
+     */
+    List<Venue> getAll();
 }

@@ -1,6 +1,5 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint;
 
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.NewsDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.VenueDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.VenueMapper;
 import at.ac.tuwien.sepm.groupphase.backend.service.VenueService;
@@ -10,11 +9,18 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.annotation.Secured;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import javax.annotation.security.PermitAll;
 import javax.validation.Valid;
 import java.lang.invoke.MethodHandles;
+import java.util.List;
 
 @RestController
 @RequestMapping(value = "/api/v1/venues")
@@ -37,6 +43,14 @@ public class VenueEndpoint {
     public VenueDto create(@Valid @RequestBody VenueDto venueDto) {
         LOGGER.info("POST /api/v1/venue body: {}", venueDto);
         return venueMapper.venueToVenueDto(venueService.add(venueMapper.venueDtoToVenue(venueDto)));
+    }
+
+    @Secured("ROLE_ORGANIZER")
+    @GetMapping
+    @Operation(summary = "Get all venues")
+    public List<VenueDto> getAll() {
+        LOGGER.info("GET /api/v1/venues/");
+        return venueMapper.venueToVenueDto(venueService.getAll());
     }
 
     @GetMapping(value = {"/{id}"})

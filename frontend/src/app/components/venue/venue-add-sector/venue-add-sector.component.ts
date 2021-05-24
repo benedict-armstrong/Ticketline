@@ -1,10 +1,10 @@
-import { Component, EventEmitter, OnInit, Output } from "@angular/core";
-import { FormBuilder, FormGroup, Validators } from "@angular/forms";
-import { Sector } from "src/app/dtos/sector";
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Sector } from 'src/app/dtos/sector';
 @Component({
-  selector: "app-venue-add-sector",
-  templateUrl: "./venue-add-sector.component.html",
-  styleUrls: ["./venue-add-sector.component.scss"],
+  selector: 'app-venue-add-sector',
+  templateUrl: './venue-add-sector.component.html',
+  styleUrls: ['./venue-add-sector.component.scss'],
 })
 export class VenueAddSectorComponent implements OnInit {
   @Output() newSector = new EventEmitter<Sector[]>();
@@ -12,44 +12,44 @@ export class VenueAddSectorComponent implements OnInit {
   venueAddSectorForm: FormGroup;
   sectors: Sector[] = [
     {
-      name: "Stage",
+      name: 'Stage',
       id: 0,
-      description: "This is the Stage",
-      color: "#CCCCCC",
-      type: "STAGE",
+      description: 'This is the Stage',
+      color: '#CCCCCC',
+      type: 'STAGE',
     },
   ];
   submitted = false;
 
   colors: string[] = [
-    "#CCCCCC",
-    "#FF6633",
-    "#B3B31A",
-    "#FF33FF",
-    "#FFFF99",
-    "#00B3E6",
-    "#E6B333",
-    "#3366E6",
-    "#999966",
-    "#99FF99",
-    "#B34D4D",
-    "#991AFF",
+    '#CCCCCC',
+    '#FF6633',
+    '#B3B31A',
+    '#FF33FF',
+    '#FFFF99',
+    '#00B3E6',
+    '#E6B333',
+    '#3366E6',
+    '#999966',
+    '#99FF99',
+    '#B34D4D',
+    '#991AFF',
   ];
 
   constructor(private formBuilder: FormBuilder) {}
 
   ngOnInit(): void {
     this.venueAddSectorForm = this.formBuilder.group({
-      name: ["", [Validators.required]],
-      description: [""],
-      type: ["SEATED", [Validators.required]],
+      name: ['', [Validators.required]],
+      description: [''],
+      type: ['SEATED', [Validators.required]],
     });
     this.newSector.emit(this.sectors);
   }
 
   createSector() {
     if (this.sectors.length > 9) {
-      alert("Maximum of 10 sectors allowed");
+      alert('Maximum of 10 sectors allowed');
       return;
     }
     this.submitted = true;
@@ -63,14 +63,14 @@ export class VenueAddSectorComponent implements OnInit {
         color: this.colors[this.sectors.length],
       });
       this.venueAddSectorForm.reset();
-      this.venueAddSectorForm.controls["type"].setValue("SEATED");
+      this.venueAddSectorForm.controls['type'].setValue('SEATED');
       this.newSector.emit(this.sectors);
     }
   }
 
   removeSector(sector: Sector) {
     if (this.sectors.length < 2) {
-      alert("You must at least have one sector.");
+      alert('You must at least have one sector.');
       return;
     }
     const index = this.sectors.indexOf(sector);

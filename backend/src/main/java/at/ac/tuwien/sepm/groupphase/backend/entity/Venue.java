@@ -7,7 +7,16 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Column;
+import javax.persistence.CascadeType;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.FetchType;
 import java.util.List;
 
 @Data
@@ -26,6 +35,9 @@ public class Venue {
 
     @Column(nullable = false)
     private int width;
+
+    @ManyToOne
+    private ApplicationUser owner;
 
     @OneToOne(cascade = {CascadeType.ALL})
     private Address address;
