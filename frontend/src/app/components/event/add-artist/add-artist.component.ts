@@ -32,7 +32,7 @@ export class AddArtistComponent implements OnInit {
       selectedArtist: ['']
     });
 
-    this.artistService.findAllByCriteria(0, 1000).subscribe((response) => {
+    this.artistService.getArtists(0, 1000).subscribe((response) => {
       this.existingArtists = response;
       this.filteredArtists = this.existingArtists;
     });

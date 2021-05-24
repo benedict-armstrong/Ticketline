@@ -1,4 +1,4 @@
-@import "../../../colors.scss";
+@import "../../../../colors.scss";
 
 .day {
   margin-top: 20px;
@@ -10,6 +10,9 @@
 
 .more {
   margin: 20px 0;
+}
+
+.clickable {
   cursor: pointer;
 }
 

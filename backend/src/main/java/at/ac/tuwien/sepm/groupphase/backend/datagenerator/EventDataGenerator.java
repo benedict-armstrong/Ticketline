@@ -23,6 +23,8 @@ import java.net.URL;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Set;
 
 @Profile("generateData")
@@ -64,6 +66,16 @@ public class EventDataGenerator {
         } else {
             LOGGER.debug("generating {} event entries", NUMBER_OF_EVENTS_TO_GENERATE);
 
+            List<Artist> artistList = new LinkedList<>();
+            if (artistRepository.findAll().size() >= 5) {
+                artistList = artistRepository.findAll();
+            }
+
+            List<Address> addressList = new LinkedList<>();
+            if (addressRepository.findAll().size() >= 5) {
+                addressList = addressRepository.findAll();
+            }
+
             // using free images from pixabay to test
             // Image 1 https://pixabay.com/vectors/test-pattern-tv-tv-test-pattern-152459/
             // Image 2 https://cdn.pixabay.com/photo/2015/11/22/19/04/crowd-1056764_960_720.jpg
@@ -88,12 +100,26 @@ public class EventDataGenerator {
                 set.add(file);
 
                 Set<Performance> performances = new HashSet<>();
+                int addressOffset = 0;
+                int artistOffset = 0;
                 for (int j = 0; j <= i; j++) {
-                    Address location = generateEventLocation(i);
-                    addressRepository.save(location);
+                    Address location;
+                    if (addressList.size() <= j) {
+                        location = generateEventLocation(j);
+                        addressList.add(addressRepository.save(location));
+                        addressOffset++;
+                    } else {
+                        location = addressList.get(j - addressOffset);
+                    }
 
-                    Artist artist = generateArtist(i);
-                    artistRepository.save(artist);
+                    Artist artist;
+                    if (artistList.size() <= j) {
+                        artist = generateArtist(j);
+                        artistList.add(artistRepository.save(artist));
+                        artistOffset++;
+                    } else {
+                        artist = artistList.get(j - artistOffset);
+                    }
 
                     Performance performance = Performance.builder()
                         .title(TEST_PERFORMANCE_TITLE + (j + i))
@@ -160,7 +186,6 @@ public class EventDataGenerator {
     }
 
     public static File generateImage(byte[] imgBuffer, File.Type imageType) {
-        File file = File.builder().data(imgBuffer).type(imageType).build();
-        return file;
+        return File.builder().data(imgBuffer).type(imageType).build();
     }
 }

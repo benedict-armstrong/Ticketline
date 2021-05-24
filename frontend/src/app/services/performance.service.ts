@@ -9,7 +9,7 @@ import {Performance} from '../dtos/performance';
 })
 export class ApplicationPerformanceService {
 
-  private eventBaseUri: string = this.globals.backendUri + '/performances';
+  private performanceBaseUri: string = this.globals.backendUri + '/performances';
 
   constructor(private httpClient: HttpClient, private globals: Globals) {
   }
@@ -21,14 +21,14 @@ export class ApplicationPerformanceService {
     let params = new HttpParams();
     params = params.set('page', String(page));
     params = params.set('size', String(size));
-    return this.httpClient.get<Performance[]>(this.eventBaseUri, { params });
+    return this.httpClient.get<Performance[]>(this.performanceBaseUri, { params });
   }
 
   /**
    * Loads a specific performance from the backend
    */
   getPerformanceById(id: number): Observable<Performance> {
-    return this.httpClient.get<Performance>(this.eventBaseUri + '/' + id);
+    return this.httpClient.get<Performance>(this.performanceBaseUri + '/' + id);
   }
 
   /**
@@ -36,6 +36,6 @@ export class ApplicationPerformanceService {
    */
   addEvent(event: Performance): Observable<Performance> {
     console.log(event);
-    return this.httpClient.post<Performance>(this.eventBaseUri, event);
+    return this.httpClient.post<Performance>(this.performanceBaseUri, event);
   }
 }

@@ -1,16 +1,12 @@
-@import "../../../colors.scss";
+@import "src/colors";
 
-.event {
+.location {
   display: flex;
   max-height: 130px;
   margin-top: 20px;
   justify-content: space-between;
   align-items: center;
-  cursor: pointer;
-}
-
-.event:hover {
-  box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
+  cursor: default;
 }
 
 .performance {
