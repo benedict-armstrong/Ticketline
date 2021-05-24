@@ -4,6 +4,7 @@ package at.ac.tuwien.sepm.groupphase.backend.unittests;
 import at.ac.tuwien.sepm.groupphase.backend.basetest.TestDataUser;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepm.groupphase.backend.repository.UserRepository;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -37,7 +38,7 @@ public class UserRepositoryTest implements TestDataUser {
 
     @BeforeEach
     public void beforeEach() {
-        userRepository.deleteAll();
+        //userRepository.deleteAll();
         user = ApplicationUser.builder()
             .firstName(ADMIN_FIRST_NAME)
             .lastName(ADMIN_LAST_NAME)
@@ -50,6 +51,11 @@ public class UserRepositoryTest implements TestDataUser {
             .address(ADMIN_ADDRESS)
             .telephoneNumber(ADMIN_PHONE_NUMBER)
             .build();
+    }
+
+    @AfterEach
+    public void afterEach() {
+        userRepository.deleteAll();
     }
 
     @Test

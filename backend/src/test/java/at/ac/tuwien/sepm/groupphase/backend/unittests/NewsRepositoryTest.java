@@ -6,6 +6,7 @@ import at.ac.tuwien.sepm.groupphase.backend.entity.Event;
 import at.ac.tuwien.sepm.groupphase.backend.entity.News;
 import at.ac.tuwien.sepm.groupphase.backend.repository.EventRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.NewsRepository;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -38,8 +39,8 @@ public class NewsRepositoryTest implements TestDataNews {
 
     @BeforeEach
     public void beforeEach(){
-        newsRepository.deleteAll();
-        eventRepository.deleteAll();
+        //newsRepository.deleteAll();
+        //eventRepository.deleteAll();
         Event event = Event.builder()
             .title(TestDataEvent.TEST_EVENT_TITLE)
             .description(TestDataEvent.TEST_EVENT_DESCRIPTION)
@@ -67,6 +68,12 @@ public class NewsRepositoryTest implements TestDataNews {
             .event(event)
             .publishedAt(TEST_NEWS_PUBLISHED_AT)
             .build();
+    }
+
+    @AfterEach
+    public void afterEach() {
+        newsRepository.deleteAll();
+        eventRepository.deleteAll();
     }
 
     @Test

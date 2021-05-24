@@ -26,7 +26,8 @@ export class LoginComponent implements OnInit {
   ) {
     this.loginForm = this.formBuilder.group({
       email: ['', [Validators.required]],
-      password: ['', [Validators.required]]
+      password: ['', [Validators.required]],
+      keepLogin: [true]
     });
   }
 
@@ -42,7 +43,9 @@ export class LoginComponent implements OnInit {
         this.loginForm.value.password
       );
 
-      this.authService.loginUser(authObj).subscribe(
+      const checked = this.loginForm.value.keepLogin;
+
+      this.authService.loginUser(authObj, checked).subscribe(
         () => {
           this.router.navigate(['/user']);
         },
