@@ -98,7 +98,7 @@ public class PerformanceEndpointTest implements TestDataEvent, TestAuthentificat
         performance = Performance.builder()
             .title(TestDataEvent.TEST_EVENT_TITLE)
             .description(TestDataEvent.TEST_EVENT_DESCRIPTION)
-            .date(TestDataEvent.TEST_EVENT_DATE_FUTURE)
+            .date(TestDataEvent.TEST_PERFORMANCE_DATE)
             .artist(artist)
             .location(address)
             .sectorTypes(TestDataEvent.getTestEventSectortypes())
@@ -147,7 +147,7 @@ public class PerformanceEndpointTest implements TestDataEvent, TestAuthentificat
         Performance invalidPerformance = Performance.builder()
             .title(TestDataEvent.TEST_EVENT_TITLE)
             .description(TestDataEvent.TEST_EVENT_DESCRIPTION)
-            .date(TestDataEvent.TEST_EVENT_DATE_PAST)
+            .date(TestDataEvent.TEST_PERFORMANCE_DATE.minusYears(10))
             .artist(TestDataEvent.TEST_EVENT_ARTIST)
             .location(TestDataEvent.TEST_EVENT_LOCATION)
             .sectorTypes(TestDataEvent.getTestEventSectortypes())
@@ -157,6 +157,7 @@ public class PerformanceEndpointTest implements TestDataEvent, TestAuthentificat
             post(TestDataEvent.PEFORMANCE_BASE_URI)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(invalidPerformance))
+                .header(securityProperties.getAuthHeader(), authToken)
         ).andReturn();
 
         MockHttpServletResponse response = mvcResult.getResponse();
@@ -169,7 +170,7 @@ public class PerformanceEndpointTest implements TestDataEvent, TestAuthentificat
         Performance invalidPerformance = Performance.builder()
             .title(TestDataEvent.TEST_EVENT_TITLE)
             .description(TestDataEvent.TEST_EVENT_DESCRIPTION)
-            .date(TestDataEvent.TEST_EVENT_DATE_FUTURE)
+            .date(TestDataEvent.TEST_PERFORMANCE_DATE)
             .artist(TestDataEvent.TEST_EVENT_ARTIST)
             .location(TestDataEvent.TEST_EVENT_LOCATION)
             .sectorTypes(new HashSet<>())

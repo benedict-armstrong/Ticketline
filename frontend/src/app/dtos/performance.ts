@@ -7,7 +7,7 @@ export class Performance {
     public id: number,
     public title: string,
     public description: string,
-    public date: Date,
+    public date: string,
     public sectorTypes: SectorType[],
     public location: Address,
     public artist: Artist

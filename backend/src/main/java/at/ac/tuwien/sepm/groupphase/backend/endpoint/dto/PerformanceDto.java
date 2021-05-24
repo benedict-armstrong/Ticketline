@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -36,7 +37,7 @@ public class PerformanceDto {
     @Size(min = 1, message = "Atleast one sectortype is required")
     private SectorTypeDto[] sectorTypes;
 
-    @NotNull(message = "Event date is required")
+    @NotNull(message = "Performance date is required")
     @Future
     private LocalDateTime date;
 }

@@ -39,6 +39,8 @@ export class AddPerformanceComponent implements OnInit {
   addPerformance() {
     this.submitted = true;
 
+    this.performance.date = new Date(this.addPerformanceForm.value.date).toISOString();
+    console.log(this.performance.date);
     if (this.addPerformanceForm.valid &&
       this.sectorTypes.length !== 0 &&
       this.artist !== undefined &&
@@ -46,10 +48,13 @@ export class AddPerformanceComponent implements OnInit {
       // Add additional event data
       this.performance.title = this.addPerformanceForm.value.title;
       this.performance.description = this.addPerformanceForm.value.description;
-      this.performance.date = this.addPerformanceForm.value.date;
       this.performance.location = this.location;
       this.performance.artist = this.artist;
       this.performance.sectorTypes = this.sectorTypes;
+
+      this.performance.date = new Date(this.addPerformanceForm.value.date).toISOString();
+      console.log(this.performance.date);
+
 
       this.performanceAdded.emit(this.performance);
       this.addPerformanceForm.reset();

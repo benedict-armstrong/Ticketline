@@ -4,8 +4,6 @@ import at.ac.tuwien.sepm.groupphase.backend.entity.Event;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Performance;
 import at.ac.tuwien.sepm.groupphase.backend.repository.EventRepository;
 import at.ac.tuwien.sepm.groupphase.backend.service.EventService;
-import at.ac.tuwien.sepm.groupphase.backend.specification.EventSpecification;
-import at.ac.tuwien.sepm.groupphase.backend.specification.EventSearchCriteria;
 import at.ac.tuwien.sepm.groupphase.backend.specification.EventSpecificationBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -51,9 +49,10 @@ public class CustomEventService implements EventService {
             throw new IllegalArgumentException("Starting date of event must be before the ending date");
         }
 
+
         for (Performance performance : performanceSet) {
-            if (performance.getDate().isBefore(event.getStartDate())
-                || performance.getDate().isAfter(event.getEndDate())) {
+            if (performance.getDate().isBefore(event.getStartDate().atStartOfDay())
+                || performance.getDate().isAfter(event.getEndDate().atStartOfDay())) {
                 throw new IllegalArgumentException("Date of performances must be in period of event");
             }
         }

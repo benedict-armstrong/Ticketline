@@ -45,7 +45,7 @@ public class PerformanceRepositoryTest implements TestDataEvent {
         performance = Performance.builder()
             .title(TestDataEvent.TEST_EVENT_TITLE)
             .description(TestDataEvent.TEST_EVENT_DESCRIPTION)
-            .date(TestDataEvent.TEST_EVENT_DATE_FUTURE)
+            .date(TestDataEvent.TEST_PERFORMANCE_DATE)
             .artist(artist)
             .location(address)
             .sectorTypes(TestDataEvent.getTestEventSectortypes())

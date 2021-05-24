@@ -20,6 +20,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.lang.invoke.MethodHandles;
 import java.net.URL;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
@@ -31,8 +32,8 @@ public class EventDataGenerator {
     private static final int NUMBER_OF_EVENTS_TO_GENERATE = 5;
     private static final String TEST_EVENT = "Test Event";
     private static final String TEST_EVENT_DESCRIPTION = "This is a test description! Part";
-    private static final LocalDateTime TEST_EVENT_START_DATE = LocalDateTime.parse("2022-06-12T22:00:00");
-    private static final LocalDateTime TEST_EVENT_END_DATE = LocalDateTime.parse("2022-12-12T22:00:00");
+    private static final LocalDate TEST_EVENT_START_DATE = LocalDate.parse("2021-12-12");
+    private static final LocalDate TEST_EVENT_END_DATE = LocalDate.parse("2023-12-12");
     private static final String TEST_PERFORMANCE_TITLE = "Performance";
     private static final String TEST_PERFORMANCE_DESCRIPTION = "THis is a new performance part";
 
@@ -42,7 +43,7 @@ public class EventDataGenerator {
     private static final String TEST_LOCATION_CITY = "Vienna";
     private static final String TEST_LOCATION_POSTCODE = "1000";
     private static final String TEST_LOCATION_COUNTRY = "Austria";
-    private static final LocalDateTime TEST_DATE = LocalDateTime.parse("2022-12-12T22:00:00");
+    private static final LocalDateTime TEST_DATETIME = LocalDateTime.parse("2022-12-12T22:00:00");
 
     private final EventRepository eventRepository;
     private final FileRepository fileRepository;
@@ -97,7 +98,7 @@ public class EventDataGenerator {
                     Performance performance = Performance.builder()
                         .title(TEST_PERFORMANCE_TITLE + (j + i))
                         .description(TEST_PERFORMANCE_DESCRIPTION + (j + i))
-                        .date(TEST_DATE.plusDays(i * 10))
+                        .date(TEST_DATETIME.plusDays(i * 10))
                         .sectorTypes(generateSectorTypes(i))
                         .artist(artist)
                         .location(location)
