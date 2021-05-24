@@ -154,6 +154,16 @@ public class NewsDataGenerator {
         List<Event> events = new LinkedList<>();
         byte[] imgBuffer1 = recoverImageFromUrl("https://cdn.pixabay.com/photo/2013/07/12/17/47/test-pattern-152459_960_720.png");
 
+        List<Artist> artistList = new LinkedList<>();
+        if (artistRepository.findAll().size() >= NUMBER_OF_NEWS_TO_GENERATE) {
+            artistList = artistRepository.findAll();
+        }
+
+        List<Address> addressList = new LinkedList<>();
+        if (addressRepository.findAll().size() >= NUMBER_OF_NEWS_TO_GENERATE) {
+            addressList = addressRepository.findAll();
+        }
+
         for (int i = 0; i < NUMBER_OF_NEWS_TO_GENERATE; i++) {
             Set<File> set = new HashSet<>();
             File file = EventDataGenerator.generateImage(imgBuffer1, File.Type.IMAGE_JPG);
@@ -161,11 +171,21 @@ public class NewsDataGenerator {
             fileRepository.save(file);
             set.add(file);
 
-            Address location = EventDataGenerator.generateEventLocation(i);
-            addressRepository.save(location);
+            Address location;
+            if (addressList.size() != 0) {
+                location = addressList.get(i);
+            } else {
+                location = EventDataGenerator.generateEventLocation(i);
+                addressRepository.save(location);
+            }
 
-            Artist artist = EventDataGenerator.generateArtist(i);
-            artistRepository.save(artist);
+            Artist artist;
+            if (artistList.size() != 0) {
+                artist = artistList.get(i);
+            } else {
+                artist = EventDataGenerator.generateArtist(i);
+                artistRepository.save(artist);
+            }
 
             Set<Performance> performances = new HashSet<>();
             Performance performance = Performance.builder()
