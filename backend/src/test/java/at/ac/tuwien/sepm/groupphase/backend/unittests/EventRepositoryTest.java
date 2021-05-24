@@ -2,6 +2,7 @@ package at.ac.tuwien.sepm.groupphase.backend.unittests;
 
 import at.ac.tuwien.sepm.groupphase.backend.basetest.TestDataEvent;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Event;
+import at.ac.tuwien.sepm.groupphase.backend.entity.Performance;
 import at.ac.tuwien.sepm.groupphase.backend.repository.EventRepository;
 import at.ac.tuwien.sepm.groupphase.backend.specification.EventSpecificationBuilder;
 import org.junit.jupiter.api.AfterEach;
@@ -13,6 +14,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+
+import java.util.HashSet;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -33,14 +37,12 @@ public class EventRepositoryTest implements TestDataEvent {
         //eventRepository.deleteAll();
 
         event = Event.builder()
-            .title(TestDataEvent.TEST_EVENT_TITLE)
+            .name(TestDataEvent.TEST_EVENT_TITLE)
             .description(TestDataEvent.TEST_EVENT_DESCRIPTION)
-            .date(TestDataEvent.TEST_EVENT_DATE_FUTURE)
+            .startDate(TestDataEvent.TEST_EVENT_DATE_FUTURE)
+            .endDate(TestDataEvent.TEST_EVENT_DATE_FUTURE2)
             .duration(TestDataEvent.TEST_EVENT_DURATION)
             .eventType(TestDataEvent.TEST_EVENT_EVENT_TYPE)
-            .artist(TestDataEvent.getTestEventArtist())
-            .location(TestDataEvent.getTestEventLocation())
-            .sectorTypes(TestDataEvent.getTestEventSectortypes())
             .build();
     }
 
@@ -51,7 +53,7 @@ public class EventRepositoryTest implements TestDataEvent {
 
     @Test
     @DisplayName("Check if one item is added")
-    public void givenNothing_whenSaveNews_thenFindListWithOneElement() {
+    public void givenNothing_whenSaveEvent_thenFindListWithOneElement() {
         eventRepository.save(event);
 
         assertAll(
@@ -61,7 +63,7 @@ public class EventRepositoryTest implements TestDataEvent {
 
     @Test
     @DisplayName("Should return test event by id")
-    public void givenNothing_whenSaveNews_thenFindNewsById() {
+    public void givenNothing_whenSaveEvent_thenFindEventById() {
         eventRepository.save(event);
 
         assertAll(
@@ -71,7 +73,7 @@ public class EventRepositoryTest implements TestDataEvent {
 
     @Test
     @DisplayName("Should return null when searching for negative id")
-    public void givenNothing_whenFindOnyById_ShouldBeNull() {
+    public void givenNothing_whenFindOneById_ShouldBeNull() {
         assertNull(eventRepository.findOneById(-1L));
     }
 
@@ -81,7 +83,7 @@ public class EventRepositoryTest implements TestDataEvent {
         eventRepository.save(event);
 
         EventSpecificationBuilder builder = new EventSpecificationBuilder();
-        builder.with("title", ":", event.getTitle());
+        builder.with("name", ":", event.getName());
 
         assertEquals(event, eventRepository.findAll(builder.build()).get(0));
     }

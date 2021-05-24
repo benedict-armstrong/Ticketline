@@ -1,0 +1,73 @@
+<div class="performance" *ngIf="performance">
+  <div class="main">
+    <div class="header">
+      <h3>{{performance.title}}</h3>
+      <div class="row performance-info">
+        <div class="col-8">
+          <p>{{performance.description}}</p>
+        </div>
+        <div class="col-4 additional-performance-info">
+          <h4>Time</h4>
+          <p class="info">{{performance.date | date:'EEEE, MMM d, y HH:mm'}} <br>
+          <h4>Performer</h4>
+          <p>{{performance.artist.firstName}} {{performance.artist.lastName}}</p>
+          <h4>Location</h4>
+          <p>
+            {{this.performance.location.name}}<br>
+            {{this.performance.location.lineOne}}<br>
+            {{this.performance.location.postcode}} {{this.performance.location.city}} <br>
+            {{this.performance.location.country}}
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="body">
+      <div class="options row row-cols-1 row-cols-md-4 g-4">
+        <div class="col">
+          <div class="card h-100 selected">
+            <div class="card-body text-center">
+              <p>We choose the best seat for you</p>
+            </div>
+          </div>
+        </div>
+        <div class="col">
+          <div class="card h-100">
+            <div class="card-body text-center">
+              <p>Choose your own seat</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tickets">
+        <p class="text-center">We will try to find seats next to each other</p>
+        <div *ngFor="let sectorType of performance.sectorTypes">
+          <app-ticket-list-item [sectorType]="sectorType"></app-ticket-list-item>
+        </div>
+      </div>
+
+      <div class="selected-items row">
+        <div class="col">
+          <p> 1x Front Frow Ticket for Adults<br>
+            1x Front Frow Ticket for Child</p>
+        </div>
+        <div class="col prices">
+          <p>EUR 53.00<br>
+            EUR 32.00</p>
+        </div>
+
+      </div>
+
+      <div class="checkout">
+        <div>
+          <h4>EUR 85.00</h4>
+        </div>
+        <div class="checkout-buttons">
+          <button class="secondary">Continue Shopping</button>
+          <button class="primary">Checkout</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>

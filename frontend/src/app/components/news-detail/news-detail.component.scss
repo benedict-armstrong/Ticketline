@@ -43,3 +43,10 @@
   object-fit: cover;
   -webkit-transform: translateY(calc(-50% + 250px));
 }
+
+.dateGroup {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  font-weight: bold;
+}

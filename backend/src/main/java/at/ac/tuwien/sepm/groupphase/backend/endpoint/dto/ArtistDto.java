@@ -7,7 +7,6 @@ import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
-import java.util.Objects;
 
 @Data
 @NoArgsConstructor
@@ -20,7 +19,8 @@ public class ArtistDto {
     @Size(max = 200, message = "First name must be 200 characters or less")
     private String firstName;
 
-    @NotBlank(message = "A last name is required")
     @Size(max = 200, message = "Last name must be 200 characters or less")
     private String lastName;
+
+    private PerformanceDto[] performanceDtos;
 }

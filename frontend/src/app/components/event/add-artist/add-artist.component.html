@@ -1,0 +1,53 @@
+<h5 class="col-6">Artist</h5>
+<div class="col-3">
+  <button type="button" class="primary" (click)="addNewArtist = !addNewArtist" *ngIf="addNewArtist">Select existing artist</button>
+  <button type="button" class="primary" (click)="addNewArtist = !addNewArtist" *ngIf="!addNewArtist">Add new artist</button>
+</div>
+<form *ngIf="!addNewArtist" [formGroup]="selectArtistForm">
+  <div class="form-group row" id="artistFilter">
+    <div class="col-6">
+      <label for="filterFirstName">First name</label>
+      <input type="text" name="filterFirstName" formControlName="filterFirstName" class="text-input form-control col-6"
+             id="filterFirstName" placeholder="Search by first name..." (input)="filterArtists()">
+    </div>
+    <div class="col-6">
+      <label for="filterLastName">Last name</label>
+      <input type="text" name="filterLastName" formControlName="filterLastName" class="text-input form-control col-6"
+             id="filterLastName" placeholder="Search by last name..." (input)="filterArtists()">
+    </div>
+  </div>
+  <div class="form-group">
+    <label for="selectedArtist" class="required">Select existing artist:</label>
+    <select class="form-select" size="5" *ngIf="filteredArtists" (change)="artistSelected()" name="selectedArtist" formControlName="selectedArtist" id="selectedArtist">
+      <option *ngFor="let artist of filteredArtists" [ngValue]="artist">
+        {{artist.firstName}} {{artist.lastName}}
+      </option>
+    </select>
+  </div>
+</form>
+<form (submit)="addArtist()" [formGroup]="addArtistForm" *ngIf="addNewArtist">
+  <div class="row">
+    <div class="col-6">
+      <div class="form-group">
+        <label for="firstName" class="required">Artist Firstname</label>
+        <input type="text" name="firstName" formControlName="firstName" class="text-input form-control"
+               id="firstName" placeholder="Enter artist firstname">
+        <div *ngIf="submitted && addArtistForm.controls.firstName.errors" class="error">
+          <small class="form-text text-danger" *ngIf="addArtistForm.controls.firstName.errors.required">
+            Firstname is required!
+          </small>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-6">
+      <div class="form-group">
+        <label for="lastName">Artist Lastname</label>
+        <input type="text" name="lastName" formControlName="lastName" class="text-input form-control"
+               id="lastName" placeholder="Enter artist lastname">
+      </div>
+    </div>
+  </div>
+  <button class="primary" type="submit">Add Artist</button>
+</form>
+

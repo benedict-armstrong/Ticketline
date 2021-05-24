@@ -67,7 +67,9 @@ export class RegisterComponent implements OnInit {
           this.registerForm.value.lineTwo,
           this.registerForm.value.city,
           this.registerForm.value.postcode,
-          this.registerForm.value.country
+          this.registerForm.value.country,
+          null,
+          false
         )
       );
       this.userService.createUser(user).subscribe(

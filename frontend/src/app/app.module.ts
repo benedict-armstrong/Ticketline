@@ -21,10 +21,14 @@ import { UserHomeComponent } from './components/user-home/user-home.component';
 import { TicketDetailComponent } from './components/ticket-detail/ticket-detail.component';
 import { TicketListItemComponent } from './components/ticket-list-item/ticket-list-item.component';
 import {AddNewsComponent} from './components/add-news/add-news.component';
-import { AddEventComponent } from './components/event/add-event/add-event.component';
+import { AddPerformanceComponent } from './components/event/add-performance/add-performance.component';
 import { AddUserComponent } from './components/add-user/add-user.component';
 import { httpInterceptorProviders } from './interceptors';
 import { AddSectortypeComponent } from './components/event/add-sectortype/add-sectortype.component';
+import { AddArtistComponent } from './components/event/add-artist/add-artist.component';
+import { AddAddressComponent } from './components/event/add-address/add-address.component';
+import { AddEventComponent } from './components/event/add-event/add-event.component';
+import { PerformanceDetailComponent } from './components/performance-detail/performance-detail.component';
 
 @NgModule({
   declarations: [
@@ -45,9 +49,13 @@ import { AddSectortypeComponent } from './components/event/add-sectortype/add-se
     TicketDetailComponent,
     TicketListItemComponent,
     AddNewsComponent,
-    AddEventComponent,
+    AddPerformanceComponent,
     AddUserComponent,
-    AddSectortypeComponent
+    AddSectortypeComponent,
+    AddArtistComponent,
+    AddAddressComponent,
+    AddEventComponent,
+    PerformanceDetailComponent
   ],
   imports: [
     BrowserModule,

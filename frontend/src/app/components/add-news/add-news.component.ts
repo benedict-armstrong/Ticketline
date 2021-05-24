@@ -3,9 +3,9 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {ActivatedRoute, Router} from '@angular/router';
 import {ApplicationNewsService} from '../../services/news.service';
 import {News} from '../../dtos/news';
-import {Event} from '../../dtos/event';
-import {ApplicationEventService} from '../../services/event.service';
 import {FileService} from '../../services/file.service';
+import {ApplicationEventService} from '../../services/event.service';
+import {Event} from '../../dtos/event';
 
 @Component({
   selector: 'app-add-news',
@@ -108,7 +108,7 @@ export class AddNewsComponent implements OnInit {
       (event: Event) => {
         this.event = event;
         this.addNewsForm.patchValue({
-          eventName: event.title
+          eventName: event.name
         });
       },
       error => {

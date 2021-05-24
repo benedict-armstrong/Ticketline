@@ -1,13 +1,29 @@
+@import "../../../colors.scss";
+
 .event {
   display: flex;
   max-height: 130px;
-  margin: 5px;
+  margin-top: 20px;
   justify-content: space-between;
   align-items: center;
   cursor: pointer;
 }
 
 .event:hover {
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
+}
+
+.performance {
+  display: flex;
+  flex-direction: row;
+  max-height: 90px;
+  margin-top: 5px;
+  align-items: center;
+  cursor: pointer;
+  background-color: $gray-242;
+}
+
+.performance:hover {
   box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
 }
 
@@ -19,10 +35,10 @@
   max-height: 130px;
 }
 
-.detail {
-  margin: 20px;
-}
-
 .date-time {
   color: #c14953;
+}
+
+.detail {
+  margin-left: 10px;
 }
