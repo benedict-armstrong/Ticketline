@@ -16,6 +16,7 @@ public interface CartService {
 
     /**
      * Returns a list of all CartItems of a user with the given id.
+     *
      * @param userId id of the user
      * @return List containing all the cart items
      */
