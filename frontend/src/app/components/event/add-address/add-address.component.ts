@@ -34,7 +34,7 @@ export class AddAddressComponent implements OnInit {
       nameFilter: ['']
     });
 
-    this.addressService.findAllByCriteria(0, 1000).subscribe((response) => {
+    this.addressService.getAddresses(0, 1000).subscribe((response) => {
       this.existingAddresses = response;
       this.filteredAddresses = response;
     });

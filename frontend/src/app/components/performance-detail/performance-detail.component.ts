@@ -15,12 +15,12 @@ export class PerformanceDetailComponent implements OnInit {
   error = false;
   errorMessage = '';
 
-  constructor(private eventService: ApplicationPerformanceService,
+  constructor(private performanceService: ApplicationPerformanceService,
               private activeRoute: ActivatedRoute) { }
 
   ngOnInit(): void {
     const performanceId = this.activeRoute.snapshot.params.id;
-    this.eventService.getPerformanceById(performanceId).subscribe(
+    this.performanceService.getPerformanceById(performanceId).subscribe(
       (response) => {
         this.performance = response;
       },

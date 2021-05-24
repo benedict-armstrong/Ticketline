@@ -1,6 +1,7 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint;
 
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.ArtistDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.PaginationDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.ArtistMapper;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.PaginationMapper;
@@ -9,9 +10,11 @@ import io.swagger.v3.oas.annotations.Operation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -37,19 +40,25 @@ public class ArtistEndpoint {
         this.paginationMapper = paginationMapper;
     }
 
-    @PermitAll
-    @GetMapping
-    @Operation(summary = "Get all artists")
-    public List<ArtistDto> findAllByCriteria(PaginationDto paginationDto) {
-        LOGGER.info("GET /api/v1/artists");
-        return artistMapper.artistListToArtistDtoList(artistService.findAllByCriteria(paginationMapper.paginationDtoToPageable(paginationDto)));
-    }
-
     @Secured("ROLE_ORGANIZER")
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     @Operation(summary = "Add a new artist")
     public ArtistDto addArtist(@Valid @RequestBody ArtistDto artistDto) {
         LOGGER.info("POST /api/v1/artists body: {}", artistDto);
         return artistMapper.artistToArtistDto(artistService.addArtist(artistMapper.artistDtoToArtist(artistDto)));
+    }
+
+    @PermitAll
+    @GetMapping
+    @Operation(summary = "Get all artists")
+    public List<ArtistDto> findAll(PaginationDto paginationDto, ArtistDto artistDto) {
+        LOGGER.info("GET /api/v1/artists");
+
+        if (artistDto != null) {
+            return artistMapper.artistListToArtistDtoList(artistService.search(artistMapper.artistDtoToArtist(artistDto), paginationMapper.paginationDtoToPageable(paginationDto)));
+        }
+
+        return artistMapper.artistListToArtistDtoList(artistService.findAll(paginationMapper.paginationDtoToPageable(paginationDto)));
     }
 }

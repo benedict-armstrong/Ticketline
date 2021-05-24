@@ -9,7 +9,7 @@ export class Address {
       public city: string,
       public postcode: string,
       public country: string,
-      public events: Performance[],
+      public performances: Performance[],
       public eventLocation: boolean) {
     }
   }

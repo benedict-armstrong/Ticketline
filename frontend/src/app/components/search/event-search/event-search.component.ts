@@ -1,14 +1,14 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Event } from '../../dtos/event';
-import { ApplicationEventService } from '../../services/event.service';
+import { Event } from '../../../dtos/event';
+import { ApplicationEventService } from '../../../services/event.service';
 
 @Component({
   selector: 'app-search',
-  templateUrl: './search.component.html',
-  styleUrls: ['./search.component.scss']
+  templateUrl: './event-search.component.html',
+  styleUrls: ['./event-search.component.scss']
 })
-export class SearchComponent implements OnInit {
+export class EventSearchComponent implements OnInit {
 
   @Output() searchedEvents = new EventEmitter<Event[]>();
   @Output() searchedDates = new EventEmitter<any>();

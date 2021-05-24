@@ -5,6 +5,6 @@ export class Artist {
     public id: number,
     public firstName: string,
     public lastName: string,
-    public events: Performance[]
+    public performances: Performance[]
   ) {}
 }

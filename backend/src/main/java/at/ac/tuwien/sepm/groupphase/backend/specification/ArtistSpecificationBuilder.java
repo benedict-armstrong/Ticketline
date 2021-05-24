@@ -1,35 +1,35 @@
 package at.ac.tuwien.sepm.groupphase.backend.specification;
 
-import at.ac.tuwien.sepm.groupphase.backend.entity.Event;
+import at.ac.tuwien.sepm.groupphase.backend.entity.Artist;
 import org.springframework.data.jpa.domain.Specification;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class EventSpecificationBuilder {
+public class ArtistSpecificationBuilder {
 
     private final List<SearchCriteria> params;
 
-    public EventSpecificationBuilder() {
+    public ArtistSpecificationBuilder() {
         params = new ArrayList<SearchCriteria>();
     }
 
-    public EventSpecificationBuilder with(String key, String operation, Object value) {
+    public ArtistSpecificationBuilder with(String key, String operation, Object value) {
         params.add(new SearchCriteria(key, operation, value));
         return this;
     }
 
-    public Specification<Event> build() {
+    public Specification<Artist> build() {
         if (params.size() == 0) {
             return null;
         }
 
-        List<EventSpecification> specs = params.stream()
-            .map(EventSpecification::new)
+        List<ArtistSpecification> specs = params.stream()
+            .map(ArtistSpecification::new)
             .collect(Collectors.toList());
 
-        EventSpecification result = specs.get(0);
+        ArtistSpecification result = specs.get(0);
 
         for (int i = 1; i < params.size(); i++) {
             result.and(specs.get(i));
