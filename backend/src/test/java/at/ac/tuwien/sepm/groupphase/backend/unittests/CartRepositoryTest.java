@@ -1,10 +1,11 @@
 package at.ac.tuwien.sepm.groupphase.backend.unittests;
 
 import at.ac.tuwien.sepm.groupphase.backend.basetest.TestDataCart;
+import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepm.groupphase.backend.entity.CartItem;
 import at.ac.tuwien.sepm.groupphase.backend.repository.CartRepository;
-import at.ac.tuwien.sepm.groupphase.backend.repository.EventRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.UserRepository;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -27,39 +28,37 @@ public class CartRepositoryTest implements TestDataCart {
     private UserRepository userRepository;
 
     @Autowired
-    private EventRepository eventRepository;
-
-    @Autowired
     private CartRepository cartRepository;
 
-    private List<CartItem> cart = new LinkedList<CartItem>();
+    private CartItem cartItem;
 
     @BeforeEach
     public void beforeEach() {
-        userRepository.deleteAll();
-        eventRepository.deleteAll();
-        cartRepository.deleteAll();
 
-        userRepository.save(CART_USER);
-        eventRepository.save(CART_EVENT);
+        ApplicationUser user = userRepository.save(CART_USER);
 
-        cart.add(CartItem.builder()
-            .user(CART_USER)
-            .event(CART_EVENT)
-            .sectorType(CART_SECTOR_TYPE)
+        cartItem = CartItem.builder()
+            .user(user)
+            .ticketId(CART_TICKET_ID)
             .amount(CART_AMOUNT)
-            .build()
-        );
+            .creationDate(CART_CREATION_DATE)
+            .build();
+    }
+
+    @AfterEach
+    public void afterEach() {
+        cartRepository.deleteAll();
+        userRepository.deleteAll();
     }
 
     @Test
     public void givenNothing_whenSaveCart_thenFindListWithOneElementAndFindUserById() {
 
-        cartRepository.saveAll(cart);
+        cartRepository.save(cartItem);
 
         assertAll(
             () -> assertEquals(1, cartRepository.findAll().size()),
-            () -> assertNotNull(cartRepository.findById(cart.get(0).getId()))
+            () -> assertNotNull(cartRepository.findById(cartItem.getId()))
         );
     }
 }

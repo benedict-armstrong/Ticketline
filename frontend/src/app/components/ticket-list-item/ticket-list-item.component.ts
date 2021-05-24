@@ -56,7 +56,7 @@ export class TicketListItemComponent implements OnInit {
       });
     } else {
       this.error = true;
-    }    
+    }
   }
 
   ngOnInit(): void {

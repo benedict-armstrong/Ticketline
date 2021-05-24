@@ -12,6 +12,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Column;
 import javax.persistence.ManyToOne;
 import javax.persistence.FetchType;
+import java.time.LocalDateTime;
 
 @Data
 @NoArgsConstructor
@@ -27,12 +28,14 @@ public class CartItem {
     @ManyToOne(fetch = FetchType.LAZY)
     private ApplicationUser user;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    private Event event;
-
-    @ManyToOne(fetch = FetchType.EAGER)
-    private SectorType sectorType;
+    //@ManyToOne(fetch = FetchType.EAGER)
+    //private Ticket ticket;
+    @Column
+    private Long ticketId;
 
     @Column(nullable = false)
     private Integer amount;
+
+    @Column(nullable = false)
+    private LocalDateTime creationDate;
 }

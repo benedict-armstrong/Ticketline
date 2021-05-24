@@ -1,6 +1,7 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper;
 
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.CartItemDto;
+import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepm.groupphase.backend.entity.CartItem;
 import org.mapstruct.Mapper;
 
@@ -15,6 +16,14 @@ public interface CartItemMapper extends FileTypeMapper {
 
     List<CartItemDto> cartItemListToCartItemDtoList(List<CartItem> cartItems);
 
-    List<CartItem> cartItemDtoListToCartItemList(List<CartItemDto> cartItemsDto);
+    List<CartItem> cartItemDtoListToCartItemList(List<CartItemDto> cartItemDtos);
+
+    default Long map(ApplicationUser value) {
+        return value.getId();
+    }
+
+    default ApplicationUser mapToUser(Long value) {
+        return ApplicationUser.builder().id(value).build();
+    }
 
 }

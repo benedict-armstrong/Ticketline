@@ -16,13 +16,10 @@ public class CartItemDto {
     private Long id;
 
     @NotNull(message = "User is required")
-    private UserDto userDto;
+    private Long userId;
 
-    @NotNull(message = "Event is required")
-    private EventDto eventDto;
-
-    @NotNull(message = "Sector Type is required")
-    private SectorTypeDto sectorTypeDto;
+    @NotNull(message = "TicketType is required")
+    private Long ticketId;
 
     @NotNull(message = "Amount is required")
     private Integer amount;

@@ -2,15 +2,13 @@ package at.ac.tuwien.sepm.groupphase.backend.service;
 
 import at.ac.tuwien.sepm.groupphase.backend.entity.CartItem;
 
-import java.util.List;
-
 public interface CartService {
 
     /**
-     * Adds a list of cart items.
+     * Adds a item to the cart.
      *
-     * @param cart to add
-     * @return list of completed entries
+     * @param cartItem to add
+     * @return the persisted cartItem
      */
-    List<CartItem> addCart(List<CartItem> cart);
+    CartItem addCart(CartItem cartItem);
 }
