@@ -12,7 +12,7 @@
   <label for="selectedAddress">Select existing address:</label>
   <select (change)="addressSelected()" size="5" [compareWith]="" class="form-select" id="selectedAddress" formControlName="selectedAddress" name="selectedAddress" *ngIf="existingAddresses">
     <option *ngFor="let address of filteredAddresses" [ngValue]="address">
-      {{address.name}}
+      {{address.name}}: {{address.lineOne}}, {{address.city}} {{address.postcode}}
     </option>
   </select>
 </form>
