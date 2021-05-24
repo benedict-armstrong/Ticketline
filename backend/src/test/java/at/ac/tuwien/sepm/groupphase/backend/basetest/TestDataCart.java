@@ -27,6 +27,26 @@ public interface TestDataCart extends TestData {
         .address(CART_ADDRESS)
         .build();
 
+    Address CART_ADDRESS2 = Address.builder()
+        .name("Cart Test2")
+        .lineOne("Teststraße 2")
+        .city("Wien")
+        .postcode("1010")
+        .country("Österreich").build();
+
+    ApplicationUser CART_USER2 = ApplicationUser.builder()
+        .firstName("Cart")
+        .lastName("Test2")
+        .telephoneNumber("+43 660 123456789")
+        .email("cartTest2@email.com")
+        .password("password")
+        .lastLogin(LocalDateTime.now())
+        .points(0)
+        .status(ApplicationUser.UserStatus.ACTIVE)
+        .role(ApplicationUser.UserRole.CLIENT)
+        .address(CART_ADDRESS2)
+        .build();
+
     Long CART_TICKET_ID = 0L;
 
     LocalDateTime CART_CREATION_DATE = LocalDateTime.now();

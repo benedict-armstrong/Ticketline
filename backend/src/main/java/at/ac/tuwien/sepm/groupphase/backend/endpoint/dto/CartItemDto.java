@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
 @Data
@@ -22,5 +23,6 @@ public class CartItemDto {
     private Long ticketId;
 
     @NotNull(message = "Amount is required")
+    @Min(0)
     private Integer amount;
 }
