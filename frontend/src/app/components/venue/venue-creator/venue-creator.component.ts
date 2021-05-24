@@ -114,8 +114,12 @@ export class VenueCreatorComponent implements OnInit {
   }
 
   save() {
+    let valid = true;
     const layout: LayoutUnit[][] = this.venueLayout.map((row) =>
       row.map((su) => {
+        if (su.available && !su.sector) {
+          valid = false;
+        }
         if (su.available) {
           return new LayoutUnit(
             null,
@@ -128,6 +132,11 @@ export class VenueCreatorComponent implements OnInit {
       })
     );
 
-    this.createdVenueLayout.emit(layout);
+    if (valid) {
+      this.createdVenueLayout.emit(layout);
+      alert('Saved Venue');
+    } else {
+      alert('Please assign all seats');
+    }
   }
 }

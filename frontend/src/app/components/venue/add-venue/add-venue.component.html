@@ -95,7 +95,8 @@
     <h5>Add at least one sector</h5>
   </div>
 
-  <button type="submit" form="venueForm" class="primary">Add Venue</button>
+  <button type="submit" form="venueForm" class="primary" [disabled]="!this.venueLayout"
+    [ngClass]="{'disabled': !this.venueLayout}">Add Venue</button>
 
   <div *ngIf="error" class="col-12 alert alert-danger alert-dismissible fade show" role="alert">
     <strong>Error! </strong> {{ errorMessage }}
