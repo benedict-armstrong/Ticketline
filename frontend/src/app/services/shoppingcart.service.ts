@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpRequest } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { CartItem } from '../dtos/cartItem';
@@ -29,18 +29,17 @@ export class ShoppingcartService {
           if (cart.length > 0) {
             for (let i = 0; i < this.cart.length; i++) {
               for (let j = 0; j < cart.length; j++) {
-                console.log("Check");
-                if (this.cart[i].id === cart[j].id) {
+                if (this.cart[i].id === cart[j].id || this.cart[i].ticketId === cart[j].ticketId) {
                   this.cart[i] = cart[j];
                   cart.splice(j, 1);
-                }              
+                }
               }           
             }
             for (let j = 0; j < cart.length; j++) {
               this.cart.push(cart[j]);            
             }
           }
-          console.log(cart);
+          this.updatePrice();
         },
         (error) => {
           this.defaultServiceErrorHandling(error);
@@ -51,20 +50,64 @@ export class ShoppingcartService {
   }
 
   addToCart(item): void {
-    this.cart.push(item);
-    this.updatePrice();
+    this.postShoppingCart(item).subscribe(
+      (cartItem: CartItem) => {
+        this.success = true;
+        for (let i = 0; i < this.cart.length; i++) {
+          if (this.cart[i].id === cartItem.id || this.cart[i].ticketId === cartItem.ticketId) {
+            this.cart[i] = cartItem;
+            cartItem = null;
+          }
+        }
+        if (cartItem != null) {
+          this.cart.push(cartItem);
+        }
+        this.updatePrice();
+      },
+      (error) => {
+        this.defaultServiceErrorHandling(error);
+      }
+    );
   }
 
   removeFromCart(index): void {
-    this.cart.splice(index, 1);
-    this.updatePrice();
+    this.deleteShoppingCart(this.cart[index]).subscribe(
+      (anwser) => {
+        this.success = true;
+        if (anwser === true) {
+          this.cart.splice(index, 1);
+          this.updatePrice();
+        }
+      },
+      (error) => {
+        this.defaultServiceErrorHandling(error);
+      }
+    );
   }
 
   setAmount(index: number, amount: number): void {
     if (amount >= 0) {
       this.cart[index].amount = amount;
+      this.postShoppingCart(this.cart[index]).subscribe(
+        (cartItem: CartItem) => {
+          this.success = true;
+          for (let i = 0; i < this.cart.length; i++) {
+            if (this.cart[i].id === cartItem.id || this.cart[i].ticketId === cartItem.ticketId) {
+              this.cart[i] = cartItem;
+              cartItem = null;
+              break;
+            }
+          }
+          if (cartItem != null) {
+            this.cart.push(cartItem);
+          }
+          this.updatePrice();
+        },
+        (error) => {
+          this.defaultServiceErrorHandling(error);
+        }
+      );
     }
-    this.updatePrice();
   }
 
   getFromCart(index: number) {
@@ -74,13 +117,24 @@ export class ShoppingcartService {
   updatePrice(): void {
     this.total = 0;
     this.cart.forEach(item => {
-      console.log(item.amount);
       this.total += this.price * item.amount;
     });
   }
 
   getShoppingCart(): Observable<CartItem[]> {
     return this.httpClient.get<CartItem[]>(this.userBaseUri + '/2');
+  }
+
+  postShoppingCart(cartItem: CartItem): Observable<CartItem> {
+    return this.httpClient.post<CartItem>(this.userBaseUri, cartItem);
+  }
+
+  putShoppingCart(cartItem: CartItem): Observable<CartItem> {
+    return this.httpClient.put<CartItem>(this.userBaseUri, cartItem);
+  }
+
+  deleteShoppingCart(cartItem: CartItem): Observable<Object> {
+    return this.httpClient.request<Object>('delete', this.userBaseUri, { body: cartItem});
   }
 
   private defaultServiceErrorHandling(error: any) {

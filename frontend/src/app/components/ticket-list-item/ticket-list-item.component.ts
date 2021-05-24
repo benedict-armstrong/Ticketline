@@ -52,7 +52,7 @@ export class TicketListItemComponent implements OnInit {
       this.cartService.addToCart({
         id: null,
         userId: 2,
-        ticketId: this.sectorType.name.charCodeAt(0),
+        ticketId: this.sectorType.name.charCodeAt(1),
         amount: this.ticketForm.value.amount
       });
     } else {

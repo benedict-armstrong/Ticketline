@@ -61,4 +61,12 @@ public class CartEndpoint {
         LOGGER.info("PUT /api/v1/cart {}", cartItemDto);
         return cartItemMapper.cartItemToCartItemDto(cartService.updateCartItem(cartItemMapper.cartItemDtoToCartItem(cartItemDto)));
     }
+
+    @DeleteMapping
+    @PermitAll
+    @Operation(summary = "Update Cart Item")
+    public boolean delete(@Valid @RequestBody CartItemDto cartItemDto) {
+        LOGGER.info("PUT /api/v1/cart {}", cartItemDto);
+        return cartService.deleteCartItem(cartItemMapper.cartItemDtoToCartItem(cartItemDto));
+    }
 }

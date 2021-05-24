@@ -57,6 +57,14 @@ public class CartServiceImpl implements CartService {
         return cartRepository.save(cartItem);
     }
 
+    @Override
+    public boolean deleteCartItem(CartItem cartItem) {
+        LOGGER.trace("deleteCartItem({})", cartItem);
+        CartItem toBeDeleted = cartRepository.getOne(cartItem.getId());
+        cartRepository.delete(toBeDeleted);
+        return true;
+    }
+
     @Scheduled(fixedDelay = 60000)
     private void pruneCartItems() {
         LOGGER.trace("pruneCartItems()");

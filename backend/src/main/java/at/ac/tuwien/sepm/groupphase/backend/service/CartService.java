@@ -28,4 +28,12 @@ public interface CartService {
      * @return the persisted cartItem
      */
     CartItem updateCartItem(CartItem cartItem);
+
+    /**
+     * Deletes a item from the cart.
+     *
+     * @param cartItem to delete
+     * @return true if the item has been deleted
+     */
+    boolean deleteCartItem(CartItem cartItem);
 }
