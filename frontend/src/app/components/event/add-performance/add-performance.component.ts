@@ -1,7 +1,5 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {ApplicationPerformanceService} from '../../../services/performance.service';
 import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
-import {FileService} from '../../../services/file.service';
 import {Performance} from '../../../dtos/performance';
 import {Artist} from '../../../dtos/artist';
 import {Address} from '../../../dtos/address';

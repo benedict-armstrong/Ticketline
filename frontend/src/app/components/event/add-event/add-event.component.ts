@@ -72,6 +72,8 @@ export class AddEventComponent implements OnInit {
             this.eventService.addEvent(this.event).subscribe((response) => {
               this.success = true;
               this.router.navigate(['/event-detail', response.id]);
+            }, error => {
+              this.defaultServiceErrorHandling(error);
             });
           }
         }, fileError => {

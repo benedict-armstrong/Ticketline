@@ -25,29 +25,31 @@
                     <div>
                         <p><em>Corresponding event</em></p>
 
-                        <div class="date">
-                          <span class="fst-italic">From:</span>
-                            <div id="startMonth">
-                              {{correspondingEvent.startDate | date:'MMM'}}
+                        <div class="dateGroup">
+                          <div class="date">
+                            <span class="fst-italic">From:</span>
+                              <div id="startMonth">
+                                {{correspondingEvent.startDate | date:'MMM'}}
+                              </div>
+                              <div id="startDay">
+                                {{correspondingEvent.startDate | date:'d'}}
+                              </div>
+                              <div id="startYear">
+                                {{correspondingEvent.startDate | date:'y'}}
+                              </div>
                             </div>
-                            <div id="startDay">
-                              {{correspondingEvent.startDate | date:'d'}}
-                            </div>
-                            <div id="startYear">
-                              {{correspondingEvent.startDate | date:'y'}}
-                            </div>
+                          <div class="date">
+                            <span class="fst-italic">To:</span>
+                            <div id="endMonth">
+                                {{correspondingEvent.endDate | date:'MMM'}}
+                              </div>
+                              <div id="endDay">
+                                {{correspondingEvent.endDate | date:'d'}}
+                              </div>
+                              <div id="endYear">
+                                {{correspondingEvent.endDate | date:'y'}}
+                              </div>
                           </div>
-                        <div class="date">
-                          <span class="fst-italic">To:</span>
-                          <div id="endMonth">
-                              {{correspondingEvent.endDate | date:'MMM'}}
-                            </div>
-                            <div id="endDay">
-                              {{correspondingEvent.endDate | date:'d'}}
-                            </div>
-                            <div id="endYear">
-                              {{correspondingEvent.endDate | date:'y'}}
-                            </div>
                         </div>
                         <h4><strong>{{correspondingEvent.name}}</strong></h4>
                         <p>38€</p>

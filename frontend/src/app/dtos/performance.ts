@@ -1,4 +1,3 @@
-import {CustomFile} from './customFile';
 import {SectorType} from './sectortype';
 import {Artist} from './artist';
 import {Address} from './address';
