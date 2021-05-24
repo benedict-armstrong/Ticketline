@@ -7,6 +7,7 @@ import at.ac.tuwien.sepm.groupphase.backend.entity.Performance;
 import at.ac.tuwien.sepm.groupphase.backend.repository.AddressRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.ArtistRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.PerformanceRepository;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -38,10 +39,6 @@ public class PerformanceRepositoryTest implements TestDataEvent {
 
     @BeforeEach
     public void beforeEach(){
-        performanceRepository.deleteAll();
-        artistRepository.deleteAll();
-        addressRepository.deleteAll();
-
         Address address = addressRepository.save(TestDataEvent.TEST_EVENT_LOCATION);
         Artist artist = artistRepository.save(TestDataEvent.TEST_EVENT_ARTIST);
 
@@ -53,6 +50,13 @@ public class PerformanceRepositoryTest implements TestDataEvent {
             .location(address)
             .sectorTypes(TestDataEvent.getTestEventSectortypes())
             .build();
+    }
+
+    @AfterEach
+    public void afterEach() {
+        performanceRepository.deleteAll();
+        artistRepository.deleteAll();
+        addressRepository.deleteAll();
     }
 
     @Test
