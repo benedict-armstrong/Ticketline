@@ -22,6 +22,8 @@ export class TicketListItemComponent implements OnInit {
   // Success Flag
   success = false;
 
+  price = 10;
+
   constructor(
     private formBuilder: FormBuilder,
     private cartService: ShoppingcartService
