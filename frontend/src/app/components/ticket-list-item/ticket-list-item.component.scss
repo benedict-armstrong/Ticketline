@@ -1,3 +1,5 @@
+@import "../../../colors.scss";
+
 .list-item {
   display: flex;
   justify-content: space-between;
@@ -28,4 +30,8 @@
 
 .add {
   max-width: 150px;
+}
+
+.error {
+  border-color: $primary
 }

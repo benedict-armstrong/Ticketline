@@ -27,6 +27,7 @@ import { AddEventComponent } from './components/event/add-event/add-event.compon
 import { AddUserComponent } from './components/add-user/add-user.component';
 import { httpInterceptorProviders } from './interceptors';
 import { AddSectortypeComponent } from './components/event/add-sectortype/add-sectortype.component';
+import { CartItemComponent } from './components/shoppingcart/cart-item/cart-item.component';
 
 @NgModule({
   declarations: [
@@ -51,7 +52,8 @@ import { AddSectortypeComponent } from './components/event/add-sectortype/add-se
     AddNewsComponent,
     AddEventComponent,
     AddUserComponent,
-    AddSectortypeComponent
+    AddSectortypeComponent,
+    CartItemComponent
   ],
   imports: [
     BrowserModule,

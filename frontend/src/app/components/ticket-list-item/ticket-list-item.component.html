@@ -1,7 +1,7 @@
 <div class="list-item">
     <div>
         <h4>{{sectorType.name}} ({{sectorType.numberOfTickets}} Tickets)</h4>
-        <p>Best experience | EUR 53.00</p>
+        <p>Best experience | {{this.price | currency:'EUR'}}</p>
     </div>
     <form class="options" [formGroup]="ticketForm" (ngSubmit)="addToCart()">
         <div class="age">
@@ -12,7 +12,7 @@
         </div>
         <div class="count inline">
             <button class="secondary no-shadow no-border" (click)="decAmount()" type="button"><i class="bi bi-dash-circle"></i></button>
-            <input type="number" formControlName="amount">
+            <input type="number" formControlName="amount" [ngClass]="{'error': error}">
             <button class="secondary no-shadow no-border" (click)="incAmount()" type="button"><i class="bi bi-plus-circle"></i></button>
         </div>
         <button class="add primary" type="submit">Add to Cart</button>

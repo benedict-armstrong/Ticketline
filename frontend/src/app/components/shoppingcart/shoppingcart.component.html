@@ -8,35 +8,13 @@
 		</div>
 	</div>
 	<div class="products">
-		<div class="ticket" *ngFor="let item of cartService.cart; index as i;">
-			<div class="row ticketHeader">
-				<div class="col-9">
-					<span>{{item.name}}</span>
-				</div>
-				<div class="col-3 closeContainer">
-					<button class="close" type="button" (click)="removeFromCart(i)">X</button>
-				</div>
-			</div>
-			<div class="row ticketBody">
-				<div class="col-8 counts">
-					<form>
-						<div class="inline">
-							<button class="secondary no-shadow no-border" type="button" (click)="decAmount(i)"><i class="bi bi-dash-circle"></i></button>
-							<input type="number">
-							<span>{{item.amount}}</span>
-							<button class="secondary no-shadow no-border" type="button" (click)="incAmount(i)"><i class="bi bi-plus-circle"></i></button>
-						</div>
-					</form>
-				</div>
-				<div class="col-4 prices">
-					<span class="price">{{item.price}} €</span>
-				</div>
-			</div>
+		<div *ngFor="let item of cartService.cart; index as i;">
+			<app-cart-item [i]="i"></app-cart-item>
 		</div>
 	</div>
 	<div class="totals">
 		<div class="subtotal">
-			<span class="label">Subtotal:</span> <span class="amount">$54.00</span>
+			<span class="label">Total: </span> <span class="amount">{{this.cartService.total | currency:"EUR"}}</span>
 		</div>
 	</div>
 	<button class="primary">Checkout</button>

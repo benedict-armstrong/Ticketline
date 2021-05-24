@@ -17,16 +17,4 @@ export class ShoppingcartComponent implements OnInit {
   close(): void {
     this.cartService.status = false;
   }
-
-  removeFromCart(index): void {
-    this.cartService.removeFromCart(index);
-  }
-
-  incAmount(index): void {
-    this.cartService.incAmount(index);
-  }
-
-  decAmount(index): void {
-    this.cartService.decAmount(index);
-  }
 }

@@ -1,5 +1,5 @@
 import {Component, Input, OnInit} from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ShoppingcartService } from 'src/app/services/shoppingcart.service';
 import {SectorType} from '../../dtos/sectortype';
 
@@ -22,29 +22,41 @@ export class TicketListItemComponent implements OnInit {
   // Success Flag
   success = false;
 
+  //TODO Change
+  price = 10.995;
+
   constructor(
     private formBuilder: FormBuilder,
     private cartService: ShoppingcartService
   ) {
     this.ticketForm = this.formBuilder.group({
-      amount: 0
+      amount: [0, [Validators.min(1)]]
     });
   }
 
   incAmount(): void {
     this.ticketForm.setValue({amount: this.ticketForm.value.amount + 1});
+    this.error = false;
   }
 
   decAmount(): void {
-    this.ticketForm.setValue({amount: this.ticketForm.value.amount - 1});
+    if (this.ticketForm.value.amount > 0) {
+      this.ticketForm.setValue({amount: this.ticketForm.value.amount - 1});
+      this.error = false;
+    }
   }
 
   addToCart(): void {
-    this.cartService.addToCart({
-      name: this.sectorType.name,
-      amount: this.ticketForm.value.amount,
-      price: 0.01
-    });
+    if (this.ticketForm.valid) {
+      this.error = false;
+      this.cartService.addToCart({
+        name: this.sectorType.name,
+        amount: this.ticketForm.value.amount,
+        price: this.price
+      });
+    } else {
+      this.error = true;
+    }    
   }
 
   ngOnInit(): void {
