@@ -17,7 +17,6 @@ export class VenueCreatorComponent implements OnInit {
 
   @Output() createdVenueLayout = new EventEmitter<LayoutUnit[][]>();
 
-  hasChanges = true;
   venueLayoutForm: FormGroup;
   submitted = false;
   venueLayout: SeatUnit[][];
@@ -34,7 +33,7 @@ export class VenueCreatorComponent implements OnInit {
 
   @HostListener('window:beforeunload', ['$event'])
   doSomething($event) {
-    if (this.hasChanges) {
+    if (this.venueLayout) {
       $event.returnValue = 'Your data will be lost!';
     }
   }
