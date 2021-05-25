@@ -1,0 +1,21 @@
+@import "../../../../colors.scss";
+
+.day {
+  margin-top: 20px;
+}
+
+.day > .header {
+  border-bottom: 1px solid lightgray;
+}
+
+.more {
+  margin: 20px 0;
+}
+
+.clickable {
+  cursor: pointer;
+}
+
+h5 {
+  cursor: pointer;
+}

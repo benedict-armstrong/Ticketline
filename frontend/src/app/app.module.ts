@@ -1,36 +1,45 @@
-import { NgModule } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
+import { NgModule } from "@angular/core";
+import { BrowserModule } from "@angular/platform-browser";
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { HttpClientModule } from "@angular/common/http";
 
-import { AppRoutingModule } from './app-routing.module';
-import { AppComponent } from './app.component';
-import { HomePageComponent } from './components/home-page/home-page.component';
-import { NavbarComponent } from './components/navbar/navbar.component';
-import { FooterComponent } from './components/footer/footer.component';
-import { LoginComponent } from './components/login/login.component';
-import { RegisterComponent } from './components/register/register.component';
-import { EventDetailComponent } from './components/event-detail/event-detail.component';
-import { NewsComponent } from './components/news/news.component';
-import { NewsItemComponent } from './components/news-item/news-item.component';
-import { NewsDetailComponent } from './components/news-detail/news-details.component';
-import { EventsComponent } from './components/events/events.component';
-import { EventListItemComponent } from './components/event-list-item/event-list-item.component';
-import { SearchComponent } from './components/search/search.component';
-import { UserHomeComponent } from './components/user-home/user-home.component';
-import { TicketDetailComponent } from './components/ticket-detail/ticket-detail.component';
-import { TicketListItemComponent } from './components/ticket-list-item/ticket-list-item.component';
-import { AddNewsComponent } from './components/add-news/add-news.component';
-import { AddEventComponent } from './components/event/add-event/add-event.component';
-import { AddUserComponent } from './components/add-user/add-user.component';
-import { httpInterceptorProviders } from './interceptors';
-import { AddVenueComponent } from './components/venue/add-venue/add-venue.component';
-import { VenueCreatorComponent } from './components/venue/venue-creator/venue-creator.component';
-import { VenueLayoutGridComponent } from './components/venue/venue-layout-grid/venue-layout-grid.component';
-import { VenueAddSectorComponent } from './components/venue/venue-add-sector/venue-add-sector.component';
-import { VenueSectorListComponent } from './components/venue/venue-sector-list/venue-sector-list.component';
-import { VenueGridUnitComponent } from './components/venue/venue-grid-unit/venue-grid-unit.component';
-import { AddSectortypeComponent } from './components/event/add-sectortype/add-sectortype.component';
+import { AppRoutingModule } from "./app-routing.module";
+import { AppComponent } from "./app.component";
+import { HomePageComponent } from "./components/home-page/home-page.component";
+import { NavbarComponent } from "./components/navbar/navbar.component";
+import { FooterComponent } from "./components/footer/footer.component";
+import { LoginComponent } from "./components/login/login.component";
+import { RegisterComponent } from "./components/register/register.component";
+import { EventDetailComponent } from "./components/event-detail/event-detail.component";
+import { NewsComponent } from "./components/news/news.component";
+import { NewsItemComponent } from "./components/news-item/news-item.component";
+import { NewsDetailComponent } from "./components/news-detail/news-details.component";
+import { SearchResultComponent } from "./components/search/search-result/search-result.component";
+import { EventListItemComponent } from "./components/search/event-list-item/event-list-item.component";
+import { EventSearchComponent } from "./components/search/event-search/event-search.component";
+import { UserHomeComponent } from "./components/user-home/user-home.component";
+import { TicketDetailComponent } from "./components/ticket-detail/ticket-detail.component";
+import { TicketListItemComponent } from "./components/ticket-list-item/ticket-list-item.component";
+import { AddNewsComponent } from "./components/add-news/add-news.component";
+import { AddEventComponent } from "./components/event/add-event/add-event.component";
+import { AddPerformanceComponent } from "./components/event/add-performance/add-performance.component";
+import { AddUserComponent } from "./components/add-user/add-user.component";
+import { httpInterceptorProviders } from "./interceptors";
+import { AddVenueComponent } from "./components/venue/add-venue/add-venue.component";
+import { VenueCreatorComponent } from "./components/venue/venue-creator/venue-creator.component";
+import { VenueLayoutGridComponent } from "./components/venue/venue-layout-grid/venue-layout-grid.component";
+import { VenueAddSectorComponent } from "./components/venue/venue-add-sector/venue-add-sector.component";
+import { VenueSectorListComponent } from "./components/venue/venue-sector-list/venue-sector-list.component";
+import { VenueGridUnitComponent } from "./components/venue/venue-grid-unit/venue-grid-unit.component";
+import { AddSectortypeComponent } from "./components/event/add-sectortype/add-sectortype.component";
+import { AddArtistComponent } from "./components/event/add-artist/add-artist.component";
+import { AddAddressComponent } from "./components/event/add-address/add-address.component";
+import { PerformanceDetailComponent } from "./components/performance-detail/performance-detail.component";
+import { ArtistSearchComponent } from "./components/search/artist-search/artist-search.component";
+import { AddressSearchComponent } from "./components/search/address-search/address-search.component";
+import { ArtistListItemComponent } from "./components/search/artist-list-item/artist-list-item.component";
+import { AddressListItemComponent } from "./components/search/address-list-item/address-list-item.component";
+import { LoadingAnimationComponent } from "./components/loading-animation/loading-animation.component";
 
 @NgModule({
   declarations: [
@@ -44,14 +53,14 @@ import { AddSectortypeComponent } from './components/event/add-sectortype/add-se
     NewsComponent,
     NewsItemComponent,
     NewsDetailComponent,
-    EventsComponent,
+    SearchResultComponent,
     EventListItemComponent,
-    SearchComponent,
+    EventSearchComponent,
     UserHomeComponent,
     TicketDetailComponent,
     TicketListItemComponent,
     AddNewsComponent,
-    AddEventComponent,
+    AddPerformanceComponent,
     AddUserComponent,
     AddSectortypeComponent,
     AddVenueComponent,
@@ -60,6 +69,15 @@ import { AddSectortypeComponent } from './components/event/add-sectortype/add-se
     VenueAddSectorComponent,
     VenueSectorListComponent,
     VenueGridUnitComponent,
+    AddArtistComponent,
+    AddAddressComponent,
+    AddEventComponent,
+    PerformanceDetailComponent,
+    ArtistSearchComponent,
+    AddressSearchComponent,
+    ArtistListItemComponent,
+    AddressListItemComponent,
+    LoadingAnimationComponent,
   ],
   imports: [
     BrowserModule,

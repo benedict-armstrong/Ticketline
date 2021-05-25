@@ -47,7 +47,7 @@ public interface LayoutUnitMapper {
         for (int i = 0; i < height; i++) {
             List<LayoutUnitDto> row = new ArrayList<>();
             for (int j = 0; j < width; j++) {
-                if ((i * width + j) == list.get(index).getLocalId()) {
+                if (index < list.size() && (i * width + j) == list.get(index).getLocalId()) {
                     row.add(layoutUnitToLayoutUnitDto(list.get(index)));
                     index++;
                 } else {

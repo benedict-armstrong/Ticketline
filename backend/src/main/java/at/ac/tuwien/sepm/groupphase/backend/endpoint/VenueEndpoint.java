@@ -41,7 +41,7 @@ public class VenueEndpoint {
     @PostMapping
     @Operation(summary = "Create a new venue")
     public VenueDto create(@Valid @RequestBody VenueDto venueDto) {
-        LOGGER.info("POST /api/v1/venue body: {}", venueDto);
+        LOGGER.info("POST /api/v1/venue Name: {}, Sectors: {}", venueDto.getName(), venueDto.getSectors());
         return venueMapper.venueToVenueDto(venueService.add(venueMapper.venueDtoToVenue(venueDto)));
     }
 

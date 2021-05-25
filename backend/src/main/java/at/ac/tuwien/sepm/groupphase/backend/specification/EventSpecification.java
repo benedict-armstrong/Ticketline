@@ -13,7 +13,7 @@ import javax.persistence.criteria.Root;
 @AllArgsConstructor
 public class EventSpecification implements Specification<Event> {
 
-    private EventSearchCriteria criteria;
+    private final SearchCriteria criteria;
 
     @Override
     public Predicate toPredicate(Root<Event> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {

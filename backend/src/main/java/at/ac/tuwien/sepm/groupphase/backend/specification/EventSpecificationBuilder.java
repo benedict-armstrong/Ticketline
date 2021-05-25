@@ -9,14 +9,14 @@ import java.util.stream.Collectors;
 
 public class EventSpecificationBuilder {
 
-    private final List<EventSearchCriteria> params;
+    private final List<SearchCriteria> params;
 
     public EventSpecificationBuilder() {
-        params = new ArrayList<EventSearchCriteria>();
+        params = new ArrayList<SearchCriteria>();
     }
 
     public EventSpecificationBuilder with(String key, String operation, Object value) {
-        params.add(new EventSearchCriteria(key, operation, value));
+        params.add(new SearchCriteria(key, operation, value));
         return this;
     }
 

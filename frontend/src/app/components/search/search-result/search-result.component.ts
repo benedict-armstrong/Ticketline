@@ -1,0 +1,95 @@
+import { Component, OnInit } from '@angular/core';
+import {ApplicationEventService} from '../../../services/event.service';
+import {Event} from '../../../dtos/event';
+import {Artist} from '../../../dtos/artist';
+import {Address} from '../../../dtos/address';
+
+@Component({
+  selector: 'app-search-result',
+  templateUrl: './search-result.component.html',
+  styleUrls: ['./search-result.component.scss']
+})
+export class SearchResultComponent implements OnInit {
+
+  events: Event[] = [];
+  artists: Artist[] = [];
+  addresses: Address[] = [];
+  dates = [];
+  page = 0;
+  size = 8;
+  noEvent = true;
+  noArtist = true;
+  noAddress = true;
+  eventSearched = true;
+  artistSearched = false;
+  addressSearched = false;
+  search = false;
+
+  constructor(private eventService: ApplicationEventService) { }
+
+  ngOnInit(): void {
+    this.loadBatch();
+  }
+
+  /**
+   * Loads the next e entries to be displayed.
+   * The amount of news entries in one batch is specified in the property `limit`.
+   * Offsetting is done with the help of IDs.
+   */
+  loadBatch() {
+    this.eventService.getEvents(this.page, this.size).subscribe(
+      response => {
+        this.events.push(...response);
+        if (response.length < this.size) {
+          this.noEvent = true;
+        } else {
+          this.page++;
+          this.noEvent = false;
+        }
+      }, error => {
+        console.error(error);
+      }
+    );
+  }
+
+  setSearchEvents(results: Event[]) {
+    this.eventSearched = true;
+    this.artistSearched = false;
+    this.addressSearched = false;
+    this.events = Object.assign([], results);
+  }
+
+  setSearchDates(dates: string[]) {
+    this.dates = Object.assign([], dates);
+  }
+
+  setNoEvents(noEvent: boolean) {
+    this.noEvent = noEvent;
+  }
+
+  setSearchPagination(search: boolean) {
+    this.search = search;
+  }
+
+  setSearchArtists(results: Artist[]) {
+    this.eventSearched = false;
+    this.addressSearched = false;
+    this.artistSearched = true;
+    this.artists = Object.assign([], results);
+  }
+
+  setNoArtist(noArtist: boolean) {
+    this.noArtist = noArtist;
+  }
+
+  setSearchAddresses(results: Address[]) {
+    this.eventSearched = false;
+    this.artistSearched = false;
+    this.addressSearched = true;
+    this.addresses = Object.assign([], results);
+  }
+
+  setNoAddress(noAddress: boolean) {
+    this.noAddress = noAddress;
+  }
+}

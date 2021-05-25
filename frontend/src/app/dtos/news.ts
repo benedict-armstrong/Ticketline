@@ -1,5 +1,5 @@
-import { Event } from './event';
 import {CustomFile} from './customFile';
+import {Event} from './event';
 
 export class News {
   constructor(

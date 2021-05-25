@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -25,6 +26,7 @@ public class File {
     private Long id;
 
     @Lob
+    @ToString.Exclude
     private byte[] data;
 
     @Enumerated(EnumType.STRING)

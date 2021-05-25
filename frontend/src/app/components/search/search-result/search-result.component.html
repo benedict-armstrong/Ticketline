@@ -1,0 +1,59 @@
+<app-search #appSearch (searchedEvents)="setSearchEvents($event)" (searchedDates)="setSearchDates($event)" (searchedNoEvent)="setNoEvents($event)" (searchPagination)="setSearchPagination($event)"></app-search>
+<app-artist-search #artistSearch (searchedArtists)="setSearchArtists($event)" (searchedNoArtist)="setNoArtist($event)" (searchPagination)="setSearchPagination($event)"></app-artist-search>
+<app-address-search #addressSearch (searchedAddresses)="setSearchAddresses($event)" (searchedNoAddress)="setNoAddress($event)" (searchPagination)="setSearchPagination($event)"></app-address-search>
+
+ <div *ngIf="eventSearched">
+    <div *ngFor="let event of events">
+      <app-event-list-item [eventItem]="event"></app-event-list-item>
+    </div>
+  </div>
+
+  <div *ngIf="artistSearched">
+    <div *ngFor="let artist of artists">
+      <app-artist-list-item [artist]="artist"></app-artist-list-item>
+    </div>
+  </div>
+
+  <div *ngIf="addressSearched">
+    <div *ngFor="let location of addresses">
+      <app-address-list-item [address]="location"></app-address-list-item>
+    </div>
+  </div>
+
+<div *ngIf="addressSearched">
+  <div *ngIf="search" class="text-center more" (click)="addressSearch.searchAddress()">
+    <h3 *ngIf="!noAddress" class="clickable">Load More</h3>
+    <h3 *ngIf="noAddress">You're all caught up</h3>
+    <h3 *ngIf="!noAddress" class="clickable"><i class="bi bi-arrow-bar-down"></i></h3>
+  </div>
+  <div *ngIf="!search" class="text-center more" (click)="addressSearch.searchAddress()">
+    <h3 *ngIf="!noAddress" class="clickable">Load More</h3>
+    <h3 *ngIf="noAddress">You're all caught up</h3>
+    <h3 *ngIf="!noAddress" class="clickable"><i class="bi bi-arrow-bar-down"></i></h3>
+  </div>
+</div>
+<div *ngIf="artistSearched">
+  <div *ngIf="search" class="text-center more" (click)="artistSearch.searchArtists()">
+    <h3 *ngIf="!noArtist" class="clickable">Load More</h3>
+    <h3 *ngIf="noArtist">You're all caught up</h3>
+    <h3 *ngIf="!noArtist" class="clickable"><i class="bi bi-arrow-bar-down"></i></h3>
+  </div>
+  <div *ngIf="!search" class="text-center more" (click)="artistSearch.searchArtists()">
+    <h3 *ngIf="!noArtist" class="clickable">Load More</h3>
+    <h3 *ngIf="noArtist">You're all caught up</h3>
+    <h3 *ngIf="!noArtist" class="clickable"><i class="bi bi-arrow-bar-down"></i></h3>
+  </div>
+</div>
+<div *ngIf="eventSearched">
+  <div *ngIf="search" class="text-center more" (click)="appSearch.searchEvents()">
+    <h3 *ngIf="!noEvent" class="clickable">Load More</h3>
+    <h3 *ngIf="noEvent">You're all caught up</h3>
+    <h3 *ngIf="!noEvent" class="clickable"><i class="bi bi-arrow-bar-down"></i></h3>
+  </div>
+  <div *ngIf="!search" class="text-center more" (click)="loadBatch()">
+    <h3 *ngIf="!noEvent" class="clickable">Load More</h3>
+    <h3 *ngIf="noEvent">You're all caught up</h3>
+    <h3 *ngIf="!noEvent" class="clickable"><i class="bi bi-arrow-bar-down"></i></h3>
+  </div>
+</div>
+
