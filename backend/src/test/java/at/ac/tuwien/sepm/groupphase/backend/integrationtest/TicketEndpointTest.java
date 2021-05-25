@@ -11,27 +11,20 @@ import at.ac.tuwien.sepm.groupphase.backend.entity.Address;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Event;
 import at.ac.tuwien.sepm.groupphase.backend.entity.SectorType;
-import at.ac.tuwien.sepm.groupphase.backend.entity.Ticket;
 import at.ac.tuwien.sepm.groupphase.backend.repository.EventRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.TicketRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.TicketTypeRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.UserRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
 
 import java.util.Arrays;
 
@@ -83,16 +76,16 @@ public class TicketEndpointTest implements TestAuthentification, TestDataTicket,
     private final TicketDto template = TicketDto.builder()
         .seats(Arrays.asList(1L, 5L, 6L))
         .build();
-    private final Event performance = Event.builder()
-        .title(TEST_EVENT_TITLE)
-        .description(TEST_EVENT_DESCRIPTION)
-        .date(TEST_EVENT_DATE_FUTURE)
-        .duration(TEST_EVENT_DURATION)
-        .eventType(TEST_EVENT_EVENT_TYPE)
-        .artist(TestDataEvent.getTestEventArtist())
-        .location(TestDataEvent.getTestEventLocation())
-        .sectorTypes(TestDataEvent.getTestEventSectortypes())
-        .build();
+    //    private final Event performance = Event.builder()
+    //        .title(TEST_EVENT_TITLE)
+    //        .description(TEST_EVENT_DESCRIPTION)
+    //        .date(TEST_EVENT_DATE_FUTURE)
+    //        .duration(TEST_EVENT_DURATION)
+    //        .eventType(TEST_EVENT_EVENT_TYPE)
+    //        .artist(TestDataEvent.getTestEventArtist())
+    //        .location(TestDataEvent.getTestEventLocation())
+    //        .sectorTypes(TestDataEvent.getTestEventSectortypes())
+    //        .build();
     private final Address address = Address.builder()
         .name("Max Mustermann")
         .lineOne("Teststraße 2")
@@ -125,14 +118,14 @@ public class TicketEndpointTest implements TestAuthentification, TestDataTicket,
 
         ticketTypeRepository.save(STANDARD_TICKET_TYPE);
 
-        Event savedPerformance = performanceRepository.save(performance);
-        SectorType sectorType = (SectorType) savedPerformance.getSectorTypes().toArray()[0];
-        sectorType.setPrice(100L);
+        //        Event savedPerformance = performanceRepository.save(performance);
+        //        SectorType sectorType = (SectorType) savedPerformance.getSectorTypes().toArray()[0];
+        //        sectorType.setPrice(100L);
 
-        template.setSectorType(sectorType);
-        template.setOwner(savedUser.getId());
-        template.setPerformance(savedPerformance.getId());
-        template.setTicketType(ticketTypeMapper.ticketTypeToTicketType(STANDARD_TICKET_TYPE));
+        //        template.setSectorType(sectorType);
+        //        template.setOwner(savedUser.getId());
+        //        template.setPerformance(savedPerformance.getId());
+        //        template.setTicketType(ticketTypeMapper.ticketTypeToTicketTypeDto(STANDARD_TICKET_TYPE));
     }
 
 //    @Test

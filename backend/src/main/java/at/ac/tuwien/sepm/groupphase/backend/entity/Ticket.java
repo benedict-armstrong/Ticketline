@@ -36,7 +36,7 @@ public class Ticket {
 
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
     @JoinColumn(name = "PERFORMANCE_ID", nullable = false)
-    private Event performance; // TODO: change type to Performance
+    private Performance performance;
 
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
     @JoinColumn(name = "SECTOR_ID", nullable = false)

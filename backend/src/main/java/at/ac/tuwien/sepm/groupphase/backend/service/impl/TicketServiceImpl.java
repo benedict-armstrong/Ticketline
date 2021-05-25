@@ -24,6 +24,7 @@ public class TicketServiceImpl implements TicketService {
     @Override
     public Ticket save(Ticket ticket, Ticket.Status status) {
         LOGGER.trace("saveTicket({})", ticket);
+        System.out.println(ticket);
         ticket.setTotalPrice(calculatePrice(ticket));
         ticket.setStatus(status);
         return ticketRepository.save(ticket);
