@@ -144,13 +144,6 @@ public class TicketEndpointTest implements TestAuthentification, TestDataTicket,
 
     @BeforeEach
     public void beforeEach() throws Exception {
-        ticketRepository.deleteAll();
-        userRepository.deleteAll();
-        performanceRepository.deleteAll();
-        ticketTypeRepository.deleteAll();
-        artistRepository.deleteAll();
-        addressRepository.deleteAll();
-
         artistRepository.save(artist);
         addressRepository.save(address);
 
