@@ -24,20 +24,34 @@
                 <div class="details">
                     <div>
                         <p><em>Corresponding event</em></p>
-                        <div class="date">
-                            <div id="month">
-                              {{correspondingEvent.date | date:'MMM'}}
+
+                        <div class="dateGroup">
+                          <div class="date">
+                            <span class="fst-italic">From:</span>
+                              <div id="startMonth">
+                                {{correspondingEvent.startDate | date:'MMM'}}
+                              </div>
+                              <div id="startDay">
+                                {{correspondingEvent.startDate | date:'d'}}
+                              </div>
+                              <div id="startYear">
+                                {{correspondingEvent.startDate | date:'y'}}
+                              </div>
                             </div>
-                            <div id="day">
-                              {{correspondingEvent.date | date:'d'}}
-                            </div>
-                            <div id="year">
-                              {{correspondingEvent.date | date:'y'}}
-                            </div>
+                          <div class="date">
+                            <span class="fst-italic">To:</span>
+                            <div id="endMonth">
+                                {{correspondingEvent.endDate | date:'MMM'}}
+                              </div>
+                              <div id="endDay">
+                                {{correspondingEvent.endDate | date:'d'}}
+                              </div>
+                              <div id="endYear">
+                                {{correspondingEvent.endDate | date:'y'}}
+                              </div>
+                          </div>
                         </div>
-                        <h4><strong>{{correspondingEvent.title}}</strong></h4>
-                        <p id="performer" *ngIf="correspondingEvent.artist">{{correspondingEvent.artist.firstName}} {{correspondingEvent.artist.lastName}}</p>
-                        <p *ngIf="correspondingEvent.location">{{correspondingEvent.location.name}}</p>
+                        <h4><strong>{{correspondingEvent.name}}</strong></h4>
                         <p>38€</p>
                     </div>
                     <button class="primary" id="get-tickets" [routerLink]="['/event-detail', correspondingEvent.id]">Get tickets</button>

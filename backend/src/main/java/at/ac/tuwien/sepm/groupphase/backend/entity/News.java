@@ -7,7 +7,6 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
-import java.util.Objects;
 import java.util.Set;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -44,7 +43,7 @@ public class News {
     private String text;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "EVENT_ID")
+    @JoinColumn
     private Event event;
 
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)

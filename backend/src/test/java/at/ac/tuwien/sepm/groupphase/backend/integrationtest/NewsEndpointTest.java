@@ -6,14 +6,20 @@ import at.ac.tuwien.sepm.groupphase.backend.basetest.TestDataFile;
 import at.ac.tuwien.sepm.groupphase.backend.basetest.TestDataNews;
 import at.ac.tuwien.sepm.groupphase.backend.config.properties.SecurityProperties;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.NewsDto;
+import at.ac.tuwien.sepm.groupphase.backend.entity.Address;
+import at.ac.tuwien.sepm.groupphase.backend.entity.Artist;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Event;
+import at.ac.tuwien.sepm.groupphase.backend.entity.Performance;
 import at.ac.tuwien.sepm.groupphase.backend.entity.File;
 import at.ac.tuwien.sepm.groupphase.backend.entity.News;
+import at.ac.tuwien.sepm.groupphase.backend.repository.AddressRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.ArtistRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.EventRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.FileRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.NewsRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.UserRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -62,6 +68,12 @@ public class NewsEndpointTest implements TestDataNews, TestDataFile, TestAuthent
     private UserRepository userRepository;
 
     @Autowired
+    private ArtistRepository artistRepository;
+
+    @Autowired
+    private AddressRepository addressRepository;
+
+    @Autowired
     private ObjectMapper objectMapper;
 
     @Autowired
@@ -87,20 +99,34 @@ public class NewsEndpointTest implements TestDataNews, TestDataFile, TestAuthent
 
     @BeforeEach
     public void beforeEach() throws Exception {
-        newsRepository.deleteAll();
-        eventRepository.deleteAll();
-        fileRepository.deleteAll();
+        //newsRepository.deleteAll();
+        //eventRepository.deleteAll();
+        //fileRepository.deleteAll();
+
+        Address address = addressRepository.save(TestDataEvent.TEST_EVENT_LOCATION);
+        Artist artist = artistRepository.save(TestDataEvent.TEST_EVENT_ARTIST);
+
+        Set<Performance> performances = new HashSet<>();
+        performances.add(Performance.builder()
+            .title(TestDataEvent.TEST_EVENT_PERFORMANCE_TITLE)
+            .description(TestDataEvent.TEST_EVENT_PERFORMANCE_DESCRIPTION)
+            .date(TestDataEvent.TEST_PERFORMANCE_DATE)
+            .artist(artist)
+            .location(address)
+            .sectorTypes(TestDataEvent.getTestEventSectortypes())
+            .build()
+        );
 
         event = Event.builder()
-            .title(TestDataEvent.TEST_EVENT_TITLE)
+            .name(TestDataEvent.TEST_EVENT_TITLE)
             .description(TestDataEvent.TEST_EVENT_DESCRIPTION)
-            .date(TestDataEvent.TEST_EVENT_DATE_FUTURE)
-            .duration(TestDataEvent.TEST_EVENT_DURATION)
+            .startDate(TestDataEvent.TEST_EVENT_DATE_FUTURE)
+            .endDate(TestDataEvent.TEST_EVENT_DATE_FUTURE2)
             .eventType(TestDataEvent.TEST_EVENT_EVENT_TYPE)
-            .artist(TestDataEvent.getTestEventArtist())
-            .location(TestDataEvent.getTestEventLocation())
-            .sectorTypes(TestDataEvent.getTestEventSectortypes())
+            .duration(TestDataEvent.TEST_EVENT_DURATION)
+            .performances(performances)
             .build();
+
         news.setEvent(event);
 
         fileRepository.save(IMAGE_FILE);
@@ -109,9 +135,19 @@ public class NewsEndpointTest implements TestDataNews, TestDataFile, TestAuthent
 
         eventRepository.save(event);
 
-        userRepository.deleteAll();
+        //userRepository.deleteAll();
         saveUser(AUTH_USER_ORGANIZER, userRepository, passwordEncoder);
         authToken = authenticate(AUTH_USER_ORGANIZER, mockMvc, objectMapper);
+    }
+
+    @AfterEach
+    public void afterEach() {
+        newsRepository.deleteAll();
+        eventRepository.deleteAll();
+        fileRepository.deleteAll();
+        userRepository.deleteAll();
+        addressRepository.deleteAllInBatch();
+        artistRepository.deleteAll();
     }
 
     @Test

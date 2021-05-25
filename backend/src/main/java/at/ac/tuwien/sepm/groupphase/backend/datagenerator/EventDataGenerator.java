@@ -3,8 +3,11 @@ package at.ac.tuwien.sepm.groupphase.backend.datagenerator;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Address;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Artist;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Event;
+import at.ac.tuwien.sepm.groupphase.backend.entity.Performance;
 import at.ac.tuwien.sepm.groupphase.backend.entity.File;
 import at.ac.tuwien.sepm.groupphase.backend.entity.SectorType;
+import at.ac.tuwien.sepm.groupphase.backend.repository.AddressRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.ArtistRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.EventRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.FileRepository;
 import org.slf4j.Logger;
@@ -17,8 +20,11 @@ import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.lang.invoke.MethodHandles;
 import java.net.URL;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Set;
 
 @Profile("generateData")
@@ -28,20 +34,29 @@ public class EventDataGenerator {
     private static final int NUMBER_OF_EVENTS_TO_GENERATE = 5;
     private static final String TEST_EVENT = "Test Event";
     private static final String TEST_EVENT_DESCRIPTION = "This is a test description! Part";
+    private static final LocalDate TEST_EVENT_START_DATE = LocalDate.parse("2021-12-12");
+    private static final LocalDate TEST_EVENT_END_DATE = LocalDate.parse("2023-12-12");
+    private static final String TEST_PERFORMANCE_TITLE = "Performance";
+    private static final String TEST_PERFORMANCE_DESCRIPTION = "THis is a new performance part";
+
     private static final String TEST_ARTIST_FIRSTNAME = "Artist";
     private static final String TEST_ARTIST_LASTNAME = "Famous";
     private static final String TEST_LOCATION_NAME = "Address";
     private static final String TEST_LOCATION_CITY = "Vienna";
     private static final String TEST_LOCATION_POSTCODE = "1000";
     private static final String TEST_LOCATION_COUNTRY = "Austria";
-    private static final LocalDateTime TEST_DATE = LocalDateTime.parse("2022-12-12T22:00:00");
+    private static final LocalDateTime TEST_DATETIME = LocalDateTime.parse("2022-12-12T22:00:00");
 
     private final EventRepository eventRepository;
     private final FileRepository fileRepository;
+    private final AddressRepository addressRepository;
+    private final ArtistRepository artistRepository;
 
-    public EventDataGenerator(EventRepository eventRepository, FileRepository fileRepository) {
+    public EventDataGenerator(EventRepository eventRepository, FileRepository fileRepository, AddressRepository addressRepository, ArtistRepository artistRepository) {
         this.eventRepository = eventRepository;
         this.fileRepository = fileRepository;
+        this.addressRepository = addressRepository;
+        this.artistRepository = artistRepository;
     }
 
     @PostConstruct
@@ -50,6 +65,16 @@ public class EventDataGenerator {
             LOGGER.debug("events already generated");
         } else {
             LOGGER.debug("generating {} event entries", NUMBER_OF_EVENTS_TO_GENERATE);
+
+            List<Artist> artistList = new LinkedList<>();
+            if (artistRepository.findAll().size() >= 5) {
+                artistList = artistRepository.findAll();
+            }
+
+            List<Address> addressList = new LinkedList<>();
+            if (addressRepository.findAll().size() >= 5) {
+                addressList = addressRepository.findAll();
+            }
 
             // using free images from pixabay to test
             // Image 1 https://pixabay.com/vectors/test-pattern-tv-tv-test-pattern-152459/
@@ -74,16 +99,50 @@ public class EventDataGenerator {
                 fileRepository.save(file);
                 set.add(file);
 
+                Set<Performance> performances = new HashSet<>();
+                int addressOffset = 0;
+                int artistOffset = 0;
+                for (int j = 0; j <= i; j++) {
+                    Address location;
+                    if (addressList.size() <= j) {
+                        location = generateEventLocation(j);
+                        addressList.add(addressRepository.save(location));
+                        addressOffset++;
+                    } else {
+                        location = addressList.get(j - addressOffset);
+                    }
+
+                    Artist artist;
+                    if (artistList.size() <= j) {
+                        artist = generateArtist(j);
+                        artistList.add(artistRepository.save(artist));
+                        artistOffset++;
+                    } else {
+                        artist = artistList.get(j - artistOffset);
+                    }
+
+                    Performance performance = Performance.builder()
+                        .title(TEST_PERFORMANCE_TITLE + (j + i))
+                        .description(TEST_PERFORMANCE_DESCRIPTION + (j + i))
+                        .date(TEST_DATETIME.plusDays(i * 10))
+                        .sectorTypes(generateSectorTypes(i))
+                        .artist(artist)
+                        .location(location)
+                        .build();
+
+                    performances.add(performance);
+                }
+
                 Event event = Event.builder()
-                    .title(TEST_EVENT + (i))
-                    .description(TEST_EVENT_DESCRIPTION + (i))
+                    .name(TEST_EVENT + i)
+                    .description(TEST_EVENT_DESCRIPTION + i)
                     .eventType(Event.EventType.CONCERT)
-                    .duration(100 + i * 50)
-                    .date(TEST_DATE.plusDays(i * 10))
-                    .sectorTypes(generateSectorTypes(i))
-                    .artist(generateArtist(i))
-                    .location(generateLocation(i))
-                    .images(set).build();
+                    .duration(100 + 50 * i)
+                    .startDate(TEST_EVENT_START_DATE)
+                    .endDate(TEST_EVENT_END_DATE)
+                    .images(set)
+                    .performances(performances)
+                    .build();
 
                 LOGGER.debug("saving event {}", event);
                 eventRepository.save(event);
@@ -113,10 +172,10 @@ public class EventDataGenerator {
             .build();
     }
 
-    public static Address generateLocation(int index) {
+    public static Address generateEventLocation(int index) {
         return Address.builder().name(TEST_LOCATION_NAME + index)
             .lineOne("line " + index).city(TEST_LOCATION_CITY)
-            .postcode(TEST_LOCATION_POSTCODE).country(TEST_LOCATION_COUNTRY).build();
+            .postcode(TEST_LOCATION_POSTCODE).country(TEST_LOCATION_COUNTRY).eventLocation(true).build();
     }
 
     public static Set<SectorType> generateSectorTypes(int index) {
@@ -127,7 +186,6 @@ public class EventDataGenerator {
     }
 
     public static File generateImage(byte[] imgBuffer, File.Type imageType) {
-        File file = File.builder().data(imgBuffer).type(imageType).build();
-        return file;
+        return File.builder().data(imgBuffer).type(imageType).build();
     }
 }

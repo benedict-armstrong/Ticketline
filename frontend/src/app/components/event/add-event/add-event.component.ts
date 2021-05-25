@@ -1,11 +1,11 @@
-import { Component, OnInit } from '@angular/core';
-import {ApplicationEventService} from '../../../services/event.service';
+import {Component, HostListener, OnInit} from '@angular/core';
 import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
-import {FileService} from '../../../services/file.service';
 import {Event} from '../../../dtos/event';
+import {Performance} from '../../../dtos/performance';
+import {ApplicationEventService} from '../../../services/event.service';
 import {Router} from '@angular/router';
-import {Address} from '../../../dtos/address';
-import {Artist} from '../../../dtos/artist';
+import {ViewportScroller} from '@angular/common';
+import {FileService} from '../../../services/file.service';
 
 @Component({
   selector: 'app-add-event',
@@ -13,70 +13,53 @@ import {Artist} from '../../../dtos/artist';
   styleUrls: ['./add-event.component.scss']
 })
 export class AddEventComponent implements OnInit {
+  pageYoffset = 0;
   addEventForm: FormGroup;
-  submitted = false;
+  event = new Event(null, null, null, null, null, null, null, null, []);
+  performances = [];
+  files = [];
   fileNoImage = false;
   tooManyFiles = false;
   fileTooBig = false;
-  files = [];
-  sectorTypes = [];
+  submitted = false;
+  addingPerformance = false;
+  success = false;
   error = false;
   errorMessage: string;
-  success = false;
 
-  event = new Event(null, null, null, null, null, [], null, null, null, []);
+  constructor(private formBuilder: FormBuilder, private eventService: ApplicationEventService,
+              private router: Router, private scroll: ViewportScroller, private fileService: FileService) { }
 
-  constructor(private applicationEventService: ApplicationEventService,
-              private formBuilder: FormBuilder, private fileService: FileService,
-              private router: Router) {
+  @HostListener('window:scroll', ['$event']) onScroll(event) {
+    this.pageYoffset = window.pageYOffset;
   }
 
   ngOnInit(): void {
     this.addEventForm = this.formBuilder.group({
-      eventName: ['', [Validators.required, Validators.maxLength(100)]],
+      name: ['', [Validators.required, Validators.maxLength(100)]],
       description: ['', [Validators.required, Validators.maxLength(10000)]],
-      files: [''],
-      date: ['', [Validators.required, this.dateValidator]],
+      duration: ['', [Validators.required, Validators.min(1)]],
       eventType: ['CONCERT', [Validators.required]],
-      artistFirstName: ['', [Validators.required]],
-      artistLastName: ['', [Validators.required]],
-      addressName: ['', [Validators.required]],
-      lineOne: ['', [Validators.required]],
-      lineTwo: [''],
-      city: ['', [Validators.required]],
-      postcode: ['', [Validators.required]],
-      country: ['', [Validators.required]],
-      duration: ['', [Validators.required, Validators.min(1)]]
+      startDate: ['', [Validators.required, this.dateValidator]],
+      endDate: ['', [Validators.required, this.dateValidator]],
+      files: ['']
     });
   }
 
-  addEvent() {
+  addEvent(): void {
     this.submitted = true;
 
-    if (this.addEventForm.valid &&
-      this.sectorTypes.length !== 0 &&
-      this.files.length !== 0) {
-      // Add additional event data
-      this.event.title = this.addEventForm.value.eventName;
+    if (this.addEventForm.valid
+      && this.performances.length !== 0
+      && this.files.length !== 0
+    ) {
+      this.event.name = this.addEventForm.value.name;
       this.event.description = this.addEventForm.value.description;
-      this.event.date = this.addEventForm.value.date;
       this.event.duration = this.addEventForm.value.duration;
       this.event.eventType = this.addEventForm.value.eventType;
-      this.event.location = new Address(
-        null,
-        this.addEventForm.value.addressName,
-        this.addEventForm.value.lineOne,
-        this.addEventForm.value.lineTwo,
-        this.addEventForm.value.city,
-        this.addEventForm.value.postcode,
-        this.addEventForm.value.country
-      );
-      this.event.artist = new Artist(
-        null,
-        this.addEventForm.value.artistFirstName,
-        this.addEventForm.value.artistLastName
-      );
-      this.event.sectorTypes = this.sectorTypes;
+      this.event.startDate = this.addEventForm.value.startDate;
+      this.event.endDate = this.addEventForm.value.endDate;
+      this.event.performances = this.performances;
 
       // // New Imageupload
       let count = this.files.length;
@@ -86,23 +69,44 @@ export class AddEventComponent implements OnInit {
           this.event.images.push(f);
           count--;
           if (count === 0) {
-            this.applicationEventService.addEvent(this.event).subscribe(
-              (response) => {
-                this.success = true;
-                this.router.navigate(['event-detail', response.id]);
-              },
-              error => {
-                this.defaultServiceErrorHandling(error);
-              }
-            );
+            this.eventService.addEvent(this.event).subscribe((response) => {
+              this.success = true;
+              this.router.navigate(['/event-detail', response.id]);
+            }, error => {
+              this.defaultServiceErrorHandling(error);
+            });
           }
         }, fileError => {
           this.defaultServiceErrorHandling(fileError);
         });
       });
-    } else {
-      console.log('Invalid input');
     }
+
+  }
+
+  addPerformance(performance: Performance): void {
+    this.performances.push(performance);
+    this.addingPerformance = false;
+  }
+
+  removePerformance(index: number): void {
+    if (index > -1) {
+      this.performances.splice(index, 1);
+    }
+  }
+
+  changeToAddPerformance(): void {
+    this.addingPerformance = true;
+    this.event.name = this.addEventForm.value.name;
+    this.scrollToTop();
+  }
+
+  scrollToTop() {
+    this.scroll.scrollToPosition([0, 0]);
+  }
+
+  cancelAddingPerformance(): void  {
+    this.addingPerformance = false;
   }
 
   onFileChange(event) {
@@ -147,11 +151,16 @@ export class AddEventComponent implements OnInit {
     }
   }
 
+  /**
+   * validate the date to be in the future.
+   *
+   * @param control where the date is picked
+   * @private
+   */
   private dateValidator(control: FormControl): { invalidDate: boolean } {
     if (control.value) {
-      const date = new Date(control.value);
-
-      if (date.valueOf() < Date.now()) {
+      const startDate = new Date(control.value);
+      if (startDate.valueOf() < Date.now()) {
         return {invalidDate: true};
       }
 

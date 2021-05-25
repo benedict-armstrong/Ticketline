@@ -5,6 +5,7 @@ import { FileService } from 'src/app/services/file.service';
 import { ApplicationNewsService } from 'src/app/services/news.service';
 import {AuthService} from '../../services/auth.service';
 import {UserService} from '../../services/user.service';
+import {Performance} from '../../dtos/performance';
 import {Event} from '../../dtos/event';
 
 @Component({
@@ -67,7 +68,7 @@ export class NewsDetailComponent implements OnInit {
       this.userService.getUserByEmail(email).subscribe(
         user => {
           userToChange = user;
-          if (userToChange.lastReadNews.id < this.newsItem.id){
+          if (userToChange.lastReadNews == null || userToChange.lastReadNews.id < this.newsItem.id) {
             userToChange.lastReadNews = this.newsItem;
           }
           this.userService.updateUser(userToChange).subscribe(
