@@ -14,20 +14,20 @@ public interface TicketMapper {
 
     Ticket ticketDtoToTicket(TicketDto ticketDto);
 
-    default Long map(ApplicationUser value) {
-        return value.getId();
-    }
-
-    default Long map(Performance value) {
-        return value.getId();
-    }
-
-    default ApplicationUser mapToUser(Long value) {
-        return ApplicationUser.builder().id(value).build();
-    }
-
-    default Performance mapToPerformance(Long value) {
-        return Performance.builder().id(value).build();
-    }
+//    default Long map(ApplicationUser value) {
+//        return value.getId();
+//    }
+//
+//    default Long map(Performance value) {
+//        return value.getId();
+//    }
+//
+//    default ApplicationUser mapToUser(Long value) {
+//        return ApplicationUser.builder().id(value).build();
+//    }
+//
+//    default Performance mapToPerformance(Long value) {
+//        return Performance.builder().id(value).build();
+//    }
 
 }

@@ -12,4 +12,9 @@ public interface TestDataArtist extends TestData {
         .firstName(TEST_ARTIST_FIRSTNAME)
         .lastName(TEST_ARTIST_LASTNAME)
         .build();
+
+    static Artist getArtist() {
+        return Artist.builder().firstName(TEST_ARTIST_FIRSTNAME).lastName(TEST_ARTIST_LASTNAME).build();
+    }
+
 }

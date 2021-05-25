@@ -7,6 +7,6 @@ import org.mapstruct.Mapper;
 @Mapper
 public interface TicketTypeMapper {
 
-    TicketTypeDto ticketTypeToTicketType(TicketType value);
+    TicketTypeDto ticketTypeToTicketTypeDto(TicketType value);
 
 }

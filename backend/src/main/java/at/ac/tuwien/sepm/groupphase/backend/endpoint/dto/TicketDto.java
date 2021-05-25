@@ -22,21 +22,21 @@ public class TicketDto {
 
     private Long id;
 
-    @JsonIdentityReference(alwaysAsId = true)
+    //@JsonIdentityReference(alwaysAsId = true)
     private UserDto owner;
 
-    @JsonIdentityReference(alwaysAsId = true)
+    //@JsonIdentityReference(alwaysAsId = true)
     @NotNull(message = "Performance ID is missing")
     private PerformanceDto performance;
 
-    @JsonIdentityReference(alwaysAsId = true)
+    //@JsonIdentityReference(alwaysAsId = true)
     @NotNull(message = "Sector type is missing")
     private SectorTypeDto sectorType;
 
-    @NotNull(message = "List of seats is missing")
+    //@NotNull(message = "List of seats is missing")
     private List<Long> seats; // TODO: map to Venue's seats
 
-    @JsonIdentityReference(alwaysAsId = true)
+    //@JsonIdentityReference(alwaysAsId = true)
     @NotNull(message = "Ticket type is missing")
     private TicketTypeDto ticketType;
 

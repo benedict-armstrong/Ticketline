@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import {Performance} from '../../dtos/performance';
 import {ApplicationPerformanceService} from '../../services/performance.service';
 import {ActivatedRoute} from '@angular/router';
+import {Ticket} from '../../dtos/ticket';
+import {TicketService} from '../../services/ticket.service';
 
 @Component({
   selector: 'app-performance-detail',
@@ -16,7 +18,8 @@ export class PerformanceDetailComponent implements OnInit {
   errorMessage = '';
 
   constructor(private performanceService: ApplicationPerformanceService,
-              private activeRoute: ActivatedRoute) { }
+              private activeRoute: ActivatedRoute,
+              private ticketService: TicketService) { }
 
   ngOnInit(): void {
     const performanceId = this.activeRoute.snapshot.params.id;
@@ -33,6 +36,18 @@ export class PerformanceDetailComponent implements OnInit {
 
   vanishAlert(): void {
     this.error = false;
+  }
+
+  testtick() {
+    const t = new Ticket(null, null, this.performance, this.performance.sectorTypes[0], [1],
+      this.performance.ticketTypes[0], 100, 'PAID_FOR');
+    this.ticketService.buy(t).subscribe(
+      q => {
+        console.log('SUCC', q);
+      }, e => {
+        console.log('ERR', e);
+      }
+    );
   }
 
   private defaultServiceErrorHandling(error: any) {

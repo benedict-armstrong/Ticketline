@@ -32,7 +32,6 @@ public class TicketServiceImpl implements TicketService {
     @Override
     public Ticket save(Ticket ticket, Ticket.Status status) {
         LOGGER.trace("saveTicket({})", ticket);
-        System.out.println(ticket);
         ticket.setOwner(
             userRepository.findUserByEmail((String) authenticationFacade.getAuthentication().getPrincipal())
         );
@@ -50,6 +49,7 @@ public class TicketServiceImpl implements TicketService {
     }
 
     private Long calculatePrice(Ticket ticket) {
+        LOGGER.trace("calculatePrice({})", ticket);
         return (long) Math.floor(100 * ticket.getTicketType().getMultiplier() * ticket.getSectorType().getPrice()
             * ticket.getSeats().size());
     }

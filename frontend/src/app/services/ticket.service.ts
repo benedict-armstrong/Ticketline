@@ -1,0 +1,21 @@
+import { Injectable } from '@angular/core';
+import {HttpClient} from '@angular/common/http';
+import {Globals} from '../global/globals';
+import {Observable} from 'rxjs';
+import {Ticket} from '../dtos/ticket';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class TicketService {
+
+  private newsBaseUri: string = this.globals.backendUri + '/tickets';
+
+  constructor(private httpClient: HttpClient, private globals: Globals) { }
+
+  buy(ticket: Ticket): Observable<Ticket> {
+    console.log('POSTthis', ticket);
+    return this.httpClient.post<Ticket>(this.newsBaseUri, ticket);
+  }
+
+}

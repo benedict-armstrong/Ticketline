@@ -39,12 +39,11 @@ public class TicketEndpoint {
     }
 
     @PostMapping
-    @Secured("ROLE_USER")
+    @Secured({"ROLE_USER", "ROLE_ORGANIZER", "ROLE_ADMIN"})
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(summary = "Create a ticket")
     public TicketDto createTicket(@RequestBody TicketDto ticket, @RequestParam(name = "mode") String mode) {
         LOGGER.info("POST /api/v1/tickets {}", ticket);
-        System.out.println(ticket);
         return ticketMapper.ticketToTicketDto(ticketService.save(
             ticketMapper.ticketDtoToTicket(ticket), ticketStatusMapper.modeToStatus(mode)
         ));
