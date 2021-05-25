@@ -14,16 +14,16 @@ import { EventDetailComponent } from './components/event-detail/event-detail.com
 import { NewsComponent } from './components/news/news.component';
 import { NewsItemComponent } from './components/news-item/news-item.component';
 import { NewsDetailComponent } from './components/news-detail/news-details.component';
-import { EventsComponent } from './components/events/events.component';
-import { EventListItemComponent } from './components/event-list-item/event-list-item.component';
-import { SearchComponent } from './components/search/search.component';
+import { SearchResultComponent } from './components/search/search-result/search-result.component';
+import { EventListItemComponent } from './components/search/event-list-item/event-list-item.component';
+import { EventSearchComponent } from './components/search/event-search/event-search.component';
 import { UserHomeComponent } from './components/user-home/user-home.component';
 import { TicketDetailComponent } from './components/ticket-detail/ticket-detail.component';
 import { TicketListItemComponent } from './components/ticket-list-item/ticket-list-item.component';
-import { AddNewsComponent } from './components/add-news/add-news.component';
+import {AddNewsComponent} from './components/add-news/add-news.component';
 import { AddUserComponent } from './components/add-user/add-user.component';
 import { httpInterceptorProviders } from './interceptors';
-import { LoadingAnimationComponent } from './components/loading-animation/loading-animation.component';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -36,15 +36,24 @@ import { LoadingAnimationComponent } from './components/loading-animation/loadin
     NewsComponent,
     NewsItemComponent,
     NewsDetailComponent,
-    EventsComponent,
+    SearchResultComponent,
     EventListItemComponent,
-    SearchComponent,
+    EventSearchComponent,
     UserHomeComponent,
     TicketDetailComponent,
     TicketListItemComponent,
     AddNewsComponent,
+    AddPerformanceComponent,
     AddUserComponent,
-    AddUserComponent,
+    AddSectortypeComponent,
+    AddArtistComponent,
+    AddAddressComponent,
+    AddEventComponent,
+    PerformanceDetailComponent,
+    ArtistSearchComponent,
+    AddressSearchComponent,
+    ArtistListItemComponent,
+    AddressListItemComponent,
     LoadingAnimationComponent,
   ],
   imports: [

@@ -3,9 +3,9 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {ActivatedRoute, Router} from '@angular/router';
 import {ApplicationNewsService} from '../../services/news.service';
 import {News} from '../../dtos/news';
-// import {Event} from '../../dtos/event';
-// import {ApplicationEventService} from '../../services/event.service';
 import {FileService} from '../../services/file.service';
+import {ApplicationEventService} from '../../services/event.service';
+import {Event} from '../../dtos/event';
 
 @Component({
   selector: 'app-add-news',
@@ -15,13 +15,14 @@ import {FileService} from '../../services/file.service';
 export class AddNewsComponent implements OnInit {
 
   addNewsForm: FormGroup;
-  // eventId = 0;
-  // event = null;
+  eventId = 0;
+  event = null;
   submitted = false;
   error = false;
   errorMessage = '';
   fileNoImage = false;
   tooManyFiles = false;
+  fileTooBig = false;
   success = false;
   files = [];
 
@@ -30,17 +31,18 @@ export class AddNewsComponent implements OnInit {
     , null
     , null
     , null
+    , null
     , []);
 
-  constructor(private applicationNewsService: ApplicationNewsService, /*private applicationEventService: ApplicationEventService,*/
+  constructor(private applicationNewsService: ApplicationNewsService, private applicationEventService: ApplicationEventService,
               private formBuilder: FormBuilder, private router: Router, private actRoute: ActivatedRoute,
               private fileService: FileService) {
-    // this.eventId = this.actRoute.snapshot.params.id;
-    // this.loadEvent(this.eventId);
+    this.eventId = this.actRoute.snapshot.params.id;
+    this.loadEvent(this.eventId);
 
     this.addNewsForm = this.formBuilder.group({
       title: ['', [Validators.required, Validators.maxLength(100)]],
-      //eventName: [''],
+      eventName: [''],
       author: ['', [Validators.required, Validators.maxLength(100)]],
       text: ['', [Validators.required, Validators.maxLength(10000)]],
       files: ['']
@@ -56,7 +58,7 @@ export class AddNewsComponent implements OnInit {
       // Add additional news data
       this.news.title = this.addNewsForm.value.title;
       this.news.text = this.addNewsForm.value.text;
-      //this.news.event = this.event;
+      this.news.event = this.event;
       this.news.author = this.addNewsForm.value.author;
 
       const fileService = this.fileService;
@@ -66,6 +68,9 @@ export class AddNewsComponent implements OnInit {
         this.applicationNewsService.publishNews(this.news).subscribe(
           () => {
             this.success = true;
+            setTimeout(() => {
+              this.router.navigate(['/']);
+            }, 3000);
           },
           error => {
             this.defaultServiceErrorHandling(error);
@@ -81,6 +86,9 @@ export class AddNewsComponent implements OnInit {
               this.applicationNewsService.publishNews(this.news).subscribe(
                 () => {
                   this.success = true;
+                  setTimeout(() => {
+                    this.router.navigate(['/']);
+                  }, 3000);
                 },
                 error => {
                   this.defaultServiceErrorHandling(error);
@@ -95,29 +103,32 @@ export class AddNewsComponent implements OnInit {
     }
   }
 
-  // loadEvent(id) {
-  //   this.applicationEventService.getEventById(id).subscribe(
-  //     (event: Event) => {
-  //       this.event = event;
-  //       this.addNewsForm.patchValue({
-  //         eventName: event.title
-  //       });
-  //     },
-  //     error => {
-  //       this.defaultServiceErrorHandling(error);
-  //     }
-  //   );
-  // }
+  loadEvent(id) {
+    this.applicationEventService.getEventById(id).subscribe(
+      (event: Event) => {
+        this.event = event;
+        this.addNewsForm.patchValue({
+          eventName: event.name
+        });
+      },
+      error => {
+        this.defaultServiceErrorHandling(error);
+      }
+    );
+  }
 
   onFileChange(event) {
     this.fileNoImage = false;
     this.tooManyFiles = false;
+    this.fileTooBig = false;
     if (event.target.files.length > 0) {
       const file = event.target.files[0];
       if (!file.type.includes('image')) {
         this.fileNoImage = true;
-      } else if (this.news.images.length >= 10) {
+      } else if (this.files.length >= 10) {
         this.tooManyFiles = true;
+      } else if (file.size > 1000000) {
+        this.fileTooBig = true;
       } else {
         this.files.push(file);
       }

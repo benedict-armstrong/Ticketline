@@ -31,5 +31,4 @@ public interface AuthenticationFacade {
      * @return true if the User is authenticated and not Anonymous false otherwise
      */
     boolean isUser();
-
 }

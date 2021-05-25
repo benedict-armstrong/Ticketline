@@ -43,14 +43,14 @@ public class UserDataGenerator {
             LOGGER.debug("generating {} user entries", NUMBER_OF_USER_TO_GENERATE);
 
             for (int i = 0; i < NUMBER_OF_USER_TO_GENERATE; i++) {
-                ApplicationUser user = ApplicationUser.UserBuilder.anUser().withEmail(TEST_USER_NAME + i + "@gmx.com")
-                                        .withPassword(TEST_USER_NAME + i).withFirstName(TEST_USER_NAME + i + " first")
-                                        .withLastName(TEST_USER_NAME + i + " last").withRole(ApplicationUser.UserRole.CLIENT)
-                                        .withTelephoneNumber("012345" + i).withStatus(ApplicationUser.UserStatus.ACTIVE)
-                                        .withAddress(Address.AddressBuilder.anAddress().withName(TEST_ADDRESS_NAME + i)
-                                        .withLineOne("line " + i).withCity(TEST_ADDRESS_CITY)
-                                        .withPostcode(TEST_ADDRESS_POSTCODE).withCountry(TEST_ADDRESS_COUNTRY).build())
-                                        .withLastLogin(LocalDateTime.now()).build();
+                ApplicationUser user = ApplicationUser.builder().email(TEST_USER_NAME + i + "@gmx.com")
+                                        .password(TEST_USER_NAME + i + TEST_USER_NAME).firstName(TEST_USER_NAME + i + "first")
+                                        .lastName(TEST_USER_NAME + i + "last").role(ApplicationUser.UserRole.CLIENT)
+                                        .telephoneNumber("012345" + i).status(ApplicationUser.UserStatus.ACTIVE)
+                                        .address(Address.builder().name(TEST_ADDRESS_NAME + i)
+                                        .lineOne("line " + i).city(TEST_ADDRESS_CITY)
+                                        .postcode(TEST_ADDRESS_POSTCODE).country(TEST_ADDRESS_COUNTRY).build())
+                                        .lastLogin(LocalDateTime.now()).build();
 
                 user.setLastLogin(LocalDateTime.now());
                 user.setPassword(passwordEncoder.encode(user.getPassword()));
@@ -66,14 +66,14 @@ public class UserDataGenerator {
             LOGGER.debug("admin user already generated");
         } else {
             LOGGER.debug("generating admin user");
-            ApplicationUser user = ApplicationUser.UserBuilder.anUser().withEmail(TEST_USER_NAME + "Admin" + "@gmx.com")
-                .withPassword(TEST_USER_NAME + "Admin").withFirstName(TEST_USER_NAME + "Admin" + " first")
-                .withLastName(TEST_USER_NAME + "Admin" + " last").withRole(ApplicationUser.UserRole.ADMIN)
-                .withTelephoneNumber("0123459").withStatus(ApplicationUser.UserStatus.ACTIVE)
-                .withAddress(Address.AddressBuilder.anAddress().withName(TEST_ADDRESS_NAME + "Admin")
-                    .withLineOne("line " + "Admin").withCity(TEST_ADDRESS_CITY)
-                    .withPostcode(TEST_ADDRESS_POSTCODE).withCountry(TEST_ADDRESS_COUNTRY).build())
-                .withLastLogin(LocalDateTime.now()).build();
+            ApplicationUser user = ApplicationUser.builder().email(TEST_USER_NAME + "Admin" + "@gmx.com")
+                .password(TEST_USER_NAME + "Admin").firstName(TEST_USER_NAME + "Admin" + "first")
+                .lastName(TEST_USER_NAME + "Admin" + "last").role(ApplicationUser.UserRole.ADMIN)
+                .telephoneNumber("0123459").status(ApplicationUser.UserStatus.ACTIVE)
+                .address(Address.builder().name(TEST_ADDRESS_NAME + "Admin")
+                    .lineOne("line " + "Admin").city(TEST_ADDRESS_CITY)
+                    .postcode(TEST_ADDRESS_POSTCODE).country(TEST_ADDRESS_COUNTRY).build())
+                .lastLogin(LocalDateTime.now()).build();
 
             user.setLastLogin(LocalDateTime.now());
             user.setPassword(passwordEncoder.encode(user.getPassword()));
@@ -88,14 +88,14 @@ public class UserDataGenerator {
             LOGGER.debug("organizer user already generated");
         } else {
             LOGGER.debug("generating organizer user");
-            ApplicationUser user = ApplicationUser.UserBuilder.anUser().withEmail(TEST_USER_NAME + "Organizer" + "@gmx.com")
-                .withPassword(TEST_USER_NAME + "Organizer").withFirstName(TEST_USER_NAME + "Organizer" + " first")
-                .withLastName(TEST_USER_NAME + "Organizer" + " last").withRole(ApplicationUser.UserRole.ORGANIZER)
-                .withTelephoneNumber("0123459").withStatus(ApplicationUser.UserStatus.ACTIVE)
-                .withAddress(Address.AddressBuilder.anAddress().withName(TEST_ADDRESS_NAME + "Organizer")
-                    .withLineOne("line " + "Organizer").withCity(TEST_ADDRESS_CITY)
-                    .withPostcode(TEST_ADDRESS_POSTCODE).withCountry(TEST_ADDRESS_COUNTRY).build())
-                .withLastLogin(LocalDateTime.now()).build();
+            ApplicationUser user = ApplicationUser.builder().email(TEST_USER_NAME + "Organizer" + "@gmx.com")
+                .password(TEST_USER_NAME + "Organizer").firstName(TEST_USER_NAME + "Organizer" + "first")
+                .lastName(TEST_USER_NAME + "Organizer" + "last").role(ApplicationUser.UserRole.ORGANIZER)
+                .telephoneNumber("0123459").status(ApplicationUser.UserStatus.ACTIVE)
+                .address(Address.builder().name(TEST_ADDRESS_NAME + "Organizer")
+                    .lineOne("line " + "Organizer").city(TEST_ADDRESS_CITY)
+                    .postcode(TEST_ADDRESS_POSTCODE).country(TEST_ADDRESS_COUNTRY).build())
+                .lastLogin(LocalDateTime.now()).build();
 
             user.setLastLogin(LocalDateTime.now());
             user.setPassword(passwordEncoder.encode(user.getPassword()));

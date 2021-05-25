@@ -19,10 +19,11 @@ export class AuthService {
    *
    * @param authRequest User data
    */
-  loginUser(authRequest: AuthRequest): Observable<string> {
+  loginUser(authRequest: AuthRequest, keepLogin: boolean): Observable<string> {
+    console.log(keepLogin);
     return this.httpClient
       .post(this.authBaseUri, authRequest, { responseType: 'text' })
-      .pipe(tap((authResponse: string) => this.setToken(authResponse)));
+      .pipe(tap((authResponse: string) => this.setToken(authResponse, keepLogin)));
   }
 
   /**
@@ -39,10 +40,15 @@ export class AuthService {
   logoutUser(): void {
     console.log('Logout');
     localStorage.removeItem('authToken');
+    sessionStorage.removeItem('authToken');
   }
 
   getToken(): string {
-    return localStorage.getItem('authToken');
+    let token = localStorage.getItem('authToken');
+    if (token == null) {
+      token = sessionStorage.getItem('authToken');
+    }
+    return token;
   }
 
   /**
@@ -74,8 +80,12 @@ export class AuthService {
     return null;
   }
 
-  private setToken(authResponse: string) {
-    localStorage.setItem('authToken', authResponse);
+  private setToken(authResponse: string, keepLogin: boolean) {
+    if (keepLogin) {
+      localStorage.setItem('authToken', authResponse);
+    } else {
+      sessionStorage.setItem('authToken', authResponse);
+    }
   }
 
   private getTokenExpirationDate(token: string): Date {

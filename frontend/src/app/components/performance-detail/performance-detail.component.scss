@@ -1,0 +1,89 @@
+@import "../../../colors.scss";
+
+.event {
+  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+  margin: 10px;
+}
+
+.event-info {
+  margin: 20px 0;
+}
+
+.additional-event-info {
+  background-color: $gray-242;
+}
+
+.jumbotron img {
+  width: 100%;
+  object-fit: cover;
+  height: 500px;
+}
+
+.main {
+  padding: 20px;
+}
+
+.header .info {
+  color: rgba(193, 73, 83, 1);
+}
+
+.header > h3, .header > .add-news {
+  display: inline-block;
+}
+
+.options {
+  display: flex;
+  justify-content: center;
+}
+
+.card:hover {
+  border: 1px solid rgba(193, 73, 83, 1);
+}
+
+.card.selected {
+  border: 1px solid rgba(193, 73, 83, 1);
+}
+
+.tickets > p {
+  color: white;
+}
+
+.tickets {
+  margin-top: 20px;
+  padding: 20px 0px;
+}
+
+.selected-items p {
+  margin: 0px;
+}
+
+.selected-items {
+  border-top: 1px solid lightgray;
+  border-bottom: 1px solid lightgray;
+  padding: 10px;
+  margin-bottom: 25px;
+  opacity: 0.8;
+}
+
+.prices {
+  text-align: end;
+}
+
+.checkout {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.checkout-buttons {
+  display: flex;
+}
+
+.checkout-buttons button {
+  width: clamp(100px, 200px, 200px);
+}
+
+h4 {
+  margin: 10px 0;
+}
