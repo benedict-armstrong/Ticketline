@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import {HttpClient} from '@angular/common/http';
+import {HttpClient, HttpParams} from '@angular/common/http';
 import {Globals} from '../global/globals';
 import {Observable} from 'rxjs';
 import {Ticket} from '../dtos/ticket';
@@ -15,7 +15,9 @@ export class TicketService {
 
   buy(ticket: Ticket): Observable<Ticket> {
     console.log('POSTthis', ticket);
-    return this.httpClient.post<Ticket>(this.newsBaseUri, ticket);
+    let params = new HttpParams();
+    params = params.set('mode', 'buy');
+    return this.httpClient.post<Ticket>(this.newsBaseUri, ticket, {params});
   }
 
 }

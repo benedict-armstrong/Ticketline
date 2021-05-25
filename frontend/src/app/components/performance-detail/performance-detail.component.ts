@@ -4,6 +4,7 @@ import {ApplicationPerformanceService} from '../../services/performance.service'
 import {ActivatedRoute} from '@angular/router';
 import {Ticket} from '../../dtos/ticket';
 import {TicketService} from '../../services/ticket.service';
+import { User } from 'src/app/dtos/user';
 
 @Component({
   selector: 'app-performance-detail',

@@ -15,7 +15,7 @@ import javax.validation.constraints.PositiveOrZero;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@JsonIdentityInfo(scope = TicketTypeDto.class, generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+//@JsonIdentityInfo(scope = TicketTypeDto.class, generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class TicketTypeDto {
 
     private Long id;

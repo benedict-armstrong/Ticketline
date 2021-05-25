@@ -16,7 +16,7 @@ import javax.validation.constraints.PositiveOrZero;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@JsonIdentityInfo(scope = UserDto.class, generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+//@JsonIdentityInfo(scope = UserDto.class, generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class SectorTypeDto {
     private Long id;
 

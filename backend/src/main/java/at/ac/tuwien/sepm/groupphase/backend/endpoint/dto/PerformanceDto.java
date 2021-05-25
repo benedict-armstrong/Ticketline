@@ -17,7 +17,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@JsonIdentityInfo(scope = PerformanceDto.class, generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+//@JsonIdentityInfo(scope = PerformanceDto.class, generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class PerformanceDto {
 
     private Long id;
