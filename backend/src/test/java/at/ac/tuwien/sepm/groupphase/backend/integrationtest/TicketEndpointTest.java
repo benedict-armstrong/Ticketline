@@ -10,6 +10,7 @@ import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.TicketTypeMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Address;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Event;
+import at.ac.tuwien.sepm.groupphase.backend.entity.Performance;
 import at.ac.tuwien.sepm.groupphase.backend.entity.SectorType;
 import at.ac.tuwien.sepm.groupphase.backend.repository.EventRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.TicketRepository;
@@ -26,6 +27,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.time.LocalDateTime;
 import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -76,16 +78,14 @@ public class TicketEndpointTest implements TestAuthentification, TestDataTicket,
     private final TicketDto template = TicketDto.builder()
         .seats(Arrays.asList(1L, 5L, 6L))
         .build();
-    //    private final Event performance = Event.builder()
-    //        .title(TEST_EVENT_TITLE)
-    //        .description(TEST_EVENT_DESCRIPTION)
-    //        .date(TEST_EVENT_DATE_FUTURE)
-    //        .duration(TEST_EVENT_DURATION)
-    //        .eventType(TEST_EVENT_EVENT_TYPE)
-    //        .artist(TestDataEvent.getTestEventArtist())
-    //        .location(TestDataEvent.getTestEventLocation())
-    //        .sectorTypes(TestDataEvent.getTestEventSectortypes())
-    //        .build();
+//    private final Performance performance = Performance.builder()
+//        .title("PerfTitle")
+//        .description("PerfDesc")
+//        .date(LocalDateTime.of(3000, 5, 25, 15, 24))
+//        .artist(TEST_A)
+//        .location(TestDataEvent.getTestEventLocation())
+//        .sectorTypes(TestDataEvent.getTestEventSectortypes())
+//        .build();
     private final Address address = Address.builder()
         .name("Max Mustermann")
         .lineOne("Teststraße 2")

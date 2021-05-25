@@ -3,6 +3,7 @@ package at.ac.tuwien.sepm.groupphase.backend.integrationtest;
 import at.ac.tuwien.sepm.groupphase.backend.basetest.TestAuthentification;
 import at.ac.tuwien.sepm.groupphase.backend.basetest.TestDataEvent;
 import at.ac.tuwien.sepm.groupphase.backend.basetest.TestDataFile;
+import at.ac.tuwien.sepm.groupphase.backend.basetest.TestDataTicket;
 import at.ac.tuwien.sepm.groupphase.backend.config.properties.SecurityProperties;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventDto;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Address;
@@ -46,7 +47,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 @SpringBootTest
 @ActiveProfiles("test")
 @AutoConfigureMockMvc
-public class EventEndpointTest implements TestDataEvent, TestAuthentification {
+public class EventEndpointTest implements TestDataEvent, TestDataTicket, TestAuthentification {
     @Autowired
     private MockMvc mockMvc;
 
@@ -109,6 +110,7 @@ public class EventEndpointTest implements TestDataEvent, TestAuthentification {
             .artist(artist)
             .location(address)
             .sectorTypes(TestDataEvent.getTestEventSectortypes())
+            .ticketTypes(TestDataTicket.getTicketTypes())
             .build());
 
         event = Event.builder()
