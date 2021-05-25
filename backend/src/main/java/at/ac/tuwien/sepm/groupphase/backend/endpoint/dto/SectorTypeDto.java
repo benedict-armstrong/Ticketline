@@ -1,5 +1,7 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint.dto;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -7,12 +9,12 @@ import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Range;
 
 import javax.validation.constraints.NotBlank;
-import java.util.Objects;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@JsonIdentityInfo(scope = UserDto.class, generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class SectorTypeDto {
     private Long id;
 

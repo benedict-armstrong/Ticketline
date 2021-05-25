@@ -1,6 +1,8 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint.dto;
 
 import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,12 +15,12 @@ import javax.validation.constraints.PositiveOrZero;
 import javax.validation.constraints.NotNull;
 
 import java.time.LocalDateTime;
-import java.util.Objects;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@JsonIdentityInfo(scope = UserDto.class, generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class UserDto  {
 
     private Long id;

@@ -2,6 +2,8 @@ package at.ac.tuwien.sepm.groupphase.backend.service.impl;
 
 import at.ac.tuwien.sepm.groupphase.backend.entity.Ticket;
 import at.ac.tuwien.sepm.groupphase.backend.repository.TicketRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.UserRepository;
+import at.ac.tuwien.sepm.groupphase.backend.security.AuthenticationFacade;
 import at.ac.tuwien.sepm.groupphase.backend.service.TicketService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,16 +17,25 @@ public class TicketServiceImpl implements TicketService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final TicketRepository ticketRepository;
+    private final UserRepository userRepository;
+    private final AuthenticationFacade authenticationFacade;
 
     @Autowired
-    public TicketServiceImpl(TicketRepository ticketRepository) {
+    public TicketServiceImpl(TicketRepository ticketRepository,
+                             UserRepository userRepository,
+                             AuthenticationFacade authenticationFacade) {
         this.ticketRepository = ticketRepository;
+        this.userRepository = userRepository;
+        this.authenticationFacade = authenticationFacade;
     }
 
     @Override
     public Ticket save(Ticket ticket, Ticket.Status status) {
         LOGGER.trace("saveTicket({})", ticket);
         System.out.println(ticket);
+        ticket.setOwner(
+            userRepository.findUserByEmail((String) authenticationFacade.getAuthentication().getPrincipal())
+        );
         ticket.setTotalPrice(calculatePrice(ticket));
         ticket.setStatus(status);
         return ticketRepository.save(ticket);
