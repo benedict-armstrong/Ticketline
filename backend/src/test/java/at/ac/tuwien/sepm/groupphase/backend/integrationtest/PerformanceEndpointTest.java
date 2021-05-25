@@ -87,11 +87,6 @@ public class PerformanceEndpointTest implements TestDataEvent, TestAuthentificat
 
     @BeforeEach
     public void beforeEach() throws Exception {
-        performanceRepository.deleteAll();
-        fileRepository.deleteAll();
-        addressRepository.deleteAll();
-        artistRepository.deleteAll();
-
         address = addressRepository.save(TestDataEvent.TEST_EVENT_LOCATION);
         artist = artistRepository.save(TestDataEvent.TEST_EVENT_ARTIST);
 
@@ -106,7 +101,6 @@ public class PerformanceEndpointTest implements TestDataEvent, TestAuthentificat
 
         fileRepository.save(file);
 
-        userRepository.deleteAll();
         saveUser(AUTH_USER_ORGANIZER, userRepository, passwordEncoder);
         authToken = authenticate(AUTH_USER_ORGANIZER, mockMvc, objectMapper);
     }
