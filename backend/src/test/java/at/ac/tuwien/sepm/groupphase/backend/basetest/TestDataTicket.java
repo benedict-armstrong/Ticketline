@@ -11,15 +11,15 @@ public interface TestDataTicket extends TestData {
 
     TicketType STANDARD_TICKET_TYPE = TicketType.builder()
         .title("Standard")
-        .priceMultiplier(1.0)
+        .multiplier(1.0)
         .build();
     TicketType VIP_TICKET_TYPE = TicketType.builder()
         .title("VIP")
-        .priceMultiplier(2.33)
+        .multiplier(2.33)
         .build();
     TicketType DISCOUNT_TICKET_TYPE = TicketType.builder()
         .title("Discount")
-        .priceMultiplier(0.85)
+        .multiplier(0.85)
         .build();
 
     Ticket STANDARD_TICKET = Ticket.builder()

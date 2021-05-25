@@ -36,8 +36,11 @@ public class PerformanceDto {
     @NotNull(message = "Artist is required")
     private ArtistDto artist;
 
-    @Size(min = 1, message = "Atleast one sectortype is required")
+    @Size(min = 1, message = "At least one sector type is required")
     private SectorTypeDto[] sectorTypes;
+
+    @Size(min = 1, message = "At least one ticket type is required")
+    private TicketTypeDto[] ticketTypes;
 
     @NotNull(message = "Performance date is required")
     @Future

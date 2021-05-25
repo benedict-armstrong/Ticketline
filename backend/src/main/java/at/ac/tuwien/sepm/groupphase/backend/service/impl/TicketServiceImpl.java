@@ -50,7 +50,7 @@ public class TicketServiceImpl implements TicketService {
     }
 
     private Long calculatePrice(Ticket ticket) {
-        return (long) Math.floor(100 * ticket.getTicketType().getPriceMultiplier() * ticket.getSectorType().getPrice()
+        return (long) Math.floor(100 * ticket.getTicketType().getMultiplier() * ticket.getSectorType().getPrice()
             * ticket.getSeats().size());
     }
 

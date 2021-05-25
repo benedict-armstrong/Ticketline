@@ -25,6 +25,6 @@ public class TicketTypeDto {
 
     @NotNull(message = "Price multiplier is missing")
     @PositiveOrZero(message = "Price multiplier has to be at least zero")
-    private Double priceMultiplier;
+    private Double multiplier;
 
 }

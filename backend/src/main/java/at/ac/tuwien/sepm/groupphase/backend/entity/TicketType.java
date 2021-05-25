@@ -26,6 +26,6 @@ public class TicketType {
     private String title;
 
     @Column(name = "MULTIPLIER", nullable = false)
-    private Double priceMultiplier;
+    private Double multiplier;
 
 }
