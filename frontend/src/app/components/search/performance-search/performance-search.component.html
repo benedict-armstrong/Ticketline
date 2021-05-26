@@ -1,0 +1,73 @@
+<div class="search">
+    <div class="filters">
+        <button class="primary filterButton" type="button" data-bs-toggle="collapse"
+            data-bs-target="#collapsePerformanceSearch" aria-expanded="false" aria-controls="collapsePerformanceSearch">
+            Find a performance
+        </button>
+        <div class="collapse" id="collapsePerformanceSearch">
+            <div class="card">
+                <form [formGroup]="this.performanceSearchForm" (ngSubmit)="resetValues(); searchPerformances()">
+                    <div class="card-body">
+                        <div class="row">
+                            <h3>Search for performances</h3>
+                            <div class="col">
+                                <div class="row mb-3">
+                                    <label for="filterDate" class="col-sm-3 col-form-label">Date</label>
+                                    <div class="col-sm-9">
+                                        <input type="date" class="text-input form-control" id="filterDate"
+                                            formControlName="date">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="row mb-3">
+                                    <label for="filterTime" class="col-sm-3 col-form-label">Time</label>
+                                    <div class="col-sm-9">
+                                        <input type="time" class="text-input form-control" id="filterTime"
+                                            formControlName="time">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <div class="row mb-3">
+                                    <label for="filterVenue" class="col-sm-3 col-form-label">Venue</label>
+                                    <div class="col-sm-9">
+                                        <input type="text" class="text-input form-control" id="filterVenue"
+                                            formControlName="venue">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="row mb-3">
+                                    <label for="filterPrice" class="col-sm-3 col-form-label">Price</label>
+                                    <div class="col-sm-9">
+                                        <input type="number" class="text-input form-control" id="filterPrice"
+                                            formControlName="price" min="0" step="0.1" >
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col" *ngIf="eventsSelect">
+                                <div class="row mb-3">
+                                    <label for="filterEvent" class="col-sm-3 col-form-label">Event</label>
+                                    <div class="col-sm-9">
+                                        <select name="event" id="filterEvent" formControlName="event" class="select-input form-select">
+                                            <option *ngFor="let event of eventsSelect" value="event.id">{{event.name}}</option>
+                                            <option value="change">Load more ...</option>
+                                          </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <button type="submit" class="secondary filterButton">Apply</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

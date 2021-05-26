@@ -3,6 +3,7 @@ import {HttpClient, HttpParams} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {Globals} from '../global/globals';
 import {Performance} from '../dtos/performance';
+import { String } from 'lodash';
 
 @Injectable({
   providedIn: 'root'
@@ -37,5 +38,30 @@ export class ApplicationPerformanceService {
   addEvent(event: Performance): Observable<Performance> {
     console.log(event);
     return this.httpClient.post<Performance>(this.performanceBaseUri, event);
+  }
+
+  /**
+   * Search all Performances
+   */
+  searchPerformances(page: number, size: number, date: Date): Observable<Performance[]> {
+    let params = new HttpParams();
+    params = params.set('page', String(page));
+    params = params.set('size', String(size));
+    if (date !== null) {
+      params = params.set('date', date.toISOString());
+    }
+
+    return this.httpClient.get<Performance[]>(this.performanceBaseUri, { params });
+  }
+
+  /**
+   * Get all Performances
+   */
+  getPerformances(page: number, size: number): Observable<Performance[]> {
+    let params = new HttpParams();
+    params = params.set('page', String(page));
+    params = params.set('size', String(size));
+
+    return this.httpClient.get<Performance[]>(this.performanceBaseUri, { params });
   }
 }

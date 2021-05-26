@@ -11,7 +11,6 @@ import {Artist} from '../../../dtos/artist';
 export class ArtistSearchComponent implements OnInit {
   @Output() searchedArtists = new EventEmitter<Artist[]>();
   @Output() searchedNoArtist = new EventEmitter<any>();
-  @Output() searchPagination = new EventEmitter<any>();
 
   // Error flag
   error = false;
@@ -70,7 +69,6 @@ export class ArtistSearchComponent implements OnInit {
           }
           this.searchedArtists.emit(this.artists);
           this.searchedNoArtist.emit(this.noArtist);
-          this.searchPagination.emit(true);
         }, error => {
           console.error(error);
         }

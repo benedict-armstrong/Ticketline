@@ -12,7 +12,6 @@ export class AddressSearchComponent implements OnInit {
 
   @Output() searchedAddresses = new EventEmitter<Address[]>();
   @Output() searchedNoAddress = new EventEmitter<any>();
-  @Output() searchPagination = new EventEmitter<any>();
 
   // Error flag
   error = false;
@@ -78,7 +77,6 @@ export class AddressSearchComponent implements OnInit {
           }
           this.searchedAddresses.emit(this.addresses);
           this.searchedNoAddress.emit(this.noAddress);
-          this.searchPagination.emit(true);
         }, error => {
           console.error(error);
         }

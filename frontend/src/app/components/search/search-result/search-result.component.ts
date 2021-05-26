@@ -14,15 +14,18 @@ export class SearchResultComponent implements OnInit {
   events: Event[] = [];
   artists: Artist[] = [];
   addresses: Address[] = [];
+  performances: Performance[] = [];
   dates = [];
   page = 0;
   size = 8;
   noEvent = true;
   noArtist = true;
   noAddress = true;
+  noPerformance = true;
   eventSearched = true;
   artistSearched = false;
   addressSearched = false;
+  performanceSearched = false;
   search = false;
 
   constructor(private eventService: ApplicationEventService) { }
@@ -56,6 +59,7 @@ export class SearchResultComponent implements OnInit {
     this.eventSearched = true;
     this.artistSearched = false;
     this.addressSearched = false;
+    this.performanceSearched = false;
     this.events = Object.assign([], results);
   }
 
@@ -74,6 +78,7 @@ export class SearchResultComponent implements OnInit {
   setSearchArtists(results: Artist[]) {
     this.eventSearched = false;
     this.addressSearched = false;
+    this.performanceSearched = false;
     this.artistSearched = true;
     this.artists = Object.assign([], results);
   }
@@ -85,11 +90,24 @@ export class SearchResultComponent implements OnInit {
   setSearchAddresses(results: Address[]) {
     this.eventSearched = false;
     this.artistSearched = false;
+    this.performanceSearched = false;
     this.addressSearched = true;
     this.addresses = Object.assign([], results);
   }
 
   setNoAddress(noAddress: boolean) {
     this.noAddress = noAddress;
+  }
+
+  setSearchPerformances(results: Performance[]){
+    this.eventSearched = false;
+    this.artistSearched = false;
+    this.addressSearched = false;
+    this.performanceSearched = true;
+    this.performances = Object.assign([], results);
+  }
+
+  setNoPerformance(noPerformance: boolean){
+    this.noPerformance = noPerformance;
   }
 }

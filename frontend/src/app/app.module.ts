@@ -33,6 +33,8 @@ import { ArtistSearchComponent } from './components/search/artist-search/artist-
 import { AddressSearchComponent } from './components/search/address-search/address-search.component';
 import { ArtistListItemComponent } from './components/search/artist-list-item/artist-list-item.component';
 import { AddressListItemComponent } from './components/search/address-list-item/address-list-item.component';
+import { PerformanceSearchComponent } from './components/search/performance-search/performance-search.component';
+import { PerformanceListItemComponent } from './components/search/performance-list-item/performance-list-item.component';
 
 @NgModule({
   declarations: [
@@ -63,7 +65,9 @@ import { AddressListItemComponent } from './components/search/address-list-item/
     ArtistSearchComponent,
     AddressSearchComponent,
     ArtistListItemComponent,
-    AddressListItemComponent
+    AddressListItemComponent,
+    PerformanceSearchComponent,
+    PerformanceListItemComponent
   ],
   imports: [
     BrowserModule,
