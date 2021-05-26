@@ -3,9 +3,11 @@ package at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.AddressDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.ArtistDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.PerformanceDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.PerformanceSearchDto;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Address;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Artist;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Performance;
+import at.ac.tuwien.sepm.groupphase.backend.entity.PerformanceSearch;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
@@ -23,4 +25,8 @@ public interface PerformanceMapper extends FileTypeMapper {
 
     @Mapping(target = "performances", ignore = true)
     ArtistDto artistToArtistDto(Artist artist);
+
+    List<PerformanceDto> performanceListToPerformanceDtoList(List<Performance> performances);
+
+    PerformanceSearch performanceSearchDtoToPerformanceSearch(PerformanceSearchDto performanceSearchDto);
 }

@@ -1,7 +1,9 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint;
 
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.ArtistDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.PerformanceDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.PaginationDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.PerformanceSearchDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.PerformanceMapper;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.PaginationMapper;
 import at.ac.tuwien.sepm.groupphase.backend.service.PerformanceService;
@@ -22,6 +24,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import javax.annotation.security.PermitAll;
 import javax.validation.Valid;
 import java.lang.invoke.MethodHandles;
+import java.util.List;
 
 @RestController
 @RequestMapping(value = "/api/v1/performances")
@@ -30,11 +33,13 @@ public class PerformanceEndpoint {
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final PerformanceService performanceService;
     private final PerformanceMapper performanceMapper;
+    private final PaginationMapper paginationMapper;
 
     @Autowired
-    public PerformanceEndpoint(PerformanceService performanceService, PerformanceMapper performanceMapper) {
+    public PerformanceEndpoint(PerformanceService performanceService, PerformanceMapper performanceMapper, PaginationMapper paginationMapper) {
         this.performanceService = performanceService;
         this.performanceMapper = performanceMapper;
+        this.paginationMapper = paginationMapper;
     }
 
     @Secured("ROLE_ORGANIZER")
@@ -52,5 +57,18 @@ public class PerformanceEndpoint {
     public PerformanceDto findById(@PathVariable Long id) {
         LOGGER.info("GET /api/v1/performances/{}", id);
         return performanceMapper.performanceToPerformanceDto(performanceService.findById(id));
+    }
+
+    @PermitAll
+    @GetMapping
+    @Operation(summary = "Get all performances")
+    public List<PerformanceDto> findAll(PaginationDto paginationDto, PerformanceSearchDto performanceDto) {
+        LOGGER.info("GET /api/v1/performances");
+
+        if (performanceDto != null) {
+            return performanceMapper.performanceListToPerformanceDtoList(performanceService.search(performanceMapper.performanceSearchDtoToPerformanceSearch(performanceDto), paginationMapper.paginationDtoToPageable(paginationDto)));
+        }
+
+        return performanceMapper.performanceListToPerformanceDtoList(performanceService.findAll(paginationMapper.paginationDtoToPageable(paginationDto)));
     }
 }
