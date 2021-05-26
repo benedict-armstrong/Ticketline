@@ -2,6 +2,7 @@ import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { ApplicationEventService } from 'src/app/services/event.service';
 import { ApplicationPerformanceService } from 'src/app/services/performance.service';
+import {Performance} from '../../../dtos/performance';
 
 @Component({
   selector: 'app-performance-search',

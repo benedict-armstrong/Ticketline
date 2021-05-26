@@ -1,4 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
+import {Performance} from '../../../dtos/performance';
 
 @Component({
   selector: 'app-performance-list-item',

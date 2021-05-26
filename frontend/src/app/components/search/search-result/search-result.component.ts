@@ -3,6 +3,7 @@ import {ApplicationEventService} from '../../../services/event.service';
 import {Event} from '../../../dtos/event';
 import {Artist} from '../../../dtos/artist';
 import {Address} from '../../../dtos/address';
+import {Performance} from '../../../dtos/performance';
 
 @Component({
   selector: 'app-search-result',
