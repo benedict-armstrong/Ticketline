@@ -10,6 +10,7 @@ import at.ac.tuwien.sepm.groupphase.backend.entity.Artist;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Performance;
 import at.ac.tuwien.sepm.groupphase.backend.entity.SectorType;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Ticket;
+import at.ac.tuwien.sepm.groupphase.backend.entity.TicketType;
 import at.ac.tuwien.sepm.groupphase.backend.repository.ArtistRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.PerformanceRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.TicketRepository;
@@ -64,7 +65,7 @@ public class TicketRepositoryTest implements TestDataTicket {
         ApplicationUser savedUser = userRepository.save(user);
         user.setId(savedUser.getId());
 
-        ticketTypeRepository.save(STANDARD_TICKET_TYPE);
+        TicketType savedTicketType = ticketTypeRepository.save(STANDARD_TICKET_TYPE);
 
         Artist savedArtist = artistRepository.save(artist);
 
@@ -78,6 +79,7 @@ public class TicketRepositoryTest implements TestDataTicket {
         template.setOwner(savedUser);
         template.setPerformance(savedPerformance);
         template.setStatus(Ticket.Status.PAID_FOR);
+        template.setTicketType(savedTicketType);
     }
 
     @AfterEach
