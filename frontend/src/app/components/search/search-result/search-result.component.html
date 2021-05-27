@@ -1,4 +1,26 @@
-<app-search #appSearch (searchedEvents)="setSearchEvents($event)" (searchedDates)="setSearchDates($event)" (searchedNoEvent)="setNoEvents($event)" (searchPagination)="setSearchPagination($event)"></app-search>
+<div id="search-btns">
+  <h1>Find the perfect event</h1>
+  <div id="search-btn-list">
+    <button class="primary filterButton" type="button" data-bs-toggle="collapse" data-bs-target="#collapseEventSearch"
+            aria-expanded="false" aria-controls="collapseEventSearch">
+      Find an event
+    </button>
+    <button class="primary filterButton" type="button" data-bs-toggle="collapse" data-bs-target="#collapseArtistSearch"
+            aria-expanded="false" aria-controls="collapseEventSearch">
+      Find an artist
+    </button>
+    <button class="primary filterButton" type="button" data-bs-toggle="collapse" data-bs-target="#collapseAddressSearch"
+            aria-expanded="false" aria-controls="collapseEventSearch">
+      Find a location
+    </button>
+    <button class="primary filterButton" type="button" data-bs-toggle="collapse" data-bs-target="#collapsePerformanceSearch"
+            aria-expanded="false" aria-controls="collapseEventSearch">
+      Find a performance
+    </button>
+  </div>
+</div>
+
+<app-event-search #appSearch (searchedEvents)="setSearchEvents($event)" (searchedDates)="setSearchDates($event)" (searchedNoEvent)="setNoEvents($event)" (searchPagination)="setSearchPagination($event)"></app-event-search>
 <app-artist-search #artistSearch (searchedArtists)="setSearchArtists($event)" (searchedNoArtist)="setNoArtist($event)"></app-artist-search>
 <app-address-search #addressSearch (searchedAddresses)="setSearchAddresses($event)" (searchedNoAddress)="setNoAddress($event)"></app-address-search>
 <app-performance-search #performanceSearch (searchedPerformances)="setSearchPerformances($event)" (searchedNoPerformance)="setNoPerformance($event)"></app-performance-search>
