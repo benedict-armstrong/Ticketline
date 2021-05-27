@@ -1,0 +1,47 @@
+<div class="card h-100" [ngClass]="old == true ? 'expired':''">
+  <div class="card-body">
+    <div>
+      <img src="assets/tickets.svg" alt="">
+      <h5 class="card-title">{{eventType}} Tickets</h5>
+    </div>
+    <div class="card-text">
+      <p>
+        {{startTime}}<br>
+        {{location}}
+      </p>
+      <!--
+      <p>
+        {{item.performance.date}}<br>
+        {{item.performance.location.name}}
+      </p>
+      <div *ngFor="let entry of tickets">
+        <div class="row">
+          <div class="col">
+            {{entry.ticketType.multiplier}}x {{entry.ticketType.title}}
+          </div>
+          <div class="col price">
+            EUR {{entry.sectorType.price}}
+          </div>
+        </div>
+      </div>-->
+
+      <div class="row">
+        <div class="col">
+          2x Adults
+        </div>
+        <div class="col price">
+          EUR 59.00
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          2x Children
+        </div>
+        <div class="col price">
+          EUR 29.00
+        </div>
+      </div>
+    </div>
+    <button [routerLink]="['/ticket']">View</button>
+  </div>
+</div>
