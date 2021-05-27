@@ -1,12 +1,14 @@
 package at.ac.tuwien.sepm.groupphase.backend.unittests;
 
 import at.ac.tuwien.sepm.groupphase.backend.basetest.TestDataEvent;
+import at.ac.tuwien.sepm.groupphase.backend.basetest.TestDataTicket;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Address;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Artist;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Performance;
 import at.ac.tuwien.sepm.groupphase.backend.repository.AddressRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.ArtistRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.PerformanceRepository;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -38,21 +40,25 @@ public class PerformanceRepositoryTest implements TestDataEvent {
 
     @BeforeEach
     public void beforeEach(){
-        performanceRepository.deleteAll();
-        artistRepository.deleteAll();
-        addressRepository.deleteAll();
-
         Address address = addressRepository.save(TestDataEvent.TEST_EVENT_LOCATION);
         Artist artist = artistRepository.save(TestDataEvent.TEST_EVENT_ARTIST);
 
         performance = Performance.builder()
             .title(TestDataEvent.TEST_EVENT_TITLE)
             .description(TestDataEvent.TEST_EVENT_DESCRIPTION)
-            .date(TestDataEvent.TEST_EVENT_DATE_FUTURE)
+            .date(TestDataEvent.TEST_PERFORMANCE_DATE)
             .artist(artist)
             .location(address)
             .sectorTypes(TestDataEvent.getTestEventSectortypes())
+            .ticketTypes(TestDataTicket.getTicketTypes())
             .build();
+    }
+
+    @AfterEach
+    public void afterEach() {
+        performanceRepository.deleteAll();
+        artistRepository.deleteAll();
+        addressRepository.deleteAll();
     }
 
     @Test

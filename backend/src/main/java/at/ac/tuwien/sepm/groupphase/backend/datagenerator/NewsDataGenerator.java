@@ -20,6 +20,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.lang.invoke.MethodHandles;
 import java.net.URL;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -37,7 +38,9 @@ public class NewsDataGenerator {
     private static final String TEST_TEXT = "Test Test Test";
     private static final String TEST_EVENT = "Testevent";
     private static final String TEST_EVENT_DESCRIPTION = "This is a test description! Part";
-    private static final LocalDateTime TEST_DATE = LocalDateTime.parse("2025-06-30T12:00:00");
+    private static final LocalDate TEST_DATE = LocalDate.parse("2025-06-30");
+    private static final LocalDate TEST_DATE2 = LocalDate.parse("2027-06-30");
+    private static final LocalDateTime TEST_DATETIME = LocalDateTime.parse("2026-06-30T12:00:00");
 
     private final NewsRepository newsRepository;
     private final EventRepository eventRepository;
@@ -191,8 +194,9 @@ public class NewsDataGenerator {
             Performance performance = Performance.builder()
                 .title(TEST_EVENT + (i))
                 .description(TEST_EVENT_DESCRIPTION + (i))
-                .date(TEST_DATE.plusDays(i * 10))
+                .date(TEST_DATETIME.plusDays(i * 10))
                 .sectorTypes(EventDataGenerator.generateSectorTypes(i))
+                .ticketTypes(EventDataGenerator.generateTicketTypes(i))
                 .artist(artist)
                 .location(location)
                 .build();
@@ -203,7 +207,7 @@ public class NewsDataGenerator {
                 .name(TEST_EVENT + i)
                 .description(TEST_EVENT_DESCRIPTION + (i))
                 .startDate(TEST_DATE.plusDays(i * 10))
-                .endDate(TEST_DATE.plusDays(i * 20))
+                .endDate(TEST_DATE2.plusDays(i * 20))
                 .eventType(Event.EventType.CONCERT)
                 .duration(100 + i * 50)
                 .images(set)

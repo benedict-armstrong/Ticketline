@@ -32,7 +32,7 @@
     </div>
 
     <div class="form-group">
-      <label for="date" class="required">Date</label>
+      <label for="date" class="required">Date <span class="small">(yyyy-MM-dd HH:mm)</span></label>
       <input type="datetime-local" name="date" formControlName="date" class="text-input form-control" id="date">
       <div *ngIf="submitted && addPerformanceForm.controls.date.errors" class="error">
         <small class="form-text text-danger" *ngIf="addPerformanceForm.controls.date.errors.required">
@@ -48,7 +48,14 @@
 
     <app-add-sectortype [(sectorTypes)]="sectorTypes"></app-add-sectortype>
     <div *ngIf="sectorTypes.length === 0 && submitted" class="alert alert-danger">
-        Atleast one sector type required!
+        At least one sector type required!
+    </div>
+
+    <hr/>
+
+    <app-add-tickettype [(ticketTypes)]="ticketTypes"></app-add-tickettype>
+    <div *ngIf="sectorTypes.length === 0 && submitted" class="alert alert-danger">
+      At least one ticket type required!
     </div>
 
     <hr />

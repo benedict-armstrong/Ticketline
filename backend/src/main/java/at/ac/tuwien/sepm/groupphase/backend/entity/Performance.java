@@ -17,9 +17,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.FetchType;
 import javax.persistence.CascadeType;
-import javax.persistence.Enumerated;
-import javax.persistence.EnumType;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
@@ -58,4 +57,9 @@ public class Performance {
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @NotNull
     private Set<SectorType> sectorTypes = new HashSet<>();
+
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @NotNull
+    private Set<TicketType> ticketTypes = new HashSet<>();
+
 }

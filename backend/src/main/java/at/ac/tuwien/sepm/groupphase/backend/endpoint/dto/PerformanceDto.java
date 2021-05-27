@@ -4,8 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
-import org.hibernate.validator.constraints.Range;
 
 import javax.validation.constraints.Future;
 import javax.validation.constraints.NotBlank;
@@ -35,10 +33,13 @@ public class PerformanceDto {
     @NotNull(message = "Artist is required")
     private ArtistDto artist;
 
-    @Size(min = 1, message = "Atleast one sectortype is required")
+    @Size(min = 1, message = "At least one sector type is required")
     private SectorTypeDto[] sectorTypes;
 
-    @NotNull(message = "Event date is required")
+    @Size(min = 1, message = "At least one ticket type is required")
+    private TicketTypeDto[] ticketTypes;
+
+    @NotNull(message = "Performance date is required")
     @Future
     private LocalDateTime date;
 }

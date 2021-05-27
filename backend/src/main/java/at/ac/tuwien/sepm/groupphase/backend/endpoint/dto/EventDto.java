@@ -1,6 +1,7 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint.dto;
 
 import at.ac.tuwien.sepm.groupphase.backend.entity.Event;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -12,6 +13,7 @@ import javax.validation.constraints.Future;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Data
@@ -40,12 +42,11 @@ public class EventDto {
 
     @NotNull
     @Future(message = "Start date must be in the future")
-    private LocalDateTime startDate;
+    private LocalDate startDate;
 
     @NotNull
     @Future(message = "End date must be in the future")
-    //TODO: Must be after startDate
-    private LocalDateTime endDate;
+    private LocalDate endDate;
 
     @Size(max = 10, message = "Upload 10 images or less")
     @Size(min = 1, message = "Atleast one image required")

@@ -50,7 +50,6 @@ export class AddArtistComponent implements OnInit {
 
       this.artistService.addArtist(addedArtist).subscribe((response) => {
         this.existingArtists.push(response);
-        this.filteredArtists.push(response);
         this.addNewArtist = false;
         this.selectArtistForm.value.selectedArtist = response;
         this.artistSelected();
