@@ -1,20 +1,20 @@
 <div id="search-btns">
   <h1>Find the perfect event</h1>
   <div id="search-btn-list">
-    <button class="primary filterButton" type="button" data-bs-toggle="collapse" data-bs-target="#collapseEventSearch"
-            aria-expanded="false" aria-controls="collapseEventSearch">
+    <button id="eventSearchBtn" class="filterButton secondary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseEventSearch"
+            aria-expanded="false" aria-controls="collapseEventSearch" (click)="triggerSearchBtn('eventSearchBtn')">
       Find an event
     </button>
-    <button class="primary filterButton" type="button" data-bs-toggle="collapse" data-bs-target="#collapseArtistSearch"
-            aria-expanded="false" aria-controls="collapseEventSearch">
+    <button id="artistSearchBtn" class="filterButton secondary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseArtistSearch"
+            aria-expanded="false" aria-controls="collapseArtistSearch" (click)="triggerSearchBtn('artistSearchBtn')">
       Find an artist
     </button>
-    <button class="primary filterButton" type="button" data-bs-toggle="collapse" data-bs-target="#collapseAddressSearch"
-            aria-expanded="false" aria-controls="collapseEventSearch">
+    <button id="locationSearchBtn" class="filterButton secondary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseAddressSearch"
+            aria-expanded="false" aria-controls="collapseAddressSearch" (click)="triggerSearchBtn('locationSearchBtn')">
       Find a location
     </button>
-    <button class="primary filterButton" type="button" data-bs-toggle="collapse" data-bs-target="#collapsePerformanceSearch"
-            aria-expanded="false" aria-controls="collapseEventSearch">
+    <button id="performanceSearchBtn" class="filterButton secondary" type="button" data-bs-toggle="collapse" data-bs-target="#collapsePerformanceSearch"
+            aria-expanded="false" aria-controls="collapsePerformanceSearch" (click)="triggerSearchBtn('performanceSearchBtn')">
       Find a performance
     </button>
   </div>

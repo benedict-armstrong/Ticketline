@@ -111,4 +111,16 @@ export class SearchResultComponent implements OnInit {
   setNoPerformance(noPerformance: boolean){
     this.noPerformance = noPerformance;
   }
+
+  triggerSearchBtn(name: string){
+    if (document.getElementById(name)) {
+      if (document.getElementById(name).classList[1] === 'secondary') {
+        document.getElementById(name).classList.remove('secondary');
+        document.getElementById(name).classList.add('primary');
+      } else {
+        document.getElementById(name).classList.remove('primary');
+        document.getElementById(name).classList.add('secondary');
+      }
+    }
+  }
 }

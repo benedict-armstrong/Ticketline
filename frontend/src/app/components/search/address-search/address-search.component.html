@@ -1,9 +1,5 @@
 <div class="search">
   <div class="filters">
-<!--    <button class="primary filterButton" type="button" data-bs-toggle="collapse" data-bs-target="#collapseAddressSearch"-->
-<!--            aria-expanded="false" aria-controls="collapseAddressSearch">-->
-<!--      Find a location-->
-<!--    </button>-->
     <div class="collapse" id="collapseAddressSearch">
       <div class="card">
         <form [formGroup]="this.addressSearchForm" (ngSubmit)="resetValues(); searchAddress()">
