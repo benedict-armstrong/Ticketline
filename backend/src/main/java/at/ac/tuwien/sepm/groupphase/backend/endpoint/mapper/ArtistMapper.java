@@ -14,16 +14,9 @@ import java.util.List;
 @Mapper
 public interface ArtistMapper {
 
-    @Mapping(target = "performances", source = "performances")
     ArtistDto artistToArtistDto(Artist artist);
 
     Artist artistDtoToArtist(ArtistDto artistDto);
-
-    @Mapping(target = "artist", ignore = true)
-    PerformanceDto eventToEventDto(Performance performance);
-
-    @Mapping(target = "performances", ignore = true)
-    AddressDto addressToAddressDto(Address address);
 
     List<ArtistDto> artistListToArtistDtoList(List<Artist> artist);
 }
