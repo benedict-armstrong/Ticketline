@@ -19,7 +19,7 @@ public interface EventRepository extends JpaRepository<Event, Long>, JpaSpecific
      *
      * @return ordered list of all events
      */
-    Page<Event> findAllByOrderByDateAsc(Pageable pageable);
+    Page<Event> findAllByOrderByStartDateAsc(Pageable pageable);
 
     /**
      * Find one event by id.

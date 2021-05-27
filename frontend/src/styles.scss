@@ -128,3 +128,36 @@ button.close {
     margin: 0;
   }
 }
+.required::after {
+  content: '*';
+  color: red;
+}
+
+button.filterButton {
+  width: 150px;
+}
+
+.filters {
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.filters input,
+.filters select {
+  height: 38px;
+}
+
+.filters > div {
+  width: 100%;
+}
+
+div.carousel-item {
+  height: 400px;
+}
+
+.info > img {
+  width: 150px;
+  max-height: 150px;
+}

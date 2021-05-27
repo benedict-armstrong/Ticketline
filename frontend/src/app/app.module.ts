@@ -14,9 +14,9 @@ import { EventDetailComponent } from './components/event-detail/event-detail.com
 import { NewsComponent } from './components/news/news.component';
 import { NewsItemComponent } from './components/news-item/news-item.component';
 import { NewsDetailComponent } from './components/news-detail/news-details.component';
-import { EventsComponent } from './components/events/events.component';
-import { EventListItemComponent } from './components/event-list-item/event-list-item.component';
-import { SearchComponent } from './components/search/search.component';
+import { SearchResultComponent } from './components/search/search-result/search-result.component';
+import { EventListItemComponent } from './components/search/event-list-item/event-list-item.component';
+import { EventSearchComponent } from './components/search/event-search/event-search.component';
 import { UserHomeComponent } from './components/user-home/user-home.component';
 import { TicketDetailComponent } from './components/ticket-detail/ticket-detail.component';
 import { TicketListItemComponent } from './components/ticket-list-item/ticket-list-item.component';
@@ -28,6 +28,17 @@ import { AddUserComponent } from './components/add-user/add-user.component';
 import { httpInterceptorProviders } from './interceptors';
 import { AddSectortypeComponent } from './components/event/add-sectortype/add-sectortype.component';
 import { CartItemComponent } from './components/shoppingcart/cart-item/cart-item.component';
+import { AddPerformanceComponent } from './components/event/add-performance/add-performance.component';
+import { AddArtistComponent } from './components/event/add-artist/add-artist.component';
+import { AddAddressComponent } from './components/event/add-address/add-address.component';
+import { PerformanceDetailComponent } from './components/performance-detail/performance-detail.component';
+import { ArtistSearchComponent } from './components/search/artist-search/artist-search.component';
+import { AddressSearchComponent } from './components/search/address-search/address-search.component';
+import { ArtistListItemComponent } from './components/search/artist-list-item/artist-list-item.component';
+import { AddressListItemComponent } from './components/search/address-list-item/address-list-item.component';
+import {LoadingAnimationComponent} from './components/loading-animation/loading-animation.component';
+
+
 
 @NgModule({
   declarations: [
@@ -41,19 +52,28 @@ import { CartItemComponent } from './components/shoppingcart/cart-item/cart-item
     NewsComponent,
     NewsItemComponent,
     NewsDetailComponent,
-    EventsComponent,
+    SearchResultComponent,
     EventListItemComponent,
-    SearchComponent,
+    EventSearchComponent,
     UserHomeComponent,
     TicketDetailComponent,
     TicketListItemComponent,
     ShoppingcartTestingComponent,
     ShoppingcartComponent,
     AddNewsComponent,
-    AddEventComponent,
+    AddPerformanceComponent,
     AddUserComponent,
     AddSectortypeComponent,
-    CartItemComponent
+    CartItemComponent,
+    AddArtistComponent,
+    AddAddressComponent,
+    AddEventComponent,
+    PerformanceDetailComponent,
+    ArtistSearchComponent,
+    AddressSearchComponent,
+    ArtistListItemComponent,
+    AddressListItemComponent,
+    LoadingAnimationComponent,
   ],
   imports: [
     BrowserModule,

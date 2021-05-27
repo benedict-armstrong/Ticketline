@@ -5,8 +5,13 @@ import at.ac.tuwien.sepm.groupphase.backend.basetest.TestDataEvent;
 import at.ac.tuwien.sepm.groupphase.backend.basetest.TestDataFile;
 import at.ac.tuwien.sepm.groupphase.backend.config.properties.SecurityProperties;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventDto;
+import at.ac.tuwien.sepm.groupphase.backend.entity.Address;
+import at.ac.tuwien.sepm.groupphase.backend.entity.Artist;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Event;
 import at.ac.tuwien.sepm.groupphase.backend.entity.File;
+import at.ac.tuwien.sepm.groupphase.backend.entity.Performance;
+import at.ac.tuwien.sepm.groupphase.backend.repository.AddressRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.ArtistRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.EventRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.FileRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.UserRepository;
@@ -34,7 +39,6 @@ import java.util.List;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 
@@ -43,7 +47,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 @ActiveProfiles("test")
 @AutoConfigureMockMvc
 public class EventEndpointTest implements TestDataEvent, TestAuthentification {
-
     @Autowired
     private MockMvc mockMvc;
 
@@ -55,6 +58,12 @@ public class EventEndpointTest implements TestDataEvent, TestAuthentification {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private ArtistRepository artistRepository;
+
+    @Autowired
+    private AddressRepository addressRepository;
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -71,6 +80,10 @@ public class EventEndpointTest implements TestDataEvent, TestAuthentification {
         .type(TestDataFile.TEST_FILE_TYPE)
         .build();
 
+    private Address address;
+
+    private Artist artist;
+
     private Set<File> images = new HashSet<>();
 
     private String authToken;
@@ -82,19 +95,31 @@ public class EventEndpointTest implements TestDataEvent, TestAuthentification {
         //eventRepository.deleteAll();
         //fileRepository.deleteAll();
 
+        address = addressRepository.save(TestDataEvent.TEST_EVENT_LOCATION);
+        artist = artistRepository.save(TestDataEvent.TEST_EVENT_ARTIST);
+
         images = new HashSet<>();
         images.add(file);
 
+        Set<Performance> performances = new HashSet<>();
+        performances.add(Performance.builder()
+            .title(TestDataEvent.TEST_EVENT_PERFORMANCE_TITLE)
+            .description(TestDataEvent.TEST_EVENT_PERFORMANCE_DESCRIPTION)
+            .date(TestDataEvent.TEST_PERFORMANCE_DATE)
+            .artist(artist)
+            .location(address)
+            .sectorTypes(TestDataEvent.getTestEventSectortypes())
+            .build());
+
         event = Event.builder()
-            .title(TestDataEvent.TEST_EVENT_TITLE)
+            .name(TestDataEvent.TEST_EVENT_TITLE)
             .description(TestDataEvent.TEST_EVENT_DESCRIPTION)
-            .date(TestDataEvent.TEST_EVENT_DATE_FUTURE)
+            .startDate(TestDataEvent.TEST_EVENT_DATE_FUTURE)
+            .endDate(TestDataEvent.TEST_EVENT_DATE_FUTURE2)
             .duration(TestDataEvent.TEST_EVENT_DURATION)
             .eventType(TestDataEvent.TEST_EVENT_EVENT_TYPE)
-            .artist(TestDataEvent.getTestEventArtist())
-            .location(TestDataEvent.getTestEventLocation())
-            .sectorTypes(TestDataEvent.getTestEventSectortypes())
             .images(images)
+            .performances(performances)
             .build();
 
         fileRepository.save(file);
@@ -109,11 +134,13 @@ public class EventEndpointTest implements TestDataEvent, TestAuthentification {
         eventRepository.deleteAll();
         fileRepository.deleteAll();
         userRepository.deleteAll();
+        addressRepository.deleteAll();
+        artistRepository.deleteAll();
     }
 
     @Test
     @DisplayName("Should return empty list when getting all news but there are none")
-    public void givenNothing_whenGetAllNews_thenReturnEmptyList() throws Exception {
+    public void givenNothing_whenGetAllEvents_thenReturnEmptyList() throws Exception {
         MvcResult mvcResult = this.mockMvc.perform(
             get(TestDataEvent.EVENT_BASE_URI)
                 .param("page", "0")
@@ -136,17 +163,16 @@ public class EventEndpointTest implements TestDataEvent, TestAuthentification {
         int amountOfEventsToGenerate = 15;
         int pageSize = 5;
         for (int i = 0; i < amountOfEventsToGenerate; i++) {
-            Event e = Event.builder()
-                .title(TestDataEvent.TEST_EVENT_TITLE)
+            event = Event.builder()
+                .name(TestDataEvent.TEST_EVENT_TITLE)
                 .description(TestDataEvent.TEST_EVENT_DESCRIPTION)
-                .date(TestDataEvent.TEST_EVENT_DATE_FUTURE)
+                .startDate(TestDataEvent.TEST_EVENT_DATE_FUTURE)
+                .endDate(TestDataEvent.TEST_EVENT_DATE_FUTURE2)
                 .duration(TestDataEvent.TEST_EVENT_DURATION)
                 .eventType(TestDataEvent.TEST_EVENT_EVENT_TYPE)
-                .artist(TestDataEvent.getTestEventArtist())
-                .location(TestDataEvent.getTestEventLocation())
-                .sectorTypes(TestDataEvent.getTestEventSectortypes())
                 .build();
-            eventRepository.save(e);
+
+            eventRepository.save(event);
         }
 
         MvcResult mvcResult = this.mockMvc.perform(
@@ -225,17 +251,31 @@ public class EventEndpointTest implements TestDataEvent, TestAuthentification {
 
 
     @Test
-    @DisplayName("Should return 400 when Date is in past")
-    public void whenCreateEventWithPastDate_then400() throws Exception {
+    @DisplayName("Should return 400 when start Date is in past")
+    public void whenCreateEventWithPastStartDate_then400() throws Exception {
+        Set<File> images = new HashSet<>();
+        images.add(file);
+        fileRepository.save(file);
+
+        Set<Performance> performances = new HashSet<>();
+        performances.add(Performance.builder()
+            .title(TestDataEvent.TEST_EVENT_PERFORMANCE_TITLE)
+            .description(TestDataEvent.TEST_EVENT_PERFORMANCE_DESCRIPTION)
+            .date(TestDataEvent.TEST_PERFORMANCE_DATE)
+            .artist(artist)
+            .location(address)
+            .sectorTypes(TestDataEvent.getTestEventSectortypes())
+            .build());
+
         Event invalidEvent = Event.builder()
-            .title(TestDataEvent.TEST_EVENT_TITLE)
+            .name(TestDataEvent.TEST_EVENT_TITLE)
             .description(TestDataEvent.TEST_EVENT_DESCRIPTION)
-            .date(TestDataEvent.TEST_EVENT_DATE_PAST)
+            .startDate(TestDataEvent.TEST_EVENT_DATE_PAST)
+            .endDate(TestDataEvent.TEST_EVENT_DATE_FUTURE2)
             .duration(TestDataEvent.TEST_EVENT_DURATION)
             .eventType(TestDataEvent.TEST_EVENT_EVENT_TYPE)
-            .artist(TestDataEvent.getTestEventArtist())
-            .location(TestDataEvent.getTestEventLocation())
-            .sectorTypes(TestDataEvent.getTestEventSectortypes())
+            .images(images)
+            .performances(performances)
             .build();
 
         MvcResult mvcResult = this.mockMvc.perform(
@@ -249,19 +289,32 @@ public class EventEndpointTest implements TestDataEvent, TestAuthentification {
     }
 
     @Test
-    @DisplayName("Should return 400 when Date is in past")
-    public void whenCreateEventWithNoSectorTypes_then400() throws Exception {
+    @DisplayName("Should return 400 when end Date is in past")
+    public void whenCreateEventWithPastEndDate_then400() throws Exception {
+        Set<File> images = new HashSet<>();
+        images.add(file);
+        fileRepository.save(file);
+
+        Set<Performance> performances = new HashSet<>();
+        performances.add(Performance.builder()
+            .title(TestDataEvent.TEST_EVENT_PERFORMANCE_TITLE)
+            .description(TestDataEvent.TEST_EVENT_PERFORMANCE_DESCRIPTION)
+            .date(TestDataEvent.TEST_PERFORMANCE_DATE)
+            .artist(artist)
+            .location(address)
+            .sectorTypes(TestDataEvent.getTestEventSectortypes())
+            .build());
+
         Event invalidEvent = Event.builder()
-            .title(TestDataEvent.TEST_EVENT_TITLE)
+            .name(TestDataEvent.TEST_EVENT_TITLE)
             .description(TestDataEvent.TEST_EVENT_DESCRIPTION)
-            .date(TestDataEvent.TEST_EVENT_DATE_FUTURE)
+            .startDate(TestDataEvent.TEST_EVENT_DATE_FUTURE)
+            .endDate(TestDataEvent.TEST_EVENT_DATE_PAST)
             .duration(TestDataEvent.TEST_EVENT_DURATION)
             .eventType(TestDataEvent.TEST_EVENT_EVENT_TYPE)
-            .artist(TestDataEvent.getTestEventArtist())
-            .location(TestDataEvent.getTestEventLocation())
-            .sectorTypes(new HashSet<>())
+            .images(images)
+            .performances(performances)
             .build();
-
         MvcResult mvcResult = this.mockMvc.perform(
             post(TestDataEvent.EVENT_BASE_URI)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -292,15 +345,12 @@ public class EventEndpointTest implements TestDataEvent, TestAuthentification {
     @DisplayName("Should return 200 and all events when no search params are given")
     public void whenEventsGiven_SearchWithNoParams_ShouldReturn200AndEvents() throws Exception {
         Event searchEvent = Event.builder()
-            .title(TestDataEvent.TEST_EVENT_TITLE)
+            .name(TestDataEvent.TEST_EVENT_TITLE)
             .description(TestDataEvent.TEST_EVENT_DESCRIPTION)
-            .date(TestDataEvent.TEST_EVENT_DATE_FUTURE)
+            .startDate(TestDataEvent.TEST_EVENT_DATE_FUTURE)
+            .endDate(TestDataEvent.TEST_EVENT_DATE_FUTURE2)
             .duration(TestDataEvent.TEST_EVENT_DURATION)
             .eventType(TestDataEvent.TEST_EVENT_EVENT_TYPE)
-            .artist(TestDataEvent.getTestEventArtist())
-            .location(TestDataEvent.getTestEventLocation())
-            .sectorTypes(TestDataEvent.getTestEventSectortypes())
-            .images(images)
             .build();
 
         eventRepository.save(searchEvent);
@@ -326,15 +376,12 @@ public class EventEndpointTest implements TestDataEvent, TestAuthentification {
     @DisplayName("Should return 200 and event with title from search")
     public void whenEventsGiven_SearchWithTitle_ShouldReturn200AndEvent() throws Exception {
         Event searchEvent = Event.builder()
-            .title(TestDataEvent.TEST_EVENT_TITLE)
+            .name(TestDataEvent.TEST_EVENT_TITLE)
             .description(TestDataEvent.TEST_EVENT_DESCRIPTION)
-            .date(TestDataEvent.TEST_EVENT_DATE_FUTURE)
+            .startDate(TestDataEvent.TEST_EVENT_DATE_FUTURE)
+            .endDate(TestDataEvent.TEST_EVENT_DATE_FUTURE2)
             .duration(TestDataEvent.TEST_EVENT_DURATION)
             .eventType(TestDataEvent.TEST_EVENT_EVENT_TYPE)
-            .artist(TestDataEvent.getTestEventArtist())
-            .location(TestDataEvent.getTestEventLocation())
-            .sectorTypes(TestDataEvent.getTestEventSectortypes())
-            .images(images)
             .build();
 
         eventRepository.save(searchEvent);
@@ -354,7 +401,7 @@ public class EventEndpointTest implements TestDataEvent, TestAuthentification {
             objectMapper.readValue(response.getContentAsString(), EventDto[].class)
         );
         assertEquals(HttpStatus.OK.value(), response.getStatus());
-        assertEquals(searchEvent.getTitle(), eventDtos.get(0).getTitle());
+        assertEquals(searchEvent.getName(), eventDtos.get(0).getName());
         assertEquals(1, eventDtos.size());
     }
 
@@ -362,15 +409,12 @@ public class EventEndpointTest implements TestDataEvent, TestAuthentification {
     @DisplayName("Should return 200 and event with duration when duration minus 30 is given")
     public void whenEventsGiven_SearchWithDurationMinus30_ShouldReturn200AndEvent() throws Exception {
         Event searchEvent = Event.builder()
-            .title(TestDataEvent.TEST_EVENT_TITLE)
+            .name(TestDataEvent.TEST_EVENT_TITLE)
             .description(TestDataEvent.TEST_EVENT_DESCRIPTION)
-            .date(TestDataEvent.TEST_EVENT_DATE_FUTURE)
+            .startDate(TestDataEvent.TEST_EVENT_DATE_FUTURE)
+            .endDate(TestDataEvent.TEST_EVENT_DATE_FUTURE2)
             .duration(TestDataEvent.TEST_EVENT_DURATION)
             .eventType(TestDataEvent.TEST_EVENT_EVENT_TYPE)
-            .artist(TestDataEvent.getTestEventArtist())
-            .location(TestDataEvent.getTestEventLocation())
-            .sectorTypes(TestDataEvent.getTestEventSectortypes())
-            .images(images)
             .build();
 
         eventRepository.save(searchEvent);
@@ -398,15 +442,12 @@ public class EventEndpointTest implements TestDataEvent, TestAuthentification {
     @DisplayName("Should return 200 and event description when word is in description")
     public void whenEventsGiven_SearchWithDescription_ShouldReturn200AndEvent() throws Exception {
         Event searchEvent = Event.builder()
-            .title(TestDataEvent.TEST_EVENT_TITLE)
+            .name(TestDataEvent.TEST_EVENT_TITLE)
             .description(TestDataEvent.TEST_EVENT_DESCRIPTION)
-            .date(TestDataEvent.TEST_EVENT_DATE_FUTURE)
+            .startDate(TestDataEvent.TEST_EVENT_DATE_FUTURE)
+            .endDate(TestDataEvent.TEST_EVENT_DATE_FUTURE2)
             .duration(TestDataEvent.TEST_EVENT_DURATION)
             .eventType(TestDataEvent.TEST_EVENT_EVENT_TYPE)
-            .artist(TestDataEvent.getTestEventArtist())
-            .location(TestDataEvent.getTestEventLocation())
-            .sectorTypes(TestDataEvent.getTestEventSectortypes())
-            .images(images)
             .build();
 
         eventRepository.save(searchEvent);
@@ -434,15 +475,12 @@ public class EventEndpointTest implements TestDataEvent, TestAuthentification {
     @DisplayName("Should return 200 and event with event type")
     public void whenEventsGiven_SearchWithEventType_ShouldReturn200AndEvent() throws Exception {
         Event searchEvent = Event.builder()
-            .title(TestDataEvent.TEST_EVENT_TITLE)
+            .name(TestDataEvent.TEST_EVENT_TITLE)
             .description(TestDataEvent.TEST_EVENT_DESCRIPTION)
-            .date(TestDataEvent.TEST_EVENT_DATE_FUTURE)
+            .startDate(TestDataEvent.TEST_EVENT_DATE_FUTURE)
+            .endDate(TestDataEvent.TEST_EVENT_DATE_FUTURE2)
             .duration(TestDataEvent.TEST_EVENT_DURATION)
             .eventType(TestDataEvent.TEST_EVENT_EVENT_TYPE)
-            .artist(TestDataEvent.getTestEventArtist())
-            .location(TestDataEvent.getTestEventLocation())
-            .sectorTypes(TestDataEvent.getTestEventSectortypes())
-            .images(images)
             .build();
 
         eventRepository.save(searchEvent);
@@ -469,16 +507,13 @@ public class EventEndpointTest implements TestDataEvent, TestAuthentification {
     @Test
     @DisplayName("Should return 200 and event with all search params")
     public void whenEventsGiven_SearchWithAllParams_ShouldReturn200AndEvent() throws Exception {
-        Event searchEvent = Event.builder()
-            .title(TestDataEvent.TEST_EVENT_TITLE)
+       Event searchEvent = Event.builder()
+            .name(TestDataEvent.TEST_EVENT_TITLE)
             .description(TestDataEvent.TEST_EVENT_DESCRIPTION)
-            .date(TestDataEvent.TEST_EVENT_DATE_FUTURE)
+            .startDate(TestDataEvent.TEST_EVENT_DATE_FUTURE)
+            .endDate(TestDataEvent.TEST_EVENT_DATE_FUTURE2)
             .duration(TestDataEvent.TEST_EVENT_DURATION)
             .eventType(TestDataEvent.TEST_EVENT_EVENT_TYPE)
-            .artist(TestDataEvent.getTestEventArtist())
-            .location(TestDataEvent.getTestEventLocation())
-            .sectorTypes(TestDataEvent.getTestEventSectortypes())
-            .images(images)
             .build();
 
         eventRepository.save(searchEvent);
@@ -501,7 +536,7 @@ public class EventEndpointTest implements TestDataEvent, TestAuthentification {
             objectMapper.readValue(response.getContentAsString(), EventDto[].class)
         );
         assertEquals(HttpStatus.OK.value(), response.getStatus());
-        assertEquals(searchEvent.getTitle(), eventDtos.get(0).getTitle());
+        assertEquals(searchEvent.getName(), eventDtos.get(0).getName());
         assertEquals(searchEvent.getDescription(), eventDtos.get(0).getDescription());
         assertEquals(searchEvent.getDuration(), eventDtos.get(0).getDuration());
         assertEquals(searchEvent.getEventType(), eventDtos.get(0).getEventType());
@@ -512,15 +547,12 @@ public class EventEndpointTest implements TestDataEvent, TestAuthentification {
     @DisplayName("Should return nothing when event given and search with other event type")
     public void whenEventsGiven_SearchWithOtherEventType_ShouldReturnNothing() throws Exception {
         Event searchEvent = Event.builder()
-            .title(TestDataEvent.TEST_EVENT_TITLE)
+            .name(TestDataEvent.TEST_EVENT_TITLE)
             .description(TestDataEvent.TEST_EVENT_DESCRIPTION)
-            .date(TestDataEvent.TEST_EVENT_DATE_FUTURE)
+            .startDate(TestDataEvent.TEST_EVENT_DATE_FUTURE)
+            .endDate(TestDataEvent.TEST_EVENT_DATE_FUTURE2)
             .duration(TestDataEvent.TEST_EVENT_DURATION)
             .eventType(TestDataEvent.TEST_EVENT_EVENT_TYPE)
-            .artist(TestDataEvent.getTestEventArtist())
-            .location(TestDataEvent.getTestEventLocation())
-            .sectorTypes(TestDataEvent.getTestEventSectortypes())
-            .images(images)
             .build();
 
         eventRepository.save(searchEvent);

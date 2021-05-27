@@ -1,0 +1,75 @@
+<div class="search">
+    <h1>Find the perfect Event</h1>
+    <div class="form-group">
+        <!-- <label for="search">Seach</label>
+        <input type="search" class="form-control search-field text-input" name="search" id="search"
+            aria-describedby="search" placeholder="Search for events"> -->
+    </div>
+    <div class="filters">
+        <button class="primary filterButton" type="button" data-bs-toggle="collapse" data-bs-target="#collapseEventSearch"
+            aria-expanded="false" aria-controls="collapseEventSearch">
+            add filters
+        </button>
+        <div class="collapse" id="collapseEventSearch">
+            <div class="card">
+                <form [formGroup]="this.eventSearchForm" (ngSubmit)="resetValues(); searchEvents()">
+                    <div class="card-body">
+                        <div class="row">
+                            <h3>Search for events</h3>
+                            <div class="col">
+                                <div class="row mb-3">
+                                    <label for="filterEventTitle" class="col-sm-3 col-form-label">Title</label>
+                                    <div class="col-sm-9">
+                                        <input type="text" class="text-input form-control" id="filterEventTitle"
+                                            formControlName="title">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="row mb-3">
+                                    <label for="filterEventDescription"
+                                        class="col-sm-3 col-form-label">Description</label>
+                                    <div class="col-sm-9">
+                                        <input type="text" class="text-input form-control" id="filterEventDescription"
+                                            formControlName="description">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <div class="row mb-3">
+                                    <label for="filterEventDuration" class="col-sm-3 col-form-label">Duration</label>
+                                    <div class="col-sm-9">
+                                        <input type="number" class="text-input form-control" id="filterEventDuration"
+                                            formControlName="duration">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="row mb-3">
+                                    <label for="filterEventType" class="col-sm-3 col-form-label">Eventtype</label>
+                                    <div class="col-sm-9">
+                                        <select name="eventType" id="filterEventType" formControlName="eventType"
+                                            class="select-input form-select">
+                                            <option value="" selected></option>
+                                            <option value="CONCERT">Concert</option>
+                                            <option value="OPERA">Opera</option>
+                                            <option value="CINEMA">Cinema</option>
+                                            <option value="THEATRE">Theatre</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <button type="submit" class="secondary filterButton">Apply</button>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>

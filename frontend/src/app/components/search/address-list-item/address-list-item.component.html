@@ -1,0 +1,26 @@
+<div *ngIf="address.performances.length !== 0">
+  <div class="location">
+    <div class="info">
+      <div class="detail">
+        <h5>{{address.name}}</h5>
+        <p>{{address.lineOne}}
+          <span *ngIf="address.lineTwo !== ''"> {{address.lineTwo}} <br/> </span>
+          {{address.city}}, {{address.postcode}}, {{address.country}}
+        </p>
+      </div>
+    </div>
+  </div>
+  <div *ngFor="let performance of address.performances">
+    <div class="performance" [routerLink]="['/performance-detail', performance.id]">
+      <div class="info">
+        <div class="detail">
+          <h5>{{performance.title}}</h5>
+          <span class="date-time">{{performance.date | date:'EEEE, MMM d, y HH:mm'}}: </span>
+          <span class="artist">{{performance.artist.firstName}} {{performance.artist.lastName}}, </span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <hr/>
+</div>
+

@@ -1,3 +1,5 @@
+import {Performance} from './performance';
+
 export class Address {
     constructor(
       public id: number,
@@ -6,6 +8,8 @@ export class Address {
       public lineTwo: string,
       public city: string,
       public postcode: string,
-      public country: string) {
+      public country: string,
+      public performances: Performance[],
+      public eventLocation: boolean) {
     }
   }
