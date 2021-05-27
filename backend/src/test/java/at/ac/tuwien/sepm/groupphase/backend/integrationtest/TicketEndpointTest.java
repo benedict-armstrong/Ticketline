@@ -142,7 +142,7 @@ public class TicketEndpointTest implements TestAuthentification, TestDataTicket,
         .telephoneNumber(ADMIN_PHONE_NUMBER)
         .build();
 
-    @BeforeEach
+    /*@BeforeEach
     public void beforeEach() throws Exception {
         artistRepository.save(artist);
         addressRepository.save(address);
@@ -154,9 +154,7 @@ public class TicketEndpointTest implements TestAuthentification, TestDataTicket,
 
         Performance savedPerformance = performanceRepository.save(performance);
         SectorType sectorType = (SectorType) savedPerformance.getSectorTypes().toArray()[0];
-        sectorType.setPrice(100L);
 
-        template.setSectorType(sectorTypeMapper.sectorTypeToSectorTypeDto(sectorType));
         template.setPerformance(performanceMapper.performanceToPerformanceDto(savedPerformance));
         template.setTicketType(ticketTypeMapper.ticketTypeToTicketTypeDto(STANDARD_TICKET_TYPE));
     }
@@ -196,6 +194,6 @@ public class TicketEndpointTest implements TestAuthentification, TestDataTicket,
             () -> assertEquals(Ticket.Status.PAID_FOR.toString(), ticketDto.getStatus()),
             () -> assertEquals(templatePrice, ticketDto.getTotalPrice())
         );
-    }
+    }*/
 
 }

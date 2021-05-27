@@ -1,7 +1,8 @@
 import {Component, Input, OnInit} from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ShoppingcartService } from 'src/app/services/shoppingcart.service';
-import {SectorType} from '../../dtos/sectortype';
+import { TicketService } from 'src/app/services/ticket.service';
+import { TicketType } from '../../dtos/ticketType';
+import { Performance } from '../../dtos/performance';
 
 @Component({
   selector: 'app-ticket-list-item',
@@ -10,23 +11,19 @@ import {SectorType} from '../../dtos/sectortype';
 })
 export class TicketListItemComponent implements OnInit {
   @Input()
-  sectorType: SectorType;
+  ticketType: TicketType;
+  @Input()
+  performance: Performance;
 
   ticketForm: FormGroup;
-  // After first submission attempt, form validation will start
-  submitted = false;
-  // Error flag
+
   error = false;
   errorMessage = '';
-
-  // Success Flag
   success = false;
-
-  price = 10.05;
 
   constructor(
     private formBuilder: FormBuilder,
-    private cartService: ShoppingcartService
+    private ticketService: TicketService
   ) {
     this.ticketForm = this.formBuilder.group({
       amount: [0, [Validators.min(1)]]
@@ -48,11 +45,12 @@ export class TicketListItemComponent implements OnInit {
   addToCart(): void {
     if (this.ticketForm.valid) {
       this.error = false;
-      this.cartService.addToCart({
+      this.ticketService.addToCart({
         id: null,
-        userId: 2,
-        ticketId: this.sectorType.name.charCodeAt(1),
-        amount: this.ticketForm.value.amount
+        performance: this.performance,
+        ticketType: this.ticketType,
+        seats: [this.ticketForm.value.amount],
+        status: null
       });
     } else {
       this.error = true;

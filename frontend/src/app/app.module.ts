@@ -20,7 +20,6 @@ import { EventSearchComponent } from './components/search/event-search/event-sea
 import { UserHomeComponent } from './components/user-home/user-home.component';
 import { TicketDetailComponent } from './components/ticket-detail/ticket-detail.component';
 import { TicketListItemComponent } from './components/ticket-list-item/ticket-list-item.component';
-import { ShoppingcartTestingComponent } from './components/shoppingcart-testing/shoppingcart-testing.component';
 import { ShoppingcartComponent } from './components/shoppingcart/shoppingcart.component';
 import { AddNewsComponent } from './components/add-news/add-news.component';
 import { AddEventComponent } from './components/event/add-event/add-event.component';
@@ -57,7 +56,6 @@ import { AddTickettypeComponent } from './components/event/add-tickettype/add-ti
     UserHomeComponent,
     TicketDetailComponent,
     TicketListItemComponent,
-    ShoppingcartTestingComponent,
     ShoppingcartComponent,
     AddNewsComponent,
     AddPerformanceComponent,

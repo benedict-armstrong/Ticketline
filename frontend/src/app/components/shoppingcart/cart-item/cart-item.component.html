@@ -1,24 +1,33 @@
 <div class="cartItem">
     <div class="row ticketHeader">
         <div class="col-9">
-            <span>{{this.cartService.cart[this.i].ticketId}}</span>
+            <span>{{this.ticketService.cart[this.i].performance.title}}</span>
         </div>
         <div class="col-3 closeContainer">
             <button class="close" type="button" (click)="removeFromCart()">X</button>
         </div>
     </div>
     <div class="row ticketBody">
+        <div class="col-8">
+            <span>{{this.ticketService.cart[this.i].ticketType.title}} {{this.ticketService.cart[this.i].ticketType.sectorType.name}}</span>
+        </div>
+
+        <div class="col-4 prices">
+            <span class="price">{{this.ticketService.cart[this.i].ticketType.price | currency:'EUR'}}</span>
+        </div>
+    </div>
+    <div class="row ticketBody">
         <div class="col-8 counts">
             <form [formGroup]="cartItemForm">
                 <div class="inline">
-                    <button class="secondary no-shadow no-border" type="button" (click)="decAmount()"><i class="bi bi-dash-circle"></i></button>
+                    <button class="secondary no-shadow no-border" [class.Locked]="this.ticketService.waiting" type="button" (click)="decAmount()"><i class="bi bi-dash-circle"></i></button>
                     <input type="number" formControlName="amount" (change)="setAmount()">
                     <button class="secondary no-shadow no-border" type="button" (click)="incAmount()"><i class="bi bi-plus-circle"></i></button>
                 </div>
             </form>
         </div>
         <div class="col-4 prices">
-            <span class="price">{{10 * cartItemForm.value.amount | currency:'EUR'}}</span>
+            <span class="price">{{this.ticketService.cart[this.i].ticketType.price * cartItemForm.value.amount | currency:'EUR'}}</span>
         </div>
     </div>
 </div>

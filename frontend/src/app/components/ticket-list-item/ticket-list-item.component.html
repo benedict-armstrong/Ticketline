@@ -1,7 +1,7 @@
 <div class="list-item">
     <div>
-        <h4>{{sectorType.name}} ({{sectorType.numberOfTickets}} Tickets)</h4>
-        <p>Best experience | {{this.price | currency:'EUR'}}</p>
+        <h4>{{ticketType.title}} {{ticketType.sectorType.name}} ({{ticketType.sectorType.numberOfTickets}} Tickets)</h4>
+        <p>Best experience | {{ticketType.price | currency:'EUR'}}</p>
     </div>
     <form class="options" [formGroup]="ticketForm" (ngSubmit)="addToCart()">
         <div class="age">

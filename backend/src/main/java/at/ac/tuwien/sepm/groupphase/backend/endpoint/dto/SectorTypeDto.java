@@ -22,8 +22,4 @@ public class SectorTypeDto {
 
     @Range(min = 1, message = "Atleast 1 ticket per sector")
     private int numberOfTickets;
-
-    @PositiveOrZero
-    @NotNull
-    private Long price;
 }

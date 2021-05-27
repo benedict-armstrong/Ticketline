@@ -5,11 +5,15 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Column;
+import javax.persistence.Id;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.Column;
+import javax.persistence.ManyToOne;
+import javax.persistence.FetchType;
+import javax.persistence.CascadeType;
+import javax.persistence.JoinColumn;
 
 @Data
 @NoArgsConstructor
@@ -25,7 +29,10 @@ public class TicketType {
     @Column(nullable = false)
     private String title;
 
-    @Column(name = "MULTIPLIER", nullable = false)
-    private Double multiplier;
+    @Column
+    private double price;
 
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinColumn(name = "SECTOR_ID", nullable = true)
+    private SectorType sectorType;
 }

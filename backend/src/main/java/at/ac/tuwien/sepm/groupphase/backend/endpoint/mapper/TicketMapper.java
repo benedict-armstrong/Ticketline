@@ -7,10 +7,14 @@ import at.ac.tuwien.sepm.groupphase.backend.entity.Performance;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Ticket;
 import org.mapstruct.Mapper;
 
+import java.util.List;
+
 @Mapper
 public interface TicketMapper {
 
     TicketDto ticketToTicketDto(Ticket ticket);
+
+    List<TicketDto> ticketListToTicketDtoList(List<Ticket> tickets);
 
     Ticket ticketDtoToTicket(TicketDto ticketDto);
 

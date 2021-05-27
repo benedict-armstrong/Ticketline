@@ -6,7 +6,6 @@ import { HomePageComponent } from './components/home-page/home-page.component';
 import { LoginComponent } from './components/login/login.component';
 import { NewsComponent } from './components/news/news.component';
 import { RegisterComponent } from './components/register/register.component';
-import { ShoppingcartTestingComponent } from './components/shoppingcart-testing/shoppingcart-testing.component';
 import { TicketDetailComponent } from './components/ticket-detail/ticket-detail.component';
 import { UserHomeComponent } from './components/user-home/user-home.component';
 import {AddNewsComponent} from './components/add-news/add-news.component';
@@ -29,7 +28,6 @@ const routes: Routes = [
   { path: 'ticket', component: TicketDetailComponent, canActivate: [AuthGuard], data: { roles: ['ADMIN', 'ORGANIZER', 'USER']} },
   { path: 'add-news/:id', component: AddNewsComponent, canActivate: [AuthGuard], data: { roles: ['ADMIN', 'ORGANIZER']} },
   { path: 'add-user', component: AddUserComponent, canActivate: [AuthGuard], data: { roles: ['ADMIN']} },
-  { path: 'sctest', component: ShoppingcartTestingComponent},
   { path: 'add-event', component: AddEventComponent, canActivate: [AuthGuard], data: { roles: ['ADMIN', 'ORGANIZER']} }
 ];
 

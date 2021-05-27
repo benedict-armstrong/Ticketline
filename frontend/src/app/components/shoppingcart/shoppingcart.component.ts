@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { ShoppingcartService } from 'src/app/services/shoppingcart.service';
+import { TicketService } from 'src/app/services/ticket.service';
 
 @Component({
   selector: 'app-shoppingcart',
@@ -9,12 +9,12 @@ import { ShoppingcartService } from 'src/app/services/shoppingcart.service';
 })
 export class ShoppingcartComponent implements OnInit {
 
-  constructor(public cartService: ShoppingcartService) {}
+  constructor(public ticketService: TicketService) {}
 
   ngOnInit(): void {
   }
 
   close(): void {
-    this.cartService.toggleStatus();
+    this.ticketService.toggleStatus();
   }
 }

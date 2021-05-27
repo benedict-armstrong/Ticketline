@@ -29,6 +29,14 @@ button.secondary {
   color: $primary-darker;
 }
 
+button.primary.locked {
+  background: $gray-131;
+}
+
+button.secondary.locked {
+  color: $gray-131;
+}
+
 button.no-shadow {
   box-shadow: none;
 }

@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { AuthService } from 'src/app/services/auth.service';
-import { ShoppingcartService } from 'src/app/services/shoppingcart.service';
+import { TicketService } from 'src/app/services/ticket.service';
 
 @Component({
   selector: 'app-navbar',
@@ -9,12 +9,12 @@ import { ShoppingcartService } from 'src/app/services/shoppingcart.service';
 })
 export class NavbarComponent implements OnInit {
 
-  constructor(private authService: AuthService, private cartService: ShoppingcartService) {}
+  constructor(private authService: AuthService, private ticketService: TicketService) {}
 
   ngOnInit(): void {}
 
   toggleCart() {
-    this.cartService.toggleStatus();
+    this.ticketService.toggleStatus();
   }
 
   /**

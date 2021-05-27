@@ -1,4 +1,4 @@
-<div id="sidebar-cart" *ngIf="cartService.status">
+<div id="sidebar-cart" *ngIf="ticketService.showCart">
 	<div class="row topRow">
 		<div class="col-3">
 			<button (click)="close()" class="close-button primary">X</button>
@@ -8,13 +8,13 @@
 		</div>
 	</div>
 	<div class="products">
-		<div *ngFor="let item of cartService.cart; index as i;">
+		<div *ngFor="let item of ticketService.cart; index as i;">
 			<app-cart-item [i]="i"></app-cart-item>
 		</div>
 	</div>
 	<div class="totals">
 		<div class="subtotal">
-			<span class="label">Total: </span> <span class="amount">{{this.cartService.total | currency:"EUR"}}</span>
+			<span class="label">Total: </span> <span class="amount">{{this.ticketService.total | currency:"EUR"}}</span>
 		</div>
 	</div>
 	<button class="primary">Checkout</button>
