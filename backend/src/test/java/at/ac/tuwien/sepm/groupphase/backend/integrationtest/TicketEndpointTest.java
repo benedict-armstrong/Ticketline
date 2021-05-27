@@ -5,13 +5,12 @@ import at.ac.tuwien.sepm.groupphase.backend.basetest.TestDataAddress;
 import at.ac.tuwien.sepm.groupphase.backend.basetest.TestDataArtist;
 import at.ac.tuwien.sepm.groupphase.backend.basetest.TestDataEvent;
 import at.ac.tuwien.sepm.groupphase.backend.basetest.TestDataTicket;
+import at.ac.tuwien.sepm.groupphase.backend.basetest.TestDataUser;
 import at.ac.tuwien.sepm.groupphase.backend.config.properties.SecurityProperties;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.TicketDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.PerformanceMapper;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.SectorTypeMapper;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.TicketMapper;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.TicketTypeMapper;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.UserMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Address;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Artist;
@@ -54,7 +53,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 @SpringBootTest
 @ActiveProfiles("test")
 @AutoConfigureMockMvc
-public class TicketEndpointTest implements TestAuthentification, TestDataTicket, TestDataEvent, TestDataArtist {
+public class TicketEndpointTest implements TestAuthentification, TestDataTicket {
 
     @Autowired
     private MockMvc mockMvc;
@@ -93,16 +92,10 @@ public class TicketEndpointTest implements TestAuthentification, TestDataTicket,
     // Mappers
 
     @Autowired
-    private TicketMapper ticketMapper;
-
-    @Autowired
     private TicketTypeMapper ticketTypeMapper;
 
     @Autowired
     private SectorTypeMapper sectorTypeMapper;
-
-    @Autowired
-    private UserMapper userMapper;
 
     @Autowired
     private PerformanceMapper performanceMapper;
@@ -111,36 +104,10 @@ public class TicketEndpointTest implements TestAuthentification, TestDataTicket,
         .seats(Arrays.asList(1L, 5L, 6L))
         .build();
     private final Artist artist = TestDataArtist.getArtist();
-//    private final Address address = TestDataAddress.getAddress();
-    private final Address address = Address.builder()
-        .name("Max Mustermann")
-        .lineOne("Teststraße 2")
-        .city("Wien")
-        .postcode("1010")
-        .country("Österreich")
-        .build();
+    private final Address address = TestDataAddress.getAddress();
     private final TicketType ticketType = STANDARD_TICKET_TYPE;
-    private final Performance performance = Performance.builder()
-        .title(TestDataEvent.TEST_EVENT_PERFORMANCE_TITLE)
-        .description(TestDataEvent.TEST_EVENT_PERFORMANCE_DESCRIPTION)
-        .date(TestDataEvent.TEST_PERFORMANCE_DATE)
-        .artist(artist)
-        .location(address)
-        .sectorTypes(TestDataEvent.getTestEventSectortypes())
-        .ticketTypes(TestDataTicket.getTicketTypes())
-        .build();
-    private final ApplicationUser user = ApplicationUser.builder()
-        .firstName(ADMIN_FIRST_NAME)
-        .lastName(ADMIN_LAST_NAME)
-        .email(ADMIN_EMAIL)
-        .lastLogin(ADMIN_LAST_LOGIN)
-        .role(ADMIN_ROLE)
-        .status(ADMIN_USER_STATUS)
-        .password(ADMIN_PASSWORD)
-        .points(ADMIN_POINTS)
-        .address(TestDataAddress.getAddress())
-        .telephoneNumber(ADMIN_PHONE_NUMBER)
-        .build();
+    private final Performance performance = TestDataEvent.getPerformance(artist, address);
+    private final ApplicationUser user = TestDataUser.getUser();
 
     @BeforeEach
     public void beforeEach() throws Exception {
@@ -150,7 +117,7 @@ public class TicketEndpointTest implements TestAuthentification, TestDataTicket,
         saveUser(user, userRepository, passwordEncoder);
         authToken = authenticate(user, mockMvc, objectMapper);
 
-        ticketTypeRepository.save(ticketType);
+        TicketType savedTicketType = ticketTypeRepository.save(ticketType);
 
         Performance savedPerformance = performanceRepository.save(performance);
         SectorType sectorType = (SectorType) savedPerformance.getSectorTypes().toArray()[0];
@@ -158,7 +125,7 @@ public class TicketEndpointTest implements TestAuthentification, TestDataTicket,
 
         template.setSectorType(sectorTypeMapper.sectorTypeToSectorTypeDto(sectorType));
         template.setPerformance(performanceMapper.performanceToPerformanceDto(savedPerformance));
-        template.setTicketType(ticketTypeMapper.ticketTypeToTicketTypeDto(STANDARD_TICKET_TYPE));
+        template.setTicketType(ticketTypeMapper.ticketTypeToTicketTypeDto(savedTicketType));
     }
 
     @AfterEach
