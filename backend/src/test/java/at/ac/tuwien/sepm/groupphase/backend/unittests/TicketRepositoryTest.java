@@ -83,8 +83,8 @@ public class TicketRepositoryTest implements TestDataTicket {
     @AfterEach
     public void afterEach() {
         ticketRepository.deleteAll();
-        ticketTypeRepository.deleteAll();
         performanceRepository.deleteAll();
+        ticketTypeRepository.deleteAll();
         userRepository.deleteAll();
         artistRepository.deleteAll();
     }
