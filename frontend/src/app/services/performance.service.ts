@@ -54,7 +54,7 @@ export class ApplicationPerformanceService {
     if(event !== null){
       params = params.set('eventId', event.toString());
     }
-    console.log(params)
+
     return this.httpClient.get<Performance[]>(this.performanceBaseUri, { params });
   }
 

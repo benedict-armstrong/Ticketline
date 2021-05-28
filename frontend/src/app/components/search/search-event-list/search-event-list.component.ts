@@ -28,7 +28,7 @@ export class SearchEventListComponent implements OnInit {
     });
 
     this.getEvents();
-    
+
   }
 
   filterEvents(){
@@ -44,9 +44,9 @@ export class SearchEventListComponent implements OnInit {
           }
           return true;
         }
-      
+
     });
-    
+
     if(this.filteredEvents.length === 0){
 
     }
