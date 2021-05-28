@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { ApplicationEventService } from 'src/app/services/event.service';
 import { ApplicationPerformanceService } from 'src/app/services/performance.service';
 import {Performance} from '../../../dtos/performance';
+import {Event} from '../../../dtos/event';
 
 @Component({
   selector: 'app-performance-search',
@@ -24,9 +25,7 @@ export class PerformanceSearchComponent implements OnInit {
   noPerformance = true;
   page = 0;
   size = 8;
-  eventSelectPage = 0;
-  eventSelectSize = 8;
-  eventsSelect = [];
+  selectedEvent = null;
 
   constructor(private formBuilder: FormBuilder, private performanceService: ApplicationPerformanceService,
     private eventService: ApplicationEventService) { }
@@ -35,19 +34,10 @@ export class PerformanceSearchComponent implements OnInit {
     this.performanceSearchForm = this.formBuilder.group({
       date: ['', []],
       price: ['', []],
-      event: ['', []],
       venue: ['', []],
       time: ['', []],
     });
 
-    //TODO maybe get from parent??
-    this.eventService.getEvents(this.eventSelectPage, this.eventSelectSize).subscribe(
-      (response) => {
-        this.eventsSelect.push(...response);
-      }, error => {
-        console.error(error);
-      }
-    );
   }
 
   searchPerformances() {
@@ -86,7 +76,7 @@ export class PerformanceSearchComponent implements OnInit {
           }
         }
 
-        this.performanceService.searchPerformances(this.page, this.size, date).subscribe(
+        this.performanceService.searchPerformances(this.page, this.size, date, this.selectedEvent).subscribe(
           response => {
             console.log(response);
             this.performances.push(...response);
@@ -115,14 +105,8 @@ export class PerformanceSearchComponent implements OnInit {
     this.size = 8;
   }
 
-  loadMoreEventsForSelect(){
-    this.eventService.getEvents(this.eventSelectPage, this.eventSelectSize).subscribe(
-      (response) => {
-        this.eventsSelect.push(...response);
-      }, error => {
-        console.error(error);
-      }
-    );
+  setSelectedEvent(event: number){
+    this.selectedEvent = event;
   }
 
 }
