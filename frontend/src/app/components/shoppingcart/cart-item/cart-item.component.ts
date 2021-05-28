@@ -24,7 +24,7 @@ export class CartItemComponent implements OnInit {
   ngOnInit(): void {
     this.cartItemForm.setValue({amount: this.ticketService.cart[this.i].seats[0]});
   }
-  
+
   removeFromCart(): void {
     this.ticketService.removeFromCart(this.i);
   }
@@ -47,5 +47,4 @@ export class CartItemComponent implements OnInit {
     }
     this.ticketService.setAmount(this.i, this.cartItemForm.value.amount);
   }
-  
 }

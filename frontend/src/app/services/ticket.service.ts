@@ -9,8 +9,6 @@ import {TicketUpdate} from '../dtos/ticketUpdate';
   providedIn: 'root'
 })
 export class TicketService {
-  private ticketBaseUri: string = this.globals.backendUri + '/tickets';
-
   public cart: Ticket[] = [];
   public showCart = false;
   public waiting = false;
@@ -18,6 +16,8 @@ export class TicketService {
   public error = false;
   public errorMessage = '';
   public total = 0;
+
+  private ticketBaseUri: string = this.globals.backendUri + '/tickets';
 
   constructor(private httpClient: HttpClient, private globals: Globals) { }
 
@@ -66,7 +66,6 @@ export class TicketService {
     );
   }
 
-  
   setAmount(i: number, amount: number) {
     this.updateAmount({id: this.cart[i].id, seats: [amount]}).subscribe(
       (responseTicket: TicketUpdate) => {
@@ -80,7 +79,6 @@ export class TicketService {
     );
   }
 
-  
   removeFromCart(i: number) {
     this.removeTicket(this.cart[i]).subscribe(
       (response: boolean) => {

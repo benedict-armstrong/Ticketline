@@ -1,4 +1,4 @@
-import { SectorType } from "./sectortype";
+import { SectorType } from './sectortype';
 
 export class TicketType {
   constructor(
