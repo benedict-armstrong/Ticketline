@@ -9,7 +9,7 @@ import org.mapstruct.Mapper;
 
 import java.util.List;
 
-@Mapper
+@Mapper(uses = {TicketTypeMapper.class, UserMapper.class, PerformanceMapper.class})
 public interface TicketMapper {
 
     TicketDto ticketToTicketDto(Ticket ticket);
@@ -17,20 +17,4 @@ public interface TicketMapper {
     List<TicketDto> ticketListToTicketDtoList(List<Ticket> tickets);
 
     Ticket ticketDtoToTicket(TicketDto ticketDto);
-
-    /*
-    default Long map(ApplicationUser value) {
-
-    default Long map(Performance value) {
-        return value.getId();
-    }
-
-    default ApplicationUser mapToUser(Long value) {
-        return ApplicationUser.builder().id(value).build();
-    }
-
-    default Performance mapToPerformance(Long value) {
-        return Performance.builder().id(value).build();
-    }
-    */
 }
