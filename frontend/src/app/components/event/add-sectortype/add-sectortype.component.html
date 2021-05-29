@@ -30,6 +30,22 @@
           </div>
         </div>
       </div>
+
+      <div class="col-6">
+        <div class="form-group">
+          <label for="sectorPrice" class="required">Price of a ticket in sector</label>
+          <input type="number" name="sectorPrice" formControlName="sectorPrice"
+                 class="text-input form-control" id="sectorPrice" placeholder="Enter price">
+          <div *ngIf="submitted && addSectorTypeForm.controls.sectorNumberOfTickets.errors" class="error">
+            <small *ngIf="addSectorTypeForm.controls.sectorPrice.errors.required" class="form-text text-danger">
+              Price is required!
+            </small>
+            <small *ngIf="addSectorTypeForm.controls.sectorPrice.errors.min" class="form-text text-danger">
+              Price must be greater than 0!
+            </small>
+          </div>
+        </div>
+      </div>
     </div>
     <div class="col-3">
       <button class="primary" type="submit">Add sector type</button>

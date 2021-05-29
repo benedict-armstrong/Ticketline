@@ -6,6 +6,7 @@ import at.ac.tuwien.sepm.groupphase.backend.entity.Event;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Performance;
 import at.ac.tuwien.sepm.groupphase.backend.entity.File;
 import at.ac.tuwien.sepm.groupphase.backend.entity.SectorType;
+import at.ac.tuwien.sepm.groupphase.backend.entity.TicketType;
 import at.ac.tuwien.sepm.groupphase.backend.repository.AddressRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.ArtistRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.EventRepository;
@@ -126,6 +127,7 @@ public class EventDataGenerator {
                         .description(TEST_PERFORMANCE_DESCRIPTION + (j + i))
                         .date(TEST_DATETIME.plusDays(i * 10))
                         .sectorTypes(generateSectorTypes(i))
+                        .ticketTypes(generateTicketTypes(i))
                         .artist(artist)
                         .location(location)
                         .build();
@@ -180,9 +182,17 @@ public class EventDataGenerator {
 
     public static Set<SectorType> generateSectorTypes(int index) {
         Set<SectorType> sectorTypes = new HashSet<>();
-        sectorTypes.add(SectorType.builder().name("Standing").numberOfTickets(100 + index * 50).build());
-        sectorTypes.add(SectorType.builder().name("Sitting").numberOfTickets(100 + index * 50).build());
+        sectorTypes.add(SectorType.builder().name("Standing").numberOfTickets(100 + index * 50).price(1000L + 300L * index).build());
+        sectorTypes.add(SectorType.builder().name("Sitting").numberOfTickets(100 + index * 50).price(3000L + 700L * index).build());
         return sectorTypes;
+    }
+
+    public static Set<TicketType> generateTicketTypes(int index) {
+        Set<TicketType> ticketTypes = new HashSet<>();
+        ticketTypes.add(TicketType.builder().title("Standard").multiplier(1.0 + index / 100).build());
+        ticketTypes.add(TicketType.builder().title("VIP").multiplier(3.33 + index / 50).build());
+        ticketTypes.add(TicketType.builder().title("Discount").multiplier(0.75 - index / 100).build());
+        return ticketTypes;
     }
 
     public static File generateImage(byte[] imgBuffer, File.Type imageType) {
