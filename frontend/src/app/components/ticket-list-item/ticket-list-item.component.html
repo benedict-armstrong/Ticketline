@@ -1,20 +1,38 @@
 <div class="list-item">
-    <div>
-        <h4>{{sectorType.name}} ({{sectorType.numberOfTickets}} Tickets)</h4>
-        <p>Best experience | EUR 53.00</p>
+    <div class="row">
+        <div class="col-6">
+            <h4>{{ticketType.title}} {{ticketType.sectorType.name}} ({{ticketType.sectorType.numberOfTickets}} Tickets)</h4>
+            <span>Best experience | {{ticketType.price | currency:'EUR'}}</span>
+        </div>
+        <div class="col-6 formContainer">
+            <form class="options" [formGroup]="ticketForm" (ngSubmit)="addToCart()">
+                <div class="age">
+                    <select class="form-select" name="age-group" id="age-group">
+                        <option>Adult</option>
+                        <option>Child</option>
+                    </select>
+                </div>
+                <div class="count inline">
+                    <button class="secondary no-shadow no-border" (click)="decAmount()" type="button"><i class="bi bi-dash-circle"></i></button>
+                    <input type="number" formControlName="amount" [ngClass]="{'error': validationError}">
+                    <button class="secondary no-shadow no-border" (click)="incAmount()" type="button"><i class="bi bi-plus-circle"></i></button>
+                </div>
+                <button class="add primary" [ngClass]="{'locked': this.waiting}" type="submit">Add to Cart</button>
+            </form>
+        </div>
     </div>
-    <div class="options">
-        <div class="age">
-            <select class="form-select" name="age-group" id="age-group">
-                <option>Adult</option>
-                <option>Child</option>
-            </select>
+    <div class="row">
+        <div *ngIf="error" class="col-12 alert alert-danger alert-dismissible fade show" role="alert">
+            <strong>Error! </strong> {{ errorMessage }}
+            <button type="button" (click)="vanishAlert()" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
         </div>
-        <div class="count">
-            <button class="secondary no-shadow no-border"><i class="bi bi-dash-circle"></i></button>
-            <span>0</span>
-            <button class="secondary no-shadow no-border"><i class="bi bi-plus-circle"></i></button>
+        <div *ngIf="success" class="col-12 alert alert-success alert-dismissible fade show" role="alert">
+            <strong>Success</strong> The ticket has been added to your cart.
+            <button type="button" (click)="vanishAlert()" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
         </div>
-        <button class="add primary">Add to Cart</button>
     </div>
 </div>

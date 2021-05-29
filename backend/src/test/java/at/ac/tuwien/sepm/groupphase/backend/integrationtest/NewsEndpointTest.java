@@ -7,18 +7,8 @@ import at.ac.tuwien.sepm.groupphase.backend.basetest.TestDataNews;
 import at.ac.tuwien.sepm.groupphase.backend.basetest.TestDataTicket;
 import at.ac.tuwien.sepm.groupphase.backend.config.properties.SecurityProperties;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.NewsDto;
-import at.ac.tuwien.sepm.groupphase.backend.entity.Address;
-import at.ac.tuwien.sepm.groupphase.backend.entity.Artist;
-import at.ac.tuwien.sepm.groupphase.backend.entity.Event;
-import at.ac.tuwien.sepm.groupphase.backend.entity.Performance;
-import at.ac.tuwien.sepm.groupphase.backend.entity.File;
-import at.ac.tuwien.sepm.groupphase.backend.entity.News;
-import at.ac.tuwien.sepm.groupphase.backend.repository.AddressRepository;
-import at.ac.tuwien.sepm.groupphase.backend.repository.ArtistRepository;
-import at.ac.tuwien.sepm.groupphase.backend.repository.EventRepository;
-import at.ac.tuwien.sepm.groupphase.backend.repository.FileRepository;
-import at.ac.tuwien.sepm.groupphase.backend.repository.NewsRepository;
-import at.ac.tuwien.sepm.groupphase.backend.repository.UserRepository;
+import at.ac.tuwien.sepm.groupphase.backend.entity.*;
+import at.ac.tuwien.sepm.groupphase.backend.repository.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -83,6 +73,9 @@ public class NewsEndpointTest implements TestDataNews, TestDataFile, TestAuthent
     @Autowired
     private SecurityProperties securityProperties;
 
+    @Autowired
+    private TicketTypeRepository ticketTypeRepository;
+
     private Set<File> images = new HashSet<>();
 
     private Event event;
@@ -100,9 +93,19 @@ public class NewsEndpointTest implements TestDataNews, TestDataFile, TestAuthent
 
     @BeforeEach
     public void beforeEach() throws Exception {
-        //newsRepository.deleteAll();
-        //eventRepository.deleteAll();
-        //fileRepository.deleteAll();
+        newsRepository.deleteAll();
+        eventRepository.deleteAll();
+        fileRepository.deleteAll();
+        ticketTypeRepository.deleteAll();
+
+        SectorType sectorType = SectorType.builder().name("Test").numberOfTickets(10).build();
+        TicketType ticketType = TicketType.builder().title("Test").price(10).sectorType(sectorType).build();
+
+        Set<SectorType> sectorTypeSet = new HashSet<>();
+        sectorTypeSet.add(sectorType);
+
+        Set<TicketType> ticketTypeSet = new HashSet<>();
+        ticketTypeSet.add(ticketType);
 
         Address address = addressRepository.save(TestDataEvent.TEST_EVENT_LOCATION);
         Artist artist = artistRepository.save(TestDataEvent.TEST_EVENT_ARTIST);
@@ -114,8 +117,8 @@ public class NewsEndpointTest implements TestDataNews, TestDataFile, TestAuthent
             .date(TestDataEvent.TEST_PERFORMANCE_DATE)
             .artist(artist)
             .location(address)
-            .sectorTypes(TestDataEvent.getTestEventSectortypes())
-            .ticketTypes(TestDataTicket.getTicketTypes())
+            .sectorTypes(sectorTypeSet)
+            .ticketTypes(ticketTypeSet)
             .build()
         );
 
@@ -146,6 +149,7 @@ public class NewsEndpointTest implements TestDataNews, TestDataFile, TestAuthent
     public void afterEach() {
         newsRepository.deleteAll();
         eventRepository.deleteAll();
+        ticketTypeRepository.deleteAll();
         fileRepository.deleteAll();
         userRepository.deleteAll();
         addressRepository.deleteAllInBatch();

@@ -28,8 +28,4 @@ public class SectorType {
 
     @Column
     private Integer numberOfTickets;
-
-    @Column
-    private Long price; // 1 = 100 Cents
-
 }

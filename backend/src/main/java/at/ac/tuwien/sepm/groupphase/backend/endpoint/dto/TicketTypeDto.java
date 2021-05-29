@@ -20,8 +20,10 @@ public class TicketTypeDto {
     @NotBlank(message = "Title can't be empty")
     private String title;
 
-    @NotNull(message = "Price multiplier is missing")
-    @PositiveOrZero(message = "Price multiplier has to be at least zero")
-    private Double multiplier;
+    @PositiveOrZero
+    @NotNull
+    private Long price;
 
+    @NotNull
+    private SectorTypeDto sectorType;
 }

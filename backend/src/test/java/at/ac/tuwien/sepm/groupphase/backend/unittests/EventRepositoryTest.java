@@ -34,7 +34,6 @@ public class EventRepositoryTest implements TestDataEvent {
 
     @BeforeEach
     public void beforeEach(){
-        //eventRepository.deleteAll();
 
         event = Event.builder()
             .name(TestDataEvent.TEST_EVENT_TITLE)

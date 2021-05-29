@@ -91,7 +91,6 @@ public class TicketDataGenerator {
             Event savedEvent = eventRepository.save(event);
 
             Performance savedPerformance = (Performance) savedEvent.getPerformances().toArray()[0];
-            SectorType sectorType = (SectorType) savedPerformance.getSectorTypes().toArray()[0];
             TicketType ticketType = (TicketType) savedPerformance.getTicketTypes().toArray()[0];
             for (int i = 0; i < NUMBER_OF_TICKETS_TO_GENERATE; i++) {
                 Address address = Address.builder()
@@ -121,7 +120,6 @@ public class TicketDataGenerator {
                 Ticket ticket = Ticket.builder()
                     .owner(savedUser)
                     .performance(savedPerformance)
-                    .sectorType(sectorType)
                     .ticketType(ticketType)
                     .seats(seats)
                     .build();
@@ -130,19 +128,18 @@ public class TicketDataGenerator {
     }
 
     private Event generateEvent(Address address, Artist artist, File image) throws Exception {
+        SectorType sectorType = SectorType.builder()
+            .name("Tickt. Perf. Standing")
+            .numberOfTickets(500)
+            .build();
         Set<SectorType> sectorTypes = new HashSet<>();
-        sectorTypes.add(
-            SectorType.builder()
-                .name("Tickt. Perf. Standing")
-                .numberOfTickets(500)
-                .price(8000L)
-                .build()
-        );
+        sectorTypes.add(sectorType);
         Set<TicketType> ticketTypes = new HashSet<>();
         ticketTypes.add(
             TicketType.builder()
                 .title("VIP")
-                .multiplier(2.85)
+                .price(10L)
+                .sectorType(sectorType)
                 .build()
         );
         Set<Performance> performances = new HashSet<>();

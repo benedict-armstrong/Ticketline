@@ -1,6 +1,9 @@
 package at.ac.tuwien.sepm.groupphase.backend.service;
 
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.TicketUpdateDto;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Ticket;
+
+import java.util.List;
 
 public interface TicketService {
 
@@ -20,4 +23,31 @@ public interface TicketService {
      */
     Ticket cancel(Long id);
 
+    /**
+     * Gets all tickets in the cart of a User.
+     *
+     * @return list of tickets.
+     */
+    List<Ticket> getCartTickets();
+
+    /**
+     * Updates the seats of a ticket with the given id.
+     *
+     * @param ticketUpdate entity containing the id and the new seats.
+     * @return entity containing the id and the new seats.
+     */
+    TicketUpdateDto updateSeats(TicketUpdateDto ticketUpdate);
+
+    /**
+     * Deletes a ticket.
+     *
+     * @param id of the ticket
+     * @return true if the ticket has been deleted, else false
+     */
+    boolean delete(Long id);
+
+    /**
+     * Deletes all tickets in the cart that are to old.
+     */
+    void pruneTicketsInCart();
 }

@@ -182,16 +182,22 @@ public class EventDataGenerator {
 
     public static Set<SectorType> generateSectorTypes(int index) {
         Set<SectorType> sectorTypes = new HashSet<>();
-        sectorTypes.add(SectorType.builder().name("Standing").numberOfTickets(100 + index * 50).price(1000L + 300L * index).build());
-        sectorTypes.add(SectorType.builder().name("Sitting").numberOfTickets(100 + index * 50).price(3000L + 700L * index).build());
+        sectorTypes.add(SectorType.builder().name("Standing").numberOfTickets(100 + index * 50).build());
+        sectorTypes.add(SectorType.builder().name("Sitting").numberOfTickets(100 + index * 50).build());
         return sectorTypes;
     }
 
     public static Set<TicketType> generateTicketTypes(int index) {
+        Set<SectorType> sectorTypes = new HashSet<>();
+        sectorTypes.add(SectorType.builder().name("Standing").numberOfTickets(100 + index * 50).build());
+        sectorTypes.add(SectorType.builder().name("Sitting").numberOfTickets(100 + index * 50).build());
+
         Set<TicketType> ticketTypes = new HashSet<>();
-        ticketTypes.add(TicketType.builder().title("Standard").multiplier(1.0 + index / 100).build());
-        ticketTypes.add(TicketType.builder().title("VIP").multiplier(3.33 + index / 50).build());
-        ticketTypes.add(TicketType.builder().title("Discount").multiplier(0.75 - index / 100).build());
+        for (SectorType sectorType : sectorTypes) {
+            ticketTypes.add(TicketType.builder().title("Standard").price(10.00 + 3.00 * index).sectorType(sectorType).build());
+            ticketTypes.add(TicketType.builder().title("VIP").price(30.00 + 7.00 * index).sectorType(sectorType).build());
+            ticketTypes.add(TicketType.builder().title("Discount").price(30.00 + 7.00 * index).sectorType(sectorType).build());
+        }
         return ticketTypes;
     }
 

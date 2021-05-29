@@ -1,6 +1,11 @@
 package at.ac.tuwien.sepm.groupphase.backend.service.impl;
 
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.TicketUpdateDto;
+import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
+import at.ac.tuwien.sepm.groupphase.backend.entity.Performance;
+import at.ac.tuwien.sepm.groupphase.backend.entity.SectorType;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Ticket;
+import at.ac.tuwien.sepm.groupphase.backend.exception.NoTicketLeftException;
 import at.ac.tuwien.sepm.groupphase.backend.repository.TicketRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepm.groupphase.backend.security.AuthenticationFacade;
@@ -8,11 +13,16 @@ import at.ac.tuwien.sepm.groupphase.backend.service.TicketService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.lang.invoke.MethodHandles;
+import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
+@EnableScheduling
 public class TicketServiceImpl implements TicketService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
@@ -35,8 +45,25 @@ public class TicketServiceImpl implements TicketService {
         ticket.setOwner(
             userRepository.findUserByEmail((String) authenticationFacade.getAuthentication().getPrincipal())
         );
-        ticket.setTotalPrice(calculatePrice(ticket));
         ticket.setStatus(status);
+        ticket.setUpdateDate(LocalDateTime.now());
+
+
+        List<Ticket> existingTicket = ticketRepository.findByOwnerAndTicketTypeAndStatus(ticket.getOwner(), ticket.getTicketType(), ticket.getStatus());
+        if (existingTicket.size() > 0) {
+            ticketRepository.deleteAll(existingTicket);
+        }
+
+        Long seatsNeeded = 0L;
+        for (Long seat : ticket.getSeats()) {
+            seatsNeeded += seat;
+        }
+
+        Long seatsLeft = ticket.getTicketType().getSectorType().getNumberOfTickets() - this.ticketsInUse(ticket.getPerformance(), ticket.getTicketType().getSectorType());
+
+        if ((seatsLeft - seatsNeeded) < 0) {
+            throw new NoTicketLeftException("Could not process request, there are only " + seatsLeft + " tickets remaining.");
+        }
         return ticketRepository.save(ticket);
     }
 
@@ -48,10 +75,67 @@ public class TicketServiceImpl implements TicketService {
         return ticketRepository.save(ticket);
     }
 
-    private Long calculatePrice(Ticket ticket) {
-        LOGGER.trace("calculatePrice({})", ticket);
-        return (long) Math.floor(100 * ticket.getTicketType().getMultiplier() * ticket.getSectorType().getPrice()
-            * ticket.getSeats().size());
+    @Override
+    public List<Ticket> getCartTickets() {
+        LOGGER.trace("getCartTickets()");
+        ApplicationUser user = userRepository.findUserByEmail((String) authenticationFacade.getAuthentication().getPrincipal());
+        Ticket.Status status = Ticket.Status.IN_CART;
+        return ticketRepository.findByOwnerAndStatus(user, status);
     }
 
+    @Override
+    public TicketUpdateDto updateSeats(TicketUpdateDto ticketUpdate) {
+        LOGGER.trace("updateSeats({})", ticketUpdate);
+        Ticket ticket = ticketRepository.findById(ticketUpdate.getId()).get();
+        ticket.setUpdateDate(LocalDateTime.now());
+        Long oldSeats = 0L;
+        Long newSeats = 0L;
+        for (Long seat : ticket.getSeats()) {
+            oldSeats += seat;
+        }
+        for (Long seat : ticketUpdate.getSeats()) {
+            newSeats += seat;
+        }
+        if (oldSeats < newSeats) {
+            Long seatsNeeded = newSeats - oldSeats;
+            System.out.println(seatsNeeded);
+            Long seatsLeft = ticket.getTicketType().getSectorType().getNumberOfTickets() - this.ticketsInUse(ticket.getPerformance(), ticket.getTicketType().getSectorType());
+
+            if ((seatsLeft - seatsNeeded) < 0) {
+                ticketRepository.save(ticket);
+                throw new NoTicketLeftException("Could not process request, there are only " + seatsLeft + " tickets remaining.");
+            }
+        }
+        ticket.setSeats(ticketUpdate.getSeats());
+        ticketRepository.save(ticket);
+        return TicketUpdateDto.builder().id(ticket.getId()).seats(ticket.getSeats()).build();
+    }
+
+    @Override
+    public boolean delete(Long id) {
+        LOGGER.trace("delete({})", id);
+        ticketRepository.deleteById(id);
+        return true;
+    }
+
+    @Scheduled(fixedDelay = 60000)
+    public void pruneTicketsInCart() {
+        LOGGER.trace("pruneTicketsInCart()");
+        List<Ticket> toBeDeleted = ticketRepository.findByUpdateDateBeforeAndStatus(LocalDateTime.now().minusMinutes(1), Ticket.Status.IN_CART);
+        if (toBeDeleted.size() > 0) {
+            LOGGER.info("Deleting {} stale tickets from carts", toBeDeleted.size());
+        }
+        ticketRepository.deleteAll(toBeDeleted);
+    }
+
+    private Long ticketsInUse(Performance performance, SectorType sectorType) {
+        List<Ticket> currentlyInUse = ticketRepository.findByPerformanceAndTicketTypeSectorTypeAndStatusNot(performance, sectorType, Ticket.Status.CANCELLED);
+        Long inUse = 0L;
+        for (Ticket item : currentlyInUse) {
+            for (Long seat : item.getSeats()) {
+                inUse += seat;
+            }
+        }
+        return inUse;
+    }
 }

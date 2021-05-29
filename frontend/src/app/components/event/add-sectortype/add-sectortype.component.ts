@@ -29,8 +29,7 @@ export class AddSectortypeComponent implements OnInit {
     if (this.addSectorTypeForm.valid) {
       const sectorType = new SectorType(null,
         this.addSectorTypeForm.value.sectorName,
-        this.addSectorTypeForm.value.sectorNumberOfTickets,
-        this.addSectorTypeForm.value.sectorPrice);
+        this.addSectorTypeForm.value.sectorNumberOfTickets);
 
       this.sectorTypes.push(sectorType);
       this.sectorTypesChange.emit(this.sectorTypes);

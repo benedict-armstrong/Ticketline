@@ -1,0 +1,41 @@
+<div class="cartItem">
+    <div class="row ticketHeader">
+        <div class="col-9">
+            <span>{{this.ticketService.cart[this.i].performance.title}}</span>
+        </div>
+        <div class="col-3 closeContainer">
+            <button class="close" type="button" [ngClass]="{'locked': this.waiting}" (click)="removeFromCart()">X</button>
+        </div>
+    </div>
+    <div class="row ticketBody">
+        <div class="col-8">
+            <span>{{this.ticketService.cart[this.i].ticketType.title}} {{this.ticketService.cart[this.i].ticketType.sectorType.name}}</span>
+        </div>
+
+        <div class="col-4 prices">
+            <span class="price">{{this.ticketService.cart[this.i].ticketType.price | currency:'EUR'}}</span>
+        </div>
+    </div>
+    <div class="row ticketBody">
+        <div class="col-8 counts">
+            <form [formGroup]="cartItemForm">
+                <div class="inline">
+                    <button class="secondary no-shadow no-border" [ngClass]="{'locked': this.waiting}" type="button" (click)="decAmount()"><i class="bi bi-dash-circle"></i></button>
+                    <input type="number" formControlName="amount" (change)="setAmount()">
+                    <button class="secondary no-shadow no-border" [ngClass]="{'locked': this.waiting}" type="button" (click)="incAmount()"><i class="bi bi-plus-circle"></i></button>
+                </div>
+            </form>
+        </div>
+        <div class="col-4 prices">
+            <span class="price">{{this.ticketService.cart[this.i].ticketType.price * cartItemForm.value.amount | currency:'EUR'}}</span>
+        </div>
+    </div>
+    <div class="row ticketBody">
+        <div *ngIf="error" class="col-12 alert alert-danger alert-dismissible fade show" role="alert">
+            <strong>Error! </strong> {{ errorMessage }}
+            <button type="button" (click)="vanishAlert()" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    </div>
+</div>
