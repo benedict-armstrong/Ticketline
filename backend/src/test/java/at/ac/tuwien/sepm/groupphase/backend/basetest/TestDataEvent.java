@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepm.groupphase.backend.basetest;
 
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.SectorTypeDto;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Address;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Artist;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Event;
@@ -15,6 +16,7 @@ public interface TestDataEvent extends TestData {
 
     Long ID = 1L;
     String TEST_EVENT_TITLE = "TestEventTitle";
+    String TEST_EVENT_TITLE2 = "Other TestEventTitle";
     String TEST_EVENT_DESCRIPTION = "Testdescription..";
     LocalDate TEST_EVENT_DATE_FUTURE = LocalDate.parse("2022-12-12");
     LocalDate TEST_EVENT_DATE_FUTURE2 = LocalDate.parse("2023-12-12");
@@ -34,6 +36,12 @@ public interface TestDataEvent extends TestData {
     static Set<SectorType> getTestEventSectortypes() {
         Set<SectorType> sectorTypes = new HashSet<>();
         sectorTypes.add(SectorType.builder().name("Sector").numberOfTickets(100).build());
+        return sectorTypes;
+    }
+
+    static SectorTypeDto[] getTestEventSectortypesDto() {
+        SectorTypeDto[] sectorTypes = new SectorTypeDto[1];
+        sectorTypes[0] = SectorTypeDto.builder().name("Sector").numberOfTickets(100).build();
         return sectorTypes;
     }
 
@@ -59,5 +67,4 @@ public interface TestDataEvent extends TestData {
             .eventLocation(true)
             .build();
     }
-
 }

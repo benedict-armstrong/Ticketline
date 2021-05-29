@@ -7,7 +7,7 @@ import org.mapstruct.Mapping;
 
 import java.util.List;
 
-@Mapper
+@Mapper(uses = {FileMapper.class, EventMapper.class})
 public interface NewsMapper extends FileTypeMapper {
 
     News newsDtoToNews(NewsDto newsDto);
