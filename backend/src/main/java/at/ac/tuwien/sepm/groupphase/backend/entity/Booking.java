@@ -37,11 +37,10 @@ public class Booking {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn
-    @EqualsAndHashCode.Exclude
     @ToString.Exclude
     private ApplicationUser user;
 
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
     @NotNull
     private Set<Ticket> tickets = new HashSet<>();
 }

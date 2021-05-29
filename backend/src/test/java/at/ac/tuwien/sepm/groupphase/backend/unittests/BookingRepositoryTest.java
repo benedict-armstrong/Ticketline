@@ -21,6 +21,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @ExtendWith(SpringExtension.class)
@@ -110,6 +111,14 @@ public class BookingRepositoryTest implements TestDataTicket, TestDataEvent, Tes
             .build();
 
         ticketRepository.save(ticket);
+
+        Set<Ticket> tickets = new HashSet<>();
+
+        booking = Booking.builder()
+            .buyDate(LocalDateTime.now())
+            .user(user)
+            .tickets(tickets)
+            .build();
     }
 
     @AfterEach
@@ -122,18 +131,16 @@ public class BookingRepositoryTest implements TestDataTicket, TestDataEvent, Tes
         bookingRepository.deleteAll();
     }
 
-    /*
+
     @Test
     @DisplayName("Should return correct entity back after create")
     public void whenCreateNew_thenGetCorrectEntityBack () {
-        Ticket newTicket = ticketRepository.save(ticket);
+        Booking newBooking = bookingRepository.save(booking);
         assertAll(
-            () -> assertNotNull(ticket.getId()),
-            () -> assertEquals(newTicket.getOwner(), ticket.getOwner()),
-            () -> assertEquals(newTicket.getPerformance(), ticket.getPerformance()),
-            () -> assertEquals(newTicket.getSeats(), ticket.getSeats()),
-            () -> assertEquals(newTicket.getTicketType(), ticket.getTicketType()),
-            () -> assertEquals(newTicket.getStatus(), ticket.getStatus())
+            () -> assertNotNull(booking.getId()),
+            () -> assertEquals(newBooking.getBuyDate(), booking.getBuyDate()),
+            () -> assertEquals(newBooking.getUser(), booking.getUser()),
+            () -> assertEquals(newBooking.getTickets(), booking.getTickets())
         );
-    }*/
+    }
 }
