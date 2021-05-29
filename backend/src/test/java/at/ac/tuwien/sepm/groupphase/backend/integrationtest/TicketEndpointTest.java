@@ -10,6 +10,7 @@ import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.TicketDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.TicketUpdateDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.PerformanceMapper;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.SectorTypeMapper;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.TicketMapper;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.TicketTypeMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Address;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
@@ -97,7 +98,7 @@ public class TicketEndpointTest implements TestAuthentification, TestDataTicket,
     private TicketTypeMapper ticketTypeMapper;
 
     @Autowired
-    private SectorTypeMapper sectorTypeMapper;
+    private TicketMapper ticketMapper;
 
     @Autowired
     private PerformanceMapper performanceMapper;
@@ -389,5 +390,65 @@ public class TicketEndpointTest implements TestAuthentification, TestDataTicket,
             () -> assertEquals(newTicketDto.getSeats(), newNewTicketDto.getSeats()),
             () -> assertEquals(Ticket.Status.CANCELLED.toString(), newNewTicketDto.getStatus())
         );
+    }
+
+    @Test
+    @DisplayName("Should return 200 (true) when checkout")
+    public void whenCreateTicket_thenCheckout_thenTicketShouldBePaidFor() throws Exception {
+        MvcResult mvcResult = this.mockMvc.perform(
+            post(TICKET_BASE_URI + "/cart")
+                .content(
+                    objectMapper.writeValueAsString(ticketDto)
+                )
+                .contentType(MediaType.APPLICATION_JSON)
+                .header(securityProperties.getAuthHeader(), authToken)
+        ).andReturn();
+        MockHttpServletResponse response = mvcResult.getResponse();
+        TicketDto newTicketDto = objectMapper.readValue(response.getContentAsString(), TicketDto.class);
+
+        mvcResult = this.mockMvc.perform(
+            put(TICKET_BASE_URI + "/checkout")
+                .header(securityProperties.getAuthHeader(), authToken)
+        ).andReturn();
+        response = mvcResult.getResponse();
+        assertEquals(HttpStatus.OK.value(), response.getStatus());
+        assertEquals(MediaType.APPLICATION_JSON_VALUE, response.getContentType());
+
+        boolean succeeded = objectMapper.readValue(response.getContentAsString(), boolean.class);
+        assertTrue(succeeded);
+
+        mvcResult = this.mockMvc.perform(
+            get(TICKET_BASE_URI + "/paid")
+                .header(securityProperties.getAuthHeader(), authToken)
+        ).andReturn();
+        response = mvcResult.getResponse();
+        assertEquals(HttpStatus.OK.value(), response.getStatus());
+        assertEquals(MediaType.APPLICATION_JSON_VALUE, response.getContentType());
+
+        List<TicketDto> ticketDtos = Arrays.asList(
+            objectMapper.readValue(response.getContentAsString(), TicketDto[].class)
+        );
+
+        List<Ticket> tickets = ticketMapper.ticketDtoListToTicketList(ticketDtos);
+
+        assertAll(
+            () -> assertEquals(Ticket.Status.PAID_FOR, tickets.get(0).getStatus())
+        );
+    }
+
+    @Test
+    @DisplayName("Should return 200 (false) when checkout with empty cart")
+    public void whenCheckout_andEmptyCart_thenReturnFalse() throws Exception {
+
+        MvcResult mvcResult = this.mockMvc.perform(
+            put(TICKET_BASE_URI + "/checkout")
+                .header(securityProperties.getAuthHeader(), authToken)
+        ).andReturn();
+        MockHttpServletResponse response = mvcResult.getResponse();
+        assertEquals(HttpStatus.OK.value(), response.getStatus());
+        assertEquals(MediaType.APPLICATION_JSON_VALUE, response.getContentType());
+
+        boolean succeeded = objectMapper.readValue(response.getContentAsString(), boolean.class);
+        assertFalse(succeeded);
     }
 }

@@ -81,13 +81,9 @@ export class TicketService {
     return this.httpClient.delete<boolean>(this.ticketBaseUri + '/' + ticket.id);
   }
 
-  /*
-  buy(ticket: Ticket): Observable<Ticket> {
-    let params = new HttpParams();
-    params = params.set('mode', 'buy');
-    return this.httpClient.post<Ticket>(this.ticketBaseUri, ticket, {params});
+  checkout(): Observable<boolean> {
+    return this.httpClient.put<boolean>(this.ticketBaseUri + '/checkout', null);
   }
-  */
 
   private defaultServiceErrorHandling(error: any) {
     console.log(error);

@@ -24,11 +24,11 @@ public interface TicketService {
     Ticket cancel(Long id);
 
     /**
-     * Gets all tickets in the cart of a User.
+     * Gets all tickets of a user with the given status.
      *
      * @return list of tickets.
      */
-    List<Ticket> getCartTickets();
+    List<Ticket> getTickets(Ticket.Status status);
 
     /**
      * Updates the seats of a ticket with the given id.
@@ -50,4 +50,11 @@ public interface TicketService {
      * Deletes all tickets in the cart that are to old.
      */
     void pruneTicketsInCart();
+
+    /**
+     * Adds all the tickets in the users cart to a order entity and changes their status to PAID_FOR.
+     *
+     * @return true if successfully
+     */
+    boolean checkout();
 }

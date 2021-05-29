@@ -21,10 +21,16 @@
 			<app-cart-item [i]="i"></app-cart-item>
 		</div>
 	</div>
+	<div *ngIf="error" class="col-12 alert alert-danger alert-dismissible fade show" role="alert">
+		<strong>Error! </strong> {{ errorMessage }}
+		<button type="button" (click)="vanishAlert()" class="close" data-dismiss="alert" aria-label="Close">
+		<span aria-hidden="true">&times;</span>
+		</button>
+	</div>
 	<div class="totals">
 		<div class="subtotal">
 			<span class="label">Total: </span> <span class="amount">{{this.ticketService.total | currency:"EUR"}}</span>
 		</div>
 	</div>
-	<button class="primary">Checkout</button>
+	<button class="primary" (click)="checkout()">Checkout</button>
 </div>
