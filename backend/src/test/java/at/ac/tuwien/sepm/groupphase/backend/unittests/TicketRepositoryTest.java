@@ -1,5 +1,4 @@
 package at.ac.tuwien.sepm.groupphase.backend.unittests;
-
 import at.ac.tuwien.sepm.groupphase.backend.basetest.TestDataEvent;
 import at.ac.tuwien.sepm.groupphase.backend.basetest.TestDataTicket;
 import at.ac.tuwien.sepm.groupphase.backend.basetest.TestDataUser;
@@ -28,17 +27,13 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 @DataJpaTest
 @ActiveProfiles("test")
 @AutoConfigureMockMvc
-public class TicketRepositoryTest implements TestDataEvent, TestDataTicket, TestDataUser {
+public class TicketRepositoryTest implements TestDataTicket, TestDataEvent, TestDataUser {
 
     @Autowired
     private TicketRepository ticketRepository;
 
     @Autowired
-    private TicketTypeRepository ticketTypeRepository;
-
-    @Autowired
     private PerformanceRepository performanceRepository;
-
     @Autowired
     private ArtistRepository artistRepository;
 
@@ -119,7 +114,7 @@ public class TicketRepositoryTest implements TestDataEvent, TestDataTicket, Test
     }
 
     @AfterEach
-    public void afterEach() {
+    public void afterEach () {
         ticketRepository.deleteAll();
         performanceRepository.deleteAll();
         userRepository.deleteAll();
@@ -127,18 +122,17 @@ public class TicketRepositoryTest implements TestDataEvent, TestDataTicket, Test
         addressRepository.deleteAll();
     }
 
-     @Test
-     @DisplayName("Should return correct entity back after create")
-     public void whenCreateNew_thenGetCorrectEntityBack() {
-         Ticket newTicket = ticketRepository.save(ticket);
-         assertAll(
-             () -> assertNotNull(ticket.getId()),
-             () -> assertEquals(newTicket.getOwner(), ticket.getOwner()),
-             () -> assertEquals(newTicket.getPerformance(), ticket.getPerformance()),
-             () -> assertEquals(newTicket.getSeats(), ticket.getSeats()),
-             () -> assertEquals(newTicket.getTicketType(), ticket.getTicketType()),
-             () -> assertEquals(newTicket.getStatus(), ticket.getStatus())
-         );
-     }
-
+    @Test
+    @DisplayName("Should return correct entity back after create")
+    public void whenCreateNew_thenGetCorrectEntityBack () {
+        Ticket newTicket = ticketRepository.save(ticket);
+        assertAll(
+            () -> assertNotNull(ticket.getId()),
+            () -> assertEquals(newTicket.getOwner(), ticket.getOwner()),
+            () -> assertEquals(newTicket.getPerformance(), ticket.getPerformance()),
+            () -> assertEquals(newTicket.getSeats(), ticket.getSeats()),
+            () -> assertEquals(newTicket.getTicketType(), ticket.getTicketType()),
+            () -> assertEquals(newTicket.getStatus(), ticket.getStatus())
+        );
+    }
 }

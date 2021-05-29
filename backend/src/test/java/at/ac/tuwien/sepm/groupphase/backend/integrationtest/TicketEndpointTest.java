@@ -4,15 +4,13 @@ import at.ac.tuwien.sepm.groupphase.backend.basetest.TestAuthentification;
 import at.ac.tuwien.sepm.groupphase.backend.basetest.TestDataArtist;
 import at.ac.tuwien.sepm.groupphase.backend.basetest.TestDataEvent;
 import at.ac.tuwien.sepm.groupphase.backend.basetest.TestDataTicket;
+import at.ac.tuwien.sepm.groupphase.backend.basetest.TestDataUser;
 import at.ac.tuwien.sepm.groupphase.backend.config.properties.SecurityProperties;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.NewsDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.TicketDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.TicketUpdateDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.PerformanceMapper;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.SectorTypeMapper;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.TicketMapper;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.TicketTypeMapper;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.UserMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Address;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Artist;
@@ -55,7 +53,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 @SpringBootTest
 @ActiveProfiles("test")
 @AutoConfigureMockMvc
-public class TicketEndpointTest implements TestAuthentification, TestDataTicket, TestDataEvent, TestDataArtist {
+public class TicketEndpointTest implements TestAuthentification, TestDataTicket, TestDataEvent, TestDataUser {
 
     @Autowired
     private MockMvc mockMvc;
@@ -96,16 +94,10 @@ public class TicketEndpointTest implements TestAuthentification, TestDataTicket,
     // Mappers
 
     @Autowired
-    private TicketMapper ticketMapper;
-
-    @Autowired
     private TicketTypeMapper ticketTypeMapper;
 
     @Autowired
     private SectorTypeMapper sectorTypeMapper;
-
-    @Autowired
-    private UserMapper userMapper;
 
     @Autowired
     private PerformanceMapper performanceMapper;

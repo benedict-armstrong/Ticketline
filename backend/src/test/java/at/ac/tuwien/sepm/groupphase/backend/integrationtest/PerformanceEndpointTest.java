@@ -126,7 +126,7 @@ public class PerformanceEndpointTest implements TestDataEvent, TestAuthentificat
     @DisplayName("Should return 201 and performance object with set ID")
     public void whenCreatePerformance_then201AndPerformanceWithId() throws Exception {
         MvcResult mvcResult = this.mockMvc.perform(
-            post(TestDataEvent.PEFORMANCE_BASE_URI)
+            post(TestDataEvent.PERFORMANCE_BASE_URI)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(performance))
                 .header(securityProperties.getAuthHeader(), authToken)
@@ -156,7 +156,7 @@ public class PerformanceEndpointTest implements TestDataEvent, TestAuthentificat
             .build();
 
         MvcResult mvcResult = this.mockMvc.perform(
-            post(TestDataEvent.PEFORMANCE_BASE_URI)
+            post(TestDataEvent.PERFORMANCE_BASE_URI)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(invalidPerformance))
                 .header(securityProperties.getAuthHeader(), authToken)
@@ -179,7 +179,7 @@ public class PerformanceEndpointTest implements TestDataEvent, TestAuthentificat
             .build();
 
         MvcResult mvcResult = this.mockMvc.perform(
-            post(TestDataEvent.PEFORMANCE_BASE_URI)
+            post(TestDataEvent.PERFORMANCE_BASE_URI)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(invalidPerformance))
         ).andReturn();
