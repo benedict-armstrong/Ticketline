@@ -94,7 +94,7 @@ export class TicketService {
     this.error = true;
     if (typeof error.error === 'object') {
       if (error.error.error === '' || error.error.error === null || error.error.error === undefined) {
-        this.errorMessage = 'The server did not respond.'
+        this.errorMessage = 'The server did not respond.';
       } else {
         this.errorMessage = error.error.error;
       }

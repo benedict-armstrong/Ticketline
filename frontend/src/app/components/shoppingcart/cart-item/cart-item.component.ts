@@ -14,7 +14,7 @@ export class CartItemComponent implements OnInit {
   cartItemForm: FormGroup;
 
   public success = false;
-  public error = false
+  public error = false;
   public errorMessage = '';
   public waiting = false;
 
@@ -63,7 +63,7 @@ export class CartItemComponent implements OnInit {
   updateAmount(i: number, amount: number) {
     this.waiting = true;
     this.vanishAlert();
-    let oldAmount = this.ticketService.cart[i].seats[0];
+    const oldAmount = this.ticketService.cart[i].seats[0];
     this.ticketService.updateAmount({id: this.ticketService.cart[i].id, seats: [amount]}).subscribe(
       (responseTicket: TicketUpdate) => {
         this.waiting = false;
