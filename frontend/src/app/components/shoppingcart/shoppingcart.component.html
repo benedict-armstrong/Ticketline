@@ -8,6 +8,15 @@
 		</div>
 	</div>
 	<div class="products">
+		<div *ngIf="this.ticketService.loading" class="loading">
+			<app-loading-animation></app-loading-animation>
+		</div>
+		<div *ngIf="this.ticketService.error" class="col-12 alert alert-danger alert-dismissible fade show" role="alert">
+			<strong>Error! </strong> {{ this.ticketService.errorMessage }}
+			<button type="button" (click)="this.ticketService.reload()" class="close" data-dismiss="alert" aria-label="Close">
+				<span aria-hidden="true">&times;</span>
+			</button>
+		</div>
 		<div *ngFor="let item of ticketService.cart; index as i;">
 			<app-cart-item [i]="i"></app-cart-item>
 		</div>
