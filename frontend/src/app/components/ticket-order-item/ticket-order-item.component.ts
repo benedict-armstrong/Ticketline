@@ -1,5 +1,5 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {Order} from '../../dtos/order';
+import {TicketGroup} from '../../dtos/ticketGroup';
 import {Ticket} from '../../dtos/ticket';
 
 @Component({
@@ -8,7 +8,7 @@ import {Ticket} from '../../dtos/ticket';
   styleUrls: ['./ticket-order-item.component.scss']
 })
 export class TicketOrderItemComponent implements OnInit {
-  item: Order;
+  item: TicketGroup;
   tickets: Ticket[];
   eventType = 'Cinema';
   test: number[];
@@ -17,7 +17,7 @@ export class TicketOrderItemComponent implements OnInit {
   startTime = '29th of April, 20:00';
   old = false;
 
-  @Input() set ticketItem(item: Order) {
+  @Input() set ticketItem(item: TicketGroup) {
     this.item = item;
     this.tickets = item.tickets;
 
