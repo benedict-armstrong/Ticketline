@@ -6,12 +6,12 @@ import org.mapstruct.Mapper;
 
 import java.util.List;
 
-@Mapper(uses = {TicketMapper.class, UserMapper.class})
+@Mapper(uses = {TicketMapper.class, UserMapper.class, FileMapper.class})
 public interface BookingMapper {
 
     BookingDto bookingToBookingDto(Booking booking);
 
-    Booking bookingDtoDtoToBooking(BookingDto bookingDto);
+    Booking bookingDtoToBooking(BookingDto bookingDto);
 
     List<BookingDto> bookingListToBookingDtoList(List<Booking> booking);
 }

@@ -10,7 +10,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -52,6 +51,9 @@ public class MapperTest implements TestDataMapper {
 
     @Autowired
     private TicketMapper ticketMapper;
+
+    @Autowired
+    private BookingMapper bookingMapper;
 
 
     @Test
@@ -131,8 +133,8 @@ public class MapperTest implements TestDataMapper {
         assertNull(ticketMapper.ticketDtoToTicket(null));
         assertNull(ticketMapper.ticketListToTicketDtoList(null));
         assertNull(ticketMapper.ticketDtoListToTicketList(null));
-        assertNull(ticketMapper.ticketArrayToTicketSet(null));
-        assertNull(ticketMapper.ticketSetToTicketArray(null));
+        assertNull(ticketMapper.ticketDtoArrayToTicketSet (null));
+        assertNull(ticketMapper.ticketSetToTicketDtoArray(null));
     }
 
     @Test
@@ -147,5 +149,13 @@ public class MapperTest implements TestDataMapper {
     public void sectorTypeMapper() {
         assertNull(sectorTypeMapper.sectorTypeToSectorTypeDto(null));
         assertNull(sectorTypeMapper.sectorTypeDtoToSectorType(null));
+    }
+
+    @Test
+    @DisplayName("Testing booking mapper")
+    public void bookingMapper() {
+        assertNull(bookingMapper.bookingDtoToBooking(null));
+        assertNull(bookingMapper.bookingToBookingDto(null));
+        assertNull(bookingMapper.bookingListToBookingDtoList(null));
     }
 }

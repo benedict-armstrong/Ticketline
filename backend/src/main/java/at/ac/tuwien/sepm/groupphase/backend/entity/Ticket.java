@@ -1,6 +1,11 @@
 package at.ac.tuwien.sepm.groupphase.backend.entity;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
+
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;

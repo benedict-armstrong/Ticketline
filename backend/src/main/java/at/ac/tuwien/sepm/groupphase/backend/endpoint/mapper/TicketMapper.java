@@ -18,7 +18,7 @@ public interface TicketMapper {
 
     Ticket ticketDtoToTicket(TicketDto ticketDto);
 
-    Ticket[] ticketSetToTicketArray(Set<Ticket> set);
+    TicketDto[] ticketSetToTicketDtoArray(Set<Ticket> set);
 
-    Set<Ticket> ticketArrayToTicketSet(Ticket[] ticketArray);
+    Set<Ticket> ticketDtoArrayToTicketSet(TicketDto[] ticketArray);
 }

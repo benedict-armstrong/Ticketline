@@ -1,20 +1,20 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint;
 
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.BookingDto;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.TicketDto;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.TicketUpdateDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.BookingMapper;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.TicketMapper;
-import at.ac.tuwien.sepm.groupphase.backend.entity.Ticket;
 import at.ac.tuwien.sepm.groupphase.backend.service.BookingService;
-import at.ac.tuwien.sepm.groupphase.backend.service.TicketService;
 import io.swagger.v3.oas.annotations.Operation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.annotation.Secured;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 
 import java.lang.invoke.MethodHandles;
 import java.util.List;
@@ -48,6 +48,6 @@ public class BookingEndpoint {
     @Operation(summary = "Create a booking for the user")
     public BookingDto createCartTicket(@RequestBody BookingDto booking) {
         LOGGER.info("POST /api/v1/bookings {}", booking);
-        return bookingMapper.bookingToBookingDto(bookingService.save(bookingMapper.bookingDtoDtoToBooking(booking)));
+        return bookingMapper.bookingToBookingDto(bookingService.save(bookingMapper.bookingDtoToBooking(booking)));
     }
 }

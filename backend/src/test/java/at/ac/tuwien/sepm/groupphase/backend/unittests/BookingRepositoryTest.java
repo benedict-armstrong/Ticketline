@@ -110,25 +110,27 @@ public class BookingRepositoryTest implements TestDataTicket, TestDataEvent, Tes
             .updateDate(LocalDateTime.now())
             .build();
 
-        ticketRepository.save(ticket);
+        ticket = ticketRepository.save(ticket);
 
         Set<Ticket> tickets = new HashSet<>();
+        tickets.add(ticket);
 
         booking = Booking.builder()
             .buyDate(LocalDateTime.now())
             .user(user)
             .tickets(tickets)
+            .invoice(null)
             .build();
     }
 
     @AfterEach
     public void afterEach () {
+        bookingRepository.deleteAll();
         ticketRepository.deleteAll();
         performanceRepository.deleteAll();
         userRepository.deleteAll();
         artistRepository.deleteAll();
         addressRepository.deleteAll();
-        bookingRepository.deleteAll();
     }
 
 
@@ -140,7 +142,8 @@ public class BookingRepositoryTest implements TestDataTicket, TestDataEvent, Tes
             () -> assertNotNull(booking.getId()),
             () -> assertEquals(newBooking.getBuyDate(), booking.getBuyDate()),
             () -> assertEquals(newBooking.getUser(), booking.getUser()),
-            () -> assertEquals(newBooking.getTickets(), booking.getTickets())
+            () -> assertEquals(newBooking.getTickets(), booking.getTickets()),
+            () -> assertEquals(newBooking.getInvoice(), booking.getInvoice())
         );
     }
 }

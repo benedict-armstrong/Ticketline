@@ -41,6 +41,7 @@ public class BookingServiceImpl implements BookingService {
             userRepository.findUserByEmail((String) authenticationFacade.getAuthentication().getPrincipal())
         );
         booking.setBuyDate(LocalDateTime.now());
+        booking.setInvoice(null);
 
         return bookingRepository.save(booking);
     }
