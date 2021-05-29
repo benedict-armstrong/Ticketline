@@ -14,6 +14,7 @@ export class PerformanceSearchComponent implements OnInit {
 
   @Output() searchedPerformances = new EventEmitter<Performance[]>();
   @Output() searchedNoPerformance = new EventEmitter<any>();
+  @Output() searchedEventPerformance = new EventEmitter<any>();
 
   // Error flag
   error = false;
@@ -76,7 +77,7 @@ export class PerformanceSearchComponent implements OnInit {
           }
         }
 
-        this.performanceService.searchPerformances(this.page, this.size, date, this.selectedEvent).subscribe(
+        this.performanceService.searchPerformances(this.page, this.size, date, this.selectedEvent.id).subscribe(
           response => {
             console.log(response);
             this.performances.push(...response);
@@ -90,6 +91,11 @@ export class PerformanceSearchComponent implements OnInit {
 
             this.searchedPerformances.emit(this.performances);
             this.searchedNoPerformance.emit(this.noPerformance);
+            if (this.selectedEvent) {
+              this.searchedEventPerformance.emit(this.selectedEvent);
+            } else {
+              this.searchedEventPerformance.emit(undefined);
+            }
           }, error => {
             console.error(error);
           }
@@ -105,8 +111,8 @@ export class PerformanceSearchComponent implements OnInit {
     this.size = 8;
   }
 
-  setSelectedEvent(event: number){
-    this.selectedEvent = event;
+  setSelectedEvent(event: Event){
+    this.selectedEvent = event[0];
   }
 
 }

@@ -10,7 +10,7 @@
     <button type="button" class="col-sm-3 primary moreEvents" *ngIf="!this.noEvent" (click)="loadMoreEvents()">Load more events</button>
     <div class="col-sm-9" *ngIf="events">
         <select class="form-select eventSelector" size="8" multiple name="selectedEvent" id="filterEvents" (change)="eventSelected()" formControlName="selectedEvent">
-            <option *ngFor="let event of filteredEvents" value="{{event.id}}" >{{event.name}}</option>
+            <option *ngFor="let event of filteredEvents" [ngValue]="event" >{{event.name}}</option>
         </select>
     </div>
     </div>

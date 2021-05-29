@@ -63,7 +63,6 @@ export class SearchEventListComponent implements OnInit {
 
   loadMoreEvents() {
       this.getEvents();
-      this.filterEvents();
   }
 
   getEvents(){
@@ -80,6 +79,9 @@ export class SearchEventListComponent implements OnInit {
           this.noEvent = false;
         }
 
+        if (this.eventSearchForm.value.eventName) {
+          this.filterEvents();
+        }
       }, error => {
         console.error(error);
       }

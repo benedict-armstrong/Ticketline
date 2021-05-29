@@ -27,6 +27,7 @@ export class SearchResultComponent implements OnInit {
   artistSearched = false;
   addressSearched = false;
   performanceSearched = false;
+  eventPerformance = null;
   search = false;
 
   constructor(private eventService: ApplicationEventService) { }
@@ -122,5 +123,9 @@ export class SearchResultComponent implements OnInit {
         document.getElementById(name).classList.add('secondary');
       }
     }
+  }
+
+  setSearchedEventPerformance(event: Event){
+    this.eventPerformance = event;
   }
 }
