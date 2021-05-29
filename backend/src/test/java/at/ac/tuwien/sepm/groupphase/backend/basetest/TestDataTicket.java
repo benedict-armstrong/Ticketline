@@ -4,13 +4,17 @@ import at.ac.tuwien.sepm.groupphase.backend.entity.SectorType;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Ticket;
 import at.ac.tuwien.sepm.groupphase.backend.entity.TicketType;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 public interface TestDataTicket extends TestData {
 
     String TICKET_BASE_URI = BASE_URI + "/tickets";
+
+    List<Long> TICKET_SEATS = new ArrayList<>(
+        Arrays.asList(10L)
+    );
+
+    Ticket.Status TICKET_STATUS_IN_CART = Ticket.Status.IN_CART;
 
     SectorType STANDARD_SECTOR_TYPE = SectorType.builder().name("Test").numberOfTickets(10).build();
 
@@ -30,24 +34,29 @@ public interface TestDataTicket extends TestData {
         .price(0.85)
         .build();
 
-    Ticket STANDARD_TICKET = Ticket.builder()
-        .seats(Arrays.asList(1L, 5L, 6L))
-        .ticketType(STANDARD_TICKET_TYPE)
-        .build();
-    Ticket VIP_TICKET = Ticket.builder()
-        .seats(Arrays.asList(1L, 5L, 6L))
-        .ticketType(VIP_TICKET_TYPE)
-        .build();
-    Ticket DISCOUNT_TICKET = Ticket.builder()
-        .seats(Arrays.asList(1L, 5L, 6L))
-        .ticketType(DISCOUNT_TICKET_TYPE)
-        .build();
+    static Set<SectorType> getSectorTypes() {
+        Set<SectorType> set = new HashSet<>();
+        set.add(SectorType.builder().name("Test").numberOfTickets(10).build());
+        return set;
+    }
 
     static Set<TicketType> getTicketTypes() {
         Set<TicketType> set = new HashSet<>();
-        set.add(STANDARD_TICKET_TYPE);
-        set.add(VIP_TICKET_TYPE);
-        set.add(DISCOUNT_TICKET_TYPE);
+        set.add(TicketType.builder()
+            .title("Standard")
+            .sectorType(STANDARD_SECTOR_TYPE)
+            .price(1.0)
+            .build());
+        set.add(TicketType.builder()
+            .title("VIP")
+            .sectorType(STANDARD_SECTOR_TYPE)
+            .price(2.33)
+            .build());
+        set.add(TicketType.builder()
+            .title("Discount")
+            .sectorType(STANDARD_SECTOR_TYPE)
+            .price(0.85)
+            .build());
         return set;
     }
 

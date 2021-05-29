@@ -3,7 +3,6 @@ package at.ac.tuwien.sepm.groupphase.backend.endpoint;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.TicketDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.TicketUpdateDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.TicketMapper;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.TicketStatusMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Ticket;
 import at.ac.tuwien.sepm.groupphase.backend.service.TicketService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -31,14 +30,11 @@ public class TicketEndpoint {
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final TicketService ticketService;
     private final TicketMapper ticketMapper;
-    private final TicketStatusMapper ticketStatusMapper;
 
     @Autowired
-    public TicketEndpoint(TicketService ticketService, TicketMapper ticketMapper,
-                          TicketStatusMapper ticketStatusMapper) {
+    public TicketEndpoint(TicketService ticketService, TicketMapper ticketMapper) {
         this.ticketService = ticketService;
         this.ticketMapper = ticketMapper;
-        this.ticketStatusMapper = ticketStatusMapper;
     }
 
     @GetMapping("/cart")
@@ -70,12 +66,12 @@ public class TicketEndpoint {
         return ticketService.updateSeats(ticketUpdate);
     }
 
-    @PutMapping(path = "/{id}")
+    @PutMapping(path = "/{id}/cancel")
     @Secured({"ROLE_USER", "ROLE_ORGANIZER", "ROLE_ADMIN"})
-    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "Cancel a ticket")
     public TicketDto cancelTicket(@PathVariable Long id) {
-        LOGGER.info("POST /api/v1/tickets/{}", id);
+        LOGGER.info("POST /api/v1/tickets/{}/cancel", id);
         return ticketMapper.ticketToTicketDto(ticketService.cancel(id));
     }
 

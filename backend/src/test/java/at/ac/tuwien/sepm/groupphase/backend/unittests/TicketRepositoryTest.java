@@ -3,16 +3,9 @@ package at.ac.tuwien.sepm.groupphase.backend.unittests;
 import at.ac.tuwien.sepm.groupphase.backend.basetest.TestDataEvent;
 import at.ac.tuwien.sepm.groupphase.backend.basetest.TestDataTicket;
 import at.ac.tuwien.sepm.groupphase.backend.basetest.TestDataUser;
-import at.ac.tuwien.sepm.groupphase.backend.entity.Address;
-import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
-import at.ac.tuwien.sepm.groupphase.backend.entity.Event;
-import at.ac.tuwien.sepm.groupphase.backend.entity.Performance;
-import at.ac.tuwien.sepm.groupphase.backend.entity.SectorType;
-import at.ac.tuwien.sepm.groupphase.backend.entity.Ticket;
-import at.ac.tuwien.sepm.groupphase.backend.repository.EventRepository;
-import at.ac.tuwien.sepm.groupphase.backend.repository.TicketRepository;
-import at.ac.tuwien.sepm.groupphase.backend.repository.TicketTypeRepository;
-import at.ac.tuwien.sepm.groupphase.backend.repository.UserRepository;
+import at.ac.tuwien.sepm.groupphase.backend.entity.*;
+import at.ac.tuwien.sepm.groupphase.backend.repository.*;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -22,6 +15,10 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+
+import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -40,82 +37,108 @@ public class TicketRepositoryTest implements TestDataEvent, TestDataTicket, Test
     private TicketTypeRepository ticketTypeRepository;
 
     @Autowired
-    private EventRepository performanceRepository;
+    private PerformanceRepository performanceRepository;
+
+    @Autowired
+    private ArtistRepository artistRepository;
+
+    @Autowired
+    private AddressRepository addressRepository;
 
     @Autowired
     private UserRepository userRepository;
 
-    private final Ticket template = STANDARD_TICKET;
-    //    private final Performance performance = Performance.builder()
-    //        .title(TEST_EVENT_TITLE)
-    //        .description(TEST_EVENT_DESCRIPTION)
-    //        .date(TEST_EVENT_DATE_FUTURE)
-    //        .duration(TEST_EVENT_DURATION)
-    //        .eventType(TEST_EVENT_EVENT_TYPE)
-    //        .artist(TestDataEvent.getTestEventArtist())
-    //        .location(TestDataEvent.getTestEventLocation())
-    //        .sectorTypes(TestDataEvent.getTestEventSectortypes())
-    //        .build();
-    private final Address address = Address.builder()
-        .name("Max Mustermann")
-        .lineOne("Teststraße 2")
-        .city("Wien")
-        .postcode("1010")
-        .country("Österreich")
-        .build();
-    private final ApplicationUser user = ApplicationUser.builder()
-        .firstName(ADMIN_FIRST_NAME)
-        .lastName(ADMIN_LAST_NAME)
-        .email(ADMIN_EMAIL)
-        .lastLogin(ADMIN_LAST_LOGIN)
-        .role(ADMIN_ROLE)
-        .status(ADMIN_USER_STATUS)
-        .password(ADMIN_PASSWORD)
-        .points(ADMIN_POINTS)
-        .address(address)
-        .telephoneNumber(ADMIN_PHONE_NUMBER)
-        .build();
+    private Ticket ticket;
 
     @BeforeEach
     public void beforeEach() throws Exception {
-        ticketRepository.deleteAll();
-        ticketTypeRepository.deleteAll();
-        performanceRepository.deleteAll();
-        userRepository.deleteAll();
+        Address address = Address.builder()
+            .name("Max Mustermann")
+            .lineOne("Teststraße 2")
+            .city("Wien")
+            .postcode("1010")
+            .country("Österreich")
+            .eventLocation(true)
+            .build();
+        Artist artist = Artist.builder().firstName("Test").lastName("Test2").build();
 
-        ApplicationUser savedUser = userRepository.save(user);
-        user.setId(savedUser.getId());
+        address = addressRepository.save(address);
+        artist = artistRepository.save(artist);
 
-        ticketTypeRepository.save(STANDARD_TICKET_TYPE);
+        SectorType sectorType = SectorType.builder().name("Test").numberOfTickets(10).build();
+        TicketType ticketType = TicketType.builder().title("Test").price(10).sectorType(sectorType).build();
 
-        //        Event savedPerformance = performanceRepository.save(performance);
-        //        SectorType sectorType = (SectorType) savedPerformance.getSectorTypes().toArray()[0];
-        //        sectorType.setPrice(100L);
+        Set<SectorType> sectorTypeSet = new HashSet<>();
+        sectorTypeSet.add(sectorType);
 
-        //        template.setSectorType(sectorType);
-        template.setOwner(savedUser);
-        //        template.setPerformance(savedPerformance);
-        template.setStatus(Ticket.Status.PAID_FOR);
+        Set<TicketType> ticketTypeSet = new HashSet<>();
+        ticketTypeSet.add(ticketType);
+
+        Performance performance = Performance.builder()
+            .title(TEST_EVENT_PERFORMANCE_TITLE)
+            .description(TEST_EVENT_PERFORMANCE_DESCRIPTION)
+            .date(LocalDateTime.now())
+            .artist(artist)
+            .location(address)
+            .ticketTypes(ticketTypeSet)
+            .sectorTypes(sectorTypeSet)
+            .build();
+
+        performanceRepository.save(performance);
+
+        ApplicationUser user = ApplicationUser.builder()
+            .firstName(ADMIN_FIRST_NAME)
+            .lastName(ADMIN_LAST_NAME)
+            .email(ADMIN_EMAIL)
+            .lastLogin(ADMIN_LAST_LOGIN)
+            .role(ADMIN_ROLE)
+            .status(ADMIN_USER_STATUS)
+            .password(ADMIN_PASSWORD)
+            .points(ADMIN_POINTS)
+            .address(Address.builder()
+                .name("Max Mustermann")
+                .lineOne("Teststraße 2")
+                .city("Wien")
+                .postcode("1010")
+                .country("Österreich")
+                .eventLocation(false)
+                .build())
+            .telephoneNumber(ADMIN_PHONE_NUMBER)
+            .build();
+
+        user = userRepository.save(user);
+
+        ticket = Ticket.builder()
+            .ticketType(ticketType)
+            .seats(TICKET_SEATS)
+            .owner(user)
+            .performance(performance)
+            .status(TICKET_STATUS_IN_CART)
+            .updateDate(LocalDateTime.now())
+            .build();
     }
 
-//    @Test
-//    @DisplayName("Should return correct entity back after create")
-//    public void whenCreateNew_thenGetCorrectEntityBack() {
-//        Long templatePrice = (long) Math.floor(100 * template.getTicketType().getPriceMultiplier()
-//            * template.getSectorType().getPrice() * template.getSeats().size());
-//        template.setTotalPrice(templatePrice);
-//
-//        Ticket ticket = ticketRepository.save(template);
-//        assertAll(
-//            () -> assertNotNull(ticket.getId()),
-//            () -> assertEquals(template.getOwner(), ticket.getOwner()),
-//            () -> assertEquals(template.getPerformance(), ticket.getPerformance()),
-//            () -> assertEquals(template.getSectorType(), ticket.getSectorType()),
-//            () -> assertEquals(template.getSeats(), ticket.getSeats()),
-//            () -> assertEquals(template.getTicketType(), ticket.getTicketType()),
-//            () -> assertEquals(templatePrice, ticket.getTotalPrice()),
-//            () -> assertEquals(template.getStatus(), ticket.getStatus())
-//        );
-//    }
+    @AfterEach
+    public void afterEach() {
+        ticketRepository.deleteAll();
+        performanceRepository.deleteAll();
+        userRepository.deleteAll();
+        artistRepository.deleteAll();
+        addressRepository.deleteAll();
+    }
+
+     @Test
+     @DisplayName("Should return correct entity back after create")
+     public void whenCreateNew_thenGetCorrectEntityBack() {
+         Ticket newTicket = ticketRepository.save(ticket);
+         assertAll(
+             () -> assertNotNull(ticket.getId()),
+             () -> assertEquals(newTicket.getOwner(), ticket.getOwner()),
+             () -> assertEquals(newTicket.getPerformance(), ticket.getPerformance()),
+             () -> assertEquals(newTicket.getSeats(), ticket.getSeats()),
+             () -> assertEquals(newTicket.getTicketType(), ticket.getTicketType()),
+             () -> assertEquals(newTicket.getStatus(), ticket.getStatus())
+         );
+     }
 
 }
