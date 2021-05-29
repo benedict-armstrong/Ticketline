@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
@@ -44,7 +45,13 @@ public class MapperTest implements TestDataMapper {
     private SectorTypeMapper sectorTypeMapper;
 
     @Autowired
+    private TicketTypeMapper ticketTypeMapper;
+
+    @Autowired
     private UserMapper userMapper;
+
+    @Autowired
+    private TicketMapper ticketMapper;
 
 
     @Test
@@ -115,5 +122,30 @@ public class MapperTest implements TestDataMapper {
     public void userMapper() {
         assertEquals(USER_ENTITY, userMapper.userDtoToApplicationUser(USER_DTO));
         assertEquals(USER_DTO, userMapper.applicationUserToUserDto(USER_ENTITY));
+    }
+
+    @Test
+    @DisplayName("Testing ticket mapper")
+    public void ticketMapper() {
+        assertNull(ticketMapper.ticketToTicketDto(null));
+        assertNull(ticketMapper.ticketDtoToTicket(null));
+        assertNull(ticketMapper.ticketListToTicketDtoList(null));
+        assertNull(ticketMapper.ticketDtoListToTicketList(null));
+        assertNull(ticketMapper.ticketArrayToTicketSet(null));
+        assertNull(ticketMapper.ticketSetToTicketArray(null));
+    }
+
+    @Test
+    @DisplayName("Testing ticketType mapper")
+    public void ticketTypeMapper() {
+        assertNull(ticketTypeMapper.ticketTypeToTicketTypeDto(null));
+        assertNull(ticketTypeMapper.ticketTypeDtoToTicketType(null));
+    }
+
+    @Test
+    @DisplayName("Testing sectorType mapper")
+    public void sectorTypeMapper() {
+        assertNull(sectorTypeMapper.sectorTypeToSectorTypeDto(null));
+        assertNull(sectorTypeMapper.sectorTypeDtoToSectorType(null));
     }
 }

@@ -76,10 +76,9 @@ public class TicketServiceImpl implements TicketService {
     }
 
     @Override
-    public List<Ticket> getCartTickets() {
-        LOGGER.trace("getCartTickets()");
+    public List<Ticket> getTickets(Ticket.Status status) {
+        LOGGER.trace("getTickets({})", status);
         ApplicationUser user = userRepository.findUserByEmail((String) authenticationFacade.getAuthentication().getPrincipal());
-        Ticket.Status status = Ticket.Status.IN_CART;
         return ticketRepository.findByOwnerAndStatus(user, status);
     }
 
@@ -126,6 +125,22 @@ public class TicketServiceImpl implements TicketService {
             LOGGER.info("Deleting {} stale tickets from carts", toBeDeleted.size());
         }
         ticketRepository.deleteAll(toBeDeleted);
+    }
+
+    @Override
+    public boolean checkout() {
+        LOGGER.trace("checkout()");
+        ApplicationUser user = userRepository.findUserByEmail((String) authenticationFacade.getAuthentication().getPrincipal());
+        List<Ticket> tickets = ticketRepository.findByOwnerAndStatus(user, Ticket.Status.IN_CART);
+        if (tickets.size() > 0) {
+            for (Ticket ticket : tickets) {
+                ticket.setStatus(Ticket.Status.PAID_FOR);
+            }
+            ticketRepository.saveAll(tickets);
+            return true;
+        } else {
+            return false;
+        }
     }
 
     private Long ticketsInUse(Performance performance, SectorType sectorType) {

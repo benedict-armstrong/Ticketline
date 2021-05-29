@@ -41,9 +41,9 @@ public class TicketEndpoint {
     @Secured({"ROLE_USER", "ROLE_ORGANIZER", "ROLE_ADMIN"})
     @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "Get tickets from user cart")
-    public List<TicketDto> getTickets() {
+    public List<TicketDto> getCartTickets() {
         LOGGER.info("GET /api/v1/tickets/cart");
-        return ticketMapper.ticketListToTicketDtoList(ticketService.getCartTickets());
+        return ticketMapper.ticketListToTicketDtoList(ticketService.getTickets(Ticket.Status.IN_CART));
     }
 
     @PostMapping("/cart")
@@ -66,6 +66,15 @@ public class TicketEndpoint {
         return ticketService.updateSeats(ticketUpdate);
     }
 
+    @PutMapping("/checkout")
+    @Secured({"ROLE_USER", "ROLE_ORGANIZER", "ROLE_ADMIN"})
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(summary = "Buys ticket from cart")
+    public boolean checkout() {
+        LOGGER.info("PUT /api/v1/tickets/checkout");
+        return ticketService.checkout();
+    }
+
     @PutMapping(path = "/{id}/cancel")
     @Secured({"ROLE_USER", "ROLE_ORGANIZER", "ROLE_ADMIN"})
     @ResponseStatus(HttpStatus.OK)
@@ -84,5 +93,12 @@ public class TicketEndpoint {
         return ticketService.delete(id);
     }
 
-
+    @GetMapping("/paid")
+    @Secured({"ROLE_USER", "ROLE_ORGANIZER", "ROLE_ADMIN"})
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(summary = "Get tickets from user that have been paid for")
+    public List<TicketDto> getPaidTickets() {
+        LOGGER.info("GET /api/v1/tickets/paid");
+        return ticketMapper.ticketListToTicketDtoList(ticketService.getTickets(Ticket.Status.PAID_FOR));
+    }
 }
