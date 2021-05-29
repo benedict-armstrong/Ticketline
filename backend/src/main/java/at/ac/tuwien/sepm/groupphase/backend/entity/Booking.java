@@ -27,38 +27,21 @@ import java.util.Set;
 @AllArgsConstructor
 @Builder
 @Entity
-public class Performance {
+public class Booking {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false)
-    private String title;
+    private LocalDateTime buyDate;
 
-    @Column(nullable = false)
-    private String description;
-
-    @Column(nullable = false)
-    private LocalDateTime date;
-
-    @ManyToOne(cascade = {CascadeType.MERGE}, optional = false)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
-    private Address location;
-
-    @ManyToOne(cascade = {CascadeType.MERGE}, optional = false)
-    @JoinColumn
-    @EqualsAndHashCode.Exclude
-    @ToString.Exclude
-    private Artist artist;
+    private ApplicationUser user;
 
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @NotNull
-    private Set<SectorType> sectorTypes = new HashSet<>();
-
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @NotNull
-    private Set<TicketType> ticketTypes = new HashSet<>();
-
+    private Set<Ticket> tickets = new HashSet<>();
 }
