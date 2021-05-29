@@ -19,12 +19,7 @@ import at.ac.tuwien.sepm.groupphase.backend.entity.Performance;
 import at.ac.tuwien.sepm.groupphase.backend.entity.SectorType;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Ticket;
 import at.ac.tuwien.sepm.groupphase.backend.entity.TicketType;
-import at.ac.tuwien.sepm.groupphase.backend.repository.AddressRepository;
-import at.ac.tuwien.sepm.groupphase.backend.repository.ArtistRepository;
-import at.ac.tuwien.sepm.groupphase.backend.repository.PerformanceRepository;
-import at.ac.tuwien.sepm.groupphase.backend.repository.TicketRepository;
-import at.ac.tuwien.sepm.groupphase.backend.repository.TicketTypeRepository;
-import at.ac.tuwien.sepm.groupphase.backend.repository.UserRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -81,7 +76,7 @@ public class TicketEndpointTest implements TestAuthentification, TestDataTicket,
     private TicketRepository ticketRepository;
 
     @Autowired
-    private TicketTypeRepository ticketTypeRepository;
+    private BookingRepository bookingRepository;
 
     @Autowired
     private PerformanceRepository performanceRepository;
@@ -172,6 +167,7 @@ public class TicketEndpointTest implements TestAuthentification, TestDataTicket,
 
     @AfterEach
     public void afterEach() {
+        bookingRepository.deleteAll();
         ticketRepository.deleteAll();
         userRepository.deleteAll();
         performanceRepository.deleteAll();
