@@ -38,6 +38,7 @@ import { AddressListItemComponent } from './components/search/address-list-item/
 import { LoadingAnimationComponent } from './components/loading-animation/loading-animation.component';
 import { AddTickettypeComponent } from './components/event/add-tickettype/add-tickettype.component';
 import {TicketOrderItemComponent} from './components/ticket-order-item/ticket-order-item.component';
+import {BookingComponent} from './components/booking/booking.component';
 
 @NgModule({
   declarations: [
@@ -73,7 +74,8 @@ import {TicketOrderItemComponent} from './components/ticket-order-item/ticket-or
     AddressListItemComponent,
     LoadingAnimationComponent,
     AddTickettypeComponent,
-    TicketOrderItemComponent
+    TicketOrderItemComponent,
+    BookingComponent
   ],
   imports: [
     BrowserModule,

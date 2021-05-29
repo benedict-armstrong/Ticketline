@@ -1,7 +1,7 @@
 <div class="user-home" *ngIf="this.user">
     <h3>Welcome Back {{this.user.firstName}}!</h3>
     <div class="user-booking cards">
-        <h3>Your Bookings</h3>
+        <h3>Your Tickets</h3>
         <div *ngIf="loading" class="col">
           <app-loading-animation></app-loading-animation>
         </div>
@@ -199,6 +199,17 @@
                             </div>
                             <button class="primary" type="submit">Change</button>
                         </form>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <div>
+                            <i class="bi bi-receipt-cutoff"></i>
+                            <h5 class="card-title">All Orders</h5>
+                        </div>
+                        <button class="primary" [routerLink]="['/orders']">View Orders</button>
                     </div>
                 </div>
             </div>

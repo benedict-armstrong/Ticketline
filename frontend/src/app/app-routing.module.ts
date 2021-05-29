@@ -14,6 +14,7 @@ import { AddUserComponent } from './components/add-user/add-user.component';
 import {AuthGuard} from './guards/auth.guard';
 import {AddEventComponent} from './components/event/add-event/add-event.component';
 import {PerformanceDetailComponent} from './components/performance-detail/performance-detail.component';
+import {BookingComponent} from './components/booking/booking.component';
 
 const routes: Routes = [
   { path: '', component: HomePageComponent },
@@ -28,7 +29,8 @@ const routes: Routes = [
   { path: 'ticket', component: TicketDetailComponent, canActivate: [AuthGuard], data: { roles: ['ADMIN', 'ORGANIZER', 'USER']} },
   { path: 'add-news/:id', component: AddNewsComponent, canActivate: [AuthGuard], data: { roles: ['ADMIN', 'ORGANIZER']} },
   { path: 'add-user', component: AddUserComponent, canActivate: [AuthGuard], data: { roles: ['ADMIN']} },
-  { path: 'add-event', component: AddEventComponent, canActivate: [AuthGuard], data: { roles: ['ADMIN', 'ORGANIZER']} }
+  { path: 'add-event', component: AddEventComponent, canActivate: [AuthGuard], data: { roles: ['ADMIN', 'ORGANIZER']} },
+  { path: 'orders', component: BookingComponent, canActivate: [AuthGuard], data: { roles: ['ADMIN', 'ORGANIZER', 'USER']} },
 ];
 
 @NgModule({
