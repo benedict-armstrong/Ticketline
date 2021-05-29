@@ -1,14 +1,12 @@
 package at.ac.tuwien.sepm.groupphase.backend.service.impl;
 
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.TicketUpdateDto;
-import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
-import at.ac.tuwien.sepm.groupphase.backend.entity.Performance;
-import at.ac.tuwien.sepm.groupphase.backend.entity.SectorType;
-import at.ac.tuwien.sepm.groupphase.backend.entity.Ticket;
+import at.ac.tuwien.sepm.groupphase.backend.entity.*;
 import at.ac.tuwien.sepm.groupphase.backend.exception.NoTicketLeftException;
 import at.ac.tuwien.sepm.groupphase.backend.repository.TicketRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepm.groupphase.backend.security.AuthenticationFacade;
+import at.ac.tuwien.sepm.groupphase.backend.service.BookingService;
 import at.ac.tuwien.sepm.groupphase.backend.service.TicketService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import java.lang.invoke.MethodHandles;
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.List;
 
 @Service
@@ -29,14 +28,17 @@ public class TicketServiceImpl implements TicketService {
     private final TicketRepository ticketRepository;
     private final UserRepository userRepository;
     private final AuthenticationFacade authenticationFacade;
+    private final BookingService bookingService;
 
     @Autowired
     public TicketServiceImpl(TicketRepository ticketRepository,
                              UserRepository userRepository,
-                             AuthenticationFacade authenticationFacade) {
+                             AuthenticationFacade authenticationFacade,
+                             BookingService bookingService) {
         this.ticketRepository = ticketRepository;
         this.userRepository = userRepository;
         this.authenticationFacade = authenticationFacade;
+        this.bookingService = bookingService;
     }
 
     @Override
@@ -137,6 +139,9 @@ public class TicketServiceImpl implements TicketService {
                 ticket.setStatus(Ticket.Status.PAID_FOR);
             }
             ticketRepository.saveAll(tickets);
+
+            Booking booking = Booking.builder().tickets(new HashSet<>(tickets)).build();
+            bookingService.save(booking);
             return true;
         } else {
             return false;

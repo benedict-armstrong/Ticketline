@@ -1,9 +1,6 @@
 package at.ac.tuwien.sepm.groupphase.backend.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -32,6 +29,7 @@ public class Ticket {
     private Long id;
 
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
+    @ToString.Exclude
     @JoinColumn(name = "OWNER_ID", nullable = false)
     private ApplicationUser owner;
 
@@ -40,6 +38,7 @@ public class Ticket {
     private TicketType ticketType;
 
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
+    @ToString.Exclude
     @JoinColumn(name = "PERFORMANCE_ID", nullable = false)
     private Performance performance;
 

@@ -41,7 +41,7 @@ public class Booking {
     @ToString.Exclude
     private ApplicationUser user;
 
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
     @NotNull
     private Set<Ticket> tickets = new HashSet<>();
 }
