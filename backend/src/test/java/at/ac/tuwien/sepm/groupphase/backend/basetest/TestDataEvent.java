@@ -39,6 +39,12 @@ public interface TestDataEvent extends TestData {
         return sectorTypes;
     }
 
+    static SectorTypeDto[] getTestEventSectortypesDto() {
+        SectorTypeDto[] sectorTypes = new SectorTypeDto[1];
+        sectorTypes[0] = SectorTypeDto.builder().name("Sector").numberOfTickets(100).build();
+        return sectorTypes;
+    }
+
     static Performance getPerformance(Artist artist, Address location) {
         return Performance.builder()
             .title(TEST_EVENT_TITLE)

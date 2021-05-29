@@ -57,9 +57,6 @@ public class MapperTest implements TestDataMapper {
     @Test
     @DisplayName("Testing address mapper special functions")
     public void addressMapperSpecialCases() {
-        assertEquals(ARTIST_DTO, addressMapper.artistToArtistDto(ARTIST_ENTITY));
-        assertEquals(PERFORMANCE_DTO, addressMapper.eventToEventDto(PERFORMANCE_ENTITY));
-
         List<AddressDto> dtoList = new ArrayList<>();
         dtoList.add(ADDRESS_DTO);
         dtoList.add(ADDRESS2_DTO);
@@ -81,9 +78,6 @@ public class MapperTest implements TestDataMapper {
     @Test
     @DisplayName("Testing artist mapper special functions")
     public void artistMapperSpecialCases() {
-        assertEquals(PERFORMANCE_DTO, artistMapper.eventToEventDto(PERFORMANCE_ENTITY));
-        assertEquals(ADDRESS_DTO, artistMapper.addressToAddressDto(ADDRESS_ENTITY));
-
         List<ArtistDto> dtoList = new ArrayList<>();
         dtoList.add(ARTIST_DTO);
         dtoList.add(ARTIST2_DTO);
@@ -105,9 +99,6 @@ public class MapperTest implements TestDataMapper {
     @Test
     @DisplayName("Testing event mapper special functions")
     public void eventMapperSpecialCases() {
-        assertEquals(ARTIST_DTO, eventMapper.artistToArtistDto(ARTIST_ENTITY));
-        assertEquals(ADDRESS_DTO, eventMapper.addressToAddressDto(ADDRESS_ENTITY));
-
         List<EventDto> dtoList = new ArrayList<>();
         dtoList.add(EVENT_DTO);
         dtoList.add(EVENT2_DTO);
