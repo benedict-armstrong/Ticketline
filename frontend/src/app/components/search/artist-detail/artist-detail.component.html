@@ -3,7 +3,7 @@
 <h4>Performances</h4>
 <div id="performances">
   <div *ngFor="let performance of performances">
-    <div class="performance" [routerLink]="['/performance-detail', performance.id]">
+    <div class="performance list-item" [routerLink]="['/performance-detail', performance.id]">
       <div class="info">
         <div class="detail">
           <h5>{{performance.title}}</h5>

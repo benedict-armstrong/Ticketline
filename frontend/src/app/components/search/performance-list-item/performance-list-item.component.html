@@ -1,4 +1,4 @@
-<div class="event" *ngIf="event" [routerLink]="['/event-detail', event.id]">
+<div class="event list-item" *ngIf="event" [routerLink]="['/event-detail', event.id]">
   <div class="info">
       <img src="{{previewImageUrl}}" alt="">
       <div class="detail">
@@ -7,7 +7,7 @@
       </div>
   </div>
 </div>
-<div *ngIf="performance" class="performance" [routerLink]="['/performance-detail', performance.id]">
+<div *ngIf="performance" class="performance list-item" [routerLink]="['/performance-detail', performance.id]">
   <div class="info">
     <div class="detail">
       <h5>{{performance.title}}</h5>
