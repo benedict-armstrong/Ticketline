@@ -3,6 +3,7 @@ package at.ac.tuwien.sepm.groupphase.backend.integrationtest;
 import at.ac.tuwien.sepm.groupphase.backend.basetest.TestAuthentification;
 import at.ac.tuwien.sepm.groupphase.backend.basetest.TestDataEvent;
 import at.ac.tuwien.sepm.groupphase.backend.basetest.TestDataFile;
+import at.ac.tuwien.sepm.groupphase.backend.basetest.TestDataTicket;
 import at.ac.tuwien.sepm.groupphase.backend.config.properties.SecurityProperties;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.PerformanceDto;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Address;
@@ -102,6 +103,7 @@ public class PerformanceEndpointTest implements TestDataEvent, TestAuthentificat
             .artist(artist)
             .location(address)
             .sectorTypes(TestDataEvent.getTestEventSectortypes())
+            .ticketTypes(TestDataTicket.getTicketTypes())
             .build();
 
         fileRepository.save(file);
@@ -121,10 +123,10 @@ public class PerformanceEndpointTest implements TestDataEvent, TestAuthentificat
     }
 
     @Test
-    @DisplayName("Should return 201 and news object with set ID")
-    public void whenCreatePerformance_then201AndPerformanceWithIdAndPublishedAt() throws Exception {
+    @DisplayName("Should return 201 and performance object with set ID")
+    public void whenCreatePerformance_then201AndPerformanceWithId() throws Exception {
         MvcResult mvcResult = this.mockMvc.perform(
-            post(TestDataEvent.PEFORMANCE_BASE_URI)
+            post(TestDataEvent.PERFORMANCE_BASE_URI)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(performance))
                 .header(securityProperties.getAuthHeader(), authToken)
@@ -154,7 +156,7 @@ public class PerformanceEndpointTest implements TestDataEvent, TestAuthentificat
             .build();
 
         MvcResult mvcResult = this.mockMvc.perform(
-            post(TestDataEvent.PEFORMANCE_BASE_URI)
+            post(TestDataEvent.PERFORMANCE_BASE_URI)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(invalidPerformance))
                 .header(securityProperties.getAuthHeader(), authToken)
@@ -177,7 +179,7 @@ public class PerformanceEndpointTest implements TestDataEvent, TestAuthentificat
             .build();
 
         MvcResult mvcResult = this.mockMvc.perform(
-            post(TestDataEvent.PEFORMANCE_BASE_URI)
+            post(TestDataEvent.PERFORMANCE_BASE_URI)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(invalidPerformance))
         ).andReturn();

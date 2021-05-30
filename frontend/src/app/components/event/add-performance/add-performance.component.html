@@ -48,7 +48,14 @@
 
     <app-add-sectortype [(sectorTypes)]="sectorTypes"></app-add-sectortype>
     <div *ngIf="sectorTypes.length === 0 && submitted" class="alert alert-danger">
-        Atleast one sector type required!
+        At least one sector type required!
+    </div>
+
+    <hr/>
+
+    <app-add-tickettype [(ticketTypes)]="ticketTypes"></app-add-tickettype>
+    <div *ngIf="sectorTypes.length === 0 && submitted" class="alert alert-danger">
+      At least one ticket type required!
     </div>
 
     <hr />

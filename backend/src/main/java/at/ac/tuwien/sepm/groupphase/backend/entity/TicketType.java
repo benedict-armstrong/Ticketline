@@ -6,30 +6,26 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.Column;
-import javax.persistence.Id;
-import javax.persistence.GeneratedValue;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
-import java.util.Objects;
+import javax.persistence.Id;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @Entity
-public class SectorType {
+public class TicketType {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column
-    private String name;
+    @Column(nullable = false)
+    private String title;
 
-    @Column
-    private Integer numberOfTickets;
-
-    @Column
-    private Long price; // 1 = 100 Cents
+    @Column(name = "MULTIPLIER", nullable = false)
+    private Double multiplier;
 
 }

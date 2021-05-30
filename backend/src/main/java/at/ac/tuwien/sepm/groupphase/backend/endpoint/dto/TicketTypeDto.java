@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.validator.constraints.Range;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -14,16 +13,15 @@ import javax.validation.constraints.PositiveOrZero;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class SectorTypeDto {
+public class TicketTypeDto {
+
     private Long id;
 
-    @NotBlank(message = "Name is required")
-    private String name;
+    @NotBlank(message = "Title can't be empty")
+    private String title;
 
-    @Range(min = 1, message = "Atleast 1 ticket per sector")
-    private int numberOfTickets;
+    @NotNull(message = "Price multiplier is missing")
+    @PositiveOrZero(message = "Price multiplier has to be at least zero")
+    private Double multiplier;
 
-    @PositiveOrZero
-    @NotNull
-    private Long price;
 }

@@ -196,6 +196,7 @@ public class NewsDataGenerator {
                 .description(TEST_EVENT_DESCRIPTION + (i))
                 .date(TEST_DATETIME.plusDays(i * 10))
                 .sectorTypes(EventDataGenerator.generateSectorTypes(i))
+                .ticketTypes(EventDataGenerator.generateTicketTypes(i))
                 .artist(artist)
                 .location(location)
                 .build();

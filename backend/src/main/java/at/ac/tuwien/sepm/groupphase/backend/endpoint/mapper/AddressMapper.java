@@ -19,14 +19,7 @@ public interface AddressMapper {
 
     Address addressDtoToAddress(AddressDto addressDto);
 
-    @Mapping(target = "performances", source = "performances")
     AddressDto addressToAddressDto(Address address);
-
-    @Mapping(target = "location", ignore = true)
-    PerformanceDto eventToEventDto(Performance performance);
-
-    @Mapping(target = "performances", ignore = true)
-    ArtistDto artistToArtistDto(Artist artist);
 
     List<AddressDto> addressListToAddressListDto(List<Address> addressList);
 
