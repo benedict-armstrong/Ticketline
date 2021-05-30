@@ -1,7 +1,9 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint;
 
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.ArtistDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.PerformanceDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.PaginationDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.PerformanceSearchDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.PerformanceMapper;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.PaginationMapper;
 import at.ac.tuwien.sepm.groupphase.backend.service.PerformanceService;
@@ -56,6 +58,19 @@ public class PerformanceEndpoint {
     public PerformanceDto findById(@PathVariable Long id) {
         LOGGER.info("GET /api/v1/performances/{}", id);
         return performanceMapper.performanceToPerformanceDto(performanceService.findById(id));
+    }
+
+    @PermitAll
+    @GetMapping
+    @Operation(summary = "Get all performances")
+    public List<PerformanceDto> findAll(PaginationDto paginationDto, PerformanceSearchDto performanceDto) {
+        LOGGER.info("GET /api/v1/performances");
+
+        if (performanceDto != null) {
+            return performanceMapper.performanceListToPerformanceDtoList(performanceService.search(performanceMapper.performanceSearchDtoToPerformanceSearch(performanceDto), paginationMapper.paginationDtoToPageable(paginationDto)));
+        }
+
+        return performanceMapper.performanceListToPerformanceDtoList(performanceService.findAll(paginationMapper.paginationDtoToPageable(paginationDto)));
     }
 
     @PermitAll

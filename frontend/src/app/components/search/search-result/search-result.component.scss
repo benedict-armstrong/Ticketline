@@ -19,3 +19,12 @@
 h5 {
   cursor: pointer;
 }
+
+#search-btns {
+  text-align: center;
+}
+
+#search-btn-list {
+  display: flex;
+  justify-content: space-around;
+}

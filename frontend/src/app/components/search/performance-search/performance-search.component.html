@@ -1,0 +1,59 @@
+<div class="search">
+    <div class="filters">
+        <div class="collapse" id="collapsePerformanceSearch">
+            <div class="card">
+                <form [formGroup]="this.performanceSearchForm" (ngSubmit)="resetValues(); searchPerformances()">
+                    <div class="card-body">
+                        <div class="row">
+                            <h3>Search for performances</h3>
+                            <div class="col">
+                                <div class="row mb-3">
+                                    <label for="filterDate" class="col-sm-3 col-form-label">Date</label>
+                                    <div class="col-sm-9">
+                                        <input type="date" class="text-input form-control" id="filterDate"
+                                            formControlName="date">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="row mb-3">
+                                    <label for="filterTime" class="col-sm-3 col-form-label">Time</label>
+                                    <div class="col-sm-9">
+                                        <input type="time" class="text-input form-control" id="filterTime"
+                                            formControlName="time">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <div class="row mb-3">
+                                    <label for="filterVenue" class="col-sm-3 col-form-label">Venue</label>
+                                    <div class="col-sm-9">
+                                        <input type="text" class="text-input form-control" id="filterVenue"
+                                            formControlName="venue">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="row mb-3">
+                                    <label for="filterPrice" class="col-sm-3 col-form-label">Price</label>
+                                    <div class="col-sm-9">
+                                        <input type="number" class="text-input form-control" id="filterPrice"
+                                            formControlName="price" min="0" step="0.1" >
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <app-search-event-list (selectedEvent)="setSelectedEvent($event)"></app-search-event-list>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <button type="submit" class="secondary filterButton">Apply</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
