@@ -1,0 +1,25 @@
+<h1 *ngIf="artist">{{artist.firstName}} {{artist.lastName}}</h1>
+<hr/>
+<h4>Performances</h4>
+<div id="performances">
+  <div *ngFor="let performance of performances">
+    <div class="performance" [routerLink]="['/performance-detail', performance.id]">
+      <div class="info">
+        <div class="detail">
+          <h5>{{performance.title}}</h5>
+          <span class="date-time">{{performance.date | date:'EEEE, MMM d, y HH:mm'}}: </span>
+          <span class="artist">{{performance.artist.firstName}} {{performance.artist.lastName}}, </span>
+          <span class="location">{{performance.location.name}}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="text-center more" *ngIf="!noPerformance" (click)="getPerformancesForArtist()">
+    <h3 class="clickable">Load More</h3>
+    <h3 class="clickable"><i class="bi bi-arrow-bar-down"></i></h3>
+  </div>
+  <div class="text-center more" *ngIf="noPerformance">
+    <h3>You're all caught up</h3>
+  </div>
+</div>
+

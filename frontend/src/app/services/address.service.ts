@@ -3,7 +3,6 @@ import {HttpClient, HttpParams} from '@angular/common/http';
 import {Globals} from '../global/globals';
 import {Observable} from 'rxjs';
 import {Address} from '../dtos/address';
-import {Artist} from '../dtos/artist';
 
 @Injectable({
   providedIn: 'root'
@@ -18,6 +17,10 @@ export class AddressService {
     params = params.set('page', String(page));
     params = params.set('size', String(size));
     return this.http.get<Address[]>(this.addressBaseUri, {params});
+  }
+
+  getAddressById(id: number): Observable<Address> {
+    return this.http.get<Address>(this.addressBaseUri + '/' + id);
   }
 
   addAddress(address: Address): Observable<Address> {

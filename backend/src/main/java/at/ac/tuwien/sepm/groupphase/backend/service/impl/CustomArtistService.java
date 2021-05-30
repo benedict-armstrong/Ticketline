@@ -1,16 +1,13 @@
 package at.ac.tuwien.sepm.groupphase.backend.service.impl;
 
 import at.ac.tuwien.sepm.groupphase.backend.entity.Artist;
-import at.ac.tuwien.sepm.groupphase.backend.entity.Event;
 import at.ac.tuwien.sepm.groupphase.backend.repository.ArtistRepository;
 import at.ac.tuwien.sepm.groupphase.backend.service.ArtistService;
 import at.ac.tuwien.sepm.groupphase.backend.specification.ArtistSpecificationBuilder;
-import at.ac.tuwien.sepm.groupphase.backend.specification.EventSpecificationBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.lang.invoke.MethodHandles;
 import java.util.List;
@@ -24,14 +21,21 @@ public class CustomArtistService implements ArtistService {
         this.artistRepository = artistRepository;
     }
 
+    @Override
+    public Artist getOneById(Long id) {
+        LOGGER.trace("getOneById({})", id);
+        return artistRepository.findOneById(id);
+    }
 
     @Override
     public List<Artist> findAll(Pageable pageRequest) {
+        LOGGER.trace("findAll({})", pageRequest);
         return artistRepository.findAll(pageRequest).getContent();
     }
 
     @Override
     public Artist addArtist(Artist artist) {
+        LOGGER.trace("addArtist({})", artist);
         return artistRepository.save(artist);
     }
 

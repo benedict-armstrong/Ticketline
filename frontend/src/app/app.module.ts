@@ -35,6 +35,8 @@ import { ArtistListItemComponent } from './components/search/artist-list-item/ar
 import { AddressListItemComponent } from './components/search/address-list-item/address-list-item.component';
 import {LoadingAnimationComponent} from './components/loading-animation/loading-animation.component';
 import { AddTickettypeComponent } from './components/event/add-tickettype/add-tickettype.component';
+import { ArtistDetailComponent } from './components/search/artist-detail/artist-detail.component';
+import { AddressDetailComponent } from './components/search/address-detail/address-detail.component';
 
 @NgModule({
   declarations: [
@@ -67,7 +69,9 @@ import { AddTickettypeComponent } from './components/event/add-tickettype/add-ti
     ArtistListItemComponent,
     AddressListItemComponent,
     LoadingAnimationComponent,
-    AddTickettypeComponent
+    AddTickettypeComponent,
+    ArtistDetailComponent,
+    AddressDetailComponent
   ],
   imports: [
     BrowserModule,
