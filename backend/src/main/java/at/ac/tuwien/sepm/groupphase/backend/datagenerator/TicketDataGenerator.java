@@ -114,15 +114,17 @@ public class TicketDataGenerator {
                 ApplicationUser savedUser = userRepository.save(user);
 
                 List<Long> seats = new ArrayList<>();
-                seats.add(1L);
-                seats.add(2L);
-                seats.add(3L);
+                seats.add(10L);
                 Ticket ticket = Ticket.builder()
                     .owner(savedUser)
                     .performance(savedPerformance)
                     .ticketType(ticketType)
+                    .status(Ticket.Status.IN_CART)
+                    .updateDate(LocalDateTime.now().plusDays(1L))
                     .seats(seats)
                     .build();
+
+                ticketRepository.save(ticket);
             }
         }
     }
@@ -137,7 +139,7 @@ public class TicketDataGenerator {
         Set<TicketType> ticketTypes = new HashSet<>();
         ticketTypes.add(
             TicketType.builder()
-                .title("VIP")
+                .title("TicketGen")
                 .price(10L)
                 .sectorType(sectorType)
                 .build()
