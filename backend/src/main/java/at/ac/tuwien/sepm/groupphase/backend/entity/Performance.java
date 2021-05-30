@@ -62,4 +62,10 @@ public class Performance {
     @NotNull
     private Set<TicketType> ticketTypes = new HashSet<>();
 
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "event_id")
+    private Event event;
+
 }

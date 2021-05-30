@@ -7,10 +7,12 @@ import at.ac.tuwien.sepm.groupphase.backend.entity.Performance;
 import at.ac.tuwien.sepm.groupphase.backend.entity.File;
 import at.ac.tuwien.sepm.groupphase.backend.entity.SectorType;
 import at.ac.tuwien.sepm.groupphase.backend.entity.TicketType;
+
 import at.ac.tuwien.sepm.groupphase.backend.repository.AddressRepository;
-import at.ac.tuwien.sepm.groupphase.backend.repository.ArtistRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.EventRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.FileRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.ArtistRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.PerformanceRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Profile;
@@ -52,12 +54,14 @@ public class EventDataGenerator {
     private final FileRepository fileRepository;
     private final AddressRepository addressRepository;
     private final ArtistRepository artistRepository;
+    private final PerformanceRepository performanceRepository;
 
-    public EventDataGenerator(EventRepository eventRepository, FileRepository fileRepository, AddressRepository addressRepository, ArtistRepository artistRepository) {
+    public EventDataGenerator(EventRepository eventRepository, FileRepository fileRepository, AddressRepository addressRepository, ArtistRepository artistRepository, PerformanceRepository performanceRepository) {
         this.eventRepository = eventRepository;
         this.fileRepository = fileRepository;
         this.addressRepository = addressRepository;
         this.artistRepository = artistRepository;
+        this.performanceRepository = performanceRepository;
     }
 
     @PostConstruct
@@ -100,6 +104,19 @@ public class EventDataGenerator {
                 fileRepository.save(file);
                 set.add(file);
 
+                Event event = Event.builder()
+                    .name(TEST_EVENT + i)
+                    .description(TEST_EVENT_DESCRIPTION + i)
+                    .eventType(Event.EventType.CONCERT)
+                    .duration(100 + 50 * i)
+                    .startDate(TEST_EVENT_START_DATE)
+                    .endDate(TEST_EVENT_END_DATE)
+                    .images(set)
+                    .build();
+
+                LOGGER.debug("saving event {}", event);
+                event = eventRepository.save(event);
+
                 Set<Performance> performances = new HashSet<>();
                 int addressOffset = 0;
                 int artistOffset = 0;
@@ -130,21 +147,15 @@ public class EventDataGenerator {
                         .ticketTypes(generateTicketTypes(i))
                         .artist(artist)
                         .location(location)
+                        .event(event)
                         .build();
 
                     performances.add(performance);
+
+                    performanceRepository.save(performance);
                 }
 
-                Event event = Event.builder()
-                    .name(TEST_EVENT + i)
-                    .description(TEST_EVENT_DESCRIPTION + i)
-                    .eventType(Event.EventType.CONCERT)
-                    .duration(100 + 50 * i)
-                    .startDate(TEST_EVENT_START_DATE)
-                    .endDate(TEST_EVENT_END_DATE)
-                    .images(set)
-                    .performances(performances)
-                    .build();
+                event.setPerformances(performances);
 
                 LOGGER.debug("saving event {}", event);
                 eventRepository.save(event);
