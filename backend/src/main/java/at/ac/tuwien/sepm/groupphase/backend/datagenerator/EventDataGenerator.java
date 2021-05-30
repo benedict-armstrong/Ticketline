@@ -38,7 +38,7 @@ public class EventDataGenerator {
     private static final LocalDate TEST_EVENT_START_DATE = LocalDate.parse("2021-12-12");
     private static final LocalDate TEST_EVENT_END_DATE = LocalDate.parse("2023-12-12");
     private static final String TEST_PERFORMANCE_TITLE = "Performance";
-    private static final String TEST_PERFORMANCE_DESCRIPTION = "THis is a new performance part";
+    private static final String TEST_PERFORMANCE_DESCRIPTION = "This is a new performance part";
 
     private static final String TEST_ARTIST_FIRSTNAME = "Artist";
     private static final String TEST_ARTIST_LASTNAME = "Famous";

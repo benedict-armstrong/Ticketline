@@ -32,8 +32,6 @@ public class VenueDto {
     @Size(min = 1)
     private List<SectorDto> sectors;
 
-    @NotNull
-    @Size(min = 1)
     @CustomLayoutConstraint(message = "Layout must be a well formed matrix")
     private List<List<LayoutUnitDto>> layout;
 }

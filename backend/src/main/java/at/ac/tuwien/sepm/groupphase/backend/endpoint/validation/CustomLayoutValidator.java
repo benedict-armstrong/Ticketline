@@ -15,7 +15,13 @@ public class CustomLayoutValidator implements ConstraintValidator<CustomLayoutCo
 
     @Override
     public boolean isValid(List<List<LayoutUnitDto>> lists, ConstraintValidatorContext constraintValidatorContext) {
+        if (lists == null) {
+            return false;
+        }
         int width = lists.get(0).size();
+        if (width < 2) {
+            return false;
+        }
         for (List<LayoutUnitDto> row : lists) {
             if (row.size() != width) {
                 return false;
