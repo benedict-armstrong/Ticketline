@@ -1,6 +1,7 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {TicketGroup} from '../../dtos/ticketGroup';
 import {Ticket} from '../../dtos/ticket';
+import {Performance} from '../../dtos/performance';
 
 @Component({
   selector: 'app-ticket-order-item',
@@ -10,8 +11,8 @@ import {Ticket} from '../../dtos/ticket';
 export class TicketOrderItemComponent implements OnInit {
   item: TicketGroup;
   tickets: Ticket[];
+  performance: Performance;
   eventType = 'Cinema';
-  test: number[];
 
   location = 'Location';
   startTime = '29th of April, 20:00';
@@ -20,18 +21,17 @@ export class TicketOrderItemComponent implements OnInit {
   @Input() set ticketItem(item: TicketGroup) {
     this.item = item;
     this.tickets = item.tickets;
+    this.performance = item.performance;
 
     // Formatting Eventtype
     this.eventType = item.event.eventType.charAt(0) + item.event.eventType.slice(1).toLowerCase();
+
+    // Setting old
+    this.old = false;
   }
 
   constructor() { }
 
   ngOnInit(): void {
-    this.test = [];
-    this.test.push(1);
-    this.test.push(2);
-    this.test.push(3);
-    this.test.push(4);
   }
 }
