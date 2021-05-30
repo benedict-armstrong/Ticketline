@@ -77,7 +77,15 @@ export class PerformanceSearchComponent implements OnInit {
           }
         }
 
-        this.performanceService.searchPerformances(this.page, this.size, date, this.selectedEvent.id).subscribe(
+        let eventId;
+
+        if(this.selectedEvent){
+          eventId = this.selectedEvent.id;
+        }else{
+          eventId = null;
+        }
+
+        this.performanceService.searchPerformances(this.page, this.size, date, eventId).subscribe(
           response => {
             console.log(response);
             this.performances.push(...response);
