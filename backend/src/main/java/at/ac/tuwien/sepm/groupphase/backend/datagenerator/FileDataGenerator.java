@@ -67,17 +67,18 @@ public class FileDataGenerator {
         int extensionDotIndex = url.length() - 1;
         for (int i = extensionDotIndex; i >= 0; i--) {
             if (url.charAt(i) == '.') {
+                extensionDotIndex = i + 1;
                 break;
             }
         }
-        String extension = url.substring(extensionDotIndex + 1);
+        String extension = url.substring(extensionDotIndex);
         switch (extension) {
             case "jpg":
                 return File.Type.IMAGE_JPG;
             case "png":
                 return File.Type.IMAGE_PNG;
             default:
-                throw new IllegalArgumentException("Couldn't map extension to file type for downloading");
+                throw new IllegalArgumentException("Couldn't map extension \"" + extension + "\" to file type for downloading");
         }
     }
 
