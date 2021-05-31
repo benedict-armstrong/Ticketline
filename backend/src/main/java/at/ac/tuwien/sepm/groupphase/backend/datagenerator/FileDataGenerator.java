@@ -20,6 +20,9 @@ public class FileDataGenerator {
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final FileRepository fileRepository;
 
+    private static final int NUMBER_OF_FILES_TO_GENERATE = 5 + (2 * EventDataGenerator.getNumberOfEventsToGenerate())
+        + (2 * NewsDataGenerator.getNumberOfNewsToGenerate());
+
     // Free images from pixabay.com
     private static final String[] imageUrls = new String[]{
         "https://cdn.pixabay.com/photo/2013/07/12/17/47/test-pattern-152459_960_720.png",
@@ -37,10 +40,10 @@ public class FileDataGenerator {
             LOGGER.debug("Files have already been generated");
         } else {
             LOGGER.debug("Generating {} files", imageUrls.length);
-            for (String imageUrl : imageUrls) {
+            for (int i = 0; i < NUMBER_OF_FILES_TO_GENERATE; i++) {
                 File file = File.builder()
-                    .data(download(imageUrl))
-                    .type(getTypeFrom(imageUrl))
+                    .data(download(imageUrls[i % imageUrls.length]))
+                    .type(getTypeFrom(imageUrls[i % imageUrls.length]))
                     .build();
                 LOGGER.debug("Saving file {}", file);
                 fileRepository.save(file);

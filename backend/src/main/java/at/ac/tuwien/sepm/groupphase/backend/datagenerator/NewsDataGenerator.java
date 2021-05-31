@@ -64,4 +64,7 @@ public class NewsDataGenerator {
         }
     }
 
+    public static int getNumberOfNewsToGenerate() {
+        return NUMBER_OF_NEWS_TO_GENERATE;
+    }
 }
