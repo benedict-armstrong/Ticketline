@@ -59,7 +59,7 @@ export class TicketListItemComponent implements OnInit {
           performance: this.performance,
           ticketType: this.ticketType,
           seats: [this.ticketForm.value.amount],
-          status: null
+          // status: null
         };
         this.waiting = true;
         this.ticketService.addTicket(ticket).subscribe(

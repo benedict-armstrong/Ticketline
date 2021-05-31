@@ -15,6 +15,6 @@ public class BookingDto {
     private Long id;
     private LocalDateTime buyDate;
     private UserDto user;
-    private TicketDto[] tickets;
+    private CartItemDto[] cartItems;
     private FileDto invoice;
 }
