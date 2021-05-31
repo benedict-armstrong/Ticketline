@@ -1,14 +1,14 @@
-import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
-import { Address } from 'src/app/dtos/address';
-import { User } from '../../dtos/user';
-import { UserService } from '../../services/user.service';
+import { Component, OnInit } from "@angular/core";
+import { FormBuilder, FormGroup, Validators } from "@angular/forms";
+import { Router } from "@angular/router";
+import { Address } from "src/app/dtos/address";
+import { User } from "../../dtos/user";
+import { UserService } from "../../services/user.service";
 
 @Component({
-  selector: 'app-register',
-  templateUrl: './register.component.html',
-  styleUrls: ['./register.component.scss'],
+  selector: "app-register",
+  templateUrl: "./register.component.html",
+  styleUrls: ["./register.component.scss"],
 })
 export class RegisterComponent implements OnInit {
   registerForm: FormGroup;
@@ -16,7 +16,7 @@ export class RegisterComponent implements OnInit {
   submitted = false;
   // Error flag
   error = false;
-  errorMessage = '';
+  errorMessage = "";
 
   // Success Flag
   success = false;
@@ -27,18 +27,18 @@ export class RegisterComponent implements OnInit {
     private router: Router
   ) {
     this.registerForm = this.formBuilder.group({
-      firstName: ['', [Validators.required]],
-      lastName: ['', [Validators.required]],
-      telephoneNumber: [''],
-      email: ['', [Validators.required]],
-      password: ['', [Validators.required, Validators.minLength(8)]],
-      passwordRepeat: ['', [Validators.required, Validators.minLength(8)]],
-      addressName: ['', [Validators.required]],
-      lineOne: ['', [Validators.required]],
-      lineTwo: [''],
-      city: ['', [Validators.required]],
-      postcode: ['', [Validators.required]],
-      country: ['', [Validators.required]],
+      firstName: ["", [Validators.required]],
+      lastName: ["", [Validators.required]],
+      telephoneNumber: [""],
+      email: ["", [Validators.required]],
+      password: ["", [Validators.required, Validators.minLength(8)]],
+      passwordRepeat: ["", [Validators.required, Validators.minLength(8)]],
+      addressName: ["", [Validators.required]],
+      lineOne: ["", [Validators.required]],
+      lineTwo: [""],
+      city: ["", [Validators.required]],
+      postcode: ["", [Validators.required]],
+      country: ["", [Validators.required]],
     });
   }
 
@@ -58,8 +58,8 @@ export class RegisterComponent implements OnInit {
         new Date(),
         null,
         0,
-        'ACTIVE',
-        'CLIENT',
+        "ACTIVE",
+        "CLIENT",
         new Address(
           null,
           this.registerForm.value.addressName,
@@ -68,21 +68,20 @@ export class RegisterComponent implements OnInit {
           this.registerForm.value.city,
           this.registerForm.value.postcode,
           this.registerForm.value.country,
-          null,
           false
         )
       );
       this.userService.createUser(user).subscribe(
         () => {
           this.success = true;
-          this.router.navigate(['/user'], { state: { user } });
+          this.router.navigate(["/user"], { state: { user } });
         },
         (error) => {
           this.defaultServiceErrorHandling(error);
         }
       );
     } else {
-      console.log('Invalid input');
+      console.log("Invalid input");
     }
   }
 
@@ -96,7 +95,7 @@ export class RegisterComponent implements OnInit {
   private defaultServiceErrorHandling(error: any) {
     console.log(error);
     this.error = true;
-    if (typeof error.error === 'object') {
+    if (typeof error.error === "object") {
       this.errorMessage = error.error.error;
     } else {
       this.errorMessage = error.error;

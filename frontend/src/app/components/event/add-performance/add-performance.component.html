@@ -46,20 +46,6 @@
 
     <hr />
 
-    <app-add-sectortype [(sectorTypes)]="sectorTypes"></app-add-sectortype>
-    <div *ngIf="sectorTypes.length === 0 && submitted" class="alert alert-danger">
-        At least one sector type required!
-    </div>
-
-    <hr/>
-
-    <app-add-tickettype [(ticketTypes)]="ticketTypes"></app-add-tickettype>
-    <div *ngIf="sectorTypes.length === 0 && submitted" class="alert alert-danger">
-      At least one ticket type required!
-    </div>
-
-    <hr />
-
     <div id="artistGroup">
       <app-add-artist (artistChanged)="changeArtist($event)"></app-add-artist>
       <div *ngIf="artist === undefined && submitted" class="alert alert-danger">
@@ -73,16 +59,12 @@
 
     <hr />
 
-    <div id="addressGroup">
-      <app-add-address (locationChanged)="changeLocation($event)"></app-add-address>
-      <div *ngIf="location === undefined && submitted" class="alert alert-danger">
-        Location is required!
-      </div>
-      <div class="row" id="currentLocation">
-        <h5 class="col-3">Current Location:</h5>
-        <div class="col-6" *ngIf="location">{{location.name}}</div>
-      </div>
+    <app-add-tickettype [(ticketTypes)]="ticketTypes"></app-add-tickettype>
+    <div *ngIf="sectorTypes.length === 0 && submitted" class="alert alert-danger">
+      At least one ticket type required!
     </div>
+
+    <hr />
 
     <button type="button" (click)="addPerformance()" class="primary" id="create">Add performance</button>
     <button type="button" (click)="cancelAdding.emit()" class="secondary" id="cancel">Cancel</button>

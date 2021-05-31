@@ -1,10 +1,11 @@
 <div class="event list-item" *ngIf="event" [routerLink]="['/event-detail', event.id]">
   <div class="info">
-      <img src="{{previewImageUrl}}" alt="">
-      <div class="detail">
-          <h5>{{event.name}}</h5>
-          <p class="date-time">{{event.startDate | date:'EEEE, MMM d, y HH:mm'}} - {{event.endDate | date:'EEEE, MMM d, y HH:mm'}}</p>
-      </div>
+    <img src="{{previewImageUrl}}" alt="">
+    <div class="detail">
+      <h5>{{event.name}}</h5>
+      <p class="date-time">{{event.startDate | date:'EEEE, MMM d, y HH:mm'}} - {{event.endDate | date:'EEEE, MMM d, y
+        HH:mm'}}</p>
+    </div>
   </div>
 </div>
 <div *ngIf="performance" class="performance list-item" [routerLink]="['/performance-detail', performance.id]">
@@ -13,7 +14,7 @@
       <h5>{{performance.title}}</h5>
       <span class="date-time">{{performance.date | date:'EEEE, MMM d, y HH:mm'}}: </span>
       <span class="artist">{{performance.artist.firstName}} {{performance.artist.lastName}}, </span>
-      <span class="location">{{performance.location.name}}</span>
+      <span class="location">{{performance.venue.address.name}}</span>
     </div>
   </div>
 </div>

@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { AddSectortypeComponent } from './add-sectortype.component';
+import { SelectVenueComponent } from './select-venue.component';
 
-describe('AddSectortypeComponent', () => {
-  let component: AddSectortypeComponent;
-  let fixture: ComponentFixture<AddSectortypeComponent>;
+describe('SelectVenueComponent', () => {
+  let component: SelectVenueComponent;
+  let fixture: ComponentFixture<SelectVenueComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ AddSectortypeComponent ]
+      declarations: [ SelectVenueComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(AddSectortypeComponent);
+    fixture = TestBed.createComponent(SelectVenueComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

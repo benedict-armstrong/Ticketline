@@ -27,9 +27,12 @@ export class AddTickettypeComponent implements OnInit {
   addTicketType() {
     this.submitted = true;
     if (this.addTicketTypeForm.valid) {
-      const ticketType = new TicketType(null,
+      const ticketType = new TicketType(
+        null,
         this.addTicketTypeForm.value.ticketTypeTitle,
-        this.addTicketTypeForm.value.ticketTypeMultiplier);
+        null,
+        null
+      );
 
       this.ticketTypes.push(ticketType);
 

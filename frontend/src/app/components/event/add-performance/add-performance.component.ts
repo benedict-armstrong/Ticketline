@@ -23,7 +23,7 @@ export class AddPerformanceComponent implements OnInit {
   errorMessage: string;
   success = false;
 
-  performance = new Performance(null, null, null, null, null, null, null, null);
+  performance; // = new Performance(null, null, null, null, null, null, null);
   location: Address;
   artist: Artist;
 
