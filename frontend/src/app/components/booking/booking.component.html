@@ -4,16 +4,16 @@
 
 <div>
   <div *ngFor="let booking of bookings">
-    <div class="booking">
+    <div class="booking list-item">
       <div class="info">
         <div class="detail">
           <h5>{{booking.buyDate | date:'EEEE, MMM d, y HH:mm'}}</h5>
-          <p [routerLink]="['/downloadInvoice']">Click for invoice download</p>
+          <!-- <p [routerLink]="['/downloadInvoice']">Click for invoice download</p> -->
         </div>
       </div>
     </div>
     <div *ngFor="let ticket of booking.tickets">
-      <div class="ticket offset-1" [routerLink]="['/performance-detail', ticket.performance.id]">
+      <div class="ticket list-item offset-1" [routerLink]="['/performance-detail', ticket.performance.id]">
         <div class="info">
           <div class="detail">
             <h5>{{ticket.performance.title}}</h5>
