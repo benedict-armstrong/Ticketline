@@ -1,21 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-// @ts-ignore
-import { EventsComponent } from './events.component';
+import { VenueLayoutGridComponent } from './venue-layout-grid.component';
 
-describe('EventsComponent', () => {
-  let component: EventsComponent;
-  let fixture: ComponentFixture<EventsComponent>;
+describe('VenueLayoutGridComponent', () => {
+  let component: VenueLayoutGridComponent;
+  let fixture: ComponentFixture<VenueLayoutGridComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ EventsComponent ]
+      declarations: [ VenueLayoutGridComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(EventsComponent);
+    fixture = TestBed.createComponent(VenueLayoutGridComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

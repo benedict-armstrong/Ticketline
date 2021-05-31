@@ -1,21 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-// @ts-ignore
-import { EventsComponent } from './events.component';
+import { VenueGridUnitComponent } from './venue-grid-unit.component';
 
-describe('EventsComponent', () => {
-  let component: EventsComponent;
-  let fixture: ComponentFixture<EventsComponent>;
+describe('VenueGridUnitComponent', () => {
+  let component: VenueGridUnitComponent;
+  let fixture: ComponentFixture<VenueGridUnitComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ EventsComponent ]
+      declarations: [ VenueGridUnitComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(EventsComponent);
+    fixture = TestBed.createComponent(VenueGridUnitComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

@@ -18,10 +18,12 @@ export class LoginComponent implements OnInit {
   error = false;
   errorMessage = '';
 
-
-  constructor(private authService: AuthService,
-              private userService: UserService,
-              private formBuilder: FormBuilder, private router: Router) {
+  constructor(
+    private authService: AuthService,
+    private userService: UserService,
+    private formBuilder: FormBuilder,
+    private router: Router
+  ) {
     this.loginForm = this.formBuilder.group({
       email: ['', [Validators.required]],
       password: ['', [Validators.required]],

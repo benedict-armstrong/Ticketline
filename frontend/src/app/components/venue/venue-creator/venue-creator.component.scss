@@ -1,0 +1,52 @@
+@import "../../../../colors.scss";
+
+.venue-creator {
+  padding: 10px;
+}
+
+.toolbar-header {
+  margin-bottom: 10px;
+  border-bottom: 1px solid lightgray;
+}
+
+.toolbar-body {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.select-sector {
+  margin: 0px 5px;
+  width: 150px;
+}
+
+.toolbar button {
+  margin: 0px 5px;
+  width: 90px;
+}
+
+.toolbar button.active {
+  border: 2px solid $primary;
+  box-shadow: none;
+}
+
+.grid-size {
+  display: flex;
+  align-items: center;
+}
+
+.grid-size input {
+  width: 65px;
+  margin: 0px 10px;
+}
+
+#make-grid {
+  width: 100px;
+}
+
+.venue-layout-grid {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}

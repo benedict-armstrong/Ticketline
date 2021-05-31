@@ -1,0 +1,42 @@
+<div class="venue-add-sector">
+  <form class="venue-add-sector-form" [formGroup]="venueAddSectorForm" (ngSubmit)="createSector()">
+
+    <div class="row">
+      <div class="col-4">
+        <div class="form-group">
+          <label for="name">Sector Name</label>
+          <input type="text" name="name" formControlName="name" class="text-input form-control" id="name"
+            placeholder="Enter Sector name">
+        </div>
+      </div>
+
+      <div class="col-5">
+        <div class="form-group">
+          <label for="postcode">Description</label>
+          <input type="text" name="description" formControlName="description" class="text-input form-control"
+            id="description" placeholder="Enter Description">
+        </div>
+      </div>
+
+      <div class="col-3">
+        <div class="form-group">
+          <label for="type">Type</label>
+          <select class="select-input form-select" id="type" formControlName="type">
+            <option value="SEATED">Seated</option>
+            <option value="STANDING">Standing</option>
+            <option value="STAGE">Stage</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div
+      *ngIf="submitted && (venueAddSectorForm.controls.name.errors || venueAddSectorForm.controls.description.errors)"
+      class="error">
+      <small class="form-text text-warning">Name and description required</small>
+    </div>
+    <button type="submit" id="addSector" class="secondary">Add Sector</button>
+  </form>
+
+  <app-venue-sector-list *ngFor="let sector of sectors" [sector]="sector" (deleteSector)="this.removeSector($event)">
+  </app-venue-sector-list>
+</div>

@@ -17,6 +17,7 @@ import { PerformanceDetailComponent } from './components/performance-detail/perf
 import { BookingComponent } from './components/booking/booking.component';
 import { AddressDetailComponent } from './components/search/address-detail/address-detail.component';
 import { ArtistDetailComponent } from './components/search/artist-detail/artist-detail.component';
+import { AddVenueComponent } from './components/venue/add-venue/add-venue.component';
 
 const routes: Routes = [
   { path: '', component: HomePageComponent },
@@ -28,6 +29,7 @@ const routes: Routes = [
   { path: 'address-detail/:id', component: AddressDetailComponent },
   { path: 'artist-detail/:id', component: ArtistDetailComponent },
   { path: 'event-detail/:id', component: EventDetailComponent },
+  { path: 'add-venue', component: AddVenueComponent, canActivate: [AuthGuard], data: { roles: ['ADMIN', 'ORGANIZER'] } },
   { path: 'performance-detail/:id', component: PerformanceDetailComponent },
   { path: 'user', component: UserHomeComponent, canActivate: [AuthGuard], data: { roles: ['ADMIN', 'ORGANIZER', 'USER']} },
   { path: 'ticket', component: TicketDetailComponent, canActivate: [AuthGuard], data: { roles: ['ADMIN', 'ORGANIZER', 'USER']} },
