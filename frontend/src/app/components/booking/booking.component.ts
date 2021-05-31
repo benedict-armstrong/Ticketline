@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {BookingService} from '../../services/booking.service';
 import {Booking} from '../../dtos/booking';
+import {Ticket} from '../../dtos/ticket';
 
 @Component({
   selector: 'app-booking',
