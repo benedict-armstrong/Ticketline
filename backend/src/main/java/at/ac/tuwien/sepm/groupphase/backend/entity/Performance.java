@@ -3,6 +3,7 @@ package at.ac.tuwien.sepm.groupphase.backend.entity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.Entity;
@@ -42,6 +43,7 @@ public class Performance {
     private Artist artist;
 
     @ManyToOne(optional = false)
+    @EqualsAndHashCode.Exclude
     private Venue venue;
 
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)

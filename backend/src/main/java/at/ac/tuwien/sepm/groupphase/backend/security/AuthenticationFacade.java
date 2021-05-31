@@ -33,7 +33,7 @@ public interface AuthenticationFacade {
     boolean isUser();
 
     /**
-     * Returns the Users mail address if user is logged in
+     * Returns the Users mail address if user is logged in.
      *
      * @return logged in users email
      */
