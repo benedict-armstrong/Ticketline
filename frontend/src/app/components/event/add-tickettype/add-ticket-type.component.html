@@ -42,14 +42,7 @@
         <th>Title</th>
         <th>Multiplier</th>
       </tr>
-      <tbody>
-      <tr *ngFor="let sectorType of ticketTypes; let i = index">
-        <td>{{sectorType.title}}</td>
-        <td>{{sectorType.multiplier}}</td>
-        <td><button type="button" class="btn btn-secondary" style="width: 100%"
-                    (click)="removeTicketType(i)">X</button></td>
-      </tr>
-      </tbody>
+
     </table>
   </div>
 </div>

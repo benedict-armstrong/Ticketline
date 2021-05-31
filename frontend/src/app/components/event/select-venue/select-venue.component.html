@@ -1,1 +1,25 @@
-<p>select-venue works!</p>
+<h5 class="col-6">Venue</h5>
+<form [formGroup]="selectVenueForm">
+  <div class="form-group row" id="venueFilter">
+    <div class="col-6">
+      <label for="filterName">Venue Name</label>
+      <input type="text" name="filterName" formControlName="filterName" class="text-input form-control col-6"
+             id="filterName" placeholder="Search by name..." (input)="filterVenues()">
+    </div>
+    <div class="col-6">
+      <label for="filterAddressName">Venue Address Name</label>
+      <input type="text" name="filterAddressName" formControlName="filterAddressName" class="text-input form-control col-6"
+             id="filterAddressName" placeholder="Search by address name..." (input)="filterVenues()">
+    </div>
+  </div>
+  <div class="form-group">
+    <label for="selectedVenue" class="required">Select a Venue:</label>
+    <select class="form-select" size="5" *ngIf="filteredVenues" (change)="venueSelected()" name="selectedVenue" formControlName="selectedVenue" id="selectedVenue">
+      <option *ngFor="let venue of filteredVenues" [ngValue]="venue">
+       {{venue.name}} | {{venue.address.name}}
+      </option>
+    </select>
+  </div>
+</form>
+
+

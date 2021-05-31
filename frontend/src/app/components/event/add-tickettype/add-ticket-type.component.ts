@@ -4,10 +4,10 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 
 @Component({
   selector: 'app-add-tickettype',
-  templateUrl: './add-tickettype.component.html',
-  styleUrls: ['./add-tickettype.component.scss']
+  templateUrl: './add-ticket-type.component.html',
+  styleUrls: ['./add-ticket-type.component.scss']
 })
-export class AddTickettypeComponent implements OnInit {
+export class AddTicketTypeComponent implements OnInit {
 
   @Input() ticketTypes: TicketType[];
 
@@ -16,8 +16,9 @@ export class AddTickettypeComponent implements OnInit {
 
   constructor(private formBuilder: FormBuilder) {
     this.addTicketTypeForm = this.formBuilder.group({
-      ticketTypeTitle: ['', Validators.required],
-      ticketTypeMultiplier: ['', [Validators.required, Validators.min(0)]],
+      name: ['', Validators.required],
+      price: ['', [Validators.required, Validators.min(0)]],
+      sector: ['', [Validators.required]],
     });
   }
 
@@ -29,15 +30,14 @@ export class AddTickettypeComponent implements OnInit {
     if (this.addTicketTypeForm.valid) {
       const ticketType = new TicketType(
         null,
-        this.addTicketTypeForm.value.ticketTypeTitle,
-        null,
-        null
-      );
+        this.addTicketTypeForm.value.name,
+        this.addTicketTypeForm.value.sector,
+        this.addTicketTypeForm.value.price,
+        );
 
       this.ticketTypes.push(ticketType);
 
-      this.addTicketTypeForm.controls.ticketTypeTitle.reset();
-      this.addTicketTypeForm.controls.ticketTypeMultiplier.reset();
+      this.addTicketTypeForm.reset();
       this.submitted = false;
     }
   }

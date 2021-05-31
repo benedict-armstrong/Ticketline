@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { AddTickettypeComponent } from './add-tickettype.component';
+import { AddTicketTypeComponent } from './add-ticket-type.component';
 
 describe('AddTickettypeComponent', () => {
-  let component: AddTickettypeComponent;
-  let fixture: ComponentFixture<AddTickettypeComponent>;
+  let component: AddTicketTypeComponent;
+  let fixture: ComponentFixture<AddTicketTypeComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ AddTickettypeComponent ]
+      declarations: [ AddTicketTypeComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(AddTickettypeComponent);
+    fixture = TestBed.createComponent(AddTicketTypeComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

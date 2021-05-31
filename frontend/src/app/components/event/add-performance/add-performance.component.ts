@@ -4,6 +4,7 @@ import {Performance} from '../../../dtos/performance';
 import {Artist} from '../../../dtos/artist';
 import {Address} from '../../../dtos/address';
 import {Event} from '../../../dtos/event';
+import {Venue} from '../../../dtos/venue';
 
 @Component({
   selector: 'app-add-performance',
@@ -23,9 +24,10 @@ export class AddPerformanceComponent implements OnInit {
   errorMessage: string;
   success = false;
 
-  performance; // = new Performance(null, null, null, null, null, null, null);
+  performance: Performance;
   location: Address;
   artist: Artist;
+  venue: Venue;
 
   constructor(private formBuilder: FormBuilder) {
   }
@@ -50,15 +52,9 @@ export class AddPerformanceComponent implements OnInit {
       // Add additional event data
       this.performance.title = this.addPerformanceForm.value.title;
       this.performance.description = this.addPerformanceForm.value.description;
-      this.performance.location = this.location;
       this.performance.artist = this.artist;
-      this.performance.sectorTypes = this.sectorTypes;
       this.performance.ticketTypes = this.ticketTypes;
-
       this.performance.date = new Date(this.addPerformanceForm.value.date).toISOString();
-      console.log(this.performance.date);
-
-
       this.performanceAdded.emit(this.performance);
       this.addPerformanceForm.reset();
     } else {
@@ -77,6 +73,10 @@ export class AddPerformanceComponent implements OnInit {
 
   changeArtist(artist: Artist) {
     this.artist = artist;
+  }
+
+  changeVenue(venue: Venue) {
+    this.venue = venue;
   }
 
   /**
