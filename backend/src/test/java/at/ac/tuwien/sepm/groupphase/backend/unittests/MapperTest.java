@@ -55,6 +55,12 @@ public class MapperTest implements TestDataMapper {
     @Autowired
     private BookingMapper bookingMapper;
 
+    @Autowired
+    private SectorMapper sectorMapper;
+
+    @Autowired
+    private VenueMapper venueMapper;
+
 
     @Test
     @DisplayName("Testing address mapper")
@@ -127,35 +133,62 @@ public class MapperTest implements TestDataMapper {
     }
 
     @Test
-    @DisplayName("Testing ticket mapper")
-    public void ticketMapper() {
+    @DisplayName("Testing mappers for null values")
+    public void nullMapper() {
+        assertNull(addressMapper.addressToAddressDto(null));
+        assertNull(addressMapper.addressDtoToAddress(null));
+        assertNull(addressMapper.addressListToAddressListDto(null));
+
+        assertNull(artistMapper.artistToArtistDto(null));
+        assertNull(artistMapper.artistDtoToArtist(null));
+        assertNull(artistMapper.artistListToArtistDtoList(null));
+
+        assertNull(eventMapper.eventToEventDto(null));
+        assertNull(eventMapper.eventDtoToEvent(null));
+        assertNull(eventMapper.eventListToEventDtoList(null));
+
+        assertNull(userMapper.applicationUserToUserDto(null));
+        assertNull(userMapper.userDtoToApplicationUser(null));
+
         assertNull(ticketMapper.ticketToTicketDto(null));
         assertNull(ticketMapper.ticketDtoToTicket(null));
         assertNull(ticketMapper.ticketListToTicketDtoList(null));
         assertNull(ticketMapper.ticketDtoListToTicketList(null));
         assertNull(ticketMapper.ticketDtoArrayToTicketSet (null));
         assertNull(ticketMapper.ticketSetToTicketDtoArray(null));
-    }
 
-    @Test
-    @DisplayName("Testing ticketType mapper")
-    public void ticketTypeMapper() {
         assertNull(ticketTypeMapper.ticketTypeToTicketTypeDto(null));
         assertNull(ticketTypeMapper.ticketTypeDtoToTicketType(null));
-    }
+        assertNull(ticketTypeMapper.ticketTypeSetToTicketTypeDtoArray(null));
+        assertNull(ticketTypeMapper.ticketTypeDtoArrayToTicketTypeSet(null));
 
-    @Test
-    @DisplayName("Testing sectorType mapper")
-    public void sectorTypeMapper() {
         assertNull(sectorTypeMapper.sectorTypeToSectorTypeDto(null));
         assertNull(sectorTypeMapper.sectorTypeDtoToSectorType(null));
-    }
+        assertNull(sectorTypeMapper.sectorTypeSetToSectorTypeDtoArray(null));
+        assertNull(sectorTypeMapper.sectorTypeDtoArrayToSectorTypeSet(null));
 
-    @Test
-    @DisplayName("Testing booking mapper")
-    public void bookingMapper() {
         assertNull(bookingMapper.bookingDtoToBooking(null));
         assertNull(bookingMapper.bookingToBookingDto(null));
         assertNull(bookingMapper.bookingListToBookingDtoList(null));
+
+        assertNull(newsMapper.newsDtoToNews(null));
+        assertNull(newsMapper.newsToNewsDto(null));
+        assertNull(newsMapper.newsListToNewsDtoList(null));
+
+        assertNull(performanceMapper.performanceToPerformanceDto(null));
+        assertNull(performanceMapper.performanceDtoToPerformance(null));
+        assertNull(performanceMapper.performanceListToPerformanceDtoList(null));
+        assertNull(performanceMapper.performanceDtoArrayToPerformanceSet(null));
+        assertNull(performanceMapper.performanceSetToPerformanceDtoArray(null));
+        assertNull(performanceMapper.performanceSearchDtoToPerformanceSearch(null));
+
+        assertNull(sectorMapper.sectorToSectorDto(null));
+        assertNull(sectorMapper.sectorDtoToSector(null));
+        assertNull(sectorMapper.sectorListToSectorDtoList(null));
+        assertNull(sectorMapper.sectorDtoListToSectorList(null));
+
+        assertNull(venueMapper.venueToVenueDto((Venue) null));
+        assertNull(venueMapper.venueToVenueDto((List<Venue>) null));
+        assertNull(venueMapper.venueDtoToVenue(null));
     }
 }
