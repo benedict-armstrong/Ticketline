@@ -20,10 +20,7 @@ public class TicketTypeDto {
     @NotBlank(message = "Title can't be empty")
     private String title;
 
-    @PositiveOrZero
-    @NotNull
+    @NotNull(message = "Price is required")
+    @PositiveOrZero(message = "Price can't be less than 0")
     private Long price;
-
-    @NotNull
-    private SectorTypeDto sectorType;
 }

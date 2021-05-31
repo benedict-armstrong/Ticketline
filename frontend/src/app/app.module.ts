@@ -22,7 +22,6 @@ import { TicketDetailComponent } from './components/ticket-detail/ticket-detail.
 import { TicketListItemComponent } from './components/ticket-list-item/ticket-list-item.component';
 import { ShoppingcartComponent } from './components/shoppingcart/shoppingcart.component';
 import { AddNewsComponent } from './components/add-news/add-news.component';
-import { AddEventComponent } from './components/event/add-event/add-event.component';
 import { AddPerformanceComponent } from './components/event/add-performance/add-performance.component';
 import { AddUserComponent } from './components/add-user/add-user.component';
 import { httpInterceptorProviders } from './interceptors';
@@ -36,6 +35,7 @@ import { AddSectortypeComponent } from './components/event/add-sectortype/add-se
 import { CartItemComponent } from './components/shoppingcart/cart-item/cart-item.component';
 import { AddArtistComponent } from './components/event/add-artist/add-artist.component';
 import { AddAddressComponent } from './components/event/add-address/add-address.component';
+import { AddEventComponent } from './components/event/add-event/add-event.component';
 import { PerformanceDetailComponent } from './components/performance-detail/performance-detail.component';
 import { ArtistSearchComponent } from './components/search/artist-search/artist-search.component';
 import { AddressSearchComponent } from './components/search/address-search/address-search.component';

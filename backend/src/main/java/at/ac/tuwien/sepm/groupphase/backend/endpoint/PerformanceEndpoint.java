@@ -85,6 +85,6 @@ public class PerformanceEndpoint {
     @Operation(summary = "get all performances for one location")
     public List<PerformanceDto> findAllPerformancesByLocation(PaginationDto paginationDto, @RequestParam("addressId") Long addressId) {
         LOGGER.info("GET /api/v1/performances?addressId={}", addressId);
-        return performanceMapper.performanceListToPerformanceDtoList(performanceService.findAllPerformancesByLocation(addressId, paginationMapper.paginationDtoToPageable(paginationDto)));
+        return performanceMapper.performanceListToPerformanceDtoList(performanceService.findAllPerformancesByVenueAddress(addressId, paginationMapper.paginationDtoToPageable(paginationDto)));
     }
 }

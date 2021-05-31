@@ -23,7 +23,7 @@ import java.util.Set;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-
+/*
 @ExtendWith(SpringExtension.class)
 @DataJpaTest
 @ActiveProfiles("test")
@@ -147,3 +147,4 @@ public class BookingRepositoryTest implements TestDataTicket, TestDataEvent, Tes
         );
     }
 }
+*/

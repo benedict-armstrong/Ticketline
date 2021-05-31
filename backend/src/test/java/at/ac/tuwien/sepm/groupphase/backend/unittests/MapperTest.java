@@ -41,9 +41,6 @@ public class MapperTest implements TestDataMapper {
     private PerformanceMapper performanceMapper;
 
     @Autowired
-    private SectorTypeMapper sectorTypeMapper;
-
-    @Autowired
     private TicketTypeMapper ticketTypeMapper;
 
     @Autowired
@@ -161,11 +158,6 @@ public class MapperTest implements TestDataMapper {
         assertNull(ticketTypeMapper.ticketTypeDtoToTicketType(null));
         assertNull(ticketTypeMapper.ticketTypeSetToTicketTypeDtoArray(null));
         assertNull(ticketTypeMapper.ticketTypeDtoArrayToTicketTypeSet(null));
-
-        assertNull(sectorTypeMapper.sectorTypeToSectorTypeDto(null));
-        assertNull(sectorTypeMapper.sectorTypeDtoToSectorType(null));
-        assertNull(sectorTypeMapper.sectorTypeSetToSectorTypeDtoArray(null));
-        assertNull(sectorTypeMapper.sectorTypeDtoArrayToSectorTypeSet(null));
 
         assertNull(bookingMapper.bookingDtoToBooking(null));
         assertNull(bookingMapper.bookingToBookingDto(null));

@@ -107,8 +107,6 @@ public class NewsEndpointTest implements TestDataNews, TestDataFile, TestAuthent
             .description(TestDataEvent.TEST_EVENT_PERFORMANCE_DESCRIPTION)
             .date(TestDataEvent.TEST_PERFORMANCE_DATE)
             .artist(artist)
-            .location(address)
-            .sectorTypes(TestDataEvent.getTestEventSectortypes())
             .ticketTypes(TestDataTicket.getTicketTypes())
             .build()
         );

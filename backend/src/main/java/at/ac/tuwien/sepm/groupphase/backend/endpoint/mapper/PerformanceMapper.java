@@ -9,7 +9,7 @@ import org.mapstruct.Mapper;
 import java.util.List;
 import java.util.Set;
 
-@Mapper(uses = {SectorTypeMapper.class, TicketTypeMapper.class, ArtistMapper.class, AddressMapper.class})
+@Mapper(uses = {TicketTypeMapper.class, ArtistMapper.class, AddressMapper.class, VenueMapper.class, LayoutUnitMapper.class})
 public interface PerformanceMapper extends FileTypeMapper {
 
     Performance performanceDtoToPerformance(PerformanceDto performanceDto);

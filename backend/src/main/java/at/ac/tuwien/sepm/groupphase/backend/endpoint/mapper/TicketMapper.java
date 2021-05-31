@@ -7,7 +7,7 @@ import org.mapstruct.Mapper;
 import java.util.List;
 import java.util.Set;
 
-@Mapper(uses = {TicketTypeMapper.class, UserMapper.class, PerformanceMapper.class})
+@Mapper(uses = {TicketTypeMapper.class, LayoutUnitMapper.class, PerformanceMapper.class})
 public interface TicketMapper {
 
     TicketDto ticketToTicketDto(Ticket ticket);

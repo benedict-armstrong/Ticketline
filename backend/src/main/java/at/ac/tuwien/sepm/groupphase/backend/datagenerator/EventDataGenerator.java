@@ -1,33 +1,6 @@
 package at.ac.tuwien.sepm.groupphase.backend.datagenerator;
 
-import at.ac.tuwien.sepm.groupphase.backend.entity.Address;
-import at.ac.tuwien.sepm.groupphase.backend.entity.Artist;
-import at.ac.tuwien.sepm.groupphase.backend.entity.Event;
-import at.ac.tuwien.sepm.groupphase.backend.entity.Performance;
-import at.ac.tuwien.sepm.groupphase.backend.entity.File;
-import at.ac.tuwien.sepm.groupphase.backend.entity.SectorType;
-import at.ac.tuwien.sepm.groupphase.backend.entity.TicketType;
-import at.ac.tuwien.sepm.groupphase.backend.repository.AddressRepository;
-import at.ac.tuwien.sepm.groupphase.backend.repository.ArtistRepository;
-import at.ac.tuwien.sepm.groupphase.backend.repository.EventRepository;
-import at.ac.tuwien.sepm.groupphase.backend.repository.FileRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.context.annotation.Profile;
-import org.springframework.stereotype.Component;
-
-import javax.annotation.PostConstruct;
-import java.io.ByteArrayOutputStream;
-import java.io.InputStream;
-import java.lang.invoke.MethodHandles;
-import java.net.URL;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
-
+/*
 @Profile("generateData")
 @Component
 public class EventDataGenerator {
@@ -204,4 +177,4 @@ public class EventDataGenerator {
     public static File generateImage(byte[] imgBuffer, File.Type imageType) {
         return File.builder().data(imgBuffer).type(imageType).build();
     }
-}
+}*/

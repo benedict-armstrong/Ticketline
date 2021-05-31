@@ -1,37 +1,6 @@
 package at.ac.tuwien.sepm.groupphase.backend.datagenerator;
 
-import at.ac.tuwien.sepm.groupphase.backend.entity.Address;
-import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
-import at.ac.tuwien.sepm.groupphase.backend.entity.Artist;
-import at.ac.tuwien.sepm.groupphase.backend.entity.Event;
-import at.ac.tuwien.sepm.groupphase.backend.entity.File;
-import at.ac.tuwien.sepm.groupphase.backend.entity.Performance;
-import at.ac.tuwien.sepm.groupphase.backend.entity.SectorType;
-import at.ac.tuwien.sepm.groupphase.backend.entity.Ticket;
-import at.ac.tuwien.sepm.groupphase.backend.entity.TicketType;
-import at.ac.tuwien.sepm.groupphase.backend.repository.AddressRepository;
-import at.ac.tuwien.sepm.groupphase.backend.repository.ArtistRepository;
-import at.ac.tuwien.sepm.groupphase.backend.repository.EventRepository;
-import at.ac.tuwien.sepm.groupphase.backend.repository.FileRepository;
-import at.ac.tuwien.sepm.groupphase.backend.repository.TicketRepository;
-import at.ac.tuwien.sepm.groupphase.backend.repository.UserRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.context.annotation.Profile;
-import org.springframework.stereotype.Component;
-
-import javax.annotation.PostConstruct;
-import java.io.ByteArrayOutputStream;
-import java.io.InputStream;
-import java.lang.invoke.MethodHandles;
-import java.net.URL;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
+/*
 @Profile("generateData")
 @Component
 public class TicketDataGenerator {
@@ -140,7 +109,7 @@ public class TicketDataGenerator {
         ticketTypes.add(
             TicketType.builder()
                 .title("TicketGen")
-                .price(10L)
+                .price(1000L)
                 .sectorType(sectorType)
                 .build()
         );
@@ -196,4 +165,4 @@ public class TicketDataGenerator {
         return output.toByteArray();
     }
 
-}
+}*/

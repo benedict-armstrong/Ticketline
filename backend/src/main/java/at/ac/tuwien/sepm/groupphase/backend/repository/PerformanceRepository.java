@@ -34,5 +34,5 @@ public interface PerformanceRepository extends JpaRepository<Performance, Long>,
      * @param pageable pagination
      * @return all performances by this location
      */
-    Page<Performance> findAllByLocation_Id(Long id, Pageable pageable);
+    Page<Performance> findAllByVenue_Address_Id(Long id, Pageable pageable);
 }
