@@ -31,4 +31,12 @@ public interface AuthenticationFacade {
      * @return true if the User is authenticated and not Anonymous false otherwise
      */
     boolean isUser();
+
+    /**
+     * Returns the Users mail address if user is logged in
+     *
+     * @return logged in users email
+     */
+    String getMail();
+
 }

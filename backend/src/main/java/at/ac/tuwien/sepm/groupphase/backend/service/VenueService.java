@@ -26,7 +26,7 @@ public interface VenueService {
 
 
     /**
-     * Get all Venues in System.
+     * Get all Venues in System belonging to User, If User is Admin all Venues are returned
      *
      * @return all Venues in System
      */

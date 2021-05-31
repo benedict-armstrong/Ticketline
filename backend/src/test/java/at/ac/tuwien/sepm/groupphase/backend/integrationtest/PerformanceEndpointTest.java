@@ -108,8 +108,6 @@ public class PerformanceEndpointTest implements TestDataEvent, TestAuthentificat
             .description(TestDataEvent.TEST_EVENT_DESCRIPTION)
             .date(TestDataEvent.TEST_PERFORMANCE_DATE)
             .artist(artist)
-            .location(address)
-            .sectorTypes(TestDataEvent.getTestEventSectortypes())
             .ticketTypes(TestDataTicket.getTicketTypes())
             .build();
 
@@ -184,8 +182,6 @@ public class PerformanceEndpointTest implements TestDataEvent, TestAuthentificat
                 .description(TestDataEvent.TEST_EVENT_DESCRIPTION)
                 .date(TestDataEvent.TEST_PERFORMANCE_DATE)
                 .artist(artist)
-                .location(address)
-                .sectorTypes(TestDataEvent.getTestEventSectortypes())
                 .ticketTypes(TestDataTicket.getTicketTypes())
                 .build();
 
@@ -222,8 +218,6 @@ public class PerformanceEndpointTest implements TestDataEvent, TestAuthentificat
                 .description(TestDataEvent.TEST_EVENT_DESCRIPTION)
                 .date(TestDataEvent.TEST_PERFORMANCE_DATE)
                 .artist(artist)
-                .location(address)
-                .sectorTypes(TestDataEvent.getTestEventSectortypes())
                 .ticketTypes(TestDataTicket.getTicketTypes())
                 .build();
 
@@ -261,8 +255,6 @@ public class PerformanceEndpointTest implements TestDataEvent, TestAuthentificat
                 .description(TestDataEvent.TEST_EVENT_DESCRIPTION)
                 .date(TestDataEvent.TEST_PERFORMANCE_DATE)
                 .artist(artist)
-                .location(address)
-                .sectorTypes(TestDataEvent.getTestEventSectortypes())
                 .ticketTypes(TestDataTicket.getTicketTypes())
                 .build();
 
@@ -293,8 +285,6 @@ public class PerformanceEndpointTest implements TestDataEvent, TestAuthentificat
             .description(TestDataEvent.TEST_EVENT_DESCRIPTION)
             .date(TestDataEvent.TEST_PERFORMANCE_DATE.minusYears(10))
             .artist(TestDataEvent.TEST_EVENT_ARTIST)
-            .location(TestDataEvent.TEST_EVENT_LOCATION)
-            .sectorTypes(TestDataEvent.getTestEventSectortypes())
             .build();
 
         MvcResult mvcResult = this.mockMvc.perform(
@@ -316,8 +306,6 @@ public class PerformanceEndpointTest implements TestDataEvent, TestAuthentificat
             .description(TestDataEvent.TEST_EVENT_DESCRIPTION)
             .date(TestDataEvent.TEST_PERFORMANCE_DATE)
             .artist(TestDataEvent.TEST_EVENT_ARTIST)
-            .location(TestDataEvent.TEST_EVENT_LOCATION)
-            .sectorTypes(new HashSet<>())
             .build();
 
         MvcResult mvcResult = this.mockMvc.perform(

@@ -38,13 +38,8 @@ public class Ticket {
     @JoinColumn(name = "PERFORMANCE_ID", nullable = false)
     private Performance performance;
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
-    @JoinColumn(name = "SECTOR_ID", nullable = false)
-    private SectorType sectorType;
-
-    @ElementCollection(fetch = FetchType.EAGER) // TODO: map to Venue's seat
-    @Column(nullable = false)
-    private List<Long> seats;
+    @ManyToOne()
+    private LayoutUnit seat;
 
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
     @JoinColumn(name = "TYPE_ID", nullable = false)
@@ -58,7 +53,7 @@ public class Ticket {
     private Status status;
 
     public enum Status {
-        PAID_FOR, RESERVED, CANCELLED
+        PAID, RESERVED, CANCELLED
     }
 
 }

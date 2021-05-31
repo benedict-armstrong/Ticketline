@@ -48,8 +48,6 @@ public class PerformanceRepositoryTest implements TestDataEvent {
             .description(TestDataEvent.TEST_EVENT_DESCRIPTION)
             .date(TestDataEvent.TEST_PERFORMANCE_DATE)
             .artist(artist)
-            .location(address)
-            .sectorTypes(TestDataEvent.getTestEventSectortypes())
             .ticketTypes(TestDataTicket.getTicketTypes())
             .build();
     }

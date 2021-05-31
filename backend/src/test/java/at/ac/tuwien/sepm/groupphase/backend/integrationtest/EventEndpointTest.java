@@ -108,8 +108,6 @@ public class EventEndpointTest implements TestDataEvent, TestDataTicket, TestAut
             .description(TestDataEvent.TEST_EVENT_PERFORMANCE_DESCRIPTION)
             .date(TestDataEvent.TEST_PERFORMANCE_DATE)
             .artist(artist)
-            .location(address)
-            .sectorTypes(TestDataEvent.getTestEventSectortypes())
             .ticketTypes(TestDataTicket.getTicketTypes())
             .build());
 
@@ -265,8 +263,6 @@ public class EventEndpointTest implements TestDataEvent, TestDataTicket, TestAut
             .description(TestDataEvent.TEST_EVENT_PERFORMANCE_DESCRIPTION)
             .date(TestDataEvent.TEST_PERFORMANCE_DATE)
             .artist(artist)
-            .location(address)
-            .sectorTypes(TestDataEvent.getTestEventSectortypes())
             .build());
 
         Event invalidEvent = Event.builder()
@@ -303,8 +299,6 @@ public class EventEndpointTest implements TestDataEvent, TestDataTicket, TestAut
             .description(TestDataEvent.TEST_EVENT_PERFORMANCE_DESCRIPTION)
             .date(TestDataEvent.TEST_PERFORMANCE_DATE)
             .artist(artist)
-            .location(address)
-            .sectorTypes(TestDataEvent.getTestEventSectortypes())
             .build());
 
         Event invalidEvent = Event.builder()

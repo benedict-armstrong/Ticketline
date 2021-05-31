@@ -17,6 +17,7 @@ public interface TicketService {
      *
      * @param id the id of the ticket to be cancelled.
      * @return the new ticket.
+     * @throws at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException if no ticket is found.
      */
     Ticket cancel(Long id);
 

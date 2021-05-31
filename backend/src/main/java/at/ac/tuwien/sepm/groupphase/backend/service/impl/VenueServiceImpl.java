@@ -48,7 +48,7 @@ public class VenueServiceImpl implements VenueService {
             layoutUnit.setSector(venue.getSectors().stream().filter(layoutUnitFilter -> localId.equals(layoutUnitFilter.getLocalId())).findFirst().orElse(null));
         }
 
-        ApplicationUser user = userRepository.findUserByEmail((String) authenticationFacade.getAuthentication().getPrincipal());
+        ApplicationUser user = userRepository.findUserByEmail(authenticationFacade.getMail());
 
         venue.setOwner(user);
 
@@ -72,9 +72,14 @@ public class VenueServiceImpl implements VenueService {
     @Override
     public List<Venue> getAll() {
 
-        ApplicationUser user = userRepository.findUserByEmail((String) authenticationFacade.getAuthentication().getPrincipal());
+        ApplicationUser user = userRepository.findUserByEmail(authenticationFacade.getMail());
         LOGGER.trace("getAll({})", user.getEmail());
 
-        return venueRepository.findAllByOwnerIs(user);
+        if (authenticationFacade.isAdmin()) {
+            return venueRepository.findAll();
+        } else {
+            return venueRepository.findAllByOwnerIs(user);
+        }
+
     }
 }

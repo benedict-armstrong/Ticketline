@@ -75,7 +75,6 @@ public class VenueEndpointTest implements TestDataVenue, TestAuthentification {
                 .postcode(VENUE_ADDRESS_POSTCODE)
                 .country(VENUE_ADDRESS_COUNTRY)
                 .eventLocation(false)
-                .performances(null)
                 .build())
         .layout(VENUE_LAYOUT_DTO)
         .build();
@@ -93,7 +92,6 @@ public class VenueEndpointTest implements TestDataVenue, TestAuthentification {
                     .postcode(VENUE_ADDRESS_POSTCODE)
                     .country(VENUE_ADDRESS_COUNTRY)
                     .eventLocation(false)
-                    .performances(null)
                     .build())
             .layout(VENUE_LAYOUT_DTO)
             .build();

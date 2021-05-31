@@ -7,17 +7,11 @@ import at.ac.tuwien.sepm.groupphase.backend.basetest.TestDataEvent;
 import at.ac.tuwien.sepm.groupphase.backend.basetest.TestDataTicket;
 import at.ac.tuwien.sepm.groupphase.backend.basetest.TestDataUser;
 import at.ac.tuwien.sepm.groupphase.backend.config.properties.SecurityProperties;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.LayoutUnitDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.TicketDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.PerformanceMapper;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.SectorTypeMapper;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.TicketTypeMapper;
-import at.ac.tuwien.sepm.groupphase.backend.entity.Address;
-import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
-import at.ac.tuwien.sepm.groupphase.backend.entity.Artist;
-import at.ac.tuwien.sepm.groupphase.backend.entity.Performance;
-import at.ac.tuwien.sepm.groupphase.backend.entity.SectorType;
-import at.ac.tuwien.sepm.groupphase.backend.entity.Ticket;
-import at.ac.tuwien.sepm.groupphase.backend.entity.TicketType;
+import at.ac.tuwien.sepm.groupphase.backend.entity.*;
 import at.ac.tuwien.sepm.groupphase.backend.repository.AddressRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.ArtistRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.PerformanceRepository;
@@ -95,24 +89,20 @@ public class TicketEndpointTest implements TestAuthentification, TestDataTicket 
     private TicketTypeMapper ticketTypeMapper;
 
     @Autowired
-    private SectorTypeMapper sectorTypeMapper;
-
-    @Autowired
     private PerformanceMapper performanceMapper;
 
     private final TicketDto template = TicketDto.builder()
-        .seats(Arrays.asList(1L, 5L, 6L))
+        .seat(LayoutUnitDto.builder().build())
         .build();
     private final Artist artist = TestDataArtist.getArtist();
-    private final Address address = TestDataAddress.getAddress();
+
     private final TicketType ticketType = STANDARD_TICKET_TYPE;
-    private final Performance performance = TestDataEvent.getPerformance(artist, address);
+    private final Performance performance = TestDataEvent.getPerformance(artist, Venue.builder().build());
     private final ApplicationUser user = TestDataUser.getUser();
 
     @BeforeEach
     public void beforeEach() throws Exception {
         artistRepository.save(artist);
-        addressRepository.save(address);
 
         saveUser(user, userRepository, passwordEncoder);
         authToken = authenticate(user, mockMvc, objectMapper);
@@ -120,10 +110,7 @@ public class TicketEndpointTest implements TestAuthentification, TestDataTicket 
         TicketType savedTicketType = ticketTypeRepository.save(ticketType);
 
         Performance savedPerformance = performanceRepository.save(performance);
-        SectorType sectorType = (SectorType) savedPerformance.getSectorTypes().toArray()[0];
-        sectorType.setPrice(100L);
 
-        template.setSectorType(sectorTypeMapper.sectorTypeToSectorTypeDto(sectorType));
         template.setPerformance(performanceMapper.performanceToPerformanceDto(savedPerformance));
         template.setTicketType(ticketTypeMapper.ticketTypeToTicketTypeDto(savedTicketType));
     }
@@ -141,8 +128,6 @@ public class TicketEndpointTest implements TestAuthentification, TestDataTicket 
     @Test
     @DisplayName("Should save correct ticket when creating one")
     public void whenCreateTicket_thenGetBackCorrectTicket() throws Exception {
-        Long templatePrice = (long) Math.floor(100 * template.getTicketType().getMultiplier()
-            * template.getSectorType().getPrice() * template.getSeats().size());
 
         MvcResult mvcResult = this.mockMvc.perform(
             post(TICKET_BASE_URI)
@@ -160,8 +145,8 @@ public class TicketEndpointTest implements TestAuthentification, TestDataTicket 
         TicketDto ticketDto = objectMapper.readValue(response.getContentAsString(), TicketDto.class);
         assertAll(
             () -> assertNotNull(ticketDto.getId()),
-            () -> assertEquals(Ticket.Status.PAID_FOR.toString(), ticketDto.getStatus()),
-            () -> assertEquals(templatePrice, ticketDto.getTotalPrice())
+            () -> assertEquals(Ticket.Status.PAID.toString(), ticketDto.getStatus()),
+            () -> assertEquals(template.getTotalPrice(), ticketDto.getTotalPrice())
         );
     }
 
