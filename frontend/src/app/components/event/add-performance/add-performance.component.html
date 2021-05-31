@@ -72,8 +72,8 @@
 
     <hr />
 
-    <app-add-tickettype [(ticketTypes)]="ticketTypes"></app-add-tickettype>
-    <div *ngIf="sectorTypes.length === 0 && submitted" class="alert alert-danger">
+    <app-add-tickettype *ngIf="this.venue" [sectors]="this.venue.sectors" (ticketTypesChanged)="changeTickets($event)"></app-add-tickettype>
+    <div *ngIf="this.ticketTypes.length === 0 && submitted" class="alert alert-danger">
       At least one ticket type required!
     </div>
 
