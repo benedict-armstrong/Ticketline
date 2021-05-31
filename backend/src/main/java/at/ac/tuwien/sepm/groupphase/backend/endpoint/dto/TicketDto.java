@@ -15,8 +15,6 @@ public class TicketDto {
 
     private Long id;
 
-    private Long ownerId;
-
     @NotNull(message = "Performance ID is missing")
     private PerformanceDto performance;
 

@@ -44,10 +44,12 @@ public class CartItemServiceImpl implements CartItemService {
     public CartItem save(CartItem cartItem, CartItem.Status status) {
         LOGGER.trace("save({})", cartItem);
         cartItem.setUser(
-            userRepository.findUserByEmail(authenticationFacade.getMail())
+            userRepository.findUserByEmail((String) authenticationFacade.getAuthentication().getPrincipal())
         );
         cartItem.setStatus(status);
         cartItem.setChangeDate(LocalDateTime.now());
+
+        System.out.println("CartItem User: " + cartItem.getUser().toString());
 
         return cartItemRepository.save(cartItem);
     }

@@ -52,6 +52,7 @@ public class CartItemEndpoint {
     @Operation(summary = "Create a cartItem in cart of user")
     public CartItemDto createCartTicket(@RequestBody CartItemDto cartItemDto) {
         LOGGER.info("POST /api/v1/cartItems {}", cartItemDto);
+        System.out.println("POST /api/v1/cartItems" + cartItemDto);
         return cartItemMapper.cartItemToCartItemDto(cartItemService.save(
             cartItemMapper.cartItemDtoToCartItem(cartItemDto), CartItem.Status.IN_CART
         ));
@@ -94,13 +95,12 @@ public class CartItemEndpoint {
         return cartItemService.delete(id);
     }
 
-    /*
     @GetMapping("/paid")
     @Secured({"ROLE_USER", "ROLE_ORGANIZER", "ROLE_ADMIN"})
     @ResponseStatus(HttpStatus.OK)
-    @Operation(summary = "Get tickets from user that have been paid for")
-    public List<TicketDto> getPaidTickets() {
-        LOGGER.info("GET /api/v1/tickets/paid");
-        return ticketMapper.ticketListToTicketDtoList(ticketService.getTickets(Ticket.Status.PAID_FOR));
-    }*/
+    @Operation(summary = "Get cartItems from user that have been paid for")
+    public List<CartItemDto> getPaidCartItems() {
+        LOGGER.info("GET /api/v1/cartItems/paid");
+        return cartItemMapper.cartItemListToCartItemDtoList(cartItemService.getCartItems(CartItem.Status.PAID_FOR));
+    }
 }

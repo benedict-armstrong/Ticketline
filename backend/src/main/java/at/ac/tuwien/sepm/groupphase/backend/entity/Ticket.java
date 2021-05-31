@@ -34,11 +34,6 @@ public class Ticket {
     private Long id;
 
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
-    @ToString.Exclude
-    @JoinColumn(name = "OWNER_ID", nullable = false)
-    private ApplicationUser owner;
-
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
     @JoinColumn(name = "TYPE_ID", nullable = false)
     private TicketType ticketType;
 

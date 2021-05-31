@@ -14,7 +14,7 @@ public class CartItemDto {
 
     private Long id;
 
-    private Ticket[] tickets;
+    private TicketDto[] tickets;
 
     private String status;
 }
