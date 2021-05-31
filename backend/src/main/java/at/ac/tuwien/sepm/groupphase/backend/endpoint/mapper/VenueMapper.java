@@ -18,6 +18,7 @@ public interface VenueMapper {
         int width = venueDto.getLayout().get(0).size();
 
         return Venue.builder()
+            .id(venueDto.getId())
             .name(venueDto.getName())
             .address(AddressMapper.INSTANCE.addressDtoToAddress(venueDto.getAddress()))
             .sectors(SectorMapper.INSTANCE.sectorDtoListToSectorList(venueDto.getSectors()))
