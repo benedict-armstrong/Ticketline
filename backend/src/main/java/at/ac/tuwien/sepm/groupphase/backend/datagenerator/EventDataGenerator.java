@@ -10,6 +10,7 @@ import at.ac.tuwien.sepm.groupphase.backend.repository.ArtistRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.EventRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.FileRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.VenueRepository;
+import com.github.javafaker.Faker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.DependsOn;
@@ -19,10 +20,12 @@ import org.springframework.stereotype.Component;
 import javax.annotation.PostConstruct;
 import java.lang.invoke.MethodHandles;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 @Profile("generateData")
@@ -47,17 +50,6 @@ public class EventDataGenerator {
         this.venueRepository = venueRepository;
     }
 
-    private Performance buildPerformance(int i, Artist artist, Venue venue) {
-        return Performance.builder()
-            .title("Performance " + i)
-            .description("This is a new performance part " + i)
-            .date(LocalDateTime.of(2022, 12, 23, 15, 30).plusDays(i * 10L))
-            .ticketTypes(buildTicketTypes())
-            .artist(artist)
-            .venue(venueRepository.findAll().get(0))
-            .build();
-    }
-
     private Set<TicketType> buildTicketTypes() {
         Set<TicketType> ticketTypes = new HashSet<>();
         ticketTypes.add(TicketType.builder().title("Standard").price(100).build());
@@ -79,23 +71,50 @@ public class EventDataGenerator {
                 .collect(Collectors.toSet());
             List<Venue>  venues  = venueRepository.findAll();
 
+            Faker faker = new Faker();
+
             for (int i = 0; i < NUMBER_OF_EVENTS_TO_GENERATE; i++) {
                 Set<Performance> performances = new HashSet<>();
-                for (int j = 0; j < i; j++) {
-                    Artist artist = artists.get((i + j) % artists.size());
-                    Venue venue   = venues.get((i + j) % venues.size());
-                    performances.add(buildPerformance(j, artist, venue));
+                int venueOffset = 0;
+                int artistOffset = 0;
+
+                Date startDate = faker.date().future(800, TimeUnit.DAYS);
+                Date endDate = faker.date().future(30, TimeUnit.DAYS, startDate);
+                LocalDate eventStart = startDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                LocalDate eventEnd = endDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+
+                //generate 4 performances per event
+                for (int j = 0; j < 4; j++) {
+                    Artist artist = artists.get(artistOffset);
+                    artistOffset = (artistOffset + 1) % artists.size();
+
+                    Venue venue = venues.get(venueOffset);
+                    venueOffset = (venueOffset + 1) % venues.size();
+
+                    Performance performance = Performance.builder()
+                        .title(faker.esports().event())
+                        .description(faker.lorem().characters())
+                        .date(faker.date().between(startDate, endDate).toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime())
+                        .ticketTypes(buildTicketTypes())
+                        .artist(artist)
+                        .venue(venue)
+                        .build();
+
+                    performances.add(performance);
                 }
+
                 Event event = Event.builder()
-                    .name("Test Event " + i)
-                    .description("This is a test description! Part " + i)
+                    .name("Event " + i)
+                    .description(faker.lorem().characters())
                     .eventType(Event.EventType.CONCERT)
                     .duration(100 + 50 * i)
-                    .startDate(LocalDate.of(2021, 12, 25))
-                    .endDate(LocalDate.of(2023, 12, 25))
+                    .startDate(eventStart)
+                    .endDate(eventEnd)
                     .images(images)
                     .performances(performances)
                     .build();
+
+                LOGGER.debug("saving event {}", event);
                 eventRepository.save(event);
             }
         }

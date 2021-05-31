@@ -2,6 +2,7 @@ package at.ac.tuwien.sepm.groupphase.backend.datagenerator;
 
 import at.ac.tuwien.sepm.groupphase.backend.entity.Artist;
 import at.ac.tuwien.sepm.groupphase.backend.repository.ArtistRepository;
+import com.github.javafaker.Faker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Profile;
@@ -13,10 +14,8 @@ import java.lang.invoke.MethodHandles;
 @Profile("generateData")
 @Component
 public class ArtistDataGenerator {
-
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
-
-    private static final int NUMBER_OF_ARTISTS_TO_GENERATE = 5;
+    private static final int NUMBER_OF_ARTISTS_TO_GENERATE = 10;
 
     private final ArtistRepository artistRepository;
 
@@ -25,19 +24,25 @@ public class ArtistDataGenerator {
     }
 
     @PostConstruct
-    public void generateArtists() {
+    private void generateArtists() {
         if (artistRepository.findAll().size() > 0) {
-            LOGGER.debug("Artists have already been generated");
+            LOGGER.debug("artists already generated");
         } else {
-            LOGGER.debug("Generating {} artists", NUMBER_OF_ARTISTS_TO_GENERATE);
+            LOGGER.debug("generating {} artists", NUMBER_OF_ARTISTS_TO_GENERATE);
+            Faker faker = new Faker();
+
             for (int i = 0; i < NUMBER_OF_ARTISTS_TO_GENERATE; i++) {
+                String firstName = faker.name().firstName();
+                String lastName = faker.name().lastName();
+
                 Artist artist = Artist.builder()
-                    .firstName("Artist" + i)
-                    .lastName("Smith" + i)
+                    .firstName(firstName)
+                    .lastName(lastName)
                     .build();
+
+                LOGGER.debug("saving artist {}", artist);
                 artistRepository.save(artist);
             }
         }
     }
-
 }

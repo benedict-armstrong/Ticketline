@@ -6,6 +6,7 @@ import at.ac.tuwien.sepm.groupphase.backend.entity.Sector;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Venue;
 import at.ac.tuwien.sepm.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepm.groupphase.backend.service.VenueService;
+import com.github.javafaker.Faker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,12 +32,6 @@ public class VenueDataGenerator {
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     private static final String TEST_VENUE_NAME = "Venue 1";
-
-    private static final String TEST_VENUE_ADDRESS_NAME = "Address";
-    private static final String TEST_VENUE_ADDRESS_LINE_1 = "Address";
-    private static final String TEST_VENUE_ADDRESS_CITY = "Vienna";
-    private static final String TEST_VENUE_ADDRESS_POSTCODE = "1010";
-    private static final String TEST_VENUE_ADDRESS_COUNTRY = "Austria";
 
     private static final String SECTOR_1_NAME = "SECTOR 1";
     private static final String SECTOR_2_NAME = "SECTOR 1";
@@ -87,18 +82,27 @@ public class VenueDataGenerator {
         //SecurityContext sc = SecurityContextHolder.getContext();
         //sc.setAuthentication(auth);
 
+        Faker faker = new Faker();
+
+        String locationName = faker.address().streetName();
+        String streetName = faker.address().streetName();
+        String number = faker.address().buildingNumber();
+        String city = faker.address().cityName();
+        String country = faker.address().country();
+        String postCode = faker.address().zipCode();
+
         venueService.add(
             Venue.builder()
                 .name("Venue")
                 .sectors(Arrays.asList(sectorSeated, sectorStage, sectorStanding))
                 .address(
                     Address.builder()
-                        .name(TEST_VENUE_ADDRESS_NAME)
-                        .lineOne(TEST_VENUE_ADDRESS_LINE_1)
-                        .city(TEST_VENUE_ADDRESS_CITY)
-                        .postcode(TEST_VENUE_ADDRESS_POSTCODE)
-                        .country(TEST_VENUE_ADDRESS_COUNTRY)
-                        .eventLocation(false)
+                        .name(locationName)
+                        .lineOne(streetName + " " + number)
+                        .city(city)
+                        .postcode(postCode)
+                        .country(country)
+                        .eventLocation(true)
                         .build())
                 .layout(venueLayout)
                 .build()
