@@ -44,72 +44,69 @@ export class PerformanceSearchComponent implements OnInit {
   searchPerformances() {
 
     if(this.performanceSearchForm.value.date === '' && this.performanceSearchForm.value.price === ''
-      && this.performanceSearchForm.value.time === '' && this.performanceSearchForm.value.event === ''
-      && this.performanceSearchForm.value.venue === '') {
+        && this.performanceSearchForm.value.time === '' && this.performanceSearchForm.value.event === ''
+        && this.performanceSearchForm.value.venue === '') {
 
-    this.performanceService.getPerformances(this.page, this.size).subscribe(
-      response => {
-        console.log(response);
+      this.performanceService.getPerformances(this.page, this.size).subscribe(
+        response => {
+          this.performances.push(...response);
 
-        this.performances.push(...response);
-
-        if (response.length < this.size) {
-          this.noPerformance = true;
-        } else {
-          this.page++;
-          this.noPerformance = false;
-        }
-        this.searchedPerformances.emit(this.performances);
-        this.searchedNoPerformance.emit(this.noPerformance);
-      }, error => {
-        console.error(error);
-      }
-    );
-
-      } else {
-
-        let date = null;
-        if (this.performanceSearchForm.value.date !== '') {
-          if (this.performanceSearchForm.value.time !== '') {
-            date = new Date(this.performanceSearchForm.value.date + 'T' + this.performanceSearchForm.value.time);
+          if (response.length < this.size) {
+            this.noPerformance = true;
           } else {
-            date = new Date(this.performanceSearchForm.value.date);
+            this.page++;
+            this.noPerformance = false;
           }
+          this.searchedPerformances.emit(this.performances);
+          this.searchedNoPerformance.emit(this.noPerformance);
+        }, error => {
+          console.error(error);
         }
+      );
 
-        let eventId;
+    } else {
 
-        if(this.selectedEvent){
-          eventId = this.selectedEvent.id;
-        }else{
-          eventId = null;
+      let date = null;
+      if (this.performanceSearchForm.value.date !== '') {
+        if (this.performanceSearchForm.value.time !== '') {
+          date = new Date(this.performanceSearchForm.value.date + 'T' + this.performanceSearchForm.value.time);
+        } else {
+          date = new Date(this.performanceSearchForm.value.date);
         }
-
-        this.performanceService.searchPerformances(this.page, this.size, date, eventId).subscribe(
-          response => {
-            console.log(response);
-            this.performances.push(...response);
-
-            if (response.length < this.size) {
-              this.noPerformance = true;
-            } else {
-              this.page++;
-              this.noPerformance = false;
-            }
-
-            this.searchedPerformances.emit(this.performances);
-            this.searchedNoPerformance.emit(this.noPerformance);
-            if (this.selectedEvent) {
-              this.searchedEventPerformance.emit(this.selectedEvent);
-            } else {
-              this.searchedEventPerformance.emit(undefined);
-            }
-          }, error => {
-            console.error(error);
-          }
-        );
       }
 
+      let eventId;
+
+      if(this.selectedEvent){
+        eventId = this.selectedEvent.id;
+      }else{
+        eventId = null;
+      }
+
+      this.performanceService.searchPerformances(this.page, this.size, date, eventId).subscribe(
+        response => {
+          console.log(response);
+          this.performances.push(...response);
+
+          if (response.length < this.size) {
+            this.noPerformance = true;
+          } else {
+            this.page++;
+            this.noPerformance = false;
+          }
+
+          this.searchedPerformances.emit(this.performances);
+          this.searchedNoPerformance.emit(this.noPerformance);
+          if (this.selectedEvent) {
+            this.searchedEventPerformance.emit(this.selectedEvent);
+          } else {
+            this.searchedEventPerformance.emit(undefined);
+          }
+        }, error => {
+          console.error(error);
+        }
+      );
+    }
   }
 
   resetValues() {

@@ -58,7 +58,6 @@ export class ApplicationEventService {
    * Add a new event
    */
   addEvent(event: Event): Observable<Event> {
-    console.log(event);
     return this.httpClient.post<Event>(this.eventBaseUri, event);
   }
 }

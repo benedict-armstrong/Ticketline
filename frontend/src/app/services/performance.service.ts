@@ -36,7 +36,6 @@ export class ApplicationPerformanceService {
    * Add a new event
    */
   addEvent(event: Performance): Observable<Performance> {
-    console.log(event);
     return this.httpClient.post<Performance>(this.performanceBaseUri, event);
   }
 
@@ -47,14 +46,12 @@ export class ApplicationPerformanceService {
     let params = new HttpParams();
     params = params.set('page', String(page));
     params = params.set('size', String(size));
-    if (date !== null) {
+    if (date) {
       params = params.set('date', date.toISOString());
     }
-
     if(event !== null){
       params = params.set('eventId', event.toString());
     }
-
     return this.httpClient.get<Performance[]>(this.performanceBaseUri, { params });
   }
 
