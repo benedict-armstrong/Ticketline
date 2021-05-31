@@ -140,7 +140,7 @@ public class TicketDataGenerator {
         ticketTypes.add(
             TicketType.builder()
                 .title("TicketGen")
-                .price(10L)
+                .price(1000L)
                 .sectorType(sectorType)
                 .build()
         );
