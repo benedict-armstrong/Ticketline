@@ -82,8 +82,8 @@ public class CustomPerformanceService implements PerformanceService {
     }
 
     @Override
-    public List<Performance> findAllPerformancesByLocation(Long addressId, Pageable pageable) {
-        return performanceRepository.findAllByLocation_Id(addressId, pageable).getContent();
+    public List<Performance> findAllPerformancesByVenueAddress(Long addressId, Pageable pageable) {
+        return performanceRepository.findAllByVenue_Address_Id(addressId, pageable).getContent();
     }
 
     @Override

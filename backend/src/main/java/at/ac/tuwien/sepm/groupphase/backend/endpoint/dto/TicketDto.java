@@ -7,7 +7,6 @@ import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PositiveOrZero;
-import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -17,15 +16,11 @@ public class TicketDto {
 
     private Long id;
 
-    private UserDto owner;
-
     @NotNull(message = "Performance ID is missing")
     private PerformanceDto performance;
 
-    @NotNull(message = "Sector type is missing")
-    private SectorTypeDto sectorType;
-
-    private List<Long> seats; // TODO: map to Venue's seats
+    @NotNull(message = "Seat is required")
+    private LayoutUnitDto seat;
 
     @NotNull(message = "Ticket type is missing")
     private TicketTypeDto ticketType;

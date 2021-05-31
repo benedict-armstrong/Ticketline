@@ -113,23 +113,15 @@ public interface TestDataMapper extends TestData, TestDataAddress, TestDataNews,
         .publishedAt(TEST_NEWS_PUBLISHED_AT)
         .build();
 
-    SectorType SECTOR_TYPE_ENTITY = SectorType.builder()
-        .name("Sector")
-        .numberOfTickets(100)
-        .build();
-
-    SectorTypeDto SECTOR_TYPE_DTO = SectorTypeDto.builder()
-        .name("Sector")
-        .numberOfTickets(100)
-        .build();
 
     Performance PERFORMANCE_ENTITY = Performance.builder()
         .title(TestDataEvent.TEST_EVENT_TITLE)
         .description(TestDataEvent.TEST_EVENT_DESCRIPTION)
         .date(TestDataEvent.TEST_PERFORMANCE_DATE)
         .artist(ARTIST_ENTITY)
-        .location(ADDRESS_ENTITY)
-        .sectorTypes(TestDataEvent.getTestEventSectortypes())
+        .venue(
+            Venue.builder().build()
+        )
         .build();
 
     PerformanceDto PERFORMANCE_DTO = PerformanceDto.builder()
@@ -137,8 +129,9 @@ public interface TestDataMapper extends TestData, TestDataAddress, TestDataNews,
         .description(TestDataEvent.TEST_EVENT_DESCRIPTION)
         .date(TestDataEvent.TEST_PERFORMANCE_DATE)
         .artist(ARTIST_DTO)
-        .location(ADDRESS_DTO)
-        .sectorTypes(TestDataEvent.getTestEventSectortypesDto())
+        .venue(
+            VenueDto.builder().build()
+        )
         .build();
 
     ApplicationUser USER_ENTITY = ApplicationUser.builder()

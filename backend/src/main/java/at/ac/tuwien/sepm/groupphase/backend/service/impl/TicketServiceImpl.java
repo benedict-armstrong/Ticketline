@@ -1,6 +1,7 @@
 package at.ac.tuwien.sepm.groupphase.backend.service.impl;
 
 import at.ac.tuwien.sepm.groupphase.backend.entity.Ticket;
+import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepm.groupphase.backend.repository.TicketRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepm.groupphase.backend.security.AuthenticationFacade;
@@ -11,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.lang.invoke.MethodHandles;
+import java.util.Optional;
 
 @Service
 public class TicketServiceImpl implements TicketService {
@@ -33,9 +35,8 @@ public class TicketServiceImpl implements TicketService {
     public Ticket save(Ticket ticket, Ticket.Status status) {
         LOGGER.trace("saveTicket({})", ticket);
         ticket.setOwner(
-            userRepository.findUserByEmail((String) authenticationFacade.getAuthentication().getPrincipal())
+            userRepository.findUserByEmail(authenticationFacade.getMail())
         );
-        ticket.setTotalPrice(calculatePrice(ticket));
         ticket.setStatus(status);
         return ticketRepository.save(ticket);
     }
@@ -43,15 +44,13 @@ public class TicketServiceImpl implements TicketService {
     @Override
     public Ticket cancel(Long id) {
         LOGGER.trace("cancel({})", id);
-        Ticket ticket = ticketRepository.findById(id).get();
-        ticket.setStatus(Ticket.Status.CANCELLED);
-        return ticketRepository.save(ticket);
-    }
-
-    private Long calculatePrice(Ticket ticket) {
-        LOGGER.trace("calculatePrice({})", ticket);
-        return (long) Math.floor(100 * ticket.getTicketType().getMultiplier() * ticket.getSectorType().getPrice()
-            * ticket.getSeats().size());
+        Optional<Ticket> optionalTicket = ticketRepository.findById(id);
+        if (optionalTicket.isPresent()) {
+            Ticket ticket = optionalTicket.get();
+            ticket.setStatus(Ticket.Status.CANCELLED);
+            return ticketRepository.save(ticket);
+        }
+        throw new NotFoundException(String.format("Could not find Ticket with id: %d", id));
     }
 
 }
