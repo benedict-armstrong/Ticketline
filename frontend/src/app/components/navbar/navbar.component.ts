@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { AuthService } from 'src/app/services/auth.service';
-import { TicketService } from 'src/app/services/ticket.service';
+import { TicketService } from 'src/app/services/cartItem.service';
 
 @Component({
   selector: 'app-navbar',

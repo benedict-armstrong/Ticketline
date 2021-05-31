@@ -44,8 +44,13 @@ public class VenueServiceImpl implements VenueService {
         venue.setSectors(sectorRepository.saveAll(venue.getSectors()));
 
         for (LayoutUnit layoutUnit : venue.getLayout()) {
-            Long localId = layoutUnit.getSector().getLocalId();
-            layoutUnit.setSector(venue.getSectors().stream().filter(layoutUnitFilter -> localId.equals(layoutUnitFilter.getLocalId())).findFirst().orElse(null));
+            Long localSectorId = layoutUnit.getSector().getLocalId();
+            layoutUnit.setSector(
+                venue.getSectors().stream().filter(
+                    sector ->
+                        localSectorId.equals(sector.getLocalId())
+                ).findFirst().orElse(null)
+            );
         }
 
         ApplicationUser user = userRepository.findUserByEmail(authenticationFacade.getMail());

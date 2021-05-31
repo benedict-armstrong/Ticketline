@@ -18,7 +18,7 @@ export class TicketService {
   public errorMessage = '';
   public total = 0;
 
-  private ticketBaseUri: string = this.globals.backendUri + '/tickets';
+  private cartItemBaseUri: string = this.globals.backendUri + '/cartItems';
 
   constructor(private httpClient: HttpClient, private globals: Globals) { }
 
@@ -66,23 +66,23 @@ export class TicketService {
   }
 
   getShoppingCart(): Observable<Ticket[]> {
-    return this.httpClient.get<Ticket[]>(this.ticketBaseUri + '/cart');
+    return this.httpClient.get<Ticket[]>(this.cartItemBaseUri);
   }
 
   addTicket(ticket: Ticket): Observable<Ticket> {
-    return this.httpClient.post<Ticket>(this.ticketBaseUri + '/cart', ticket);
+    return this.httpClient.post<Ticket>(this.cartItemBaseUri, ticket);
   }
 
   updateAmount(ticketUpdate: TicketUpdate): Observable<TicketUpdate> {
-    return this.httpClient.put<TicketUpdate>(this.ticketBaseUri + '/amount', ticketUpdate);
+    return this.httpClient.put<TicketUpdate>(this.cartItemBaseUri + '/amount', ticketUpdate);
   }
 
   removeTicket(ticket: Ticket): Observable<boolean> {
-    return this.httpClient.delete<boolean>(this.ticketBaseUri + '/' + ticket.id);
+    return this.httpClient.delete<boolean>(this.cartItemBaseUri + '/' + ticket.id);
   }
 
   checkout(): Observable<boolean> {
-    return this.httpClient.put<boolean>(this.ticketBaseUri + '/checkout', null);
+    return this.httpClient.put<boolean>(this.cartItemBaseUri + '/checkout', null);
   }
 
   private defaultServiceErrorHandling(error: any) {

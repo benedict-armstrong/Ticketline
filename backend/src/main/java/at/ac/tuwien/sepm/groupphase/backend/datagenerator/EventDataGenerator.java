@@ -1,121 +1,116 @@
 package at.ac.tuwien.sepm.groupphase.backend.datagenerator;
 
-/*
+import at.ac.tuwien.sepm.groupphase.backend.entity.Artist;
+import at.ac.tuwien.sepm.groupphase.backend.entity.Event;
+import at.ac.tuwien.sepm.groupphase.backend.entity.File;
+import at.ac.tuwien.sepm.groupphase.backend.entity.Performance;
+import at.ac.tuwien.sepm.groupphase.backend.entity.TicketType;
+import at.ac.tuwien.sepm.groupphase.backend.entity.Venue;
+import at.ac.tuwien.sepm.groupphase.backend.repository.ArtistRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.EventRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.FileRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.VenueRepository;
+import com.github.javafaker.Faker;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.context.annotation.DependsOn;
+import org.springframework.context.annotation.Profile;
+import org.springframework.stereotype.Component;
+
+import javax.annotation.PostConstruct;
+import java.lang.invoke.MethodHandles;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
+
 @Profile("generateData")
 @Component
+@DependsOn({"venueDataGenerator", "fileDataGenerator", "artistDataGenerator"})
 public class EventDataGenerator {
-    private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
-    private static final int NUMBER_OF_EVENTS_TO_GENERATE = 5;
-    private static final String TEST_EVENT = "Test Event";
-    private static final String TEST_EVENT_DESCRIPTION = "This is a test description! Part";
-    private static final LocalDate TEST_EVENT_START_DATE = LocalDate.parse("2021-12-12");
-    private static final LocalDate TEST_EVENT_END_DATE = LocalDate.parse("2023-12-12");
-    private static final String TEST_PERFORMANCE_TITLE = "Performance";
-    private static final String TEST_PERFORMANCE_DESCRIPTION = "This is a new performance part";
 
-    private static final String TEST_ARTIST_FIRSTNAME = "Artist";
-    private static final String TEST_ARTIST_LASTNAME = "Famous";
-    private static final String TEST_LOCATION_NAME = "Address";
-    private static final String TEST_LOCATION_CITY = "Vienna";
-    private static final String TEST_LOCATION_POSTCODE = "1000";
-    private static final String TEST_LOCATION_COUNTRY = "Austria";
-    private static final LocalDateTime TEST_DATETIME = LocalDateTime.parse("2022-12-12T22:00:00");
+    private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+
+    private static final int NUMBER_OF_EVENTS_TO_GENERATE = 5;
 
     private final EventRepository eventRepository;
     private final FileRepository fileRepository;
-    private final AddressRepository addressRepository;
     private final ArtistRepository artistRepository;
+    private final VenueRepository venueRepository;
 
-    public EventDataGenerator(EventRepository eventRepository, FileRepository fileRepository, AddressRepository addressRepository, ArtistRepository artistRepository) {
+    public EventDataGenerator(EventRepository eventRepository, FileRepository fileRepository,
+                              ArtistRepository artistRepository, VenueRepository venueRepository) {
         this.eventRepository = eventRepository;
         this.fileRepository = fileRepository;
-        this.addressRepository = addressRepository;
         this.artistRepository = artistRepository;
+        this.venueRepository = venueRepository;
+    }
+
+    private Set<TicketType> buildTicketTypes() {
+        Set<TicketType> ticketTypes = new HashSet<>();
+        ticketTypes.add(TicketType.builder().title("Standard").price(100).build());
+        ticketTypes.add(TicketType.builder().title("VIP").price(150).build());
+        ticketTypes.add(TicketType.builder().title("Discount").price(50).build());
+        return ticketTypes;
     }
 
     @PostConstruct
-    private void generateEvent() throws Exception {
+    private void generateEvent() {
         if (eventRepository.findAll().size() > 0) {
-            LOGGER.debug("events already generated");
+            LOGGER.debug("Events have already been generated");
         } else {
-            LOGGER.debug("generating {} event entries", NUMBER_OF_EVENTS_TO_GENERATE);
+            LOGGER.debug("Generating {} event entries", NUMBER_OF_EVENTS_TO_GENERATE);
 
-            List<Artist> artistList = new LinkedList<>();
-            if (artistRepository.findAll().size() >= 5) {
-                artistList = artistRepository.findAll();
-            }
+            List<Artist> artists = artistRepository.findAll();
+            Set<File>    images  = fileRepository.findAll().stream()
+                .filter(item -> item.getType() == File.Type.IMAGE_JPG || item.getType() == File.Type.IMAGE_PNG)
+                .collect(Collectors.toSet());
+            List<Venue>  venues  = venueRepository.findAll();
 
-            List<Address> addressList = new LinkedList<>();
-            if (addressRepository.findAll().size() >= 5) {
-                addressList = addressRepository.findAll();
-            }
-
-            // using free images from pixabay to test
-            // Image 1 https://pixabay.com/vectors/test-pattern-tv-tv-test-pattern-152459/
-            // Image 2 https://cdn.pixabay.com/photo/2015/11/22/19/04/crowd-1056764_960_720.jpg
-            // Image 3 https://pixabay.com/de/photos/hand-drehscheibe-dj-neon-lights-1850120/
-            byte[] imgBuffer1 = recoverImageFromUrl("https://cdn.pixabay.com/photo/2013/07/12/17/47/test-pattern-152459_960_720.png");
-            byte[] imgBuffer2 = recoverImageFromUrl("https://cdn.pixabay.com/photo/2015/11/22/19/04/crowd-1056764_960_720.jpg");
-            byte[] imgBuffer3 = recoverImageFromUrl("https://cdn.pixabay.com/photo/2016/11/22/19/15/hand-1850120_960_720.jpg");
+            Faker faker = new Faker();
 
             for (int i = 0; i < NUMBER_OF_EVENTS_TO_GENERATE; i++) {
-                Set<File> set = new HashSet<>();
-                File file = generateImage(imgBuffer1, File.Type.IMAGE_JPG);
-                LOGGER.debug("saving file {} for event", file);
-                fileRepository.save(file);
-                set.add(file);
-                file = generateImage(imgBuffer2, File.Type.IMAGE_JPEG);
-                LOGGER.debug("saving file {} for event", file);
-                fileRepository.save(file);
-                set.add(file);
-                file = generateImage(imgBuffer3, File.Type.IMAGE_PNG);
-                LOGGER.debug("saving file {} for event", file);
-                fileRepository.save(file);
-                set.add(file);
-
                 Set<Performance> performances = new HashSet<>();
-                int addressOffset = 0;
+                int venueOffset = 0;
                 int artistOffset = 0;
-                for (int j = 0; j <= i; j++) {
-                    Address location;
-                    if (addressList.size() <= j) {
-                        location = generateEventLocation(j);
-                        addressList.add(addressRepository.save(location));
-                        addressOffset++;
-                    } else {
-                        location = addressList.get(j - addressOffset);
-                    }
 
-                    Artist artist;
-                    if (artistList.size() <= j) {
-                        artist = generateArtist(j);
-                        artistList.add(artistRepository.save(artist));
-                        artistOffset++;
-                    } else {
-                        artist = artistList.get(j - artistOffset);
-                    }
+                Date startDate = faker.date().future(800, TimeUnit.DAYS);
+                Date endDate = faker.date().future(30, TimeUnit.DAYS, startDate);
+                LocalDate eventStart = startDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                LocalDate eventEnd = endDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+
+                //generate 4 performances per event
+                for (int j = 0; j < 4; j++) {
+                    Artist artist = artists.get(artistOffset);
+                    artistOffset = (artistOffset + 1) % artists.size();
+
+                    Venue venue = venues.get(venueOffset);
+                    venueOffset = (venueOffset + 1) % venues.size();
 
                     Performance performance = Performance.builder()
-                        .title(TEST_PERFORMANCE_TITLE + (j + i))
-                        .description(TEST_PERFORMANCE_DESCRIPTION + (j + i))
-                        .date(TEST_DATETIME.plusDays(i * 10))
-                        .sectorTypes(generateSectorTypes(i))
-                        .ticketTypes(generateTicketTypes(i))
+                        .title(faker.esports().event())
+                        .description(faker.lorem().characters())
+                        .date(faker.date().between(startDate, endDate).toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime())
+                        .ticketTypes(buildTicketTypes())
                         .artist(artist)
-                        .location(location)
+                        .venue(venue)
                         .build();
 
                     performances.add(performance);
                 }
 
                 Event event = Event.builder()
-                    .name(TEST_EVENT + i)
-                    .description(TEST_EVENT_DESCRIPTION + i)
+                    .name("Event " + i)
+                    .description(faker.lorem().characters())
                     .eventType(Event.EventType.CONCERT)
                     .duration(100 + 50 * i)
-                    .startDate(TEST_EVENT_START_DATE)
-                    .endDate(TEST_EVENT_END_DATE)
-                    .images(set)
+                    .startDate(eventStart)
+                    .endDate(eventEnd)
+                    .images(images)
                     .performances(performances)
                     .build();
 
@@ -124,57 +119,4 @@ public class EventDataGenerator {
             }
         }
     }
-
-    private byte[] recoverImageFromUrl(String urlText) throws Exception {
-        URL url = new URL(urlText);
-        ByteArrayOutputStream output = new ByteArrayOutputStream();
-
-        try (InputStream inputStream = url.openStream()) {
-            int n = 0;
-            byte [] buffer = new byte[1024];
-            while (-1 != (n = inputStream.read(buffer))) {
-                output.write(buffer, 0, n);
-            }
-        }
-
-        return output.toByteArray();
-    }
-
-    public static Artist generateArtist(int index) {
-        return Artist.builder()
-            .firstName(TEST_ARTIST_FIRSTNAME + index)
-            .lastName(TEST_ARTIST_LASTNAME + index)
-            .build();
-    }
-
-    public static Address generateEventLocation(int index) {
-        return Address.builder().name(TEST_LOCATION_NAME + index)
-            .lineOne("line " + index).city(TEST_LOCATION_CITY)
-            .postcode(TEST_LOCATION_POSTCODE).country(TEST_LOCATION_COUNTRY).eventLocation(true).build();
-    }
-
-    public static Set<SectorType> generateSectorTypes(int index) {
-        Set<SectorType> sectorTypes = new HashSet<>();
-        sectorTypes.add(SectorType.builder().name("Standing").numberOfTickets(100 + index * 50).build());
-        sectorTypes.add(SectorType.builder().name("Sitting").numberOfTickets(100 + index * 50).build());
-        return sectorTypes;
-    }
-
-    public static Set<TicketType> generateTicketTypes(int index) {
-        Set<SectorType> sectorTypes = new HashSet<>();
-        sectorTypes.add(SectorType.builder().name("Standing").numberOfTickets(100 + index * 50).build());
-        sectorTypes.add(SectorType.builder().name("Sitting").numberOfTickets(100 + index * 50).build());
-
-        Set<TicketType> ticketTypes = new HashSet<>();
-        for (SectorType sectorType : sectorTypes) {
-            ticketTypes.add(TicketType.builder().title("Standard").price(1000L + 300L * index).sectorType(sectorType).build());
-            ticketTypes.add(TicketType.builder().title("VIP").price(3000L + 700L * index).sectorType(sectorType).build());
-            ticketTypes.add(TicketType.builder().title("Discount").price(3000L + 700L * index).sectorType(sectorType).build());
-        }
-        return ticketTypes;
-    }
-
-    public static File generateImage(byte[] imgBuffer, File.Type imageType) {
-        return File.builder().data(imgBuffer).type(imageType).build();
-    }
-}*/
+}

@@ -1,6 +1,6 @@
 import {Component, Input, OnInit} from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { TicketService } from 'src/app/services/ticket.service';
+import { TicketService } from 'src/app/services/cartItem.service';
 import { TicketType } from '../../dtos/ticketType';
 import { Performance } from '../../dtos/performance';
 import { Ticket } from 'src/app/dtos/ticket';

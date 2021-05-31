@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { TicketService } from 'src/app/services/ticket.service';
+import { TicketService } from 'src/app/services/cartItem.service';
 
 @Component({
   selector: 'app-shoppingcart',
