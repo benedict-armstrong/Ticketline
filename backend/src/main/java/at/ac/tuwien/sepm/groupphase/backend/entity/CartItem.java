@@ -37,7 +37,7 @@ public class CartItem {
     @Column(nullable = false)
     private LocalDateTime changeDate;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
     @JoinColumn
     @EqualsAndHashCode.Exclude
     @ToString.Exclude

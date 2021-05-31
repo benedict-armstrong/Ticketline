@@ -4,8 +4,6 @@ import at.ac.tuwien.sepm.groupphase.backend.basetest.TestDataUser;
 import at.ac.tuwien.sepm.groupphase.backend.basetest.TestDataVenue;
 import at.ac.tuwien.sepm.groupphase.backend.entity.*;
 import at.ac.tuwien.sepm.groupphase.backend.repository.*;
-import at.ac.tuwien.sepm.groupphase.backend.service.CartItemService;
-import ch.qos.logback.core.Layout;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -56,9 +54,20 @@ public class CartItemRepositoryTest implements TestDataUser, TestDataVenue {
 
     private CartItem cartItem;
 
+    private ApplicationUser savedUser;
+
     @BeforeEach
     public void beforeEach() throws Exception {
-        ApplicationUser savedUser = userRepository.save(ApplicationUser.builder()
+        Address address = Address.builder()
+            .name("Max Mustermann")
+            .lineOne("Teststraße 2")
+            .city("Wien")
+            .postcode("1010")
+            .country("Österreich")
+            .eventLocation(true)
+            .build();
+
+        savedUser = userRepository.save(ApplicationUser.builder()
             .firstName(ADMIN_FIRST_NAME)
             .lastName(ADMIN_LAST_NAME)
             .email(ADMIN_EMAIL)
@@ -67,7 +76,7 @@ public class CartItemRepositoryTest implements TestDataUser, TestDataVenue {
             .status(ADMIN_USER_STATUS)
             .password(ADMIN_PASSWORD)
             .points(ADMIN_POINTS)
-            .address(ADMIN_ADDRESS)
+            .address(address)
             .telephoneNumber(ADMIN_PHONE_NUMBER)
             .build()
         );
@@ -88,7 +97,7 @@ public class CartItemRepositoryTest implements TestDataUser, TestDataVenue {
 
         Set<Sector> sectorSet = new HashSet<>();
         sectorSet.add(sector);
-        List<Sector> sectorList = new LinkedList<>(sectorSet);
+        List<Sector> sectorList = sectorRepository.saveAll(new LinkedList<>(sectorSet));
 
         TicketType ticketType = TicketType.builder().title("TicketType1").price(1000L).sector(sector).build();
         Set<TicketType> ticketTypeSet = new HashSet<>();
@@ -106,7 +115,7 @@ public class CartItemRepositoryTest implements TestDataUser, TestDataVenue {
             .sectors(sectorList)
             .layout(layoutUnitList)
             .name("VANUE1")
-            .address(ADMIN_ADDRESS)
+            .address(address)
             .width(1)
             .owner(savedUser)
             .build()
@@ -123,7 +132,6 @@ public class CartItemRepositoryTest implements TestDataUser, TestDataVenue {
         );
 
         Ticket ticket1 = Ticket.builder()
-            .owner(savedUser)
             .ticketType(ticketType)
             .performance(savedPerformance)
             .seat(layoutUnit)
@@ -145,7 +153,6 @@ public class CartItemRepositoryTest implements TestDataUser, TestDataVenue {
         performanceRepository.deleteAll();
         venueRepository.deleteAll();
         ticketTypeRepository.deleteAll();
-        sectorRepository.deleteAll();
         artistRepository.deleteAll();
         userRepository.deleteAll();
         addressRepository.deleteAll();
@@ -159,7 +166,8 @@ public class CartItemRepositoryTest implements TestDataUser, TestDataVenue {
         assertAll(
             () -> assertNotNull(savedCartItem.getId()),
             () -> assertEquals(cartItem.getUser(), savedCartItem.getUser()),
-            () -> assertEquals(cartItem.getStatus(), savedCartItem.getStatus())
+            () -> assertEquals(cartItem.getStatus(), savedCartItem.getStatus()),
+            () -> assertEquals(cartItem.getTickets().size(), savedCartItem.getTickets().size())
         );
     }
 }

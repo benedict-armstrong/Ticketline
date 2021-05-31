@@ -17,4 +17,6 @@ public interface CartItemMapper {
     CartItemDto[] cartItemSetToCartItemDtoArray(Set<CartItem> cartItemSet);
 
     List<CartItemDto> cartItemListToCartItemDtoList(List<CartItem> cartItemList);
+
+    List<CartItem> cartItemDtoListToCartItemList(List<CartItemDto> cartItemDtoList);
 }
