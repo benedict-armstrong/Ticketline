@@ -13,7 +13,7 @@
         </div>
 
         <div class="col-4 prices">
-            <span class="price">{{this.ticketService.cart[this.i].ticketType.price | currency:'EUR'}}</span>
+            <span class="price">{{this.ticketService.cart[this.i].ticketType.price / 100 | currency:'EUR'}}</span>
         </div>
     </div>
     <div class="row ticketBody">
@@ -27,7 +27,7 @@
             </form>
         </div>
         <div class="col-4 prices">
-            <span class="price">{{this.ticketService.cart[this.i].ticketType.price * cartItemForm.value.amount | currency:'EUR'}}</span>
+            <span class="price">{{this.ticketService.cart[this.i].ticketType.price * cartItemForm.value.amount / 100 | currency:'EUR'}}</span>
         </div>
     </div>
     <div class="row ticketBody">

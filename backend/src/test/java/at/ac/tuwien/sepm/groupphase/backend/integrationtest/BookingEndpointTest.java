@@ -111,7 +111,7 @@ public class BookingEndpointTest implements TestAuthentification, TestDataTicket
         artist = artistRepository.save(artist);
 
         SectorType sectorType = SectorType.builder().name("Test").numberOfTickets(10).build();
-        TicketType ticketType = TicketType.builder().title("Test").price(10).sectorType(sectorType).build();
+        TicketType ticketType = TicketType.builder().title("Test").price(1000L).sectorType(sectorType).build();
 
         Set<SectorType> sectorTypeSet = new HashSet<>();
         sectorTypeSet.add(sectorType);

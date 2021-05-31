@@ -194,9 +194,9 @@ public class EventDataGenerator {
 
         Set<TicketType> ticketTypes = new HashSet<>();
         for (SectorType sectorType : sectorTypes) {
-            ticketTypes.add(TicketType.builder().title("Standard").price(10.00 + 3.00 * index).sectorType(sectorType).build());
-            ticketTypes.add(TicketType.builder().title("VIP").price(30.00 + 7.00 * index).sectorType(sectorType).build());
-            ticketTypes.add(TicketType.builder().title("Discount").price(30.00 + 7.00 * index).sectorType(sectorType).build());
+            ticketTypes.add(TicketType.builder().title("Standard").price(1000L + 300L * index).sectorType(sectorType).build());
+            ticketTypes.add(TicketType.builder().title("VIP").price(3000L + 700L * index).sectorType(sectorType).build());
+            ticketTypes.add(TicketType.builder().title("Discount").price(3000L + 700L * index).sectorType(sectorType).build());
         }
         return ticketTypes;
     }

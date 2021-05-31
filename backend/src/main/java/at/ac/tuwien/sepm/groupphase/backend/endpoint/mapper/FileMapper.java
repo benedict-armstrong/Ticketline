@@ -7,6 +7,7 @@ import org.mapstruct.Mapper;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.Set;
 
 @Mapper
 public interface FileMapper extends FileTypeMapper {
@@ -14,6 +15,10 @@ public interface FileMapper extends FileTypeMapper {
     FileDto fileToFileDto(File file);
 
     File fileDtoToFile(FileDto fileDto);
+
+    FileDto[] fileSetToFileDtoArray(Set<File> set);
+
+    Set<File> fileDtoArrayToFileSet(FileDto[] fileDtoArray);
 
     /**
      * Maps a MultipartFile object to a File entity.

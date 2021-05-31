@@ -7,6 +7,7 @@ import at.ac.tuwien.sepm.groupphase.backend.entity.PerformanceSearch;
 import org.mapstruct.Mapper;
 
 import java.util.List;
+import java.util.Set;
 
 @Mapper(uses = {SectorTypeMapper.class, TicketTypeMapper.class, ArtistMapper.class, AddressMapper.class})
 public interface PerformanceMapper extends FileTypeMapper {
@@ -18,4 +19,8 @@ public interface PerformanceMapper extends FileTypeMapper {
     List<PerformanceDto> performanceListToPerformanceDtoList(List<Performance> performances);
 
     PerformanceSearch performanceSearchDtoToPerformanceSearch(PerformanceSearchDto performanceSearchDto);
+
+    Set<Performance> performanceDtoArrayToPerformanceSet(PerformanceDto[] performanceDtoArray);
+
+    PerformanceDto[] performanceSetToPerformanceDtoArray(Set<Performance> set);
 }
