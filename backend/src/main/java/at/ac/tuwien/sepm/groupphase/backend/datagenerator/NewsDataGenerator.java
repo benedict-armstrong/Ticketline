@@ -14,6 +14,7 @@ import org.springframework.stereotype.Component;
 import javax.annotation.PostConstruct;
 import java.lang.invoke.MethodHandles;
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -45,10 +46,11 @@ public class NewsDataGenerator {
             LOGGER.debug("Generating {} news entries", NUMBER_OF_NEWS_TO_GENERATE);
 
             List<Event> events = eventRepository.findAll();
-            Set<File> images = fileRepository.findAll().stream()
+            List<File> images = fileRepository.findAll().stream()
                 .filter(item -> item.getType() == File.Type.IMAGE_JPG || item.getType() == File.Type.IMAGE_PNG)
-                .collect(Collectors.toSet());
+                .collect(Collectors.toList());
 
+            int imagesOffset = 0;
             for (int i = 0; i < NUMBER_OF_NEWS_TO_GENERATE; i++) {
                 News news = News.builder()
                     .publishedAt(LocalDateTime.now())
@@ -57,9 +59,14 @@ public class NewsDataGenerator {
                     .text("This is a News article " + i + " that was generated.")
                     .event(events.get(i % events.size()))
                     .build();
-                if (i % (NUMBER_OF_NEWS_TO_GENERATE / 2) == 0) {
-                    news.setImages(images);
+                if (i % (NUMBER_OF_NEWS_TO_GENERATE / 2) != 0) {
+                    Set<File> newsImages = new HashSet<>();
+                    newsImages.add(images.get(imagesOffset));
+                    newsImages.add(images.get(imagesOffset + 1));
+                    imagesOffset += 2;
+                    news.setImages(newsImages);
                 }
+                newsRepository.save(news);
             }
         }
     }
