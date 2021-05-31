@@ -20,8 +20,7 @@ import { EventSearchComponent } from './components/search/event-search/event-sea
 import { UserHomeComponent } from './components/user-home/user-home.component';
 import { TicketDetailComponent } from './components/ticket-detail/ticket-detail.component';
 import { TicketListItemComponent } from './components/ticket-list-item/ticket-list-item.component';
-import { AddNewsComponent } from './components/add-news/add-news.component';
-import { AddEventComponent } from './components/event/add-event/add-event.component';
+import {AddNewsComponent} from './components/add-news/add-news.component';
 import { AddPerformanceComponent } from './components/event/add-performance/add-performance.component';
 import { AddUserComponent } from './components/add-user/add-user.component';
 import { httpInterceptorProviders } from './interceptors';
@@ -34,13 +33,19 @@ import { VenueGridUnitComponent } from './components/venue/venue-grid-unit/venue
 import { AddSectortypeComponent } from './components/event/add-sectortype/add-sectortype.component';
 import { AddArtistComponent } from './components/event/add-artist/add-artist.component';
 import { AddAddressComponent } from './components/event/add-address/add-address.component';
+import { AddEventComponent } from './components/event/add-event/add-event.component';
 import { PerformanceDetailComponent } from './components/performance-detail/performance-detail.component';
 import { ArtistSearchComponent } from './components/search/artist-search/artist-search.component';
 import { AddressSearchComponent } from './components/search/address-search/address-search.component';
 import { ArtistListItemComponent } from './components/search/artist-list-item/artist-list-item.component';
 import { AddressListItemComponent } from './components/search/address-list-item/address-list-item.component';
 import { LoadingAnimationComponent } from './components/loading-animation/loading-animation.component';
+import { PerformanceSearchComponent } from './components/search/performance-search/performance-search.component';
+import { PerformanceListItemComponent } from './components/search/performance-list-item/performance-list-item.component';
 import { AddTickettypeComponent } from './components/event/add-tickettype/add-tickettype.component';
+import { ArtistDetailComponent } from './components/search/artist-detail/artist-detail.component';
+import { AddressDetailComponent } from './components/search/address-detail/address-detail.component';
+import { SearchEventListComponent } from './components/search/search-event-list/search-event-list.component';
 
 @NgModule({
   declarations: [
@@ -78,8 +83,14 @@ import { AddTickettypeComponent } from './components/event/add-tickettype/add-ti
     AddressSearchComponent,
     ArtistListItemComponent,
     AddressListItemComponent,
+    PerformanceSearchComponent,
+    PerformanceListItemComponent,
     LoadingAnimationComponent,
-    AddTickettypeComponent
+    AddTickettypeComponent,
+    SearchEventListComponent,
+    AddTickettypeComponent,
+    ArtistDetailComponent,
+    AddressDetailComponent
   ],
   imports: [
     BrowserModule,

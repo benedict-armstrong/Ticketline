@@ -3,6 +3,7 @@ import {HttpClient, HttpParams} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {Globals} from '../global/globals';
 import {Performance} from '../dtos/performance';
+import {Event} from '../dtos/event';
 
 @Injectable({
   providedIn: 'root'
@@ -37,5 +38,56 @@ export class ApplicationPerformanceService {
   addEvent(event: Performance): Observable<Performance> {
     console.log(event);
     return this.httpClient.post<Performance>(this.performanceBaseUri, event);
+  }
+
+  /**
+   * Search all Performances
+   */
+  searchPerformances(page: number, size: number, date: Date, event: number): Observable<Performance[]> {
+    let params = new HttpParams();
+    params = params.set('page', String(page));
+    params = params.set('size', String(size));
+    if (date !== null) {
+      params = params.set('date', date.toISOString());
+    }
+
+    if(event !== null){
+      params = params.set('eventId', event.toString());
+    }
+
+    return this.httpClient.get<Performance[]>(this.performanceBaseUri, { params });
+  }
+
+  /**
+   * Get all Performances
+   */
+  getPerformances(page: number, size: number): Observable<Performance[]> {
+    let params = new HttpParams();
+    params = params.set('page', String(page));
+    params = params.set('size', String(size));
+
+    return this.httpClient.get<Performance[]>(this.performanceBaseUri, { params });
+  }
+
+  /**
+   * Loads all events for one artist from the backend with pagination
+   */
+  getPerformancesForArtistId(id: number, page: number, size: number): Observable<Performance[]> {
+    let params = new HttpParams();
+    params = params.set('page', String(page));
+    params = params.set('size', String(size));
+    params = params.set('artistId', String(id));
+    return this.httpClient.get<Performance[]>(this.performanceBaseUri, { params });
+  }
+
+  /**
+   * Loads all events for one address from the backend with pagination
+   */
+  getPerformancesForAddressId(id: number, page: number, size: number): Observable<Performance[]> {
+    let params = new HttpParams();
+    params = params.set('page', String(page));
+    params = params.set('size', String(size));
+    params = params.set('addressId', String(id));
+    return this.httpClient.get<Performance[]>(this.performanceBaseUri, { params });
   }
 }

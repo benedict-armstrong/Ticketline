@@ -19,6 +19,10 @@ export class ArtistService {
     return this.http.get<Artist[]>(this.artistBaseUri, {params});
   }
 
+  getArtistById(id: number): Observable<Artist> {
+    return this.http.get<Artist>(this.artistBaseUri + '/' + id);
+  }
+
   addArtist(artist: Artist): Observable<Artist> {
     return this.http.post<Artist>(this.artistBaseUri, artist);
   }

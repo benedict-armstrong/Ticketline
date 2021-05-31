@@ -11,10 +11,12 @@ import { UserHomeComponent } from './components/user-home/user-home.component';
 import { AddNewsComponent } from './components/add-news/add-news.component';
 import { NewsDetailComponent } from './components/news-detail/news-details.component';
 import { AddUserComponent } from './components/add-user/add-user.component';
-import { AuthGuard } from './guards/auth.guard';
+import {AuthGuard} from './guards/auth.guard';
+import {AddEventComponent} from './components/event/add-event/add-event.component';
+import {PerformanceDetailComponent} from './components/performance-detail/performance-detail.component';
+import {AddressDetailComponent} from './components/search/address-detail/address-detail.component';
+import {ArtistDetailComponent} from './components/search/artist-detail/artist-detail.component';
 import { AddVenueComponent } from './components/venue/add-venue/add-venue.component';
-import { AddEventComponent } from './components/event/add-event/add-event.component';
-import { PerformanceDetailComponent } from './components/performance-detail/performance-detail.component';
 
 const routes: Routes = [
   { path: '', component: HomePageComponent },
@@ -23,6 +25,8 @@ const routes: Routes = [
   { path: 'news', component: NewsComponent },
   { path: 'events', component: SearchResultComponent },
   { path: 'news-detail/:id', component: NewsDetailComponent },
+  { path: 'address-detail/:id', component: AddressDetailComponent },
+  { path: 'artist-detail/:id', component: ArtistDetailComponent },
   { path: 'event-detail/:id', component: EventDetailComponent },
   {
     path: 'add-venue',

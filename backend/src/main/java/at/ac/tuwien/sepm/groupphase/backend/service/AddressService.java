@@ -1,7 +1,6 @@
 package at.ac.tuwien.sepm.groupphase.backend.service;
 
 import at.ac.tuwien.sepm.groupphase.backend.entity.Address;
-import at.ac.tuwien.sepm.groupphase.backend.entity.Artist;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
@@ -9,12 +8,20 @@ import java.util.List;
 public interface AddressService {
 
     /**
+     * get one address by id.
+     *
+     * @param id of the address
+     * @return the address with id
+     */
+    Address getOneById(Long id);
+
+    /**
      * find all addresses.
      *
      * @param pageRequest the pagination
      * @return list of all addresses
      */
-    List<Address> findAll(Pageable pageRequest);
+    List<Address> findAllEventLocations(Pageable pageRequest);
 
     /**
      * add a new address.

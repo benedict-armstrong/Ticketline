@@ -1,0 +1,27 @@
+@import "../../../../colors.scss";
+
+h4 {
+  margin: 10px 0;
+}
+
+.performance {
+  display: flex;
+  flex-direction: row;
+  max-height: 90px;
+  margin-top: 5px;
+  align-items: center;
+  cursor: pointer;
+  background-color: $gray-242;
+}
+
+.performance:hover {
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
+}
+
+.info {
+  display: flex;
+}
+
+.more {
+  margin: 20px 0;
+}
