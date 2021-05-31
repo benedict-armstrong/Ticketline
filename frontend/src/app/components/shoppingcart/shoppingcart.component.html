@@ -29,7 +29,7 @@
 	</div>
 	<div class="totals">
 		<div class="subtotal">
-			<span class="label">Total: </span> <span class="amount">{{this.ticketService.total | currency:"EUR"}}</span>
+			<span class="label">Total: </span> <span class="amount">{{this.ticketService.total / 100 | currency:"EUR"}}</span>
 		</div>
 	</div>
 	<button class="primary" (click)="checkout()">Checkout</button>

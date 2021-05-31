@@ -30,7 +30,7 @@ public class TicketType {
     private String title;
 
     @Column
-    private double price;
+    private Long price;
 
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "SECTOR_ID", nullable = true)

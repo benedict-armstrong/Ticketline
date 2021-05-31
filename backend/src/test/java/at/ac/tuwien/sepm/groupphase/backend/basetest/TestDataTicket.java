@@ -21,17 +21,17 @@ public interface TestDataTicket extends TestData {
     TicketType STANDARD_TICKET_TYPE = TicketType.builder()
         .title("Standard")
         .sectorType(STANDARD_SECTOR_TYPE)
-        .price(1.0)
+        .price(1000L)
         .build();
     TicketType VIP_TICKET_TYPE = TicketType.builder()
         .title("VIP")
         .sectorType(STANDARD_SECTOR_TYPE)
-        .price(2.33)
+        .price(2330L)
         .build();
     TicketType DISCOUNT_TICKET_TYPE = TicketType.builder()
         .title("Discount")
         .sectorType(STANDARD_SECTOR_TYPE)
-        .price(0.85)
+        .price(850L)
         .build();
 
     static Set<SectorType> getSectorTypes() {
@@ -45,17 +45,17 @@ public interface TestDataTicket extends TestData {
         set.add(TicketType.builder()
             .title("Standard")
             .sectorType(SectorType.builder().name("Test").numberOfTickets(10).build())
-            .price(1.0)
+            .price(1000L)
             .build());
         set.add(TicketType.builder()
             .title("VIP")
             .sectorType(SectorType.builder().name("Test").numberOfTickets(10).build())
-            .price(2.33)
+            .price(2330L)
             .build());
         set.add(TicketType.builder()
             .title("Discount")
             .sectorType(SectorType.builder().name("Test").numberOfTickets(10).build())
-            .price(0.85)
+            .price(850L)
             .build());
         return set;
     }
