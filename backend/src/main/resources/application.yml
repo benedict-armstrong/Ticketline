@@ -23,6 +23,18 @@ spring:
     console:
       enabled: true
       path: /h2-console
+  mail:
+    password: g7WdRGeUNZ6jRfs
+    username: sepm.ticketline@gmail.com
+    host: smtp.gmail.com
+    port: 587
+    protocol: smtp
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
 
 security:
   auth:

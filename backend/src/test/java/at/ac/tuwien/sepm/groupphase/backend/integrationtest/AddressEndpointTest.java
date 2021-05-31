@@ -108,6 +108,7 @@ public class AddressEndpointTest implements TestAuthentification, TestDataAddres
             .city(TEST_ADDRESS_CITY)
             .postcode(TEST_ADDRESS_POSTCODE)
             .country(TEST_ADDRESS_COUNTRY)
+            .eventLocation(true)
             .build();
 
         addressRepository.save(searchAddress);
@@ -140,6 +141,7 @@ public class AddressEndpointTest implements TestAuthentification, TestDataAddres
             .city(TEST_ADDRESS_CITY)
             .postcode(TEST_ADDRESS_POSTCODE)
             .country(TEST_ADDRESS_COUNTRY)
+            .eventLocation(true)
             .build();
 
         addressRepository.save(searchAddress);
@@ -173,6 +175,7 @@ public class AddressEndpointTest implements TestAuthentification, TestDataAddres
             .city(TEST_ADDRESS_CITY)
             .postcode(TEST_ADDRESS_POSTCODE)
             .country(TEST_ADDRESS_COUNTRY)
+            .eventLocation(true)
             .build();
 
         addressRepository.save(searchAddress);
@@ -205,6 +208,7 @@ public class AddressEndpointTest implements TestAuthentification, TestDataAddres
             .city(TEST_ADDRESS_CITY)
             .postcode(TEST_ADDRESS_POSTCODE)
             .country(TEST_ADDRESS_COUNTRY)
+            .eventLocation(true)
             .build();
 
         addressRepository.save(searchAddress);
@@ -237,6 +241,7 @@ public class AddressEndpointTest implements TestAuthentification, TestDataAddres
             .city(TEST_ADDRESS_CITY)
             .postcode(TEST_ADDRESS_POSTCODE)
             .country(TEST_ADDRESS_COUNTRY)
+            .eventLocation(true)
             .build();
 
         addressRepository.save(searchAddress);
@@ -269,6 +274,7 @@ public class AddressEndpointTest implements TestAuthentification, TestDataAddres
             .city(TEST_ADDRESS_CITY)
             .postcode(TEST_ADDRESS_POSTCODE)
             .country(TEST_ADDRESS_COUNTRY)
+            .eventLocation(true)
             .build();
 
         addressRepository.save(searchAddress);
@@ -302,6 +308,7 @@ public class AddressEndpointTest implements TestAuthentification, TestDataAddres
             .city(TEST_ADDRESS_CITY)
             .postcode(TEST_ADDRESS_POSTCODE)
             .country(TEST_ADDRESS_COUNTRY)
+            .eventLocation(true)
             .build();
 
         addressRepository.save(searchAddress);
@@ -344,6 +351,7 @@ public class AddressEndpointTest implements TestAuthentification, TestDataAddres
             .city(TEST_ADDRESS_CITY)
             .postcode(TEST_ADDRESS_POSTCODE)
             .country(TEST_ADDRESS_COUNTRY)
+            .eventLocation(true)
             .build();
 
         addressRepository.save(searchAddress);

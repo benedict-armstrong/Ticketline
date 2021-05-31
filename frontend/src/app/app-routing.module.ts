@@ -14,6 +14,8 @@ import { AddUserComponent } from './components/add-user/add-user.component';
 import {AuthGuard} from './guards/auth.guard';
 import {AddEventComponent} from './components/event/add-event/add-event.component';
 import {PerformanceDetailComponent} from './components/performance-detail/performance-detail.component';
+import {AddressDetailComponent} from './components/search/address-detail/address-detail.component';
+import {ArtistDetailComponent} from './components/search/artist-detail/artist-detail.component';
 
 const routes: Routes = [
   { path: '', component: HomePageComponent },
@@ -22,6 +24,8 @@ const routes: Routes = [
   { path: 'news', component: NewsComponent },
   { path: 'events', component: SearchResultComponent },
   { path: 'news-detail/:id', component: NewsDetailComponent },
+  { path: 'address-detail/:id', component: AddressDetailComponent },
+  { path: 'artist-detail/:id', component: ArtistDetailComponent },
   { path: 'event-detail/:id', component: EventDetailComponent },
   { path: 'performance-detail/:id', component: PerformanceDetailComponent },
   { path: 'user', component: UserHomeComponent, canActivate: [AuthGuard], data: { roles: ['ADMIN', 'ORGANIZER', 'USER']} },

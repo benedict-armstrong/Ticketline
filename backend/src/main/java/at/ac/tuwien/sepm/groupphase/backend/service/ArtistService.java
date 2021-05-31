@@ -1,12 +1,19 @@
 package at.ac.tuwien.sepm.groupphase.backend.service;
 
 import at.ac.tuwien.sepm.groupphase.backend.entity.Artist;
-import at.ac.tuwien.sepm.groupphase.backend.entity.Event;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
 public interface ArtistService {
+
+    /**
+     * get one artist by id.
+     *
+     * @param id of the artist
+     * @return the artist with id
+     */
+    Artist getOneById(Long id);
 
     /**
      * find all artists.

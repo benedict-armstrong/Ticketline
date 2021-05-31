@@ -33,6 +33,13 @@ import { ArtistSearchComponent } from './components/search/artist-search/artist-
 import { AddressSearchComponent } from './components/search/address-search/address-search.component';
 import { ArtistListItemComponent } from './components/search/artist-list-item/artist-list-item.component';
 import { AddressListItemComponent } from './components/search/address-list-item/address-list-item.component';
+import { PerformanceSearchComponent } from './components/search/performance-search/performance-search.component';
+import { PerformanceListItemComponent } from './components/search/performance-list-item/performance-list-item.component';
+import {LoadingAnimationComponent} from './components/loading-animation/loading-animation.component';
+import { AddTickettypeComponent } from './components/event/add-tickettype/add-tickettype.component';
+import { ArtistDetailComponent } from './components/search/artist-detail/artist-detail.component';
+import { AddressDetailComponent } from './components/search/address-detail/address-detail.component';
+import { SearchEventListComponent } from './components/search/search-event-list/search-event-list.component';
 
 @NgModule({
   declarations: [
@@ -63,7 +70,15 @@ import { AddressListItemComponent } from './components/search/address-list-item/
     ArtistSearchComponent,
     AddressSearchComponent,
     ArtistListItemComponent,
-    AddressListItemComponent
+    AddressListItemComponent,
+    PerformanceSearchComponent,
+    PerformanceListItemComponent,
+    LoadingAnimationComponent,
+    AddTickettypeComponent,
+    SearchEventListComponent,
+    AddTickettypeComponent,
+    ArtistDetailComponent,
+    AddressDetailComponent
   ],
   imports: [
     BrowserModule,

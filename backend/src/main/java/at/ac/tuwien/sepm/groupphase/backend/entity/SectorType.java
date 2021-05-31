@@ -18,6 +18,7 @@ import java.util.Objects;
 @Builder
 @Entity
 public class SectorType {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -26,5 +27,9 @@ public class SectorType {
     private String name;
 
     @Column
-    int numberOfTickets;
+    private Integer numberOfTickets;
+
+    @Column
+    private Long price; // 1 = 100 Cents
+
 }

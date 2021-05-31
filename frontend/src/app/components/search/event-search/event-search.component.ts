@@ -4,7 +4,7 @@ import { Event } from '../../../dtos/event';
 import { ApplicationEventService } from '../../../services/event.service';
 
 @Component({
-  selector: 'app-search',
+  selector: 'app-event-search',
   templateUrl: './event-search.component.html',
   styleUrls: ['./event-search.component.scss']
 })

@@ -17,11 +17,13 @@ export class AddPerformanceComponent implements OnInit {
   addPerformanceForm: FormGroup;
   submitted = false;
   sectorTypes = [];
+  ticketTypes = [];
+
   error = false;
   errorMessage: string;
   success = false;
 
-  performance = new Performance(null, null, null, null, null, null, null);
+  performance = new Performance(null, null, null, null, null, null, null, null);
   location: Address;
   artist: Artist;
 
@@ -51,6 +53,7 @@ export class AddPerformanceComponent implements OnInit {
       this.performance.location = this.location;
       this.performance.artist = this.artist;
       this.performance.sectorTypes = this.sectorTypes;
+      this.performance.ticketTypes = this.ticketTypes;
 
       this.performance.date = new Date(this.addPerformanceForm.value.date).toISOString();
       console.log(this.performance.date);

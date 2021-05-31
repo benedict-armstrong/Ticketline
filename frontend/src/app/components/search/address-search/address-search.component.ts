@@ -12,7 +12,6 @@ export class AddressSearchComponent implements OnInit {
 
   @Output() searchedAddresses = new EventEmitter<Address[]>();
   @Output() searchedNoAddress = new EventEmitter<any>();
-  @Output() searchPagination = new EventEmitter<any>();
 
   // Error flag
   error = false;
@@ -48,10 +47,8 @@ export class AddressSearchComponent implements OnInit {
       && this.addressSearchForm.value.postCode === '' && this.addressSearchForm.value.country === '') {
       this.addressService.getAddresses(this.page, this.size).subscribe(
         response => {
-          const nonEmptyAddress = response.filter((address) => (address.performances.length !== 0));
-
-          this.addresses.push(...nonEmptyAddress);
-          if (nonEmptyAddress.length < this.size) {
+          this.addresses.push(...response);
+          if (response.length < this.size) {
             this.noAddress = true;
           } else {
             this.page++;
@@ -78,7 +75,6 @@ export class AddressSearchComponent implements OnInit {
           }
           this.searchedAddresses.emit(this.addresses);
           this.searchedNoAddress.emit(this.noAddress);
-          this.searchPagination.emit(true);
         }, error => {
           console.error(error);
         }

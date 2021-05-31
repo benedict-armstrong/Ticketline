@@ -1,6 +1,7 @@
 package at.ac.tuwien.sepm.groupphase.backend.unittests;
 
 import at.ac.tuwien.sepm.groupphase.backend.basetest.TestDataEvent;
+import at.ac.tuwien.sepm.groupphase.backend.basetest.TestDataTicket;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Address;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Artist;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Performance;
@@ -49,6 +50,7 @@ public class PerformanceRepositoryTest implements TestDataEvent {
             .artist(artist)
             .location(address)
             .sectorTypes(TestDataEvent.getTestEventSectortypes())
+            .ticketTypes(TestDataTicket.getTicketTypes())
             .build();
     }
 

@@ -7,7 +7,8 @@ import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Range;
 
 import javax.validation.constraints.NotBlank;
-import java.util.Objects;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.PositiveOrZero;
 
 @Data
 @NoArgsConstructor
@@ -21,4 +22,8 @@ public class SectorTypeDto {
 
     @Range(min = 1, message = "Atleast 1 ticket per sector")
     private int numberOfTickets;
+
+    @PositiveOrZero
+    @NotNull
+    private Long price;
 }

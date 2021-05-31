@@ -49,7 +49,8 @@ public class UserDataGenerator {
                                         .telephoneNumber("012345" + i).status(ApplicationUser.UserStatus.ACTIVE)
                                         .address(Address.builder().name(TEST_ADDRESS_NAME + i)
                                         .lineOne("line " + i).city(TEST_ADDRESS_CITY)
-                                        .postcode(TEST_ADDRESS_POSTCODE).country(TEST_ADDRESS_COUNTRY).build())
+                                        .postcode(TEST_ADDRESS_POSTCODE).country(TEST_ADDRESS_COUNTRY)
+                                            .eventLocation(false).build())
                                         .lastLogin(LocalDateTime.now()).build();
 
                 user.setLastLogin(LocalDateTime.now());
@@ -72,7 +73,8 @@ public class UserDataGenerator {
                 .telephoneNumber("0123459").status(ApplicationUser.UserStatus.ACTIVE)
                 .address(Address.builder().name(TEST_ADDRESS_NAME + "Admin")
                     .lineOne("line " + "Admin").city(TEST_ADDRESS_CITY)
-                    .postcode(TEST_ADDRESS_POSTCODE).country(TEST_ADDRESS_COUNTRY).build())
+                    .postcode(TEST_ADDRESS_POSTCODE).country(TEST_ADDRESS_COUNTRY)
+                    .eventLocation(false).build())
                 .lastLogin(LocalDateTime.now()).build();
 
             user.setLastLogin(LocalDateTime.now());
@@ -94,7 +96,8 @@ public class UserDataGenerator {
                 .telephoneNumber("0123459").status(ApplicationUser.UserStatus.ACTIVE)
                 .address(Address.builder().name(TEST_ADDRESS_NAME + "Organizer")
                     .lineOne("line " + "Organizer").city(TEST_ADDRESS_CITY)
-                    .postcode(TEST_ADDRESS_POSTCODE).country(TEST_ADDRESS_COUNTRY).build())
+                    .postcode(TEST_ADDRESS_POSTCODE).country(TEST_ADDRESS_COUNTRY)
+                    .eventLocation(false).build())
                 .lastLogin(LocalDateTime.now()).build();
 
             user.setLastLogin(LocalDateTime.now());

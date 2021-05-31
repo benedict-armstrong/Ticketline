@@ -4,8 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -43,10 +41,6 @@ public class Address {
 
     @Column(nullable = false)
     private String country;
-
-    @OneToMany(mappedBy = "location")
-    @Fetch(FetchMode.JOIN)
-    private Set<Performance> performances;
 
     @Column(nullable = false)
     private boolean eventLocation;

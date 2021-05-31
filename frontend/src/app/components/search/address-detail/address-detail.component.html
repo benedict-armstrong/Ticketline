@@ -1,0 +1,29 @@
+<h1 *ngIf="address">{{address.name}}</h1>
+<div *ngIf="address">
+  <div>{{address.lineOne}}<span *ngIf="address.lineTwo">, {{address.lineTwo}}</span></div>
+  <div>{{address.city}}, {{address.postcode}}</div>
+  <div>{{address.country}}</div>
+</div>
+<hr/>
+<h4>Performances</h4>
+<div id="performances">
+  <div *ngFor="let performance of performances">
+    <div class="performance list-item" [routerLink]="['/performance-detail', performance.id]">
+      <div class="info">
+        <div class="detail">
+          <h5>{{performance.title}}</h5>
+          <span class="date-time">{{performance.date | date:'EEEE, MMM d, y HH:mm'}}: </span>
+          <span class="artist">{{performance.artist.firstName}} {{performance.artist.lastName}}, </span>
+          <span class="location">{{performance.location.name}}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="text-center more" *ngIf="!noPerformance" (click)="getPerformancesForAddress()">
+    <h3 class="clickable">Load More</h3>
+    <h3 class="clickable"><i class="bi bi-arrow-bar-down"></i></h3>
+  </div>
+  <div class="text-center more" *ngIf="noPerformance">
+    <h3>You're all caught up</h3>
+  </div>
+</div>
