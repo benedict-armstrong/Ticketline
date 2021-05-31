@@ -5,15 +5,12 @@ import at.ac.tuwien.sepm.groupphase.backend.basetest.TestDataEvent;
 import at.ac.tuwien.sepm.groupphase.backend.basetest.TestDataFile;
 import at.ac.tuwien.sepm.groupphase.backend.basetest.TestDataTicket;
 import at.ac.tuwien.sepm.groupphase.backend.config.properties.SecurityProperties;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.NewsDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.PerformanceDto;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.SectorTypeDto;
 import at.ac.tuwien.sepm.groupphase.backend.entity.*;
 import at.ac.tuwien.sepm.groupphase.backend.repository.AddressRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.ArtistRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.PerformanceRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.FileRepository;
-import at.ac.tuwien.sepm.groupphase.backend.repository.TicketRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.UserRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.AfterEach;
@@ -32,9 +29,6 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
-
-import java.util.HashSet;
-import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -64,9 +58,6 @@ public class PerformanceEndpointTest implements TestDataEvent, TestAuthentificat
 
     @Autowired
     private AddressRepository addressRepository;
-
-    @Autowired
-    private TicketRepository ticketRepository;
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -106,8 +97,6 @@ public class PerformanceEndpointTest implements TestDataEvent, TestAuthentificat
             .description(TestDataEvent.TEST_EVENT_DESCRIPTION)
             .date(TestDataEvent.TEST_PERFORMANCE_DATE)
             .artist(artist)
-            .location(address)
-            .sectorTypes(TestDataEvent.getTestEventSectortypes())
             .ticketTypes(TestDataTicket.getTicketTypes())
             .build();
 
@@ -125,7 +114,6 @@ public class PerformanceEndpointTest implements TestDataEvent, TestAuthentificat
         userRepository.deleteAll();
         addressRepository.deleteAll();
         artistRepository.deleteAll();
-        ticketRepository.deleteAll();
     }
 
     @Test
@@ -182,8 +170,6 @@ public class PerformanceEndpointTest implements TestDataEvent, TestAuthentificat
                 .description(TestDataEvent.TEST_EVENT_DESCRIPTION)
                 .date(TestDataEvent.TEST_PERFORMANCE_DATE)
                 .artist(artist)
-                .location(address)
-                .sectorTypes(TestDataEvent.getTestEventSectortypes())
                 .ticketTypes(TestDataTicket.getTicketTypes())
                 .build();
 
@@ -220,8 +206,6 @@ public class PerformanceEndpointTest implements TestDataEvent, TestAuthentificat
                 .description(TestDataEvent.TEST_EVENT_DESCRIPTION)
                 .date(TestDataEvent.TEST_PERFORMANCE_DATE)
                 .artist(artist)
-                .location(address)
-                .sectorTypes(TestDataEvent.getTestEventSectortypes())
                 .ticketTypes(TestDataTicket.getTicketTypes())
                 .build();
 
@@ -259,8 +243,6 @@ public class PerformanceEndpointTest implements TestDataEvent, TestAuthentificat
                 .description(TestDataEvent.TEST_EVENT_DESCRIPTION)
                 .date(TestDataEvent.TEST_PERFORMANCE_DATE)
                 .artist(artist)
-                .location(address)
-                .sectorTypes(TestDataEvent.getTestEventSectortypes())
                 .ticketTypes(TestDataTicket.getTicketTypes())
                 .build();
 
@@ -291,8 +273,6 @@ public class PerformanceEndpointTest implements TestDataEvent, TestAuthentificat
             .description(TestDataEvent.TEST_EVENT_DESCRIPTION)
             .date(TestDataEvent.TEST_PERFORMANCE_DATE.minusYears(10))
             .artist(TestDataEvent.TEST_EVENT_ARTIST)
-            .location(TestDataEvent.TEST_EVENT_LOCATION)
-            .sectorTypes(TestDataEvent.getTestEventSectortypes())
             .build();
 
         MvcResult mvcResult = this.mockMvc.perform(
@@ -314,8 +294,6 @@ public class PerformanceEndpointTest implements TestDataEvent, TestAuthentificat
             .description(TestDataEvent.TEST_EVENT_DESCRIPTION)
             .date(TestDataEvent.TEST_PERFORMANCE_DATE)
             .artist(TestDataEvent.TEST_EVENT_ARTIST)
-            .location(TestDataEvent.TEST_EVENT_LOCATION)
-            .sectorTypes(new HashSet<>())
             .build();
 
         MvcResult mvcResult = this.mockMvc.perform(

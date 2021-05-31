@@ -27,14 +27,11 @@ public class PerformanceDto {
     @Size(max = 10000, message = "Description must be 10000 characters or less")
     private String description;
 
-    @NotNull(message = "Location is required")
-    private AddressDto location;
+    @NotNull(message = "A venue is required")
+    private VenueDto venue;
 
     @NotNull(message = "Artist is required")
     private ArtistDto artist;
-
-    @Size(min = 1, message = "At least one sector type is required")
-    private SectorTypeDto[] sectorTypes;
 
     @Size(min = 1, message = "At least one ticket type is required")
     private TicketTypeDto[] ticketTypes;

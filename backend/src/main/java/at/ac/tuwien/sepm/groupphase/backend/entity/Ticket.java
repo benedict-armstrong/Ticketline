@@ -47,19 +47,7 @@ public class Ticket {
     @JoinColumn(name = "PERFORMANCE_ID", nullable = false)
     private Performance performance;
 
-    @ElementCollection(fetch = FetchType.EAGER)
-    @Column(nullable = false)
-    private List<Long> seats;
-
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private Status status;
-
-    @Column
-    private LocalDateTime updateDate;
-
-    public enum Status {
-        PAID_FOR, RESERVED, IN_CART, CANCELLED
-    }
+    @ManyToOne
+    private LayoutUnit seat;
 
 }

@@ -1,6 +1,5 @@
 package at.ac.tuwien.sepm.groupphase.backend.repository;
 
-import at.ac.tuwien.sepm.groupphase.backend.entity.SectorType;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Ticket;
 import at.ac.tuwien.sepm.groupphase.backend.entity.TicketType;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
@@ -10,6 +9,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.time.LocalDateTime;
 import java.util.List;
 
+/*
 public interface TicketRepository extends JpaRepository<Ticket, Long> {
 
     List<Ticket> findByOwnerAndStatus(ApplicationUser owner, Ticket.Status status);
@@ -20,3 +20,4 @@ public interface TicketRepository extends JpaRepository<Ticket, Long> {
 
     List<Ticket> findByPerformanceAndTicketTypeSectorTypeAndStatusNot(Performance performance, SectorType sectorType, Ticket.Status status);
 }
+*/

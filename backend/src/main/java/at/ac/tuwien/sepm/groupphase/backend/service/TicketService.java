@@ -13,13 +13,14 @@ public interface TicketService {
      * @param ticket the ticket to be saved.
      * @return the newly added ticket.
      */
-    Ticket save(Ticket ticket, Ticket.Status status);
+    Ticket save(Ticket ticket);
 
     /**
      * Cancels an already existing ticket.
      *
      * @param id the id of the ticket to be cancelled.
      * @return the new ticket.
+     * @throws at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException if no ticket is found.
      */
     Ticket cancel(Long id);
 
@@ -28,7 +29,7 @@ public interface TicketService {
      *
      * @return list of tickets.
      */
-    List<Ticket> getTickets(Ticket.Status status);
+    List<Ticket> getTickets();
 
     /**
      * Updates the seats of a ticket with the given id.

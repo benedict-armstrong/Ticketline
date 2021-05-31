@@ -1,10 +1,9 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint;
 
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.TicketDto;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.TicketUpdateDto;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.TicketMapper;
-import at.ac.tuwien.sepm.groupphase.backend.entity.Ticket;
-import at.ac.tuwien.sepm.groupphase.backend.service.TicketService;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.CartItemDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.CartItemMapper;
+import at.ac.tuwien.sepm.groupphase.backend.entity.CartItem;
+import at.ac.tuwien.sepm.groupphase.backend.service.CartItemService;
 import io.swagger.v3.oas.annotations.Operation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,79 +19,82 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.PathVariable;
+
 import java.lang.invoke.MethodHandles;
 import java.util.List;
-/*
+
 @RestController
-@RequestMapping(value = "/api/v1/tickets")
-public class TicketEndpoint {
+@RequestMapping(value = "/api/v1/cartItems")
+public class CartItemEndpoint {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
-    private final TicketService ticketService;
-    private final TicketMapper ticketMapper;
+    private final CartItemService cartItemService;
+    private final CartItemMapper cartItemMapper;
 
     @Autowired
-    public TicketEndpoint(TicketService ticketService, TicketMapper ticketMapper) {
-        this.ticketService = ticketService;
-        this.ticketMapper = ticketMapper;
+    public CartItemEndpoint(CartItemService cartItemService, CartItemMapper cartItemMapper) {
+        this.cartItemService = cartItemService;
+        this.cartItemMapper = cartItemMapper;
     }
 
-    @GetMapping("/cart")
+    @GetMapping
     @Secured({"ROLE_USER", "ROLE_ORGANIZER", "ROLE_ADMIN"})
     @ResponseStatus(HttpStatus.OK)
-    @Operation(summary = "Get tickets from user cart")
-    public List<TicketDto> getCartTickets() {
-        LOGGER.info("GET /api/v1/tickets/cart");
-        return ticketMapper.ticketListToTicketDtoList(ticketService.getTickets(Ticket.Status.IN_CART));
+    @Operation(summary = "Get all cartItems in cart from user")
+    public List<CartItemDto> getCartTickets() {
+        LOGGER.info("GET /api/v1/cartItems");
+        return cartItemMapper.cartItemListToCartItemDtoList(cartItemService.getCartItems(CartItem.Status.IN_CART));
     }
 
-    @PostMapping("/cart")
+    @PostMapping
     @Secured({"ROLE_USER", "ROLE_ORGANIZER", "ROLE_ADMIN"})
     @ResponseStatus(HttpStatus.CREATED)
-    @Operation(summary = "Create a ticket in cart of user")
-    public TicketDto createCartTicket(@RequestBody TicketDto ticket) {
-        LOGGER.info("POST /api/v1/tickets/cart {}", ticket);
-        return ticketMapper.ticketToTicketDto(ticketService.save(
-            ticketMapper.ticketDtoToTicket(ticket), Ticket.Status.IN_CART
+    @Operation(summary = "Create a cartItem in cart of user")
+    public CartItemDto createCartTicket(@RequestBody CartItemDto cartItemDto) {
+        LOGGER.info("POST /api/v1/cartItems {}", cartItemDto);
+        return cartItemMapper.cartItemToCartItemDto(cartItemService.save(
+            cartItemMapper.cartItemDtoToCartItem(cartItemDto), CartItem.Status.IN_CART
         ));
     }
 
-    @PutMapping("/amount")
+    /*@PutMapping("/amount")
     @Secured({"ROLE_USER", "ROLE_ORGANIZER", "ROLE_ADMIN"})
     @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "Update a tickets seats")
     public TicketUpdateDto updateAmount(@RequestBody TicketUpdateDto ticketUpdate) {
         LOGGER.info("PUT /api/v1/tickets/seats {}", ticketUpdate);
         return ticketService.updateSeats(ticketUpdate);
-    }
+    }*/
 
     @PutMapping("/checkout")
     @Secured({"ROLE_USER", "ROLE_ORGANIZER", "ROLE_ADMIN"})
     @ResponseStatus(HttpStatus.OK)
-    @Operation(summary = "Buys ticket from cart")
+    @Operation(summary = "Buys tickets in cartItems from cart")
     public boolean checkout() {
-        LOGGER.info("PUT /api/v1/tickets/checkout");
-        return ticketService.checkout();
+        LOGGER.info("PUT /api/v1/cartItems/checkout");
+        return cartItemService.checkout();
     }
 
+    /*
     @PutMapping(path = "/{id}/cancel")
     @Secured({"ROLE_USER", "ROLE_ORGANIZER", "ROLE_ADMIN"})
     @ResponseStatus(HttpStatus.OK)
-    @Operation(summary = "Cancel a ticket")
-    public TicketDto cancelTicket(@PathVariable Long id) {
-        LOGGER.info("POST /api/v1/tickets/{}/cancel", id);
-        return ticketMapper.ticketToTicketDto(ticketService.cancel(id));
-    }
+    @Operation(summary = "Cancel a cartItem")
+    public OrderDto cancelOrder(@PathVariable Long id) {
+        LOGGER.info("POST /api/v1/cartItems/{}/cancel", id);
+        return orderMapper.orderToOrderDto(orderService.cancel(id));
+    }*/
 
     @DeleteMapping(path = "/{id}")
     @Secured({"ROLE_USER", "ROLE_ORGANIZER", "ROLE_ADMIN"})
     @ResponseStatus(HttpStatus.OK)
-    @Operation(summary = "Delete ticket")
+    @Operation(summary = "Delete cartItem")
     public boolean delete(@PathVariable Long id) {
-        LOGGER.info("DELETE /api/v1/tickets/{}", id);
-        return ticketService.delete(id);
+        LOGGER.info("DELETE /api/v1/cartItems/{}", id);
+        return cartItemService.delete(id);
     }
 
+    /*
     @GetMapping("/paid")
     @Secured({"ROLE_USER", "ROLE_ORGANIZER", "ROLE_ADMIN"})
     @ResponseStatus(HttpStatus.OK)
@@ -100,5 +102,5 @@ public class TicketEndpoint {
     public List<TicketDto> getPaidTickets() {
         LOGGER.info("GET /api/v1/tickets/paid");
         return ticketMapper.ticketListToTicketDtoList(ticketService.getTickets(Ticket.Status.PAID_FOR));
-    }
-}*/
+    }*/
+}

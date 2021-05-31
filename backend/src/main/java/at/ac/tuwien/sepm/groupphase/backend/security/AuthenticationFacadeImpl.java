@@ -26,4 +26,9 @@ public class AuthenticationFacadeImpl implements AuthenticationFacade {
     public boolean isUser() {
         return SecurityContextHolder.getContext().getAuthentication().getAuthorities().stream().anyMatch(r -> r.getAuthority().equals("ROLE_USER"));
     }
+
+    @Override
+    public String getMail() {
+        return (String) getAuthentication().getPrincipal();
+    }
 }
