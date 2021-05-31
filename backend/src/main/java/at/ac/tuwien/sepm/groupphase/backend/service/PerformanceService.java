@@ -28,7 +28,7 @@ public interface PerformanceService {
      * @param performance to be added
      * @return the added performance with id set
      */
-    Performance addEvent(Performance performance);
+    Performance addPerformance(Performance performance);
 
     /**
      * find all performances for one artist or location.

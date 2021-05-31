@@ -1,6 +1,5 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint;
 
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.ArtistDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.PerformanceDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.PaginationDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.PerformanceSearchDto;
@@ -49,7 +48,7 @@ public class PerformanceEndpoint {
     @Operation(summary = "Create a new performance")
     public PerformanceDto create(@Valid @RequestBody PerformanceDto performanceDto) {
         LOGGER.info("POST /api/v1/events body: {}", performanceDto);
-        return performanceMapper.performanceToPerformanceDto(performanceService.addEvent(performanceMapper.performanceDtoToPerformance(performanceDto)));
+        return performanceMapper.performanceToPerformanceDto(performanceService.addPerformance(performanceMapper.performanceDtoToPerformance(performanceDto)));
     }
 
     @PermitAll

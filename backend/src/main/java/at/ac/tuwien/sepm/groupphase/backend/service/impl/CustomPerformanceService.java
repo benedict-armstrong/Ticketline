@@ -43,7 +43,7 @@ public class CustomPerformanceService implements PerformanceService {
     }
 
     @Override
-    public Performance addEvent(Performance performance) {
+    public Performance addPerformance(Performance performance) {
         LOGGER.trace("addEvent({})", performance);
         return performanceRepository.save(performance);
     }
