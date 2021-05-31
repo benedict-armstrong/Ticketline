@@ -120,4 +120,12 @@ export class PerformanceSearchComponent implements OnInit {
     this.selectedEvent = event[0];
   }
 
+  resetSearchFields(){
+    this.performanceSearchForm.reset();
+    this.performanceSearchForm.value.date = '';
+    this.performanceSearchForm.value.price = '';
+    this.performanceSearchForm.value.time = '';
+    this.performanceSearchForm.value.event = '';
+    this.performanceSearchForm.value.venue = '';
+  }
 }
