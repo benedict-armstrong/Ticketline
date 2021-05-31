@@ -63,7 +63,7 @@ public class VenueDataGenerator {
     @PostConstruct
     private void generateVenue() {
 
-        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken( "admin@mail.com", "password" );
+        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken("admin@mail.com", "password");
         SecurityContextHolder.getContext().setAuthentication(authenticationToken);
 
         Faker faker = new Faker();
