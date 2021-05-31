@@ -66,13 +66,14 @@ public class EventDataGenerator {
             LOGGER.debug("Generating {} event entries", NUMBER_OF_EVENTS_TO_GENERATE);
 
             List<Artist> artists = artistRepository.findAll();
-            Set<File>    images  = fileRepository.findAll().stream()
+            List<File>    images  = fileRepository.findAll().stream()
                 .filter(item -> item.getType() == File.Type.IMAGE_JPG || item.getType() == File.Type.IMAGE_PNG)
-                .collect(Collectors.toSet());
+                .collect(Collectors.toList());
             List<Venue>  venues  = venueRepository.findAll();
 
             Faker faker = new Faker();
 
+            int imageOffset = 0;
             for (int i = 0; i < NUMBER_OF_EVENTS_TO_GENERATE; i++) {
                 Set<Performance> performances = new HashSet<>();
                 int venueOffset = 0;
@@ -80,8 +81,6 @@ public class EventDataGenerator {
 
                 Date startDate = faker.date().future(800, TimeUnit.DAYS);
                 Date endDate = faker.date().future(30, TimeUnit.DAYS, startDate);
-                LocalDate eventStart = startDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-                LocalDate eventEnd = endDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 
                 //generate 4 performances per event
                 for (int j = 0; j < 4; j++) {
@@ -103,6 +102,14 @@ public class EventDataGenerator {
                     performances.add(performance);
                 }
 
+                Set<File> eventImages = new HashSet<>();
+                eventImages.add(images.get(imageOffset));
+                eventImages.add(images.get(imageOffset + 1));
+                imageOffset += 2;
+
+                LocalDate eventStart = startDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                LocalDate eventEnd = endDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+
                 Event event = Event.builder()
                     .name("Event " + i)
                     .description(faker.lorem().characters())
@@ -110,7 +117,7 @@ public class EventDataGenerator {
                     .duration(100 + 50 * i)
                     .startDate(eventStart)
                     .endDate(eventEnd)
-                    .images(images)
+                    .images(eventImages)
                     .performances(performances)
                     .build();
 
@@ -118,5 +125,9 @@ public class EventDataGenerator {
                 eventRepository.save(event);
             }
         }
+    }
+
+    public static int getNumberOfEventsToGenerate() {
+        return NUMBER_OF_EVENTS_TO_GENERATE;
     }
 }
