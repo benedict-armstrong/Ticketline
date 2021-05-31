@@ -2,8 +2,8 @@ import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {Performance} from '../../../dtos/performance';
 import {Artist} from '../../../dtos/artist';
-import {Address} from '../../../dtos/address';
 import {Event} from '../../../dtos/event';
+import {Venue} from '../../../dtos/venue';
 
 @Component({
   selector: 'app-add-performance',
@@ -23,8 +23,8 @@ export class AddPerformanceComponent implements OnInit {
   errorMessage: string;
   success = false;
 
-  performance = new Performance(null, null, null, null, null, null, null, null);
-  location: Address;
+  performance = new Performance(null, null, null, null, null, null, null);
+  venue: Venue;
   artist: Artist;
 
   constructor(private formBuilder: FormBuilder) {
@@ -46,13 +46,12 @@ export class AddPerformanceComponent implements OnInit {
     if (this.addPerformanceForm.valid &&
       this.sectorTypes.length !== 0 &&
       this.artist !== undefined &&
-      this.location !== undefined) {
+      this.venue !== undefined) {
       // Add additional event data
       this.performance.title = this.addPerformanceForm.value.title;
       this.performance.description = this.addPerformanceForm.value.description;
-      this.performance.location = this.location;
+      this.performance.venue = this.venue;
       this.performance.artist = this.artist;
-      this.performance.sectorTypes = this.sectorTypes;
       this.performance.ticketTypes = this.ticketTypes;
 
       this.performance.date = new Date(this.addPerformanceForm.value.date).toISOString();
@@ -71,8 +70,8 @@ export class AddPerformanceComponent implements OnInit {
     this.success = false;
   }
 
-  changeLocation(location: Address) {
-    this.location = location;
+  changeLocation(venue: Venue) {
+    this.venue = venue;
   }
 
   changeArtist(artist: Artist) {

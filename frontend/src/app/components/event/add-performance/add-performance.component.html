@@ -75,12 +75,12 @@
 
     <div id="addressGroup">
       <app-add-address (locationChanged)="changeLocation($event)"></app-add-address>
-      <div *ngIf="location === undefined && submitted" class="alert alert-danger">
+      <div *ngIf="venue === undefined && submitted" class="alert alert-danger">
         Location is required!
       </div>
       <div class="row" id="currentLocation">
         <h5 class="col-3">Current Location:</h5>
-        <div class="col-6" *ngIf="location">{{location.name}}</div>
+        <div class="col-6" *ngIf="venue">{{venue.name}}</div>
       </div>
     </div>
 
