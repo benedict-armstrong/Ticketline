@@ -24,12 +24,20 @@ public class CustomAddressService implements AddressService {
     }
 
     @Override
-    public List<Address> findAll(Pageable pageRequest) {
+    public Address getOneById(Long id) {
+        LOGGER.trace("getOneById({})", id);
+        return addressRepository.findOneById(id);
+    }
+
+    @Override
+    public List<Address> findAllEventLocations(Pageable pageRequest) {
+        LOGGER.trace("findAllEventLocations({})", pageRequest);
         return addressRepository.findAllByEventLocationTrue(pageRequest).getContent();
     }
 
     @Override
     public Address addAddress(Address address) {
+        LOGGER.trace("addAddress({})", address);
         return addressRepository.save(address);
     }
 
@@ -57,6 +65,8 @@ public class CustomAddressService implements AddressService {
         if (address.getCountry() != null) {
             builder.with("country", ":", address.getCountry());
         }
+
+        builder.with("eventLocation", "?",  true);
 
         return addressRepository.findAll(builder.build(), pageable).getContent();
     }

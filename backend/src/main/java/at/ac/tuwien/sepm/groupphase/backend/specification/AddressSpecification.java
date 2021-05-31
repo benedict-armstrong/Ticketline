@@ -21,6 +21,10 @@ public class AddressSpecification implements Specification<Address> {
                 return criteriaBuilder.like(criteriaBuilder.lower(
                     root.get(criteria.getKey())), "%" + criteria.getValue().toString().toLowerCase() + "%");
             }
+        } else if (criteria.getOperation().equalsIgnoreCase("?")) {
+            if (root.get(criteria.getKey()).getJavaType() == boolean.class) {
+                return criteriaBuilder.isTrue(root.get(criteria.getKey()));
+            }
         }
 
         return null;

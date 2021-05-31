@@ -11,7 +11,6 @@ import {Artist} from '../../../dtos/artist';
 export class ArtistSearchComponent implements OnInit {
   @Output() searchedArtists = new EventEmitter<Artist[]>();
   @Output() searchedNoArtist = new EventEmitter<any>();
-  @Output() searchPagination = new EventEmitter<any>();
 
   // Error flag
   error = false;
@@ -41,10 +40,8 @@ export class ArtistSearchComponent implements OnInit {
     if (this.artistSearchForm.value.firstName === '' && this.artistSearchForm.value.lastName === '') {
       this.artistService.getArtists(this.page, this.size).subscribe(
         response => {
-          const nonEmptyArtist = response.filter((artist) => (artist.performances.length !== 0));
-
-          this.artists.push(...nonEmptyArtist);
-          if (nonEmptyArtist.length < this.size) {
+          this.artists.push(...response);
+          if (response.length < this.size) {
             this.noArtist = true;
           } else {
             this.page++;
@@ -70,7 +67,6 @@ export class ArtistSearchComponent implements OnInit {
           }
           this.searchedArtists.emit(this.artists);
           this.searchedNoArtist.emit(this.noArtist);
-          this.searchPagination.emit(true);
         }, error => {
           console.error(error);
         }

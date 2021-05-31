@@ -44,17 +44,17 @@ public interface TestDataTicket extends TestData {
         Set<TicketType> set = new HashSet<>();
         set.add(TicketType.builder()
             .title("Standard")
-            .sectorType(STANDARD_SECTOR_TYPE)
+            .sectorType(SectorType.builder().name("Test").numberOfTickets(10).build())
             .price(1.0)
             .build());
         set.add(TicketType.builder()
             .title("VIP")
-            .sectorType(STANDARD_SECTOR_TYPE)
+            .sectorType(SectorType.builder().name("Test").numberOfTickets(10).build())
             .price(2.33)
             .build());
         set.add(TicketType.builder()
             .title("Discount")
-            .sectorType(STANDARD_SECTOR_TYPE)
+            .sectorType(SectorType.builder().name("Test").numberOfTickets(10).build())
             .price(0.85)
             .build());
         return set;

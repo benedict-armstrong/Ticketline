@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint;
 
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.AddressDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.ArtistDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.PaginationDto;
@@ -12,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -47,6 +49,14 @@ public class ArtistEndpoint {
     public ArtistDto addArtist(@Valid @RequestBody ArtistDto artistDto) {
         LOGGER.info("POST /api/v1/artists body: {}", artistDto);
         return artistMapper.artistToArtistDto(artistService.addArtist(artistMapper.artistDtoToArtist(artistDto)));
+    }
+
+    @PermitAll
+    @GetMapping(value = "/{id}")
+    @Operation(summary = "Get a specific artist")
+    public ArtistDto getOneById(@PathVariable Long id) {
+        LOGGER.info("GET /api/v1/artists/{}", id);
+        return artistMapper.artistToArtistDto(artistService.getOneById(id));
     }
 
     @PermitAll

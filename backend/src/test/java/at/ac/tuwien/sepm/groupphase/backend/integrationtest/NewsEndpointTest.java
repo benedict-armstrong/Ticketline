@@ -98,15 +98,6 @@ public class NewsEndpointTest implements TestDataNews, TestDataFile, TestAuthent
         fileRepository.deleteAll();
         ticketTypeRepository.deleteAll();
 
-        SectorType sectorType = SectorType.builder().name("Test").numberOfTickets(10).build();
-        TicketType ticketType = TicketType.builder().title("Test").price(10).sectorType(sectorType).build();
-
-        Set<SectorType> sectorTypeSet = new HashSet<>();
-        sectorTypeSet.add(sectorType);
-
-        Set<TicketType> ticketTypeSet = new HashSet<>();
-        ticketTypeSet.add(ticketType);
-
         Address address = addressRepository.save(TestDataEvent.TEST_EVENT_LOCATION);
         Artist artist = artistRepository.save(TestDataEvent.TEST_EVENT_ARTIST);
 
@@ -117,8 +108,8 @@ public class NewsEndpointTest implements TestDataNews, TestDataFile, TestAuthent
             .date(TestDataEvent.TEST_PERFORMANCE_DATE)
             .artist(artist)
             .location(address)
-            .sectorTypes(sectorTypeSet)
-            .ticketTypes(ticketTypeSet)
+            .sectorTypes(TestDataEvent.getTestEventSectortypes())
+            .ticketTypes(TestDataTicket.getTicketTypes())
             .build()
         );
 
@@ -140,7 +131,6 @@ public class NewsEndpointTest implements TestDataNews, TestDataFile, TestAuthent
 
         eventRepository.save(event);
 
-        //userRepository.deleteAll();
         saveUser(AUTH_USER_ORGANIZER, userRepository, passwordEncoder);
         authToken = authenticate(AUTH_USER_ORGANIZER, mockMvc, objectMapper);
     }

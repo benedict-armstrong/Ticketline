@@ -21,6 +21,4 @@ public class ArtistDto {
 
     @Size(max = 200, message = "Last name must be 200 characters or less")
     private String lastName;
-
-    private PerformanceDto[] performances;
 }

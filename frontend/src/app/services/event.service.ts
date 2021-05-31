@@ -27,12 +27,12 @@ export class ApplicationEventService {
   /**
    * Searches for all events in the backend with pagination
    */
-  searchEvents(page: number, size: number, title: string, description: string, duration: number, eventType: string): Observable<Event[]> {
+  searchEvents(page: number, size: number, name: string, description: string, duration: number, eventType: string): Observable<Event[]> {
     let params = new HttpParams();
     params = params.set('page', String(page));
     params = params.set('size', String(size));
-    if (title !== '') {
-      params = params.set('title', title);
+    if (name !== '') {
+      params = params.set('name', name);
     }
     if (description !== '') {
       params = params.set('description', description);

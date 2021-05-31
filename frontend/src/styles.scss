@@ -176,3 +176,14 @@ div.carousel-item {
   cursor: pointer;
   user-select: none;
 }
+
+.list-item {
+  margin: 15px;
+  padding: 20px;
+  cursor: pointer;
+  border-radius: 10px;
+}
+
+.list-item:hover {
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
+}

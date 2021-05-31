@@ -44,23 +44,14 @@ public class PerformanceRepositoryTest implements TestDataEvent {
         Address address = addressRepository.save(TestDataEvent.TEST_EVENT_LOCATION);
         Artist artist = artistRepository.save(TestDataEvent.TEST_EVENT_ARTIST);
 
-        SectorType sectorType = SectorType.builder().name("Test").numberOfTickets(10).build();
-        TicketType ticketType = TicketType.builder().title("Test").price(10).sectorType(sectorType).build();
-
-        Set<SectorType> sectorTypeSet = new HashSet<>();
-        sectorTypeSet.add(sectorType);
-
-        Set<TicketType> ticketTypeSet = new HashSet<>();
-        ticketTypeSet.add(ticketType);
-
         performance = Performance.builder()
             .title(TestDataEvent.TEST_EVENT_TITLE)
             .description(TestDataEvent.TEST_EVENT_DESCRIPTION)
             .date(TestDataEvent.TEST_PERFORMANCE_DATE)
             .artist(artist)
             .location(address)
-            .sectorTypes(sectorTypeSet)
-            .ticketTypes(ticketTypeSet)
+            .sectorTypes(TestDataEvent.getTestEventSectortypes())
+            .ticketTypes(TestDataTicket.getTicketTypes())
             .build();
     }
 
