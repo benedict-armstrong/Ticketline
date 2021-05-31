@@ -1,12 +1,12 @@
 package at.ac.tuwien.sepm.groupphase.backend.datagenerator;
 
+/*
 import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Event;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Performance;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Ticket;
 import at.ac.tuwien.sepm.groupphase.backend.entity.TicketType;
 import at.ac.tuwien.sepm.groupphase.backend.repository.EventRepository;
-import at.ac.tuwien.sepm.groupphase.backend.repository.TicketRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,14 +48,14 @@ public class TicketDataGenerator {
             Performance performance = (Performance) event.getPerformances().toArray()[0];
             TicketType ticketType = (TicketType) performance.getTicketTypes().toArray()[0];
 
-            //for (int i = 0; i < NUMBER_OF_TICKETS_TO_GENERATE; i++) {
-            //Ticket ticket = Ticket.builder()
-            //    .owner(user)
-            //    .performance(performance)
-            //    .ticketType(ticketType)
-            //    .build();
-            //ticketRepository.save(ticket);
-            //}
+            for (int i = 0; i < NUMBER_OF_TICKETS_TO_GENERATE; i++) {
+            Ticket ticket = Ticket.builder()
+                .owner(user)
+                .performance(performance)
+                .ticketType(ticketType)
+                .build();
+            ticketRepository.save(ticket);
+            }
         }
     }
-}
+}*/

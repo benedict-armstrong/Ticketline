@@ -52,9 +52,9 @@ public class EventDataGenerator {
 
     private Set<TicketType> buildTicketTypes() {
         Set<TicketType> ticketTypes = new HashSet<>();
-        ticketTypes.add(TicketType.builder().title("Standard").price(100).build());
-        ticketTypes.add(TicketType.builder().title("VIP").price(150).build());
-        ticketTypes.add(TicketType.builder().title("Discount").price(50).build());
+        ticketTypes.add(TicketType.builder().title("Standard").price(1000L).build());
+        ticketTypes.add(TicketType.builder().title("VIP").price(1500L).build());
+        ticketTypes.add(TicketType.builder().title("Discount").price(500L).build());
         return ticketTypes;
     }
 
