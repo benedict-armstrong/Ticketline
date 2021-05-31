@@ -49,12 +49,12 @@ public class TicketDataGenerator {
             TicketType ticketType = (TicketType) performance.getTicketTypes().toArray()[0];
 
             //for (int i = 0; i < NUMBER_OF_TICKETS_TO_GENERATE; i++) {
-                //Ticket ticket = Ticket.builder()
-                //    .owner(user)
-                //    .performance(performance)
-                //    .ticketType(ticketType)
-                //    .build();
-                //ticketRepository.save(ticket);
+            //Ticket ticket = Ticket.builder()
+            //    .owner(user)
+            //    .performance(performance)
+            //    .ticketType(ticketType)
+            //    .build();
+            //ticketRepository.save(ticket);
             //}
         }
     }

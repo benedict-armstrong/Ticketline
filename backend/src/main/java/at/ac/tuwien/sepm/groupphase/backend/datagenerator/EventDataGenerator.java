@@ -1,7 +1,15 @@
 package at.ac.tuwien.sepm.groupphase.backend.datagenerator;
 
-import at.ac.tuwien.sepm.groupphase.backend.entity.*;
-import at.ac.tuwien.sepm.groupphase.backend.repository.*;
+import at.ac.tuwien.sepm.groupphase.backend.entity.Artist;
+import at.ac.tuwien.sepm.groupphase.backend.entity.Event;
+import at.ac.tuwien.sepm.groupphase.backend.entity.File;
+import at.ac.tuwien.sepm.groupphase.backend.entity.Performance;
+import at.ac.tuwien.sepm.groupphase.backend.entity.TicketType;
+import at.ac.tuwien.sepm.groupphase.backend.entity.Venue;
+import at.ac.tuwien.sepm.groupphase.backend.repository.ArtistRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.EventRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.FileRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.VenueRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.DependsOn;
@@ -74,8 +82,8 @@ public class EventDataGenerator {
             for (int i = 0; i < NUMBER_OF_EVENTS_TO_GENERATE; i++) {
                 Set<Performance> performances = new HashSet<>();
                 for (int j = 0; j < i; j++) {
-                    Artist artist = artists.get((i+j) % artists.size());
-                    Venue venue   = venues.get((i+j) % venues.size());
+                    Artist artist = artists.get((i + j) % artists.size());
+                    Venue venue   = venues.get((i + j) % venues.size());
                     performances.add(buildPerformance(j, artist, venue));
                 }
                 Event event = Event.builder()

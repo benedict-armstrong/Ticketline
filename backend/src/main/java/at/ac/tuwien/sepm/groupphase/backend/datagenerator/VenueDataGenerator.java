@@ -48,34 +48,34 @@ public class VenueDataGenerator {
 
     private final UserRepository userRepository;
 
-    private final AuthenticationManager authManager;
+    //private final AuthenticationManager authManager;
 
-    private final Sector SECTOR_STAGE = Sector.builder().id(0L).name("SectorDto stage").color("#FFFCCC").type(Sector.SectorType.STAGE).build();
-    private final Sector SECTOR_SEATED = Sector.builder().id(1L).name("SectorDto seated").color("#867FD2").type(Sector.SectorType.SEATED).build();
-    private final Sector SECTOR_STANDING = Sector.builder().id(2L).name("SectorDto standing").color("#837F22").type(Sector.SectorType.STANDING).build();
+    private final Sector sectorStage = Sector.builder().id(0L).name("SectorDto stage").color("#FFFCCC").type(Sector.SectorType.STAGE).build();
+    private final Sector sectorSeated = Sector.builder().id(1L).name("SectorDto seated").color("#867FD2").type(Sector.SectorType.SEATED).build();
+    private final Sector sectorStanding = Sector.builder().id(2L).name("SectorDto standing").color("#837F22").type(Sector.SectorType.STANDING).build();
 
 
-    private final int VENUE_WIDTH = 3;
+    private final int venueWidth = 3;
 
-    private final List<LayoutUnit> VENUE_LAYOUT = Arrays.asList(
-        LayoutUnit.builder().sector(SECTOR_STAGE).customLabel("1").build(),
-        LayoutUnit.builder().sector(SECTOR_STAGE).customLabel("2").build(),
-        LayoutUnit.builder().sector(SECTOR_STAGE).customLabel("3").build(),
+    private final List<LayoutUnit> venueLayout = Arrays.asList(
+        LayoutUnit.builder().sector(sectorStage).customLabel("1").build(),
+        LayoutUnit.builder().sector(sectorStage).customLabel("2").build(),
+        LayoutUnit.builder().sector(sectorStage).customLabel("3").build(),
 
-        LayoutUnit.builder().sector(SECTOR_SEATED).customLabel("4").build(),
+        LayoutUnit.builder().sector(sectorSeated).customLabel("4").build(),
         null,
-        LayoutUnit.builder().sector(SECTOR_SEATED).customLabel("6").build(),
+        LayoutUnit.builder().sector(sectorSeated).customLabel("6").build(),
 
-        LayoutUnit.builder().sector(SECTOR_STANDING).customLabel("7").build(),
-        LayoutUnit.builder().sector(SECTOR_STANDING).customLabel("8").build(),
+        LayoutUnit.builder().sector(sectorStanding).customLabel("7").build(),
+        LayoutUnit.builder().sector(sectorStanding).customLabel("8").build(),
         null
     );
 
     @Autowired
-    public VenueDataGenerator(VenueService venueService, UserRepository userRepository, AuthenticationManager authManager) {
+    public VenueDataGenerator(VenueService venueService, UserRepository userRepository/*, AuthenticationManager authManager*/) {
         this.venueService = venueService;
         this.userRepository = userRepository;
-        this.authManager = authManager;
+        //this.authManager = authManager;
     }
 
     @PostConstruct
@@ -83,14 +83,14 @@ public class VenueDataGenerator {
 
         UsernamePasswordAuthenticationToken authReq
             = new UsernamePasswordAuthenticationToken("admin@mail.com", "password");
-        Authentication auth = authManager.authenticate(authReq);
-        SecurityContext sc = SecurityContextHolder.getContext();
-        sc.setAuthentication(auth);
+        //Authentication auth = authManager.authenticate(authReq);
+        //SecurityContext sc = SecurityContextHolder.getContext();
+        //sc.setAuthentication(auth);
 
         venueService.add(
             Venue.builder()
                 .name("Venue")
-                .sectors( Arrays.asList(SECTOR_SEATED, SECTOR_STAGE, SECTOR_STANDING))
+                .sectors(Arrays.asList(sectorSeated, sectorStage, sectorStanding))
                 .address(
                     Address.builder()
                         .name(TEST_VENUE_ADDRESS_NAME)
@@ -100,7 +100,7 @@ public class VenueDataGenerator {
                         .country(TEST_VENUE_ADDRESS_COUNTRY)
                         .eventLocation(false)
                         .build())
-                .layout(VENUE_LAYOUT)
+                .layout(venueLayout)
                 .build()
         );
     }
