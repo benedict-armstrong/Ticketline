@@ -10,10 +10,12 @@ import at.ac.tuwien.sepm.groupphase.backend.config.properties.SecurityProperties
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.ArtistDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.PerformanceDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.SectorDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.VenueDto;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Event;
 import at.ac.tuwien.sepm.groupphase.backend.entity.File;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Performance;
+import at.ac.tuwien.sepm.groupphase.backend.entity.Venue;
 import at.ac.tuwien.sepm.groupphase.backend.repository.AddressRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.ArtistRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.EventRepository;
@@ -22,6 +24,7 @@ import at.ac.tuwien.sepm.groupphase.backend.repository.SectorRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.VenueRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.deser.impl.PropertyBasedObjectIdGenerator;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -60,9 +63,6 @@ public class EventEndpointTest implements TestDataEvent, TestDataTicket, TestAut
     private EventRepository eventRepository;
 
     @Autowired
-    private FileRepository fileRepository;
-
-    @Autowired
     private UserRepository userRepository;
 
     @Autowired
@@ -70,12 +70,6 @@ public class EventEndpointTest implements TestDataEvent, TestDataTicket, TestAut
 
     @Autowired
     private VenueRepository venueRepository;
-
-    @Autowired
-    private SectorRepository sectorRepository;
-
-    @Autowired
-    private AddressRepository addressRepository;
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -86,25 +80,25 @@ public class EventEndpointTest implements TestDataEvent, TestDataTicket, TestAut
     @Autowired
     private SecurityProperties securityProperties;
 
-    private final File file = File.builder()
-        .data(TestDataFile.TEST_FILE_DATA)
-        .type(TestDataFile.TEST_FILE_TYPE)
-        .build();
-
     private String authToken;
 
     private EventDto eventDto;
 
+    private ArtistDto artistDto;
+
+    private VenueDto venueDto;
+
     @BeforeEach
     public void beforeEach() throws Exception {
+        artistDto = TestDataArtist.getArtistDto();
+        venueDto = TestDataVenue.getVenueDto();
+
         PerformanceDto[] performanceDtos = new PerformanceDto[1];
         performanceDtos[0] = PerformanceDto.builder()
             .title(TestDataEvent.TEST_EVENT_PERFORMANCE_TITLE)
             .description(TestDataEvent.TEST_EVENT_PERFORMANCE_DESCRIPTION)
             .date(TestDataEvent.TEST_PERFORMANCE_DATE)
-            .artist(TestDataArtist.getArtistDto())
             .ticketTypes(TestDataTicket.getTicketTypeDtos())
-            .venue(TestDataVenue.getVenueDto())
             .build();
 
         eventDto = EventDto.builder()
@@ -123,12 +117,10 @@ public class EventEndpointTest implements TestDataEvent, TestDataTicket, TestAut
 
     @AfterEach
     public void afterEach() {
-        venueRepository.deleteAll();
         eventRepository.deleteAll();
-        fileRepository.deleteAll();
-        userRepository.deleteAll();
-        addressRepository.deleteAll();
         artistRepository.deleteAll();
+        venueRepository.deleteAll();
+        userRepository.deleteAll();
     }
 
     private void saveEvent(EventDto eventDto) throws Exception {
@@ -142,6 +134,206 @@ public class EventEndpointTest implements TestDataEvent, TestDataTicket, TestAut
         MockHttpServletResponse response = mvcResult.getResponse();
         assertEquals(HttpStatus.CREATED.value(), response.getStatus());
         assertEquals(MediaType.APPLICATION_JSON_VALUE, response.getContentType());
+    }
+
+    private ArtistDto saveArtist(ArtistDto artistDto) throws Exception {
+        MvcResult mvcResult = this.mockMvc.perform(
+            post(ARTIST_BASE_URI)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(artistDto))
+                .header(securityProperties.getAuthHeader(), authToken)
+        ).andReturn();
+
+        MockHttpServletResponse response = mvcResult.getResponse();
+        assertEquals(HttpStatus.CREATED.value(), response.getStatus());
+        assertEquals(MediaType.APPLICATION_JSON_VALUE, response.getContentType());
+
+        return objectMapper.readValue(response.getContentAsString(),
+            ArtistDto.class);
+    }
+
+    private VenueDto saveVenue(VenueDto venueDto) throws Exception {
+        MvcResult mvcResult = this.mockMvc.perform(
+            post(VENUE_BASE_URI)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(venueDto))
+                .header(securityProperties.getAuthHeader(), authToken)
+        ).andReturn();
+
+        MockHttpServletResponse response = mvcResult.getResponse();
+        assertEquals(HttpStatus.CREATED.value(), response.getStatus());
+        assertEquals(MediaType.APPLICATION_JSON_VALUE, response.getContentType());
+
+        return objectMapper.readValue(response.getContentAsString(),
+            VenueDto.class);
+    }
+
+    @Test
+    @DisplayName("Should return 201 and news object with set ID")
+    public void whenCreateEvent_then201AndEventWithIdAndPublishedAt() throws Exception {
+        eventDto.getPerformances()[0].setArtist(saveArtist(artistDto));
+        eventDto.getPerformances()[0].setVenue(saveVenue(venueDto));
+
+        MvcResult mvcResult = this.mockMvc.perform(
+            post(TestDataEvent.EVENT_BASE_URI)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(eventDto))
+                .header(securityProperties.getAuthHeader(), authToken)
+        ).andReturn();
+
+        MockHttpServletResponse response = mvcResult.getResponse();
+        assertEquals(HttpStatus.CREATED.value(), response.getStatus());
+        assertEquals(MediaType.APPLICATION_JSON_VALUE, response.getContentType());
+
+        EventDto savedDto = objectMapper.readValue(response.getContentAsString(), EventDto.class);
+        assertAll(
+            () -> assertNotNull(savedDto.getId())
+        );
+    }
+
+    @Test
+    @DisplayName("Should return 400 when start Date is in past")
+    public void whenCreateEventWithPastStartDate_then400() throws Exception {
+        PerformanceDto[] performanceDtos = new PerformanceDto[1];
+        performanceDtos[0] = PerformanceDto.builder()
+            .title(TestDataEvent.TEST_EVENT_PERFORMANCE_TITLE)
+            .description(TestDataEvent.TEST_EVENT_PERFORMANCE_DESCRIPTION)
+            .date(TestDataEvent.TEST_PERFORMANCE_DATE)
+            .artist(saveArtist(artistDto))
+            .ticketTypes(TestDataTicket.getTicketTypeDtos())
+            .venue(saveVenue(venueDto))
+            .build();
+
+        eventDto = EventDto.builder()
+            .name(TestDataEvent.TEST_EVENT_TITLE)
+            .description(TestDataEvent.TEST_EVENT_DESCRIPTION)
+            .startDate(TestDataEvent.TEST_EVENT_DATE_PAST)
+            .endDate(TestDataEvent.TEST_EVENT_DATE_FUTURE2)
+            .duration(TestDataEvent.TEST_EVENT_DURATION)
+            .eventType(TestDataEvent.TEST_EVENT_EVENT_TYPE)
+            .performances(performanceDtos)
+            .build();
+
+        MvcResult mvcResult = this.mockMvc.perform(
+            post(TestDataEvent.EVENT_BASE_URI)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(eventDto))
+                .header(securityProperties.getAuthHeader(), authToken)
+        ).andReturn();
+
+        MockHttpServletResponse response = mvcResult.getResponse();
+        assertEquals(HttpStatus.BAD_REQUEST.value(), response.getStatus());
+    }
+
+    @Test
+    @DisplayName("Should return 400 when end Date is in past")
+    public void whenCreateEventWithPastEndDate_then400() throws Exception {
+        PerformanceDto[] performanceDtos = new PerformanceDto[1];
+        performanceDtos[0] = PerformanceDto.builder()
+            .title(TestDataEvent.TEST_EVENT_PERFORMANCE_TITLE)
+            .description(TestDataEvent.TEST_EVENT_PERFORMANCE_DESCRIPTION)
+            .date(TestDataEvent.TEST_PERFORMANCE_DATE)
+            .artist(saveArtist(artistDto))
+            .ticketTypes(TestDataTicket.getTicketTypeDtos())
+            .venue(saveVenue(venueDto))
+            .build();
+
+        eventDto = EventDto.builder()
+            .name(TestDataEvent.TEST_EVENT_TITLE)
+            .description(TestDataEvent.TEST_EVENT_DESCRIPTION)
+            .startDate(TestDataEvent.TEST_EVENT_DATE_FUTURE)
+            .endDate(TestDataEvent.TEST_EVENT_DATE_PAST)
+            .duration(TestDataEvent.TEST_EVENT_DURATION)
+            .eventType(TestDataEvent.TEST_EVENT_EVENT_TYPE)
+            .performances(performanceDtos)
+            .build();
+
+        MvcResult mvcResult = this.mockMvc.perform(
+            post(TestDataEvent.EVENT_BASE_URI)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(eventDto))
+                .header(securityProperties.getAuthHeader(), authToken)
+        ).andReturn();
+
+        MockHttpServletResponse response = mvcResult.getResponse();
+        assertEquals(HttpStatus.BAD_REQUEST.value(), response.getStatus());
+    }
+
+    @Test
+    @DisplayName("Should return 400 when date of performance is outside of event period")
+    public void whenCreateEventWithPerformanceDateOutOfPeriod_then400() throws Exception {
+        PerformanceDto[] performanceDtos = new PerformanceDto[1];
+        performanceDtos[0] = PerformanceDto.builder()
+            .title(TestDataEvent.TEST_EVENT_PERFORMANCE_TITLE)
+            .description(TestDataEvent.TEST_EVENT_PERFORMANCE_DESCRIPTION)
+            .date(TestDataEvent.TEST_EVENT_DATE_FUTURE2.plusWeeks(1).atStartOfDay())
+            .artist(saveArtist(artistDto))
+            .ticketTypes(TestDataTicket.getTicketTypeDtos())
+            .venue(saveVenue(venueDto))
+            .build();
+
+        eventDto = EventDto.builder()
+            .name(TestDataEvent.TEST_EVENT_TITLE)
+            .description(TestDataEvent.TEST_EVENT_DESCRIPTION)
+            .startDate(TestDataEvent.TEST_EVENT_DATE_FUTURE)
+            .endDate(TestDataEvent.TEST_EVENT_DATE_FUTURE2)
+            .duration(TestDataEvent.TEST_EVENT_DURATION)
+            .eventType(TestDataEvent.TEST_EVENT_EVENT_TYPE)
+            .performances(performanceDtos)
+            .build();
+
+        MvcResult mvcResult = this.mockMvc.perform(
+            post(TestDataEvent.EVENT_BASE_URI)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(eventDto))
+                .header(securityProperties.getAuthHeader(), authToken)
+        ).andReturn();
+
+        MockHttpServletResponse response = mvcResult.getResponse();
+        assertEquals(HttpStatus.CONFLICT.value(), response.getStatus());
+    }
+
+    @Test
+    @DisplayName("Should return correctly sized chunk of events on get all")
+    public void givenEvent_whenGetAll_thenGetCorrectChunk() throws Exception {
+        int amountOfEventsToGenerate = 6;
+        int pageSize = 5;
+        for (int i = 0; i < amountOfEventsToGenerate; i++) {
+            PerformanceDto[] performanceDtos = new PerformanceDto[1];
+            performanceDtos[0] = PerformanceDto.builder()
+                .title(TestDataEvent.TEST_EVENT_PERFORMANCE_TITLE)
+                .description(TestDataEvent.TEST_EVENT_PERFORMANCE_DESCRIPTION)
+                .date(TestDataEvent.TEST_PERFORMANCE_DATE)
+                .artist(saveArtist(artistDto))
+                .ticketTypes(TestDataTicket.getTicketTypeDtos())
+                .venue(saveVenue(venueDto))
+                .build();
+
+            eventDto = EventDto.builder()
+                .name(TestDataEvent.TEST_EVENT_TITLE)
+                .description(TestDataEvent.TEST_EVENT_DESCRIPTION)
+                .startDate(TestDataEvent.TEST_EVENT_DATE_FUTURE)
+                .endDate(TestDataEvent.TEST_EVENT_DATE_FUTURE2)
+                .duration(TestDataEvent.TEST_EVENT_DURATION)
+                .eventType(TestDataEvent.TEST_EVENT_EVENT_TYPE)
+                .performances(performanceDtos)
+                .build();
+
+            saveEvent(eventDto);
+        }
+
+        MvcResult mvcResult = this.mockMvc.perform(
+            get(TestDataEvent.EVENT_BASE_URI)
+                .param("page", String.valueOf(0))
+                .param("size", String.valueOf(pageSize))
+                .header(securityProperties.getAuthHeader(), authToken)
+        ).andReturn();
+        MockHttpServletResponse response = mvcResult.getResponse();
+        assertEquals(HttpStatus.OK.value(), response.getStatus());
+        assertEquals(MediaType.APPLICATION_JSON_VALUE, response.getContentType());
+
+        EventDto[] eventDtos = objectMapper.readValue(response.getContentAsString(), EventDto[].class);
+        assertEquals(pageSize, eventDtos.length);
     }
 
     @Test
@@ -161,38 +353,6 @@ public class EventEndpointTest implements TestDataEvent, TestDataTicket, TestAut
             objectMapper.readValue(response.getContentAsString(), EventDto[].class)
         );
         assertEquals(0, eventDtos.size());
-    }
-
-    @Test
-    @DisplayName("Should return correctly sized chunk of events on get all")
-    public void givenEvent_whenGetAll_thenGetCorrectChunk() throws Exception {
-        int amountOfEventsToGenerate = 15;
-        int pageSize = 5;
-        for (int i = 0; i < amountOfEventsToGenerate; i++) {
-            eventDto = EventDto.builder()
-                .name(TestDataEvent.TEST_EVENT_TITLE)
-                .description(TestDataEvent.TEST_EVENT_DESCRIPTION)
-                .startDate(TestDataEvent.TEST_EVENT_DATE_FUTURE)
-                .endDate(TestDataEvent.TEST_EVENT_DATE_FUTURE2)
-                .duration(TestDataEvent.TEST_EVENT_DURATION)
-                .eventType(TestDataEvent.TEST_EVENT_EVENT_TYPE)
-                .build();
-
-            saveEvent(eventDto);
-        }
-
-        MvcResult mvcResult = this.mockMvc.perform(
-            get(TestDataEvent.EVENT_BASE_URI)
-                .param("page", String.valueOf(1))
-                .param("size", String.valueOf(pageSize))
-                .header(securityProperties.getAuthHeader(), authToken)
-        ).andReturn();
-        MockHttpServletResponse response = mvcResult.getResponse();
-        assertEquals(HttpStatus.OK.value(), response.getStatus());
-        assertEquals(MediaType.APPLICATION_JSON_VALUE, response.getContentType());
-
-        EventDto[] eventDtos = objectMapper.readValue(response.getContentAsString(), EventDto[].class);
-        assertEquals(pageSize, eventDtos.length);
     }
 
     @Test
@@ -236,95 +396,10 @@ public class EventEndpointTest implements TestDataEvent, TestDataTicket, TestAut
     }
 
     @Test
-    @DisplayName("Should return 201 and news object with set ID")
-    public void whenCreateEvent_then201AndEventWithIdAndPublishedAt() throws Exception {
-        MvcResult mvcResult = this.mockMvc.perform(
-            post(TestDataEvent.EVENT_BASE_URI)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(eventDto))
-                .header(securityProperties.getAuthHeader(), authToken)
-        ).andReturn();
-
-        MockHttpServletResponse response = mvcResult.getResponse();
-        assertEquals(HttpStatus.CREATED.value(), response.getStatus());
-        assertEquals(MediaType.APPLICATION_JSON_VALUE, response.getContentType());
-
-        EventDto savedDto = objectMapper.readValue(response.getContentAsString(), EventDto.class);
-        assertAll(
-            () -> assertNotNull(savedDto.getId())
-        );
-    }
-
-
-    @Test
-    @DisplayName("Should return 400 when start Date is in past")
-    public void whenCreateEventWithPastStartDate_then400() throws Exception {
-        PerformanceDto[] performanceDtos = new PerformanceDto[1];
-        performanceDtos[0] = PerformanceDto.builder()
-            .title(TestDataEvent.TEST_EVENT_PERFORMANCE_TITLE)
-            .description(TestDataEvent.TEST_EVENT_PERFORMANCE_DESCRIPTION)
-            .date(TestDataEvent.TEST_PERFORMANCE_DATE)
-            .artist(TestDataArtist.getArtistDto())
-            .ticketTypes(TestDataTicket.getTicketTypeDtos())
-            .venue(TestDataVenue.getVenueDto())
-            .build();
-
-        eventDto = EventDto.builder()
-            .name(TestDataEvent.TEST_EVENT_TITLE)
-            .description(TestDataEvent.TEST_EVENT_DESCRIPTION)
-            .startDate(TestDataEvent.TEST_EVENT_DATE_PAST)
-            .endDate(TestDataEvent.TEST_EVENT_DATE_FUTURE2)
-            .duration(TestDataEvent.TEST_EVENT_DURATION)
-            .eventType(TestDataEvent.TEST_EVENT_EVENT_TYPE)
-            .performances(performanceDtos)
-            .build();
-
-        MvcResult mvcResult = this.mockMvc.perform(
-            post(TestDataEvent.EVENT_BASE_URI)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(eventDto))
-        ).andReturn();
-
-        MockHttpServletResponse response = mvcResult.getResponse();
-        assertEquals(HttpStatus.BAD_REQUEST.value(), response.getStatus());
-    }
-
-    @Test
-    @DisplayName("Should return 400 when end Date is in past")
-    public void whenCreateEventWithPastEndDate_then400() throws Exception {
-        PerformanceDto[] performanceDtos = new PerformanceDto[1];
-        performanceDtos[0] = PerformanceDto.builder()
-            .title(TestDataEvent.TEST_EVENT_PERFORMANCE_TITLE)
-            .description(TestDataEvent.TEST_EVENT_PERFORMANCE_DESCRIPTION)
-            .date(TestDataEvent.TEST_PERFORMANCE_DATE)
-            .artist(TestDataArtist.getArtistDto())
-            .ticketTypes(TestDataTicket.getTicketTypeDtos())
-            .venue(TestDataVenue.getVenueDto())
-            .build();
-
-        eventDto = EventDto.builder()
-            .name(TestDataEvent.TEST_EVENT_TITLE)
-            .description(TestDataEvent.TEST_EVENT_DESCRIPTION)
-            .startDate(TestDataEvent.TEST_EVENT_DATE_FUTURE)
-            .endDate(TestDataEvent.TEST_EVENT_DATE_PAST)
-            .duration(TestDataEvent.TEST_EVENT_DURATION)
-            .eventType(TestDataEvent.TEST_EVENT_EVENT_TYPE)
-            .performances(performanceDtos)
-            .build();
-
-        MvcResult mvcResult = this.mockMvc.perform(
-            post(TestDataEvent.EVENT_BASE_URI)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(eventDto))
-        ).andReturn();
-
-        MockHttpServletResponse response = mvcResult.getResponse();
-        assertEquals(HttpStatus.BAD_REQUEST.value(), response.getStatus());
-    }
-
-    @Test
     @DisplayName("Should return 200 and all events when no search params are given")
     public void whenEventsGiven_SearchWithNoParams_ShouldReturn200AndEvents() throws Exception {
+        eventDto.getPerformances()[0].setArtist(saveArtist(artistDto));
+        eventDto.getPerformances()[0].setVenue(saveVenue(venueDto));
         saveEvent(eventDto);
 
         MvcResult mvcResult = this.mockMvc.perform(
@@ -347,6 +422,8 @@ public class EventEndpointTest implements TestDataEvent, TestDataTicket, TestAut
     @Test
     @DisplayName("Should return 200 and event with title from search")
     public void whenEventsGiven_SearchWithTitle_ShouldReturn200AndEvent() throws Exception {
+        eventDto.getPerformances()[0].setArtist(saveArtist(artistDto));
+        eventDto.getPerformances()[0].setVenue(saveVenue(venueDto));
         saveEvent(eventDto);
 
         MvcResult mvcResult = this.mockMvc.perform(
@@ -371,6 +448,8 @@ public class EventEndpointTest implements TestDataEvent, TestDataTicket, TestAut
     @Test
     @DisplayName("Should return 200 and event with duration when duration minus 30 is given")
     public void whenEventsGiven_SearchWithDurationMinus30_ShouldReturn200AndEvent() throws Exception {
+        eventDto.getPerformances()[0].setArtist(saveArtist(artistDto));
+        eventDto.getPerformances()[0].setVenue(saveVenue(venueDto));
         saveEvent(eventDto);
 
         MvcResult mvcResult = this.mockMvc.perform(
@@ -395,6 +474,8 @@ public class EventEndpointTest implements TestDataEvent, TestDataTicket, TestAut
     @Test
     @DisplayName("Should return 200 and event description when word is in description")
     public void whenEventsGiven_SearchWithDescription_ShouldReturn200AndEvent() throws Exception {
+        eventDto.getPerformances()[0].setArtist(saveArtist(artistDto));
+        eventDto.getPerformances()[0].setVenue(saveVenue(venueDto));
         saveEvent(eventDto);
 
         MvcResult mvcResult = this.mockMvc.perform(
@@ -419,6 +500,8 @@ public class EventEndpointTest implements TestDataEvent, TestDataTicket, TestAut
     @Test
     @DisplayName("Should return 200 and event with event type")
     public void whenEventsGiven_SearchWithEventType_ShouldReturn200AndEvent() throws Exception {
+        eventDto.getPerformances()[0].setArtist(saveArtist(artistDto));
+        eventDto.getPerformances()[0].setVenue(saveVenue(venueDto));
         saveEvent(eventDto);
 
         MvcResult mvcResult = this.mockMvc.perform(
@@ -443,6 +526,8 @@ public class EventEndpointTest implements TestDataEvent, TestDataTicket, TestAut
     @Test
     @DisplayName("Should return 200 and event with all search params")
     public void whenEventsGiven_SearchWithAllParams_ShouldReturn200AndEvent() throws Exception {
+        eventDto.getPerformances()[0].setArtist(saveArtist(artistDto));
+        eventDto.getPerformances()[0].setVenue(saveVenue(venueDto));
         saveEvent(eventDto);
 
         MvcResult mvcResult = this.mockMvc.perform(
@@ -473,6 +558,8 @@ public class EventEndpointTest implements TestDataEvent, TestDataTicket, TestAut
     @Test
     @DisplayName("Should return nothing when event given and search with other event type")
     public void whenEventsGiven_SearchWithOtherEventType_ShouldReturnNothing() throws Exception {
+        eventDto.getPerformances()[0].setArtist(saveArtist(artistDto));
+        eventDto.getPerformances()[0].setVenue(saveVenue(venueDto));
         saveEvent(eventDto);
 
         MvcResult mvcResult = this.mockMvc.perform(
