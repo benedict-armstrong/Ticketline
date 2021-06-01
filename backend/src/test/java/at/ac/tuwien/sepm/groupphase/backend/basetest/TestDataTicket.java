@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepm.groupphase.backend.basetest;
 
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.TicketTypeDto;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Ticket;
 import at.ac.tuwien.sepm.groupphase.backend.entity.TicketType;
 
@@ -22,6 +23,19 @@ public interface TestDataTicket extends TestData {
         .price(200L)
         .build();
     TicketType DISCOUNT_TICKET_TYPE = TicketType.builder()
+        .title("Discount")
+        .price(50L)
+        .build();
+
+    TicketTypeDto STANDARD_TICKET_TYPE_DTO = TicketTypeDto.builder()
+        .title("Standard")
+        .price(100L)
+        .build();
+    TicketTypeDto VIP_TICKET_TYPE_DTO = TicketTypeDto.builder()
+        .title("VIP")
+        .price(200L)
+        .build();
+    TicketTypeDto DISCOUNT_TICKET_TYPE_DTO = TicketTypeDto.builder()
         .title("Discount")
         .price(50L)
         .build();
@@ -57,6 +71,23 @@ public interface TestDataTicket extends TestData {
                 .build()
         );
         return set;
+    }
+
+    static TicketTypeDto[] getTicketTypeDtos() {
+        TicketTypeDto[] dtos = new TicketTypeDto[3];
+        dtos[0] = TicketTypeDto.builder()
+            .title(STANDARD_TICKET_TYPE.getTitle())
+            .price(STANDARD_TICKET_TYPE.getPrice())
+            .build();
+        dtos[1] = TicketTypeDto.builder()
+            .title(VIP_TICKET_TYPE.getTitle())
+            .price(VIP_TICKET_TYPE.getPrice())
+            .build();
+        dtos[2] = TicketTypeDto.builder()
+            .title(DISCOUNT_TICKET_TYPE.getTitle())
+            .price(DISCOUNT_TICKET_TYPE.getPrice())
+            .build();
+        return dtos;
     }
 
 }

@@ -4,6 +4,7 @@ import at.ac.tuwien.sepm.groupphase.backend.basetest.TestAuthentification;
 import at.ac.tuwien.sepm.groupphase.backend.basetest.TestDataAddress;
 import at.ac.tuwien.sepm.groupphase.backend.config.properties.SecurityProperties;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.AddressDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.ArtistDto;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Address;
 import at.ac.tuwien.sepm.groupphase.backend.repository.AddressRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.UserRepository;
@@ -57,16 +58,18 @@ public class AddressEndpointTest implements TestAuthentification, TestDataAddres
 
     private String authToken;
 
-    private Address address;
+    private AddressDto addressDto;
 
     @BeforeEach
     public void beforeEach() throws Exception {
-        address = Address.builder()
+        addressDto = AddressDto.builder()
             .name(TEST_ADDRESS_NAME)
             .lineOne(TEST_ADDRESS_LINE_ONE)
+            .lineTwo(TEST_ADDRESS_LINE_TWO)
             .city(TEST_ADDRESS_CITY)
             .postcode(TEST_ADDRESS_POSTCODE)
             .country(TEST_ADDRESS_COUNTRY)
+            .eventLocation(true)
             .build();
 
         saveUser(AUTH_USER_ORGANIZER, userRepository, passwordEncoder);
@@ -79,13 +82,22 @@ public class AddressEndpointTest implements TestAuthentification, TestDataAddres
         addressRepository.deleteAll();
     }
 
+    private void saveAddress(AddressDto addressDto) throws Exception {
+        this.mockMvc.perform(
+            post(BASE_URI + "/addresses")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(addressDto))
+                .header(securityProperties.getAuthHeader(), authToken)
+        ).andReturn();
+    }
+
     @Test
     @DisplayName("Should return 201 and address object with set ID")
     public void whenCreateAddress_then201AndAddressWithId() throws Exception {
         MvcResult mvcResult = this.mockMvc.perform(
             post(ADDRESS_BASE_URI)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(address))
+                .content(objectMapper.writeValueAsString(addressDto))
                 .header(securityProperties.getAuthHeader(), authToken)
         ).andReturn();
 
@@ -102,16 +114,7 @@ public class AddressEndpointTest implements TestAuthentification, TestDataAddres
     @Test
     @DisplayName("Should return 200 and address with name from search")
     public void whenAddressGiven_SearchWithName_ShouldReturn200AndAddress() throws Exception {
-        Address searchAddress = Address.builder()
-            .name(TEST_ADDRESS_NAME)
-            .lineOne(TEST_ADDRESS_LINE_ONE)
-            .city(TEST_ADDRESS_CITY)
-            .postcode(TEST_ADDRESS_POSTCODE)
-            .country(TEST_ADDRESS_COUNTRY)
-            .eventLocation(true)
-            .build();
-
-        addressRepository.save(searchAddress);
+        saveAddress(addressDto);
 
         MvcResult mvcResult = this.mockMvc.perform(
             get(ADDRESS_BASE_URI)
@@ -128,23 +131,14 @@ public class AddressEndpointTest implements TestAuthentification, TestDataAddres
             objectMapper.readValue(response.getContentAsString(), AddressDto[].class)
         );
 
-        assertEquals(searchAddress.getName(), addressDtos.get(0).getName());
+        assertEquals(addressDto.getName(), addressDtos.get(0).getName());
         assertEquals(1, addressDtos.size());
     }
 
     @Test
     @DisplayName("Should return 200 and address with line one from search")
     public void whenAddressGiven_SearchWithLineOne_ShouldReturn200AndAddress() throws Exception {
-        Address searchAddress = Address.builder()
-            .name(TEST_ADDRESS_NAME)
-            .lineOne(TEST_ADDRESS_LINE_ONE)
-            .city(TEST_ADDRESS_CITY)
-            .postcode(TEST_ADDRESS_POSTCODE)
-            .country(TEST_ADDRESS_COUNTRY)
-            .eventLocation(true)
-            .build();
-
-        addressRepository.save(searchAddress);
+        saveAddress(addressDto);
 
         MvcResult mvcResult = this.mockMvc.perform(
             get(ADDRESS_BASE_URI)
@@ -161,24 +155,14 @@ public class AddressEndpointTest implements TestAuthentification, TestDataAddres
             objectMapper.readValue(response.getContentAsString(), AddressDto[].class)
         );
 
-        assertEquals(searchAddress.getLineOne(), addressDtos.get(0).getLineOne());
+        assertEquals(addressDto.getLineOne(), addressDtos.get(0).getLineOne());
         assertEquals(1, addressDtos.size());
     }
 
     @Test
     @DisplayName("Should return 200 and address with line two from search")
     public void whenAddressGiven_SearchWithLineTwo_ShouldReturn200AndAddress() throws Exception {
-        Address searchAddress = Address.builder()
-            .name(TEST_ADDRESS_NAME)
-            .lineOne(TEST_ADDRESS_LINE_ONE)
-            .lineTwo(TEST_ADDRESS_LINE_TWO)
-            .city(TEST_ADDRESS_CITY)
-            .postcode(TEST_ADDRESS_POSTCODE)
-            .country(TEST_ADDRESS_COUNTRY)
-            .eventLocation(true)
-            .build();
-
-        addressRepository.save(searchAddress);
+        saveAddress(addressDto);
 
         MvcResult mvcResult = this.mockMvc.perform(
             get(ADDRESS_BASE_URI)
@@ -195,23 +179,14 @@ public class AddressEndpointTest implements TestAuthentification, TestDataAddres
             objectMapper.readValue(response.getContentAsString(), AddressDto[].class)
         );
 
-        assertEquals(searchAddress.getLineTwo(), addressDtos.get(0).getLineTwo());
+        assertEquals(addressDto.getLineTwo(), addressDtos.get(0).getLineTwo());
         assertEquals(1, addressDtos.size());
     }
 
     @Test
     @DisplayName("Should return 200 and address with city from search")
     public void whenAddressGiven_SearchWithCity_ShouldReturn200AndAddress() throws Exception {
-        Address searchAddress = Address.builder()
-            .name(TEST_ADDRESS_NAME)
-            .lineOne(TEST_ADDRESS_LINE_ONE)
-            .city(TEST_ADDRESS_CITY)
-            .postcode(TEST_ADDRESS_POSTCODE)
-            .country(TEST_ADDRESS_COUNTRY)
-            .eventLocation(true)
-            .build();
-
-        addressRepository.save(searchAddress);
+        saveAddress(addressDto);
 
         MvcResult mvcResult = this.mockMvc.perform(
             get(ADDRESS_BASE_URI)
@@ -228,23 +203,14 @@ public class AddressEndpointTest implements TestAuthentification, TestDataAddres
             objectMapper.readValue(response.getContentAsString(), AddressDto[].class)
         );
 
-        assertEquals(searchAddress.getCity(), addressDtos.get(0).getCity());
+        assertEquals(addressDto.getCity(), addressDtos.get(0).getCity());
         assertEquals(1, addressDtos.size());
     }
 
     @Test
     @DisplayName("Should return 200 and address with postcode from search")
     public void whenAddressGiven_SearchWithPostcode_ShouldReturn200AndAddress() throws Exception {
-        Address searchAddress = Address.builder()
-            .name(TEST_ADDRESS_NAME)
-            .lineOne(TEST_ADDRESS_LINE_ONE)
-            .city(TEST_ADDRESS_CITY)
-            .postcode(TEST_ADDRESS_POSTCODE)
-            .country(TEST_ADDRESS_COUNTRY)
-            .eventLocation(true)
-            .build();
-
-        addressRepository.save(searchAddress);
+        saveAddress(addressDto);
 
         MvcResult mvcResult = this.mockMvc.perform(
             get(ADDRESS_BASE_URI)
@@ -261,23 +227,14 @@ public class AddressEndpointTest implements TestAuthentification, TestDataAddres
             objectMapper.readValue(response.getContentAsString(), AddressDto[].class)
         );
 
-        assertEquals(searchAddress.getPostcode(), addressDtos.get(0).getPostcode());
+        assertEquals(addressDto.getPostcode(), addressDtos.get(0).getPostcode());
         assertEquals(1, addressDtos.size());
     }
 
     @Test
     @DisplayName("Should return 200 and address with country from search")
     public void whenAddressGiven_SearchWithCountry_ShouldReturn200AndAddress() throws Exception {
-        Address searchAddress = Address.builder()
-            .name(TEST_ADDRESS_NAME)
-            .lineOne(TEST_ADDRESS_LINE_ONE)
-            .city(TEST_ADDRESS_CITY)
-            .postcode(TEST_ADDRESS_POSTCODE)
-            .country(TEST_ADDRESS_COUNTRY)
-            .eventLocation(true)
-            .build();
-
-        addressRepository.save(searchAddress);
+        saveAddress(addressDto);
 
         MvcResult mvcResult = this.mockMvc.perform(
             get(ADDRESS_BASE_URI)
@@ -294,24 +251,14 @@ public class AddressEndpointTest implements TestAuthentification, TestDataAddres
             objectMapper.readValue(response.getContentAsString(), AddressDto[].class)
         );
 
-        assertEquals(searchAddress.getCountry(), addressDtos.get(0).getCountry());
+        assertEquals(addressDto.getCountry(), addressDtos.get(0).getCountry());
         assertEquals(1, addressDtos.size());
     }
 
     @Test
     @DisplayName("Should return 200 and address with all search params")
     public void whenAddressGiven_SearchWithAllParams_ShouldReturn200AndAddress() throws Exception {
-        Address searchAddress = Address.builder()
-            .name(TEST_ADDRESS_NAME)
-            .lineOne(TEST_ADDRESS_LINE_ONE)
-            .lineTwo(TEST_ADDRESS_LINE_TWO)
-            .city(TEST_ADDRESS_CITY)
-            .postcode(TEST_ADDRESS_POSTCODE)
-            .country(TEST_ADDRESS_COUNTRY)
-            .eventLocation(true)
-            .build();
-
-        addressRepository.save(searchAddress);
+        saveAddress(addressDto);
 
         MvcResult mvcResult = this.mockMvc.perform(
             get(ADDRESS_BASE_URI)
@@ -333,28 +280,19 @@ public class AddressEndpointTest implements TestAuthentification, TestDataAddres
             objectMapper.readValue(response.getContentAsString(), AddressDto[].class)
         );
 
-        assertEquals(searchAddress.getName(), addressDtos.get(0).getName());
-        assertEquals(searchAddress.getLineOne(), addressDtos.get(0).getLineOne());
-        assertEquals(searchAddress.getLineTwo(), addressDtos.get(0).getLineTwo());
-        assertEquals(searchAddress.getCity(), addressDtos.get(0).getCity());
-        assertEquals(searchAddress.getPostcode(), addressDtos.get(0).getPostcode());
-        assertEquals(searchAddress.getCountry(), addressDtos.get(0).getCountry());
+        assertEquals(addressDto.getName(), addressDtos.get(0).getName());
+        assertEquals(addressDto.getLineOne(), addressDtos.get(0).getLineOne());
+        assertEquals(addressDto.getLineTwo(), addressDtos.get(0).getLineTwo());
+        assertEquals(addressDto.getCity(), addressDtos.get(0).getCity());
+        assertEquals(addressDto.getPostcode(), addressDtos.get(0).getPostcode());
+        assertEquals(addressDto.getCountry(), addressDtos.get(0).getCountry());
         assertEquals(1, addressDtos.size());
     }
 
     @Test
     @DisplayName("Should return 200 and address with country from search")
     public void whenAddressGiven_SearchWithWrongName_ShouldReturnNothing() throws Exception {
-        Address searchAddress = Address.builder()
-            .name(TEST_ADDRESS_NAME)
-            .lineOne(TEST_ADDRESS_LINE_ONE)
-            .city(TEST_ADDRESS_CITY)
-            .postcode(TEST_ADDRESS_POSTCODE)
-            .country(TEST_ADDRESS_COUNTRY)
-            .eventLocation(true)
-            .build();
-
-        addressRepository.save(searchAddress);
+        saveAddress(addressDto);
 
         MvcResult mvcResult = this.mockMvc.perform(
             get(ADDRESS_BASE_URI)

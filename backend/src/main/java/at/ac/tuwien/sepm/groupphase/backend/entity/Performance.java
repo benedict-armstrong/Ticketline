@@ -45,6 +45,7 @@ public class Performance {
     private Artist artist;
 
     @ManyToOne(optional = false)
+    @EqualsAndHashCode.Exclude
     private Venue venue;
 
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)

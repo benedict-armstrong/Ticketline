@@ -1,15 +1,17 @@
 package at.ac.tuwien.sepm.groupphase.backend.basetest;
 
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.ArtistDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.PerformanceDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.VenueDto;
 import at.ac.tuwien.sepm.groupphase.backend.entity.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-public interface TestDataEvent extends TestData {
+public interface TestDataEvent extends TestData, TestDataVenue, TestDataArtist {
 
-    Long ID = 1L;
     String TEST_EVENT_TITLE = "TestEventTitle";
-    String TEST_EVENT_TITLE2 = "Other TestEventTitle";
     String TEST_EVENT_DESCRIPTION = "Testdescription..";
     LocalDate TEST_EVENT_DATE_FUTURE = LocalDate.parse("2022-12-12");
     LocalDate TEST_EVENT_DATE_FUTURE2 = LocalDate.parse("2023-12-12");
@@ -34,6 +36,28 @@ public interface TestDataEvent extends TestData {
             .artist(artist)
             .venue(venue)
             .ticketTypes(TestDataTicket.getTicketTypes())
+            .build();
+    }
+
+    static PerformanceDto getPerformanceDto(ArtistDto artistDto, VenueDto venueDto) {
+        return PerformanceDto.builder()
+            .title(TEST_EVENT_TITLE)
+            .description(TEST_EVENT_DESCRIPTION)
+            .date(TEST_PERFORMANCE_DATE)
+            .artist(artistDto)
+            .venue(venueDto)
+            .ticketTypes(TestDataTicket.getTicketTypeDtos())
+            .build();
+    }
+
+    static EventDto getEventDto() {
+        return EventDto.builder()
+            .name("Test event")
+            .description("Test event desc")
+            .eventType(TEST_EVENT_EVENT_TYPE)
+            .startDate(TEST_EVENT_DATE_FUTURE)
+            .endDate(TEST_EVENT_DATE_FUTURE2)
+            .duration(TEST_EVENT_DURATION)
             .build();
     }
 

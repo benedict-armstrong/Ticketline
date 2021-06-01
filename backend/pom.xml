@@ -24,6 +24,7 @@
         <maven-checkstyle-plugin.version>3.1.2</maven-checkstyle-plugin.version>
         <checkstyle.version>8.41.1</checkstyle.version>
         <org.projectlombok.version>1.18.20</org.projectlombok.version>
+        <com.github.javafaker.version>1.0.2</com.github.javafaker.version>
     </properties>
 
     <dependencyManagement>
@@ -83,7 +84,7 @@
         <dependency>
             <groupId>com.github.javafaker</groupId>
             <artifactId>javafaker</artifactId>
-            <version>1.0.2</version>
+            <version>${com.github.javafaker.version}</version>
         </dependency>
         <!-- security -->
         <dependency>
