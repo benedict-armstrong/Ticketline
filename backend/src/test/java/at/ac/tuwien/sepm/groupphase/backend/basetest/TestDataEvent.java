@@ -9,11 +9,9 @@ import at.ac.tuwien.sepm.groupphase.backend.entity.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-public interface TestDataEvent extends TestData {
+public interface TestDataEvent extends TestData, TestDataVenue, TestDataArtist {
 
-    Long ID = 1L;
     String TEST_EVENT_TITLE = "TestEventTitle";
-    String TEST_EVENT_TITLE2 = "Other TestEventTitle";
     String TEST_EVENT_DESCRIPTION = "Testdescription..";
     LocalDate TEST_EVENT_DATE_FUTURE = LocalDate.parse("2022-12-12");
     LocalDate TEST_EVENT_DATE_FUTURE2 = LocalDate.parse("2023-12-12");

@@ -25,9 +25,9 @@ public interface TestDataVenue extends TestData {
     String VENUE_ADDRESS_POSTCODE = "1010";
     String VENUE_ADDRESS_COUNTRY = "Austria";
 
-    Sector SECTOR_STAGE = Sector.builder().id(0L).name("SectorDto stage").color("#FFFCCC").type(Sector.SectorType.STAGE).build();
-    Sector SECTOR_SEATED = Sector.builder().id(1L).name("SectorDto seated").color("#867FD2").type(Sector.SectorType.SEATED).build();
-    Sector SECTOR_STANDING = Sector.builder().id(2L).name("SectorDto standing").color("#837F22").type(Sector.SectorType.STANDING).build();
+    Sector SECTOR_STAGE = Sector.builder().localId(0L).name("SectorDto stage").color("#FFFCCC").type(Sector.SectorType.STAGE).build();
+    Sector SECTOR_SEATED = Sector.builder().localId(1L).name("SectorDto seated").color("#867FD2").type(Sector.SectorType.SEATED).build();
+    Sector SECTOR_STANDING = Sector.builder().localId(2L).name("SectorDto standing").color("#837F22").type(Sector.SectorType.STANDING).build();
 
     SectorDto SECTOR_DTO_STAGE = SectorDto.builder().id(0L).name("SectorDto stage").color("#FFFCCC").type(Sector.SectorType.STAGE).build();
     SectorDto SECTOR_DTO_SEATED = SectorDto.builder().id(1L).name("SectorDto seated").color("#867FD2").type(Sector.SectorType.SEATED).build();
@@ -57,14 +57,10 @@ public interface TestDataVenue extends TestData {
         LayoutUnit.builder().sector(SECTOR_STAGE).customLabel("1").build(),
         LayoutUnit.builder().sector(SECTOR_STAGE).customLabel("2").build(),
         LayoutUnit.builder().sector(SECTOR_STAGE).customLabel("3").build(),
-
         LayoutUnit.builder().sector(SECTOR_SEATED).customLabel("4").build(),
-        null,
         LayoutUnit.builder().sector(SECTOR_SEATED).customLabel("6").build(),
-
         LayoutUnit.builder().sector(SECTOR_STANDING).customLabel("7").build(),
-        LayoutUnit.builder().sector(SECTOR_STANDING).customLabel("8").build(),
-        null
+        LayoutUnit.builder().sector(SECTOR_STANDING).customLabel("8").build()
     );
 
     static Venue getVenue() {
