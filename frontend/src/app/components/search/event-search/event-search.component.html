@@ -55,7 +55,14 @@
                         </div>
                     </div>
                     <div class="card-footer">
-                        <button type="submit" class="secondary filterButton">Apply</button>
+                        <div class="row">
+                            <div class="col">
+                                <button type="submit" class="secondary filterButton">Apply</button>
+                            </div>
+                            <div class="col">
+                                <button type="button" class="secondary filterButton" (click)="resetSearchFields()">Reset</button>
+                            </div>
+                        </div>
                     </div>
                 </form>
             </div>

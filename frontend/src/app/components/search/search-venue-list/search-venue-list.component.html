@@ -1,0 +1,17 @@
+<form [formGroup]="this.venueSearchForm">
+    <div class="row mb-3">
+        <label for="filterVenue" class="col-sm-3 col-form-label">Venue</label>
+        <input type="text" name="venueName" formControlName="venueName" class="text-input form-control col-sm-9"
+                 id="filterVenue" placeholder="Search venue by name..." (input)="filterVenues()">
+    </div>
+    <div class="row mb-3">
+        <label for="filterVenues" class="col-sm-3 col-form-label">Select Venues</label>
+        <div class="row mb-3">
+        <div class="col-sm-9" *ngIf="venues">
+            <select class="form-select venueSelector" size="8" multiple name="selectedVenue" id="filterVenues" (change)="venueSelected()" formControlName="selectedVenue">
+                <option *ngFor="let venue of filteredVenues" [ngValue]="venue" >{{venue.name}}</option>
+            </select>
+        </div>
+        </div>
+    </div>
+    </form>
