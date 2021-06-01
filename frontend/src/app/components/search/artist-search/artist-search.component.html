@@ -1,0 +1,36 @@
+<div class="search">
+  <div class="filters">
+    <div class="collapse" id="collapseArtistSearch">
+      <div class="card">
+        <form [formGroup]="this.artistSearchForm" (ngSubmit)="resetValues(); searchArtists()">
+          <div class="card-body">
+            <div class="row">
+              <h3>Search for artists</h3>
+              <div class="col">
+                <div class="row mb-3">
+                  <label for="filterFirstName" class="col-sm-3 col-form-label">Firstname</label>
+                  <div class="col-sm-9">
+                    <input type="text" class="text-input form-control" id="filterFirstName"
+                           formControlName="firstName">
+                  </div>
+                </div>
+              </div>
+              <div class="col">
+                <div class="row mb-3">
+                  <label for="filterLastName" class="col-sm-3 col-form-label">Lastname</label>
+                  <div class="col-sm-9">
+                    <input type="text" class="text-input form-control" id="filterLastName"
+                           formControlName="lastName">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="card-footer">
+            <button type="submit" class="secondary filterButton">Apply</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

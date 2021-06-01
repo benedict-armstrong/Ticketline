@@ -3,6 +3,7 @@ package at.ac.tuwien.sepm.groupphase.backend.unittests;
 import at.ac.tuwien.sepm.groupphase.backend.basetest.TestDataFile;
 import at.ac.tuwien.sepm.groupphase.backend.entity.File;
 import at.ac.tuwien.sepm.groupphase.backend.repository.FileRepository;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -22,13 +23,18 @@ public class FileRepositoryTest implements TestDataFile {
     @Autowired
     private FileRepository fileRepository;
 
-    private final File file = File.FileBuilder.aFile()
-        .withData(TEST_FILE_DATA)
-        .withType(TEST_FILE_TYPE)
+    private final File file = File.builder()
+        .data(TEST_FILE_DATA)
+        .type(TEST_FILE_TYPE)
         .build();
 
     @BeforeEach
     public void beforeEach(){
+        //fileRepository.deleteAll();
+    }
+
+    @AfterEach
+    public void afterEach() {
         fileRepository.deleteAll();
     }
 

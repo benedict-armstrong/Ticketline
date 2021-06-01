@@ -1,8 +1,12 @@
 package at.ac.tuwien.sepm.groupphase.backend.entity;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import java.time.LocalDateTime;
 import java.util.HashSet;
-import java.util.Objects;
 import java.util.Set;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -15,7 +19,10 @@ import javax.persistence.CascadeType;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
-
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @Entity
 public class News {
 
@@ -36,161 +43,9 @@ public class News {
     private String text;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "EVENT_ID")
+    @JoinColumn
     private Event event;
 
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
     private Set<File> images = new HashSet<>();
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public LocalDateTime getPublishedAt() {
-        return publishedAt;
-    }
-
-    public void setPublishedAt(LocalDateTime publishedAt) {
-        this.publishedAt = publishedAt;
-    }
-
-    public String getAuthor() {
-        return author;
-    }
-
-    public void setAuthor(String author) {
-        this.author = author;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getText() {
-        return text;
-    }
-
-    public void setText(String text) {
-        this.text = text;
-    }
-
-    public Event getEvent() {
-        return event;
-    }
-
-    public void setEvent(Event event) {
-        this.event = event;
-    }
-
-    public Set<File> getImages() {
-        return images;
-    }
-
-    public void setImages(Set<File> images) {
-        this.images = images;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (!(o instanceof News)) {
-            return false;
-        }
-        News news = (News) o;
-        return Objects.equals(id, news.id)
-            && Objects.equals(publishedAt, news.publishedAt)
-            && Objects.equals(author, news.author)
-            && Objects.equals(title, news.title)
-            && Objects.equals(text, news.text);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, publishedAt, author, title, text);
-    }
-
-    @Override
-    public String toString() {
-        return "News{"
-            + "id=" + id
-            + ", publishedAt=" + publishedAt
-            + ", author='" + author + '\''
-            + ", title='" + title + '\''
-            + ", text='" + text + '\''
-            + '}';
-    }
-
-    public static final class NewsBuilder {
-        private Long id;
-        private LocalDateTime publishedAt;
-        private String author;
-        private String title;
-        private String text;
-        private Event event;
-        private Set<File> images = new HashSet<>();
-
-        private NewsBuilder() {
-        }
-
-        public static NewsBuilder aNews() {
-            return new NewsBuilder();
-        }
-
-        public NewsBuilder withId(Long id) {
-            this.id = id;
-            return this;
-        }
-
-        public NewsBuilder withPublishedAt(LocalDateTime publishedAt) {
-            this.publishedAt = publishedAt;
-            return this;
-        }
-
-        public NewsBuilder withTitle(String title) {
-            this.title = title;
-            return this;
-        }
-
-        public NewsBuilder withAuthor(String author) {
-            this.author = author;
-            return this;
-        }
-
-        public NewsBuilder withText(String text) {
-            this.text = text;
-            return this;
-        }
-
-        public NewsBuilder withEvent(Event event) {
-            this.event = event;
-            return this;
-        }
-
-        public NewsBuilder withImages(Set<File> images) {
-            this.images = images;
-            return this;
-        }
-
-        public News build() {
-            News news = new News();
-            news.setId(id);
-            news.setPublishedAt(publishedAt);
-            news.setAuthor(author);
-            news.setTitle(title);
-            news.setText(text);
-            news.setEvent(event);
-            news.setImages(images);
-            return news;
-        }
-    }
 }

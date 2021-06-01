@@ -27,18 +27,13 @@ export class ApplicationNewsService {
   /**
    * Returns an array of news
    *
-   * @param limit the amount of news to be returned
-   * @param offset the offset parameter for pagination
+   * @param page the amount of news to be returned
+   * @param size the offset parameter for pagination
    */
-  getNews(limit: number, offset: number): Observable<News[]> {
-    console.log('Retrieve news (limit=' + limit + ', offset=' + offset + ')');
+  getNews(page: number, size: number): Observable<News[]> {
     let params = new HttpParams();
-    if (limit != null) {
-      params = params.set('limit', String(limit));
-    }
-    if (offset != null) {
-      params = params.set('offset', String(offset));
-    }
+    params = params.set('page', String(page));
+    params = params.set('size', String(size));
     return this.httpClient.get<News[]>(this.newsBaseUri, { params });
   }
 

@@ -1,0 +1,36 @@
+<div id="sidebar-cart" *ngIf="cartItemService.showCart">
+	<div class="row topRow">
+		<div class="col-3">
+			<button (click)="close()" class="close-button primary">X</button>
+		</div>
+		<div class="col-9">
+			<h3>Shopping Cart</h3>
+		</div>
+	</div>
+	<div class="products">
+		<div *ngIf="this.cartItemService.loading" class="loading">
+			<app-loading-animation></app-loading-animation>
+		</div>
+		<div *ngIf="this.cartItemService.error" class="col-12 alert alert-danger alert-dismissible fade show" role="alert">
+			<strong>Error! </strong> {{ this.cartItemService.errorMessage }}
+			<button type="button" (click)="this.cartItemService.reload()" class="close" data-dismiss="alert" aria-label="Close">
+				<span aria-hidden="true">&times;</span>
+			</button>
+		</div>
+		<div *ngFor="let item of cartItemService.cart; index as i;">
+			<app-cart-item [i]="i"></app-cart-item>
+		</div>
+	</div>
+	<div *ngIf="error" class="col-12 alert alert-danger alert-dismissible fade show" role="alert">
+		<strong>Error! </strong> {{ errorMessage }}
+		<button type="button" (click)="vanishAlert()" class="close" data-dismiss="alert" aria-label="Close">
+		<span aria-hidden="true">&times;</span>
+		</button>
+	</div>
+	<div class="totals">
+		<div class="subtotal">
+			<span class="label">Total: </span> <span class="amount">{{this.cartItemService.total / 100 | currency:"EUR"}}</span>
+		</div>
+	</div>
+	<button class="primary" (click)="checkout()">Checkout</button>
+</div>

@@ -1,0 +1,98 @@
+<div class="addPerformance">
+  <form class="form" [formGroup]="addPerformanceForm" (ngSubmit)="addPerformance()">
+
+    <h3>Add new Performance <span *ngIf="event.name !== ''">for {{event.name}}</span></h3>
+
+    <div class="form-group">
+      <label for="title" class="required">Performance name</label>
+      <input type="text" name="title" formControlName="title" class="text-input form-control" id="title"
+        placeholder="Enter performance name">
+      <div *ngIf="submitted && addPerformanceForm.controls.title.errors" class="error">
+        <small class="form-text text-danger" *ngIf="addPerformanceForm.controls.title.errors.required">
+          Performance name is required!
+        </small>
+        <small class="form-text text-danger" *ngIf="addPerformanceForm.controls.title.errors.maxLength">
+          Performance name cannot be more than 100 characters!
+        </small>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="description" class="required">Description</label>
+      <textarea name="description" formControlName="description" rows="3" class="text-input form-control"
+        id="description" placeholder="Enter description"></textarea>
+      <div *ngIf="submitted && addPerformanceForm.controls.description.errors" class="error">
+        <small class="form-text text-danger" *ngIf="addPerformanceForm.controls.description.errors.required">
+          Description is required!
+        </small>
+        <small class="form-text text-danger" *ngIf="addPerformanceForm.controls.description.errors.maxLength">
+          Description cannot be more than 100 characters!
+        </small>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="date" class="required">Date <span class="small">(yyyy-MM-dd HH:mm)</span></label>
+      <input type="datetime-local" name="date" formControlName="date" class="text-input form-control" id="date">
+      <div *ngIf="submitted && addPerformanceForm.controls.date.errors" class="error">
+        <small class="form-text text-danger" *ngIf="addPerformanceForm.controls.date.errors.required">
+          Date is required!
+        </small>
+        <small class="form-text text-danger" *ngIf="addPerformanceForm.controls.date.errors.invalidDate">
+          Date must be in the future!
+        </small>
+      </div>
+    </div>
+
+    <hr />
+
+    <div id="artistGroup">
+      <app-add-artist (artistChanged)="changeArtist($event)"></app-add-artist>
+      <div *ngIf="!artist && submitted" class="alert alert-danger">
+        Artist is required!
+      </div>
+      <div class="row" id="currentArtist">
+        <h5 class="col-3">Selected Artist:</h5>
+        <div class="col-6" *ngIf="artist">{{artist.firstName}} {{artist.lastName}}</div>
+      </div>
+    </div>
+
+    <hr />
+
+    <div id="venueGroup">
+      <app-select-venue (venueChanged)="changeVenue($event)"></app-select-venue>
+      <div *ngIf="!venue && submitted" class="alert alert-danger">
+        Venue is required!
+      </div>
+      <div class="row" id="currentVenue">
+        <h5 class="col-3">Selected venue:</h5>
+        <div class="col-6" *ngIf="venue">{{venue.name}}</div>
+      </div>
+    </div>
+
+    <hr />
+
+    <app-add-tickettype *ngIf="this.venue" [sectors]="this.venue.sectors" (ticketTypesChanged)="changeTickets($event)"></app-add-tickettype>
+    <div *ngIf="this.ticketTypes.length === 0 && submitted" class="alert alert-danger">
+      At least one ticket type required!
+    </div>
+
+    <hr />
+
+    <button type="button" (click)="addPerformance()" class="primary" id="create">Add performance</button>
+    <button type="button" (click)="cancelAdding.emit()" class="secondary" id="cancel">Cancel</button>
+
+    <div *ngIf="error" class="col-12 alert alert-danger alert-dismissible fade show" role="alert">
+      <strong>Error! </strong> {{ errorMessage }}
+      <button type="button" (click)="vanishAlert()" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div *ngIf="success" class="col-12 alert alert-success alert-dismissible fade show" role="alert">
+      <strong>Success</strong> The performance is added.
+      <button type="button" (click)="vanishAlert()" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+  </form>
+</div>

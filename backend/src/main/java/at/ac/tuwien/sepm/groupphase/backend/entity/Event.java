@@ -1,12 +1,31 @@
 package at.ac.tuwien.sepm.groupphase.backend.entity;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.Column;
-import java.util.Objects;
+import javax.persistence.OneToMany;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @Entity
 public class Event {
     @Id
@@ -14,76 +33,32 @@ public class Event {
     private Long id;
 
     @Column(nullable = false)
-    private String title;
+    private String name;
 
-    public Long getId() {
-        return id;
-    }
+    @Column(nullable = false)
+    private String description;
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private Set<Performance> performances;
 
-    public String getTitle() {
-        return title;
-    }
+    @Column(nullable = false)
+    private int duration;
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private EventType eventType;
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (!(o instanceof Event)) {
-            return false;
-        }
-        Event event = (Event) o;
-        return Objects.equals(id, event.id)
-            && Objects.equals(title, event.title);
-    }
+    @Column(nullable = false)
+    private LocalDate startDate;
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(id);
-    }
+    @Column(nullable = false)
+    private LocalDate endDate;
 
-    @Override
-    public String toString() {
-        return "Event{"
-            + "id=" + id
-            + ", title=" + title
-            + '}';
-    }
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
+    @ToString.Exclude
+    private Set<File> images = new HashSet<>();
 
-    public static final class EventBuilder {
-        private Long id;
-        private String title;
-
-        private EventBuilder() {
-        }
-
-        public static EventBuilder aEvent() {
-            return new EventBuilder();
-        }
-
-        public EventBuilder withId(Long id) {
-            this.id = id;
-            return this;
-        }
-
-        public EventBuilder withTitle(String title) {
-            this.title = title;
-            return this;
-        }
-
-        public Event build() {
-            Event event = new Event();
-            event.setId(id);
-            event.setTitle(title);
-            return event;
-        }
+    public enum EventType {
+        CINEMA, THEATRE, OPERA, CONCERT
     }
 }

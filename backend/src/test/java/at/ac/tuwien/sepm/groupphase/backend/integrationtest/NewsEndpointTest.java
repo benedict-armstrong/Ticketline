@@ -1,16 +1,31 @@
 package at.ac.tuwien.sepm.groupphase.backend.integrationtest;
 
+import at.ac.tuwien.sepm.groupphase.backend.basetest.TestDataArtist;
+import at.ac.tuwien.sepm.groupphase.backend.basetest.TestDataEvent;
+import at.ac.tuwien.sepm.groupphase.backend.basetest.TestAuthentification;
 import at.ac.tuwien.sepm.groupphase.backend.basetest.TestDataFile;
 import at.ac.tuwien.sepm.groupphase.backend.basetest.TestDataNews;
+import at.ac.tuwien.sepm.groupphase.backend.basetest.TestDataTicket;
+import at.ac.tuwien.sepm.groupphase.backend.basetest.TestDataVenue;
+import at.ac.tuwien.sepm.groupphase.backend.config.properties.SecurityProperties;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.EventEndpoint;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.ArtistDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.FileDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.NewsDto;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.NewsMapper;
-import at.ac.tuwien.sepm.groupphase.backend.entity.Event;
-import at.ac.tuwien.sepm.groupphase.backend.entity.File;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.PerformanceDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.EventMapper;
+import at.ac.tuwien.sepm.groupphase.backend.entity.Artist;
 import at.ac.tuwien.sepm.groupphase.backend.entity.News;
+import at.ac.tuwien.sepm.groupphase.backend.repository.AddressRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.ArtistRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.EventRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.FileRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.NewsRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.UserRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.VenueRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -21,16 +36,15 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
-import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -41,7 +55,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest
 @ActiveProfiles("test")
 @AutoConfigureMockMvc
-public class NewsEndpointTest implements TestDataNews, TestDataFile {
+public class NewsEndpointTest implements TestDataNews, TestDataFile, TestAuthentification {
 
     @Autowired
     private MockMvc mockMvc;
@@ -56,39 +70,95 @@ public class NewsEndpointTest implements TestDataNews, TestDataFile {
     private FileRepository fileRepository;
 
     @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private ArtistRepository artistRepository;
+
+    @Autowired
+    private AddressRepository addressRepository;
+
+    @Autowired
+    private VenueRepository venueRepository;
+
+    @Autowired
     private ObjectMapper objectMapper;
 
-    private final Event event = Event.EventBuilder.aEvent()
-        .withTitle("Testevent")
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private SecurityProperties securityProperties;
+
+    private final NewsDto newsDto = NewsDto.builder()
+        .title("Testtitle")
+        .text("Testtext")
+        .author("Testuser")
+        .publishedAt(TEST_NEWS_PUBLISHED_AT)
+        .build();
+    private final News news = News.builder()
+        .title("Testtitle")
+        .text("Testtext")
+        .author("Testuser")
+        .publishedAt(TEST_NEWS_PUBLISHED_AT)
         .build();
 
-    private final File file = File.FileBuilder.aFile()
-        .withData(TEST_FILE_DATA)
-        .withType(TEST_FILE_TYPE)
-        .build();
-
-    private Set<File> images = new HashSet<>();
-
-    private final News news = News.NewsBuilder.aNews()
-        .withTitle("Testtitle")
-        .withText("Testtext")
-        .withAuthor("Testuser")
-        .withEvent(event)
-        .withImages(images)
-        .withPublishedAt(TEST_NEWS_PUBLISHED_AT)
-        .build();
+    private String authToken;
 
     @BeforeEach
-    public void beforeEach() {
+    public void beforeEach() throws Exception {
+        PerformanceDto[] performanceDtos = new PerformanceDto[1];
+        performanceDtos[0] = PerformanceDto.builder()
+            .title(TestDataEvent.TEST_EVENT_PERFORMANCE_TITLE)
+            .description(TestDataEvent.TEST_EVENT_PERFORMANCE_DESCRIPTION)
+            .date(TestDataEvent.TEST_PERFORMANCE_DATE)
+            .artist(TestDataArtist.getArtistDto())
+            .ticketTypes(TestDataTicket.getTicketTypeDtos())
+            .venue(TestDataVenue.getVenueDto())
+            .build();
+
+        EventDto eventDto = EventDto.builder()
+            .name(TestDataEvent.TEST_EVENT_TITLE)
+            .description(TestDataEvent.TEST_EVENT_DESCRIPTION)
+            .startDate(TestDataEvent.TEST_EVENT_DATE_FUTURE)
+            .endDate(TestDataEvent.TEST_EVENT_DATE_FUTURE2)
+            .eventType(TestDataEvent.TEST_EVENT_EVENT_TYPE)
+            .duration(TestDataEvent.TEST_EVENT_DURATION)
+            .performances(performanceDtos)
+            .build();
+
+        newsDto.setEvent(eventDto);
+
+        fileRepository.save(IMAGE_FILE);
+        newsDto.setImages(new FileDto[]{IMAGE_FILE_DTO});
+
+        saveUser(AUTH_USER_ORGANIZER, userRepository, passwordEncoder);
+        authToken = authenticate(AUTH_USER_ORGANIZER, mockMvc, objectMapper);
+
+        saveEvent(eventDto);
+    }
+
+    private void saveEvent(EventDto eventDto) throws Exception {
+        MvcResult mvcResult = this.mockMvc.perform(
+            post(BASE_URI + "/events")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(eventDto))
+                .header(securityProperties.getAuthHeader(), authToken)
+        ).andReturn();
+    }
+
+
+
+
+    @AfterEach
+    public void afterEach() {
         newsRepository.deleteAll();
         eventRepository.deleteAll();
         fileRepository.deleteAll();
-
-        images = new HashSet<>();
-        images.add(file);
-
-        eventRepository.save(event);
-        fileRepository.save(file);
+        userRepository.deleteAll();
+        addressRepository.deleteAllInBatch();
+        artistRepository.deleteAll();
+        venueRepository.deleteAll();
     }
 
     @Test
@@ -96,6 +166,9 @@ public class NewsEndpointTest implements TestDataNews, TestDataFile {
     public void givenNothing_whenGetAllNews_thenReturnEmptyList() throws Exception {
         MvcResult mvcResult = this.mockMvc.perform(
             get(NEWS_BASE_URI)
+                .param("page", "0")
+                .param("size", "10")
+                .header(securityProperties.getAuthHeader(), authToken)
         ).andReturn();
         MockHttpServletResponse response = mvcResult.getResponse();
         assertEquals(HttpStatus.OK.value(), response.getStatus());
@@ -108,78 +181,43 @@ public class NewsEndpointTest implements TestDataNews, TestDataFile {
     }
 
     @Test
-    @DisplayName("Should return 8 freshest news on get all with no arguments")
-    public void givenManyNews_whenGetAllWithNoArguments_thenReturnListWith8FreshNews() throws Exception {
-        LocalDateTime freshest = null;
-        for (int i = 0; i < 15; i++) {
-            News n = News.NewsBuilder.aNews()
-                .withTitle(news.getTitle() + i)
-                .withText(news.getText())
-                .withAuthor(news.getAuthor())
-                .withEvent(news.getEvent())
-                .withPublishedAt(news.getPublishedAt().plusDays(i))
+    @DisplayName("Should return correctly sized chunk of news on get all")
+    public void givenNews_whenGetAll_thenGetCorrectChunk() throws Exception {
+        int amountOfNewsToGenerate = 15;
+        int pageSize = 5;
+        for (int i = 0; i < amountOfNewsToGenerate; i++) {
+            News n = News.builder()
+                .title(news.getTitle() + i)
+                .text(news.getText())
+                .author(news.getAuthor())
+                .event(news.getEvent())
+                .publishedAt(news.getPublishedAt())
                 .build();
-            freshest = n.getPublishedAt();
             newsRepository.save(n);
         }
-        assertNotNull(freshest);
 
         MvcResult mvcResult = this.mockMvc.perform(
             get(NEWS_BASE_URI)
+                .param("page", String.valueOf(1))
+                .param("size", String.valueOf(pageSize))
+                .header(securityProperties.getAuthHeader(), authToken)
         ).andReturn();
         MockHttpServletResponse response = mvcResult.getResponse();
         assertEquals(HttpStatus.OK.value(), response.getStatus());
         assertEquals(MediaType.APPLICATION_JSON_VALUE, response.getContentType());
 
         NewsDto[] newsDtos = objectMapper.readValue(response.getContentAsString(), NewsDto[].class);
-        assertEquals(8, newsDtos.length);
-        for (int i = 0; i < newsDtos.length; i++) {
-            assertEquals(freshest.minusDays(i), newsDtos[i].getPublishedAt());
-        }
+        assertEquals(pageSize, newsDtos.length);
     }
 
     @Test
-    @DisplayName("Should return list of news with IDs smaller than offset on get all")
-    public void givenNews_whenGetAllWithOnlyOffset_thenReturnListWithNews_AllIdsSmallerThanOffset() throws Exception {
-        long limit = 4L;
-        Long offset = null;
-        for (int i = 0; i < limit + 4; i++) {
-            News n = News.NewsBuilder.aNews()
-                .withTitle(news.getTitle() + i)
-                .withText(news.getText())
-                .withAuthor(news.getAuthor())
-                .withEvent(news.getEvent())
-                .withPublishedAt(news.getPublishedAt())
-                .build();
-            News saved = newsRepository.save(n);
-            if (i == limit + 2) {
-               offset = saved.getId();
-            }
-        }
-        assertNotNull(offset);
-
-        MvcResult mvcResult = this.mockMvc.perform(
-            get(NEWS_BASE_URI)
-            .param("limit", Long.toString(limit))
-            .param("offset", offset.toString())
-        ).andReturn();
-        MockHttpServletResponse response = mvcResult.getResponse();
-        assertEquals(HttpStatus.OK.value(), response.getStatus());
-        assertEquals(MediaType.APPLICATION_JSON_VALUE, response.getContentType());
-
-        NewsDto[] newsDtos = objectMapper.readValue(response.getContentAsString(), NewsDto[].class);
-        assertEquals(limit, newsDtos.length);
-        for (NewsDto newsDto : newsDtos) {
-            assertTrue(newsDto.getId() < offset);
-        }
-    }
-
-    @Test
-    @DisplayName("Should return 422 on get all with negative limit")
+    @DisplayName("Should return 422 on get all with negative parameters")
     public void whenGetAllWithNegativeLimit_then422() throws Exception {
         MvcResult mvcResult = this.mockMvc.perform(
             get(NEWS_BASE_URI)
-                .param("limit", "-1")
+                .param("page", "-1")
+                .param("size", "-2")
+                .header(securityProperties.getAuthHeader(), authToken)
         ).andReturn();
         MockHttpServletResponse response = mvcResult.getResponse();
         assertEquals(HttpStatus.UNPROCESSABLE_ENTITY.value(), response.getStatus());
@@ -190,57 +228,40 @@ public class NewsEndpointTest implements TestDataNews, TestDataFile {
     public void whenGetAllWithNonNumericParams_then422() throws Exception {
         MvcResult mvcResultL = this.mockMvc.perform(
             get(NEWS_BASE_URI)
-                .param("limit", "A")
+                .param("page", "A")
+                .header(securityProperties.getAuthHeader(), authToken)
         ).andReturn();
         MvcResult mvcResultO = this.mockMvc.perform(
             get(NEWS_BASE_URI)
-                .param("offset", "-")
+                .param("size", "-")
+                .header(securityProperties.getAuthHeader(), authToken)
         ).andReturn();
         MvcResult mvcResultLO = this.mockMvc.perform(
             get(NEWS_BASE_URI)
-                .param("limit", "~")
-                .param("offset", "B")
+                .param("page", "~")
+                .param("size", "B")
+                .header(securityProperties.getAuthHeader(), authToken)
         ).andReturn();
 
         MockHttpServletResponse responseL = mvcResultL.getResponse();
         MockHttpServletResponse responseO = mvcResultO.getResponse();
         MockHttpServletResponse responseLO = mvcResultLO.getResponse();
         assertAll(
-            () -> assertEquals(HttpStatus.UNPROCESSABLE_ENTITY.value(), responseL.getStatus()),
-            () -> assertEquals(HttpStatus.UNPROCESSABLE_ENTITY.value(), responseO.getStatus()),
-            () -> assertEquals(HttpStatus.UNPROCESSABLE_ENTITY.value(), responseLO.getStatus())
-        );
-    }
-
-    @Test
-    @DisplayName("Should return 201 and news object with set ID and publishing date after create")
-    public void whenCreateNews_then201AndNewsWithIdAndPublishedAt() throws Exception {
-        MvcResult mvcResult = this.mockMvc.perform(
-            post(NEWS_BASE_URI)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(news))
-        ).andReturn();
-
-        MockHttpServletResponse response = mvcResult.getResponse();
-        assertEquals(HttpStatus.CREATED.value(), response.getStatus());
-        assertEquals(MediaType.APPLICATION_JSON_VALUE, response.getContentType());
-
-        NewsDto savedDto = objectMapper.readValue(response.getContentAsString(), NewsDto.class);
-        assertAll(
-            () -> assertNotNull(savedDto.getId()),
-            () -> assertNotNull(savedDto.getPublishedAt())
+            () -> assertEquals(HttpStatus.BAD_REQUEST.value(), responseL.getStatus()),
+            () -> assertEquals(HttpStatus.BAD_REQUEST.value(), responseO.getStatus()),
+            () -> assertEquals(HttpStatus.BAD_REQUEST.value(), responseLO.getStatus())
         );
     }
 
     @Test
     @DisplayName("Should return 200 and news with the given ID on get by ID")
     public void givenNews_whenGetOneById_then200AndNewsWithId() throws Exception {
-        News n = News.NewsBuilder.aNews()
-            .withTitle(news.getTitle())
-            .withText(news.getText())
-            .withAuthor(news.getAuthor())
-            .withEvent(news.getEvent())
-            .withPublishedAt(news.getPublishedAt())
+        News n = News.builder()
+            .title(news.getTitle())
+            .text(news.getText())
+            .author(news.getAuthor())
+            .event(news.getEvent())
+            .publishedAt(news.getPublishedAt())
             .build();
         News saved = newsRepository.save(n);
 
@@ -248,6 +269,7 @@ public class NewsEndpointTest implements TestDataNews, TestDataFile {
 
         MvcResult mvcResult = this.mockMvc.perform(
             get(NEWS_BASE_URI + "/" + saved.getId())
+                .header(securityProperties.getAuthHeader(), authToken)
         ).andReturn();
 
         MockHttpServletResponse response = mvcResult.getResponse();
@@ -265,6 +287,7 @@ public class NewsEndpointTest implements TestDataNews, TestDataFile {
 
         MvcResult mvcResult = this.mockMvc.perform(
             get(NEWS_BASE_URI + "/" + -1)
+                .header(securityProperties.getAuthHeader(), authToken)
         ).andReturn();
 
         MockHttpServletResponse response = mvcResult.getResponse();

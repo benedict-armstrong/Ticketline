@@ -1,10 +1,11 @@
+@import "../../../colors.scss";
+
 .header img {
   width: 100%;
 }
 
 .header {
-  margin: 30px 0px;
-  background-color: rgb(240, 240, 240);
+  margin: 30px 0;
 }
 
 .details {
@@ -13,10 +14,11 @@
   justify-content: space-between;
   padding: 20px;
   height: 100%;
+  background-color: $gray-242;
 }
 
 #performer {
-  color: rgb(131, 131, 131);
+  color: $gray-131;
 }
 
 .date {
@@ -31,4 +33,20 @@
 
 .additional-info h5 {
   height: 32px;
+}
+
+.carousel-inner {
+  height: 500px;
+}
+
+.carousel-inner img {
+  object-fit: cover;
+  -webkit-transform: translateY(calc(-50% + 250px));
+}
+
+.dateGroup {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  font-weight: bold;
 }

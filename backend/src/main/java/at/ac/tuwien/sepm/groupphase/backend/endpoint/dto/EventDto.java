@@ -1,83 +1,55 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint.dto;
 
 import at.ac.tuwien.sepm.groupphase.backend.entity.Event;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
+import org.hibernate.validator.constraints.Range;
 
-import java.util.Objects;
+import javax.validation.constraints.Future;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class EventDto {
-
     private Long id;
 
-    private String title;
+    @NotBlank(message = "Name is required")
+    private String name;
 
-    public Long getId() {
-        return id;
-    }
+    @NotBlank(message = "A description is required")
+    @Size(max = 10000, message = "Description must be 10000 characters or less")
+    private String description;
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+    @NotNull
+    @Size(min = 1, message = "Event must have atleast one performance")
+    private PerformanceDto[] performances;
 
-    public String getTitle() {
-        return title;
-    }
+    @Range(min = 1, message = "Duration must be greater than 0")
+    private int duration;
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
+    @NotNull(message = "Eventtype is required")
+    private Event.EventType eventType;
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (!(o instanceof EventDto)) {
-            return false;
-        }
-        EventDto event = (EventDto) o;
-        return Objects.equals(id, event.id)
-            && Objects.equals(title, event.title);
-    }
+    @NotNull
+    @Future(message = "Start date must be in the future")
+    private LocalDate startDate;
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(id);
-    }
+    @NotNull
+    @Future(message = "End date must be in the future")
+    private LocalDate endDate;
 
-    @Override
-    public String toString() {
-        return "Event{"
-            + "id=" + id
-            + ", title=" + title
-            + '}';
-    }
-
-    public static final class EventDtoBuilder {
-        private Long id;
-        private String title;
-
-        private EventDtoBuilder() {
-        }
-
-        public static EventDtoBuilder aEvent() {
-            return new EventDtoBuilder();
-        }
-
-        public EventDtoBuilder withId(Long id) {
-            this.id = id;
-            return this;
-        }
-
-        public EventDtoBuilder withTitle(String title) {
-            this.title = title;
-            return this;
-        }
-
-        public Event build() {
-            Event event = new Event();
-            event.setId(id);
-            event.setTitle(title);
-            return event;
-        }
-    }
+    @Size(max = 10, message = "Upload 10 images or less")
+    @Size(min = 1, message = "Atleast one image required")
+    @ToString.Exclude
+    private FileDto[] images = new FileDto[10];
 }

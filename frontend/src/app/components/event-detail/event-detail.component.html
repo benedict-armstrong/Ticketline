@@ -1,63 +1,61 @@
-<div class="event">
-    <div class="jumbotron">
-        <img src="assets/placeholder_event.jpg" alt="">
-    </div>
-    <div class="main">
-        <div class="header">
-            <h3>Titel of Event</h3>
-            <p class="info">Subtitle with Date, Time and Venue</p>
-            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Maiores laboriosam voluptatum nam amet ipsam
-                blanditiis deserunt numquam dicta tempora molestias optio, iusto expedita enim, quisquam natus sapiente.
-                Ullam deserunt quos repellendus ut, dolor eius aspernatur, nisi voluptates, praesentium accusamus quidem
-                odio totam non nostrum dicta.</p>
+<div class="event" *ngIf="eventItem">
+  <div id="carouselExampleControls" class="carousel slide col-md-8" data-bs-ride="carousel">
+    <div class="carousel-inner">
+      <div *ngIf="eventItem.images.length > 0">
+        <div class="carousel-item active" *ngFor="let img of imgURL let i = index" [ngClass]="{'active': i == 0 }">
+          <img class="card-img-top" [src]="img" alt="">
         </div>
-        <div class="body">
-            <div class="options row row-cols-1 row-cols-md-4 g-4">
-                <div class="col">
-                    <div class="card h-100 selected">
-                        <div class="card-body text-center">
-                            <p>We choose the best seat for you</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col">
-                    <div class="card h-100">
-                        <div class="card-body text-center">
-                            <p>Choose your own seat</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="tickets">
-                <p class="text-center">We will try to find seats next to each other</p>
-                <app-ticket-list-item></app-ticket-list-item>
-                <app-ticket-list-item></app-ticket-list-item>
-                <app-ticket-list-item></app-ticket-list-item>
-            </div>
-
-            <div class="selected-items row">
-                <div class="col">
-                    <p> 1x Front Frow Ticket for Adults<br>
-                        1x Front Frow Ticket for Child</p>
-                </div>
-                <div class="col prices">
-                    <p>EUR 53.00<br>
-                        EUR 32.00</p>
-                </div>
-
-            </div>
-
-            <div class="checkout">
-                <div>
-                    <h4>EUR 85.00</h4>
-                </div>
-                <div class="checkout-buttons">
-                    <button class="secondary">Continue Shopping</button>
-                    <button>Checkout</button>
-                </div>
-            </div>
-
-        </div>
+      </div>
     </div>
+    <div *ngIf="eventItem.images.length > 1">
+      <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls"
+        data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Previous</span>
+      </button>
+      <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls"
+        data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Next</span>
+      </button>
+    </div>
+  </div>
+  <div class="main">
+    <div class="header">
+      <h3 class="col-10">{{eventItem.name}}</h3>
+      <div class="col-2 add-news" *ngIf="hasOrganizerPermission()">
+        <button class="col-2 primary" [routerLink]="['/add-news', eventItem.id]">Add News</button>
+      </div>
+      <div class="row event-info">
+        <div class="col-8">
+          <p>{{eventItem.description}}</p>
+        </div>
+        <div class="col-4 additional-event-info">
+          <h4>Time</h4>
+          Start:
+          <p class="info">{{eventItem.startDate | date:'EEEE, MMM d, y'}}</p>
+          End:
+          <p class="info">{{eventItem.endDate | date:'EEEE, MMM d, y'}}</p>
+          <p>Duration: {{eventItem.duration}} minutes</p>
+          <p>
+            {{eventItem.eventType}}
+          </p>
+        </div>
+      </div>
+    </div>
+    <hr />
+    <h4>Performances</h4>
+    <div *ngFor="let performance of eventItem.performances">
+      <div class="performance" [routerLink]="['/performance-detail', performance.id]">
+        <div class="info">
+          <div class="detail">
+            <h5>{{performance.title}}</h5>
+            <span class="date-time">{{performance.date | date:'EEEE, MMM d, y HH:mm'}}: </span>
+            <span class="artist">{{performance.artist.firstName}} {{performance.artist.lastName}}, </span>
+            <span class="location">{{performance.venue.name}}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>

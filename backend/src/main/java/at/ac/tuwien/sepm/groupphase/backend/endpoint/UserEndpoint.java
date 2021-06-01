@@ -8,6 +8,8 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -26,8 +28,8 @@ import java.lang.invoke.MethodHandles;
 public class UserEndpoint {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
-    private UserService userService;
-    private UserMapper userMapper;
+    private final UserService userService;
+    private final UserMapper userMapper;
 
     @Autowired
     public UserEndpoint(UserService userService, UserMapper userMapper) {
@@ -37,7 +39,6 @@ public class UserEndpoint {
 
     @PostMapping
     @PermitAll
-    //TODO: Change!!!
     @Operation(summary = "Add User")
     public UserDto add(@Valid @RequestBody UserDto userDto) {
         LOGGER.info("POST /api/v1/users body: {}", userDto);
@@ -46,7 +47,6 @@ public class UserEndpoint {
 
     @GetMapping(value = {"/{email}"})
     @PermitAll
-    //TODO: Change!!!
     @Operation(summary = "Find User by Email")
     public UserDto findByEmail(@Valid @PathVariable("email") String email) {
         LOGGER.info("GET /api/v1/users/{}", email);
@@ -55,10 +55,9 @@ public class UserEndpoint {
 
     @PutMapping
     @PermitAll
-    //TODO: Change!!!
     @Operation(summary = "Update User")
     public UserDto update(@Valid @RequestBody UserDto userDto) {
-        LOGGER.info("PUT /api/v1/users/{}", userDto);
+        LOGGER.info("PUT /api/v1/users body:{}", userDto);
         return userMapper.applicationUserToUserDto(userService.updateUser(userMapper.userDtoToApplicationUser(userDto)));
     }
 }

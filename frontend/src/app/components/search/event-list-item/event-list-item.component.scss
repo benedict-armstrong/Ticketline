@@ -1,0 +1,31 @@
+@import "src/colors";
+
+.performance {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  background-color: rgb(241, 241, 241);
+  max-height: 90px;
+  border: 1px solid transparent;
+}
+
+.performance:hover {
+  box-shadow: none;
+  border: 1px solid #c14953;
+}
+
+.info {
+  display: flex;
+}
+
+.info img {
+  max-height: 130px;
+}
+
+.date-time {
+  color: #c14953;
+}
+
+.detail {
+  margin-left: 10px;
+}

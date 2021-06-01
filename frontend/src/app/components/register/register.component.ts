@@ -2,8 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Address } from 'src/app/dtos/address';
-import { User } from 'src/app/dtos/user';
-import { UserService } from 'src/app/services/user.service';
+import { User } from '../../dtos/user';
+import { UserService } from '../../services/user.service';
 
 @Component({
   selector: 'app-register',
@@ -11,7 +11,7 @@ import { UserService } from 'src/app/services/user.service';
   styleUrls: ['./register.component.scss'],
 })
 export class RegisterComponent implements OnInit {
-  addUserForm: FormGroup;
+  registerForm: FormGroup;
   // After first submission attempt, form validation will start
   submitted = false;
   // Error flag
@@ -26,15 +26,13 @@ export class RegisterComponent implements OnInit {
     private formBuilder: FormBuilder,
     private router: Router
   ) {
-    this.addUserForm = this.formBuilder.group({
+    this.registerForm = this.formBuilder.group({
       firstName: ['', [Validators.required]],
       lastName: ['', [Validators.required]],
       telephoneNumber: [''],
       email: ['', [Validators.required]],
       password: ['', [Validators.required, Validators.minLength(8)]],
-      points: [0, [Validators.min(0)]],
-      status: ['ACTIVE', [Validators.required]],
-      role: ['CLIENT', [Validators.required]],
+      passwordRepeat: ['', [Validators.required, Validators.minLength(8)]],
       addressName: ['', [Validators.required]],
       lineOne: ['', [Validators.required]],
       lineTwo: [''],
@@ -47,34 +45,36 @@ export class RegisterComponent implements OnInit {
   /**
    * Form validation will start after the method is called, additionally an AuthRequest will be sent
    */
-   addUser() {
+  addUser() {
     this.submitted = true;
-    console.log(this.addUserForm);
-    if (this.addUserForm.valid) {
+    if (this.registerForm.valid) {
       const user: User = new User(
         null,
-        this.addUserForm.value.firstName,
-        this.addUserForm.value.lastName,
-        this.addUserForm.value.telephoneNumber,
-        this.addUserForm.value.email,
-        this.addUserForm.value.password,
+        this.registerForm.value.firstName,
+        this.registerForm.value.lastName,
+        this.registerForm.value.telephoneNumber,
+        this.registerForm.value.email,
+        this.registerForm.value.password,
         new Date(),
-        this.addUserForm.value.points,
-        this.addUserForm.value.status,
-        this.addUserForm.value.role,
+        null,
+        0,
+        'ACTIVE',
+        'CLIENT',
         new Address(
           null,
-          this.addUserForm.value.addressName,
-          this.addUserForm.value.lineOne,
-          this.addUserForm.value.lineTwo,
-          this.addUserForm.value.city,
-          this.addUserForm.value.postcode,
-          this.addUserForm.value.country
+          this.registerForm.value.addressName,
+          this.registerForm.value.lineOne,
+          this.registerForm.value.lineTwo,
+          this.registerForm.value.city,
+          this.registerForm.value.postcode,
+          this.registerForm.value.country,
+          false
         )
       );
       this.userService.createUser(user).subscribe(
         () => {
           this.success = true;
+          this.router.navigate(['/user'], { state: { user } });
         },
         (error) => {
           this.defaultServiceErrorHandling(error);

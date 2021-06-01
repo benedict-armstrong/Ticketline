@@ -4,6 +4,7 @@ package at.ac.tuwien.sepm.groupphase.backend.unittests;
 import at.ac.tuwien.sepm.groupphase.backend.basetest.TestDataUser;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepm.groupphase.backend.repository.UserRepository;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -22,34 +23,39 @@ public class UserRepositoryTest implements TestDataUser {
     @Autowired
     private UserRepository userRepository;
 
-    private ApplicationUser user = ApplicationUser.UserBuilder.anUser()
-        .withFirstName(ADMIN_FIRST_NAME)
-        .withLastName(ADMIN_LAST_NAME)
-        .withEmail(ADMIN_EMAIL)
-        .withLastLogin(ADMIN_LAST_LOGIN)
-        .withRole(ADMIN_ROLE)
-        .withStatus(ADMIN_USER_STATUS)
-        .withPassword(ADMIN_PASSWORD)
-        .withPoints(ADMIN_POINTS)
-        .withAddress(ADMIN_ADDRESS)
-        .withTelephoneNumber(ADMIN_PHONE_NUMBER)
+    private ApplicationUser user = ApplicationUser.builder()
+        .firstName(ADMIN_FIRST_NAME)
+        .lastName(ADMIN_LAST_NAME)
+        .email(ADMIN_EMAIL)
+        .lastLogin(ADMIN_LAST_LOGIN)
+        .role(ADMIN_ROLE)
+        .status(ADMIN_USER_STATUS)
+        .password(ADMIN_PASSWORD)
+        .points(ADMIN_POINTS)
+        .address(ADMIN_ADDRESS)
+        .telephoneNumber(ADMIN_PHONE_NUMBER)
         .build();
 
     @BeforeEach
     public void beforeEach() {
-        userRepository.deleteAll();
-        user = ApplicationUser.UserBuilder.anUser()
-            .withFirstName(ADMIN_FIRST_NAME)
-            .withLastName(ADMIN_LAST_NAME)
-            .withEmail(ADMIN_EMAIL)
-            .withLastLogin(ADMIN_LAST_LOGIN)
-            .withRole(ADMIN_ROLE)
-            .withStatus(ADMIN_USER_STATUS)
-            .withPassword(ADMIN_PASSWORD)
-            .withPoints(ADMIN_POINTS)
-            .withAddress(ADMIN_ADDRESS)
-            .withTelephoneNumber(ADMIN_PHONE_NUMBER)
+        //userRepository.deleteAll();
+        user = ApplicationUser.builder()
+            .firstName(ADMIN_FIRST_NAME)
+            .lastName(ADMIN_LAST_NAME)
+            .email(ADMIN_EMAIL)
+            .lastLogin(ADMIN_LAST_LOGIN)
+            .role(ADMIN_ROLE)
+            .status(ADMIN_USER_STATUS)
+            .password(ADMIN_PASSWORD)
+            .points(ADMIN_POINTS)
+            .address(ADMIN_ADDRESS)
+            .telephoneNumber(ADMIN_PHONE_NUMBER)
             .build();
+    }
+
+    @AfterEach
+    public void afterEach() {
+        userRepository.deleteAll();
     }
 
     @Test

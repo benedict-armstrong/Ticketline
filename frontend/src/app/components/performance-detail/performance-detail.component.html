@@ -1,0 +1,49 @@
+<div class="performance" *ngIf="performance">
+  <div class="main">
+    <div class="header">
+      <h3>{{performance.title}}</h3>
+      <div class="row performance-info">
+        <div class="col-8">
+          <p>{{performance.description}}</p>
+        </div>
+        <div class="col-4 additional-performance-info">
+          <h4>Time</h4>
+          <p class="info">{{performance.date | date:'EEEE, MMM d, y HH:mm'}} <br>
+          <h4>Performer</h4>
+          <p>{{performance.artist.firstName}} {{performance.artist.lastName}}</p>
+          <h4>Location</h4>
+          <p>
+            {{this.performance.venue.name}}<br>
+            {{this.performance.venue.address.lineOne}}<br>
+            {{this.performance.venue.address.postcode}} {{this.performance.venue.address.city}} <br>
+            {{this.performance.venue.address.country}}
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="body">
+      <div class="options row row-cols-1 row-cols-md-4 g-4">
+        <div class="col">
+          <div class="card h-100 selected">
+            <div class="card-body text-center">
+              <p>We choose the best seat for you</p>
+            </div>
+          </div>
+        </div>
+        <div class="col">
+          <div class="card h-100">
+            <div class="card-body text-center">
+              <p>Choose your own seat</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tickets">
+        <p class="text-center">We will try to find seats next to each other</p>
+       <div *ngFor="let ticketType of this.performance.ticketTypes; index as j;">
+         <app-ticket-list-item *ngIf="ticketType.sector.type !== 'STAGE'" [ticketType]="ticketType" [ticketCount]="ticketCounts[j]" [performance]="performance"></app-ticket-list-item>
+      </div>
+    </div>
+  </div>
+</div>

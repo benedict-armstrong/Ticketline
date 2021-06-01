@@ -1,9 +1,13 @@
 package at.ac.tuwien.sepm.groupphase.backend.integrationtest;
 
+import at.ac.tuwien.sepm.groupphase.backend.basetest.TestAuthentification;
 import at.ac.tuwien.sepm.groupphase.backend.basetest.TestDataFile;
+import at.ac.tuwien.sepm.groupphase.backend.config.properties.SecurityProperties;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.FileDto;
 import at.ac.tuwien.sepm.groupphase.backend.repository.FileRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.UserRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -14,7 +18,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
-import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
@@ -27,7 +31,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 @SpringBootTest
 @ActiveProfiles("test")
 @AutoConfigureMockMvc
-public class FileEndpointTest implements TestDataFile {
+public class FileEndpointTest implements TestDataFile, TestAuthentification {
 
     @Autowired
     private MockMvc mockMvc;
@@ -36,32 +40,40 @@ public class FileEndpointTest implements TestDataFile {
     private FileRepository fileRepository;
 
     @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
     private ObjectMapper objectMapper;
 
-    private final MockMultipartFile mockMultipartFile = new MockMultipartFile(
-        "file",
-        "file.jpeg",
-        MediaType.IMAGE_JPEG_VALUE,
-        TEST_FILE_DATA
-    );
-    private final MockMultipartFile mockUnsupportedMultipartFile = new MockMultipartFile(
-        "file",
-        "file.zz",
-        "hello/world",
-        TEST_FILE_DATA
-    );
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private SecurityProperties securityProperties;
+
+    private String authToken;
 
     @BeforeEach
-    public void beforeEach() {
+    public void beforeEach() throws Exception {
+//        fileRepository.deleteAll();
+//        userRepository.deleteAll();
+        saveUser(AUTH_USER_ORGANIZER, userRepository, passwordEncoder);
+        authToken = authenticate(AUTH_USER_ORGANIZER, mockMvc, objectMapper);
+    }
+
+    @AfterEach
+    public void afterEach() {
         fileRepository.deleteAll();
+        userRepository.deleteAll();
     }
 
     @Test
-    @DisplayName("Should return file DTO without data after successful upload")
-    public void whenUploadFile_successful_thenGetFileDtoWithoutDataBack() throws Exception {
+    @DisplayName("Should return file DTO after successful upload")
+    public void whenUploadFile_successful_thenGetFileDtoBack() throws Exception {
         MvcResult mvcResult = this.mockMvc.perform(
             multipart(FILE_BASE_URI)
-                .file(mockMultipartFile)
+                .file(MOCK_FILE)
+                .header(securityProperties.getAuthHeader(), authToken)
         ).andReturn();
         MockHttpServletResponse response = mvcResult.getResponse();
         assertEquals(HttpStatus.CREATED.value(), response.getStatus());
@@ -70,9 +82,20 @@ public class FileEndpointTest implements TestDataFile {
         FileDto fileDto = objectMapper.readValue(response.getContentAsString(), FileDto.class);
         assertAll(
             () -> assertNotNull(fileDto.getId()),
-            () -> assertNull(fileDto.getData()),
             () -> assertNotNull(fileDto.getType())
         );
+    }
+
+    @Test
+    @DisplayName("Should return 422 when uploading a file with no file type")
+    public void whenUploadFile_noFileType_then422() throws Exception {
+        MvcResult mvcResult = this.mockMvc.perform(
+            multipart(FILE_BASE_URI)
+                .file(NOTYPE_MOCK_FILE)
+                .header(securityProperties.getAuthHeader(), authToken)
+        ).andReturn();
+        MockHttpServletResponse response = mvcResult.getResponse();
+        assertEquals(HttpStatus.UNPROCESSABLE_ENTITY.value(), response.getStatus());
     }
 
     @Test
@@ -80,7 +103,8 @@ public class FileEndpointTest implements TestDataFile {
     public void whenUploadFile_unsupported_then422() throws Exception {
         MvcResult mvcResult = this.mockMvc.perform(
             multipart(FILE_BASE_URI)
-                .file(mockUnsupportedMultipartFile)
+                .file(UNSUPPORTED_MOCK_FILE)
+                .header(securityProperties.getAuthHeader(), authToken)
         ).andReturn();
         MockHttpServletResponse response = mvcResult.getResponse();
         assertEquals(HttpStatus.UNPROCESSABLE_ENTITY.value(), response.getStatus());
@@ -91,6 +115,7 @@ public class FileEndpointTest implements TestDataFile {
     public void whenUploadFile_noFileAttached_then400() throws Exception {
         MvcResult mvcResult = this.mockMvc.perform(
             multipart(FILE_BASE_URI)
+                .header(securityProperties.getAuthHeader(), authToken)
         ).andReturn();
         MockHttpServletResponse response = mvcResult.getResponse();
         assertEquals(HttpStatus.BAD_REQUEST.value(), response.getStatus());

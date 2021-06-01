@@ -1,6 +1,16 @@
+@import "../../../colors.scss";
+
 .event {
   box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
   margin: 10px;
+}
+
+.event-info {
+  margin: 20px 0;
+}
+
+.additional-event-info {
+  background-color: $gray-242;
 }
 
 .jumbotron img {
@@ -15,6 +25,10 @@
 
 .header .info {
   color: rgba(193, 73, 83, 1);
+}
+
+.header > h3, .header > .add-news {
+  display: inline-block;
 }
 
 .options {
@@ -69,3 +83,34 @@
 .checkout-buttons button {
   width: clamp(100px, 200px, 200px);
 }
+
+h4 {
+  margin: 10px 0;
+}
+
+.performance {
+  display: flex;
+  flex-direction: row;
+  max-height: 90px;
+  margin-top: 5px;
+  align-items: center;
+  cursor: pointer;
+  background-color: $gray-242;
+}
+
+.performance:hover {
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
+}
+
+.info {
+  display: flex;
+}
+
+.date-time {
+  color: #c14953;
+}
+
+.detail {
+  margin-left: 10px;
+}
+

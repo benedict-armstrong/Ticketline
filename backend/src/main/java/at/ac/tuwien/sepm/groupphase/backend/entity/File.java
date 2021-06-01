@@ -1,5 +1,11 @@
 package at.ac.tuwien.sepm.groupphase.backend.entity;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -8,6 +14,10 @@ import javax.persistence.Lob;
 import javax.persistence.Enumerated;
 import javax.persistence.EnumType;
 
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @Entity
 public class File {
 
@@ -16,84 +26,15 @@ public class File {
     private Long id;
 
     @Lob
+    @ToString.Exclude
     private byte[] data;
 
     @Enumerated(EnumType.STRING)
     private Type type;
 
-    public File() { }
-
     public File(byte[] data, Type type) {
         this.data = data;
         this.type = type;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public byte[] getData() {
-        return data;
-    }
-
-    public void setData(byte[] data) {
-        this.data = data;
-    }
-
-    public Type getType() {
-        return type;
-    }
-
-    public void setType(Type type) {
-        this.type = type;
-    }
-
-    @Override
-    public String toString() {
-        return "File{"
-            + "id=" + id
-            + ", data=" + (data == null ? "null" : "*BLOB*")
-            + ", type=" + type
-            + '}';
-    }
-
-    public static final class FileBuilder {
-        private Long id;
-        private byte[] data;
-        private Type type;
-
-        public FileBuilder() {}
-
-        public static FileBuilder aFile() {
-            return new FileBuilder();
-        }
-
-        public FileBuilder withId(Long id) {
-            this.id = id;
-            return this;
-        }
-
-        public FileBuilder withData(byte[] data) {
-            this.data = data;
-            return this;
-        }
-
-        public FileBuilder withType(Type type) {
-            this.type = type;
-            return this;
-        }
-
-        public File build() {
-            File file = new File();
-            file.setId(id);
-            file.setData(data);
-            file.setType(type);
-            return file;
-        }
     }
 
     /**

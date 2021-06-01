@@ -6,13 +6,11 @@ import org.mapstruct.Mapper;
 
 import java.util.List;
 
-@Mapper
-public interface EventMapper {
-
+@Mapper(uses = {FileMapper.class, PerformanceMapper.class, ArtistMapper.class, AddressMapper.class})
+public interface EventMapper extends FileTypeMapper {
     Event eventDtoToEvent(EventDto eventDto);
 
     EventDto eventToEventDto(Event event);
 
-    List<EventDto> eventToEventDto(List<Event> event);
-
+    List<EventDto> eventListToEventDtoList(List<Event> events);
 }

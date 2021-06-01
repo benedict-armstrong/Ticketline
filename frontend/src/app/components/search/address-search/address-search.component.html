@@ -1,0 +1,78 @@
+<div class="search">
+  <div class="filters">
+    <div class="collapse" id="collapseAddressSearch">
+      <div class="card">
+        <form [formGroup]="this.addressSearchForm" (ngSubmit)="resetValues(); searchAddress()">
+          <div class="card-body">
+            <div class="row">
+              <h3>Search for addresses</h3>
+              <div class="col">
+                <div class="row mb-3">
+                  <label for="filterAddressName" class="col-sm-3 col-form-label">Name</label>
+                  <div class="col-sm-9">
+                    <input type="text" class="text-input form-control" id="filterAddressName"
+                           formControlName="name">
+                  </div>
+                </div>
+              </div>
+              <div class="col">
+                <div class="row mb-3">
+                  <label for="filterLineOne"
+                         class="col-sm-3 col-form-label">Line One</label>
+                  <div class="col-sm-9">
+                    <input type="text" class="text-input form-control" id="filterLineOne"
+                           formControlName="lineOne">
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col">
+                <div class="row mb-3">
+                  <label for="filterLineTwo" class="col-sm-3 col-form-label">Line Two</label>
+                  <div class="col-sm-9">
+                    <input type="text" class="text-input form-control" id="filterLineTwo"
+                           formControlName="lineTwo">
+                  </div>
+                </div>
+              </div>
+              <div class="col">
+                <div class="row mb-3">
+                  <label for="filterAddressCity" class="col-sm-3 col-form-label">City</label>
+                  <div class="col-sm-9">
+                    <input type="text" id="filterAddressCity" formControlName="city"
+                            class="text-input form-control">
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col">
+                <div class="row mb-3">
+                  <label for="filterPostCode" class="col-sm-3 col-form-label">Postcode</label>
+                  <div class="col-sm-9">
+                    <input type="text" class="text-input form-control" id="filterPostCode"
+                           formControlName="postCode">
+                  </div>
+                </div>
+              </div>
+              <div class="col">
+                <div class="row mb-3">
+                  <label for="filterAddressCountry" class="col-sm-3 col-form-label">Country</label>
+                  <div class="col-sm-9">
+                    <input type="text" id="filterAddressCountry" formControlName="country"
+                           class="text-input form-control">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="card-footer">
+            <button type="submit" class="secondary filterButton">Apply</button>
+          </div>
+        </form>
+      </div>
+
+    </div>
+  </div>
+</div>

@@ -1,0 +1,12 @@
+<div class="location list-item" *ngIf="address" [routerLink]="['/address-detail', address.id]">
+  <div class="info">
+    <div class="detail">
+      <h5>{{address.name}}</h5>
+      <p>{{address.lineOne}}
+        <span *ngIf="address.lineTwo !== ''"> {{address.lineTwo}} <br/> </span>
+        {{address.city}}, {{address.postcode}}, {{address.country}}
+      </p>
+    </div>
+  </div>
+</div>
+

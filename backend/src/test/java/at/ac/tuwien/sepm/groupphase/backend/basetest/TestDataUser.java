@@ -18,7 +18,7 @@ public interface TestDataUser extends TestData{
     int ADMIN_POINTS = 0;
     ApplicationUser.UserStatus ADMIN_USER_STATUS = ApplicationUser.UserStatus.ACTIVE;
     ApplicationUser.UserRole ADMIN_ROLE = ApplicationUser.UserRole.ADMIN;
-    Address ADMIN_ADDRESS = Address.AddressBuilder.anAddress().withName("Max Mustermann").withLineOne("Teststraße 1").withCity("Wien").withPostcode("1010").withCountry("Österreich").build();
+    Address ADMIN_ADDRESS = Address.builder().name("Max Mustermann").lineOne("Teststraße 1").city("Wien").postcode("1010").country("Österreich").build();
 
     String DEFAULT_FIRST_NAME = "Max";
     String DEFAULT_LAST_NAME = "Mustermann";
@@ -29,5 +29,36 @@ public interface TestDataUser extends TestData{
     int DEFAULT_POINTS = 0;
     ApplicationUser.UserStatus DEFAULT_STATUS = ApplicationUser.UserStatus.ACTIVE;
     ApplicationUser.UserRole DEFAULT_ROLE = ApplicationUser.UserRole.CLIENT;
-    Address DEFAULT_ADDRESS = Address.AddressBuilder.anAddress().withName("Max Mustermann").withLineOne("Teststraße 1").withCity("Wien").withPostcode("1010").withCountry("Österreich").build();
+    Address DEFAULT_ADDRESS = Address.builder().name("Max Mustermann").lineOne("Teststraße 1").city("Wien").postcode("1010").country("Österreich").build();
+
+    static ApplicationUser getAdmin() {
+        return ApplicationUser.builder()
+            .firstName(ADMIN_FIRST_NAME)
+            .lastName(ADMIN_LAST_NAME)
+            .email(ADMIN_EMAIL)
+            .lastLogin(ADMIN_LAST_LOGIN)
+            .role(ADMIN_ROLE)
+            .status(ADMIN_USER_STATUS)
+            .password(ADMIN_PASSWORD)
+            .points(ADMIN_POINTS)
+            .address(TestDataAddress.getAddress())
+            .telephoneNumber(ADMIN_PHONE_NUMBER)
+            .build();
+    }
+
+    static ApplicationUser getUser() {
+        return ApplicationUser.builder()
+            .firstName(DEFAULT_FIRST_NAME)
+            .lastName(DEFAULT_LAST_NAME)
+            .email(DEFAULT_EMAIL)
+            .lastLogin(DEFAULT_LAST_LOGIN)
+            .role(DEFAULT_ROLE)
+            .status(ApplicationUser.UserStatus.ACTIVE)
+            .password(DEFAULT_PASSWORD)
+            .points(DEFAULT_POINTS)
+            .address(TestDataAddress.getAddress())
+            .telephoneNumber(DEFAULT_PHONE_NUMBER)
+            .build();
+    }
+
 }

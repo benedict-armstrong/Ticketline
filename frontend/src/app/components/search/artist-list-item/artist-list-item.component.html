@@ -1,0 +1,7 @@
+<div class="artist list-item" *ngIf="artist" [routerLink]="['/artist-detail', artist.id]">
+  <div class="info">
+    <div class="detail">
+      <h5>{{artist.firstName}} {{artist.lastName}}</h5>
+    </div>
+  </div>
+</div>

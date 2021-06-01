@@ -1,0 +1,30 @@
+@import "../../../../colors.scss";
+
+.day {
+  margin-top: 20px;
+}
+
+.day > .header {
+  border-bottom: 1px solid lightgray;
+}
+
+.more {
+  margin: 20px 0;
+}
+
+.clickable {
+  cursor: pointer;
+}
+
+h5 {
+  cursor: pointer;
+}
+
+#search-btns {
+  text-align: center;
+}
+
+#search-btn-list {
+  display: flex;
+  justify-content: space-around;
+}
