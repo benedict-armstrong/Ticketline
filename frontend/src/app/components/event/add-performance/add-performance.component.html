@@ -46,43 +46,38 @@
 
     <hr />
 
-    <app-add-sectortype [(sectorTypes)]="sectorTypes"></app-add-sectortype>
-    <div *ngIf="sectorTypes.length === 0 && submitted" class="alert alert-danger">
-        At least one sector type required!
-    </div>
-
-    <hr/>
-
-    <app-add-tickettype [(ticketTypes)]="ticketTypes"></app-add-tickettype>
-    <div *ngIf="sectorTypes.length === 0 && submitted" class="alert alert-danger">
-      At least one ticket type required!
-    </div>
-
-    <hr />
-
     <div id="artistGroup">
       <app-add-artist (artistChanged)="changeArtist($event)"></app-add-artist>
-      <div *ngIf="artist === undefined && submitted" class="alert alert-danger">
+      <div *ngIf="!artist && submitted" class="alert alert-danger">
         Artist is required!
       </div>
       <div class="row" id="currentArtist">
-        <h5 class="col-3">Current Artist:</h5>
+        <h5 class="col-3">Selected Artist:</h5>
         <div class="col-6" *ngIf="artist">{{artist.firstName}} {{artist.lastName}}</div>
       </div>
     </div>
 
     <hr />
 
-    <div id="addressGroup">
-      <app-add-address (locationChanged)="changeLocation($event)"></app-add-address>
-      <div *ngIf="venue === undefined && submitted" class="alert alert-danger">
-        Location is required!
+    <div id="venueGroup">
+      <app-select-venue (venueChanged)="changeVenue($event)"></app-select-venue>
+      <div *ngIf="!venue && submitted" class="alert alert-danger">
+        Venue is required!
       </div>
-      <div class="row" id="currentLocation">
-        <h5 class="col-3">Current Location:</h5>
+      <div class="row" id="currentVenue">
+        <h5 class="col-3">Selected venue:</h5>
         <div class="col-6" *ngIf="venue">{{venue.name}}</div>
       </div>
     </div>
+
+    <hr />
+
+    <app-add-tickettype *ngIf="this.venue" [sectors]="this.venue.sectors" (ticketTypesChanged)="changeTickets($event)"></app-add-tickettype>
+    <div *ngIf="this.ticketTypes.length === 0 && submitted" class="alert alert-danger">
+      At least one ticket type required!
+    </div>
+
+    <hr />
 
     <button type="button" (click)="addPerformance()" class="primary" id="create">Add performance</button>
     <button type="button" (click)="cancelAdding.emit()" class="secondary" id="cancel">Cancel</button>

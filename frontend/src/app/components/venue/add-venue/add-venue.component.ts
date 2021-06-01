@@ -60,8 +60,7 @@ export class AddVenueComponent implements OnInit {
           this.venueForm.value.city,
           this.venueForm.value.postcode,
           this.venueForm.value.country,
-          null,
-          null
+          true
         ),
         this.sectors,
         this.venueLayout

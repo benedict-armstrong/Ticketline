@@ -26,7 +26,7 @@ public class TicketDto {
     private TicketTypeDto ticketType;
 
     @PositiveOrZero(message = "Total price must be at least zero")
-    private Long totalPrice; // Cents
+    private Long totalPrice; // In Cent (lowest denominator of currency used)
 
     private String status;
 

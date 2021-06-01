@@ -51,7 +51,6 @@ export class AddAddressComponent implements OnInit {
         this.addAddressForm.value.city,
         this.addAddressForm.value.postcode,
         this.addAddressForm.value.country,
-        null,
         true
       );
 

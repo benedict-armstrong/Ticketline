@@ -9,6 +9,6 @@ export class Ticket {
     public seat: LayoutUnit,
     public ticketType: TicketType,
     public totalPrice: number,
-    public status: string
+    public status: 'PAID' | 'RESERVED' | 'CANCELLED'
   ) {}
 }

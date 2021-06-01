@@ -16,4 +16,9 @@ export class VenueService {
     console.log('Save Venue');
     return this.httpClient.post<Venue>(this.userBaseUri, venue);
   }
+
+  getVenues(): Observable<Venue[]> {
+    console.log('Fetching Venues');
+    return this.httpClient.get<Venue[]>(this.userBaseUri);
+  }
 }

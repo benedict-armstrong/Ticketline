@@ -4,6 +4,7 @@ import {Performance} from '../../../dtos/performance';
 import {Artist} from '../../../dtos/artist';
 import {Event} from '../../../dtos/event';
 import {Venue} from '../../../dtos/venue';
+import {TicketType} from '../../../dtos/ticketType';
 
 @Component({
   selector: 'app-add-performance',
@@ -16,16 +17,15 @@ export class AddPerformanceComponent implements OnInit {
   @Input() event: Event;
   addPerformanceForm: FormGroup;
   submitted = false;
-  sectorTypes = [];
   ticketTypes = [];
 
   error = false;
   errorMessage: string;
   success = false;
 
-  performance = new Performance(null, null, null, null, null, null, null);
-  venue: Venue;
+  performance: Performance = new Performance(null, null, null, null, null, null, null);
   artist: Artist;
+  venue: Venue;
 
   constructor(private formBuilder: FormBuilder) {
   }
@@ -40,28 +40,21 @@ export class AddPerformanceComponent implements OnInit {
 
   addPerformance() {
     this.submitted = true;
-
-    this.performance.date = new Date(this.addPerformanceForm.value.date).toISOString();
-    console.log(this.performance.date);
-    if (this.addPerformanceForm.valid &&
-      this.sectorTypes.length !== 0 &&
-      this.artist !== undefined &&
-      this.venue !== undefined) {
-      // Add additional event data
-      this.performance.title = this.addPerformanceForm.value.title;
-      this.performance.description = this.addPerformanceForm.value.description;
-      this.performance.venue = this.venue;
-      this.performance.artist = this.artist;
-      this.performance.ticketTypes = this.ticketTypes;
-
-      this.performance.date = new Date(this.addPerformanceForm.value.date).toISOString();
-      console.log(this.performance.date);
-
+    if (this.addPerformanceForm.valid && this.artist && this.venue) {
+      this.performance = new Performance(
+        null,
+        this.addPerformanceForm.value.title,
+        this.addPerformanceForm.value.description,
+        new Date(this.addPerformanceForm.value.date).toISOString(),
+        this.ticketTypes,
+        this.artist,
+        this.venue
+      );
 
       this.performanceAdded.emit(this.performance);
       this.addPerformanceForm.reset();
     } else {
-      console.log('Invalid input');
+      console.log('Invalid Input');
     }
   }
 
@@ -70,12 +63,16 @@ export class AddPerformanceComponent implements OnInit {
     this.success = false;
   }
 
-  changeLocation(venue: Venue) {
+  changeArtist(artist: Artist) {
+    this.artist = artist;
+  }
+
+  changeVenue(venue: Venue) {
     this.venue = venue;
   }
 
-  changeArtist(artist: Artist) {
-    this.artist = artist;
+  changeTickets(ticketTypes: TicketType[]) {
+    this.performance.ticketTypes = ticketTypes;
   }
 
   /**

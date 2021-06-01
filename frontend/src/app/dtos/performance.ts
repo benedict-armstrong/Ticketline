@@ -7,9 +7,9 @@ export class Performance {
     public id: number,
     public title: string,
     public description: string,
-    public venue: Venue,
     public date: string,
     public ticketTypes: TicketType[],
-    public artist: Artist
+    public artist: Artist,
+    public venue: Venue
   ) {}
 }
