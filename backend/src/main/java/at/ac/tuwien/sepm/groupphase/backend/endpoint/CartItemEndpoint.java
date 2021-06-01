@@ -99,7 +99,7 @@ public class CartItemEndpoint {
     @DeleteMapping(path = "/{id}/{ticketId}")
     @Secured({"ROLE_USER", "ROLE_ORGANIZER", "ROLE_ADMIN"})
     @ResponseStatus(HttpStatus.OK)
-    @Operation(summary = "Delete cartItem")
+    @Operation(summary = "Delete ticket from cartItem")
     public boolean delete(@PathVariable Long id, @PathVariable Long ticketId) {
         LOGGER.info("DELETE /api/v1/cartItems/{}/{}", id, ticketId);
         return cartItemService.deleteTicket(id, ticketId);

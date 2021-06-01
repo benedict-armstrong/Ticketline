@@ -6,8 +6,10 @@ import at.ac.tuwien.sepm.groupphase.backend.basetest.TestDataTicket;
 import at.ac.tuwien.sepm.groupphase.backend.basetest.TestDataUser;
 import at.ac.tuwien.sepm.groupphase.backend.config.properties.SecurityProperties;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.BookingDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.CartItemDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.TicketDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.TicketUpdateDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.CartItemMapper;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.PerformanceMapper;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.TicketMapper;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.TicketTypeMapper;
@@ -34,12 +36,13 @@ import org.springframework.test.web.servlet.MvcResult;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-/*
+
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
 @ActiveProfiles("test")
@@ -48,9 +51,6 @@ public class BookingEndpointTest implements TestAuthentification, TestDataTicket
 
     @Autowired
     private MockMvc mockMvc;
-
-    @Autowired
-    private UserRepository userRepository;
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -70,19 +70,31 @@ public class BookingEndpointTest implements TestAuthentification, TestDataTicket
     // Custom beans
 
     @Autowired
-    private TicketRepository ticketRepository;
-
-    @Autowired
-    private BookingRepository bookingRepository;
+    private CartItemRepository cartItemRepository;
 
     @Autowired
     private PerformanceRepository performanceRepository;
 
     @Autowired
-    private ArtistRepository artistRepository;
+    private UserRepository userRepository;
 
     @Autowired
     private AddressRepository addressRepository;
+
+    @Autowired
+    private ArtistRepository artistRepository;
+
+    @Autowired
+    private SectorRepository sectorRepository;
+
+    @Autowired
+    private VenueRepository venueRepository;
+
+    @Autowired
+    private TicketTypeRepository ticketTypeRepository;
+
+    @Autowired
+    private BookingRepository bookingRepository;
 
     // Mappers
 
@@ -95,41 +107,19 @@ public class BookingEndpointTest implements TestAuthentification, TestDataTicket
     @Autowired
     private PerformanceMapper performanceMapper;
 
+    @Autowired
+    private CartItemMapper cartItemMapper;
+
     @BeforeEach
     public void beforeEach() throws Exception {
         Address address = Address.builder()
             .name("Max Mustermann")
             .lineOne("Teststraße 2")
-            .city("Wien")
+            .city("Linz")
             .postcode("1010")
             .country("Österreich")
             .eventLocation(true)
             .build();
-        Artist artist = Artist.builder().firstName("Test").lastName("Test2").build();
-
-        address = addressRepository.save(address);
-        artist = artistRepository.save(artist);
-
-        SectorType sectorType = SectorType.builder().name("Test").numberOfTickets(10).build();
-        TicketType ticketType = TicketType.builder().title("Test").price(1000L).sectorType(sectorType).build();
-
-        Set<SectorType> sectorTypeSet = new HashSet<>();
-        sectorTypeSet.add(sectorType);
-
-        Set<TicketType> ticketTypeSet = new HashSet<>();
-        ticketTypeSet.add(ticketType);
-
-        Performance performance = Performance.builder()
-            .title(TEST_EVENT_PERFORMANCE_TITLE)
-            .description(TEST_EVENT_PERFORMANCE_DESCRIPTION)
-            .date(LocalDateTime.now())
-            .artist(artist)
-            .location(address)
-            .ticketTypes(ticketTypeSet)
-            .sectorTypes(sectorTypeSet)
-            .build();
-
-        performanceRepository.save(performance);
 
         ApplicationUser user = ApplicationUser.builder()
             .firstName(ADMIN_FIRST_NAME)
@@ -151,45 +141,114 @@ public class BookingEndpointTest implements TestAuthentification, TestDataTicket
             .telephoneNumber(ADMIN_PHONE_NUMBER)
             .build();
 
-        ApplicationUser user1 = saveUser(user, userRepository, passwordEncoder);
+        ApplicationUser savedUser = saveUser(user, userRepository, passwordEncoder);
         authToken = authenticate(user, mockMvc, objectMapper);
 
+        Artist savedArtist = artistRepository.save(Artist.builder()
+            .firstName("First")
+            .lastName("Last")
+            .build()
+        );
 
-        Ticket ticket = Ticket.builder()
-            .ticketType(ticketType)
-            .seats(TICKET_SEATS)
-            .owner(user1)
-            .performance(performance)
-            .status(TICKET_STATUS_IN_CART)
-            .updateDate(LocalDateTime.now())
+        Sector sector = Sector.builder()
+            .name("Sector1")
+            .color("BLUE")
+            .type(Sector.SectorType.STANDING)
+            .description("THIS IS A SECTOR TYPE")
+            .localId(1L)
             .build();
 
+        Set<Sector> sectorSet = new HashSet<>();
+        sectorSet.add(sector);
+        List<Sector> sectorList = sectorRepository.saveAll(new LinkedList<>(sectorSet));
 
-        ticket = ticketRepository.save(ticket);
+        TicketType ticketType = TicketType.builder().title("TicketType1").price(1000L).sector(sector).build();
+        Set<TicketType> ticketTypeSet = new HashSet<>();
+        ticketTypeSet.add(ticketType);
 
-        Set<Ticket> tickets = new HashSet<>();
-        tickets.add(ticket);
+        List<LayoutUnit> layoutUnitList = new LinkedList<>();
+        layoutUnitList.add(LayoutUnit.builder()
+            .customLabel("0")
+            .sector(sector)
+            .localId(0)
+            .build());
+        layoutUnitList.add(LayoutUnit.builder()
+            .customLabel("1")
+            .sector(sector)
+            .localId(1)
+            .build());
+        layoutUnitList.add(LayoutUnit.builder()
+            .customLabel("2")
+            .sector(sector)
+            .localId(2)
+            .build());
+        layoutUnitList.add(LayoutUnit.builder()
+            .customLabel("3")
+            .sector(sector)
+            .localId(3)
+            .build());
+
+        Venue savedVenue = venueRepository.save(Venue.builder()
+            .sectors(sectorList)
+            .layout(layoutUnitList)
+            .name("VENUE1")
+            .address(address)
+            .width(1)
+            .owner(savedUser)
+            .build()
+        );
+
+        Performance savedPerformance = performanceRepository.save(Performance.builder()
+            .ticketTypes(ticketTypeSet)
+            .date(LocalDateTime.now())
+            .artist(savedArtist)
+            .description("THIS IS A PERFORMANCE")
+            .title("PERFORMANCE 1")
+            .venue(savedVenue)
+            .build()
+        );
+
+        Ticket ticket1 = Ticket.builder()
+            .ticketType(ticketType)
+            .performance(savedPerformance)
+            .seat(layoutUnitList.get(0))
+            .build();
+        Set<Ticket> ticketSet = new HashSet<>();
+        ticketSet.add(ticket1);
+
+        CartItem cartItem = cartItemRepository.save(CartItem.builder()
+            .status(CartItem.Status.PAID_FOR)
+            .changeDate(LocalDateTime.now())
+            .tickets(ticketSet)
+            .user(savedUser)
+            .build());
+        Set<CartItem> cartItems = new HashSet<>();
+        cartItems.add(cartItem);
+
+        CartItemDto[] dtoArray = cartItemMapper.cartItemSetToCartItemDtoArray(cartItems);
 
         bookingDto = BookingDto.builder()
-            .tickets(ticketMapper.ticketSetToTicketDtoArray(tickets))
-            .invoice(null)
+            .cartItems(dtoArray)
             .build();
+
 
         booking = Booking.builder()
             .buyDate(LocalDateTime.now())
-            .user(user1)
-            .tickets(tickets)
+            .user(savedUser)
+            .cartItems(cartItems)
             .invoice(null)
             .build();
     }
 
     @AfterEach
-    public void afterEach() {
+    public void afterEach () {
         bookingRepository.deleteAll();
-        ticketRepository.deleteAll();
-        userRepository.deleteAll();
+        cartItemRepository.deleteAll();
         performanceRepository.deleteAll();
+        venueRepository.deleteAll();
+        ticketTypeRepository.deleteAll();
         artistRepository.deleteAll();
+        userRepository.deleteAll();
         addressRepository.deleteAll();
     }
 
@@ -237,4 +296,4 @@ public class BookingEndpointTest implements TestAuthentification, TestDataTicket
             () -> assertNotEquals(newBookingDtoArray.length, 0)
         );
     }
-}*/
+}

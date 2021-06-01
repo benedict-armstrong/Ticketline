@@ -41,7 +41,11 @@ export class CartItemComponent implements OnInit {
 
   removeTicketFromCart(j: number): void {
     if (!this.waiting) {
-      this.removeTicketFromCartHandler(this.i, j);
+      if (this.cartItemService.cart[this.i].tickets.length > 1) {
+        this.removeTicketFromCartHandler(this.i, j);
+      } else {
+        this.removeFromCartHandler(this.i);
+      }
     }
   }
 
@@ -56,7 +60,6 @@ export class CartItemComponent implements OnInit {
     this.vanishAlert();
     this.cartItemService.addTicketToCart(this.cartItemService.cart[i]).subscribe(
       (responseCartItem: CartItem) => {
-        console.log(responseCartItem);
         this.waiting = false;
         this.success = true;
         for (let j = 0; j < this.cartItemService.cart.length; j++) {
