@@ -4,18 +4,15 @@ import at.ac.tuwien.sepm.groupphase.backend.basetest.TestDataArtist;
 import at.ac.tuwien.sepm.groupphase.backend.basetest.TestDataEvent;
 import at.ac.tuwien.sepm.groupphase.backend.basetest.TestDataTicket;
 import at.ac.tuwien.sepm.groupphase.backend.basetest.TestDataUser;
-import at.ac.tuwien.sepm.groupphase.backend.entity.Address;
-import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
-import at.ac.tuwien.sepm.groupphase.backend.entity.Artist;
-import at.ac.tuwien.sepm.groupphase.backend.entity.Performance;
-import at.ac.tuwien.sepm.groupphase.backend.entity.SectorType;
-import at.ac.tuwien.sepm.groupphase.backend.entity.Ticket;
-import at.ac.tuwien.sepm.groupphase.backend.entity.TicketType;
+import at.ac.tuwien.sepm.groupphase.backend.basetest.TestDataVenue;
+import at.ac.tuwien.sepm.groupphase.backend.entity.*;
 import at.ac.tuwien.sepm.groupphase.backend.repository.ArtistRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.PerformanceRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.SectorRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.TicketRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.TicketTypeRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.UserRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.VenueRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -26,6 +23,9 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+
+import java.util.Arrays;
+import java.util.Collections;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -47,6 +47,12 @@ public class TicketRepositoryTest implements TestDataTicket {
     private PerformanceRepository performanceRepository;
 
     @Autowired
+    private VenueRepository venueRepository;
+
+    @Autowired
+    private SectorRepository sectorRepository;
+
+    @Autowired
     private UserRepository userRepository;
 
     @Autowired
@@ -54,14 +60,11 @@ public class TicketRepositoryTest implements TestDataTicket {
 
     private final Ticket template = STANDARD_TICKET;
     private final Artist artist = TestDataArtist.getArtist();
-    private final Address location = TestDataEvent.getLocation();
-    private final Performance performance = TestDataEvent.getPerformance(artist, location);
+    private final Performance performance = TestDataEvent.getPerformance(artist, TestDataVenue.getVenue());
     private final ApplicationUser user = TestDataUser.getAdmin();
 
     @BeforeEach
     public void beforeEach() throws Exception {
-        user.setAddress(location);
-
         ApplicationUser savedUser = userRepository.save(user);
         user.setId(savedUser.getId());
 
@@ -69,17 +72,26 @@ public class TicketRepositoryTest implements TestDataTicket {
 
         Artist savedArtist = artistRepository.save(artist);
 
+        Sector sector = sectorRepository.save(TestDataVenue.getSeatedSector());
+        Venue venue = TestDataVenue.getVenue();
+        for (LayoutUnit layoutUnit : venue.getLayout()) {
+            if (layoutUnit != null) {
+                layoutUnit.setSector(sector);
+            }
+        }
+        venue.setSectors(Collections.singletonList(sector));
+
+        Venue savedVenue = venueRepository.save(venue);
+        performance.setVenue(savedVenue);
+
         Performance savedPerformance = performanceRepository.save(performance);
         savedPerformance.setArtist(savedArtist);
 
-        SectorType sectorType = (SectorType) savedPerformance.getSectorTypes().toArray()[0];
-        sectorType.setPrice(100L);
-
-        template.setSectorType(sectorType);
         template.setOwner(savedUser);
         template.setPerformance(savedPerformance);
-        template.setStatus(Ticket.Status.PAID_FOR);
+        template.setStatus(Ticket.Status.PAID);
         template.setTicketType(savedTicketType);
+        template.setTotalPrice(100L);
     }
 
     @AfterEach
@@ -89,24 +101,21 @@ public class TicketRepositoryTest implements TestDataTicket {
         ticketTypeRepository.deleteAll();
         userRepository.deleteAll();
         artistRepository.deleteAll();
+        venueRepository.deleteAll();
+        sectorRepository.deleteAll();
     }
 
     @Test
     @DisplayName("Should return correct entity back after create")
     public void whenCreateNew_thenGetCorrectEntityBack() {
-        Long templatePrice = (long) Math.floor(100 * template.getTicketType().getMultiplier()
-            * template.getSectorType().getPrice() * template.getSeats().size());
-        template.setTotalPrice(templatePrice);
-
         Ticket ticket = ticketRepository.save(template);
         assertAll(
             () -> assertNotNull(ticket.getId()),
             () -> assertEquals(template.getOwner(), ticket.getOwner()),
             () -> assertEquals(template.getPerformance(), ticket.getPerformance()),
-            () -> assertEquals(template.getSectorType(), ticket.getSectorType()),
-            () -> assertEquals(template.getSeats(), ticket.getSeats()),
+            () -> assertEquals(template.getSeat(), ticket.getSeat()),
             () -> assertEquals(template.getTicketType(), ticket.getTicketType()),
-            () -> assertEquals(templatePrice, ticket.getTotalPrice()),
+            () -> assertEquals(template.getTotalPrice(), ticket.getTotalPrice()),
             () -> assertEquals(template.getStatus(), ticket.getStatus())
         );
     }

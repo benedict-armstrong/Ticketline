@@ -10,6 +10,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 
 @Data
 @NoArgsConstructor
@@ -25,7 +26,10 @@ public class TicketType {
     @Column(nullable = false)
     private String title;
 
-    @Column(name = "MULTIPLIER", nullable = false)
-    private Double multiplier;
+    @ManyToOne()
+    private Sector sector;
+
+    @Column(nullable = false)
+    private long price;
 
 }

@@ -1,17 +1,21 @@
 package at.ac.tuwien.sepm.groupphase.backend.integrationtest;
 
+import at.ac.tuwien.sepm.groupphase.backend.basetest.TestDataArtist;
 import at.ac.tuwien.sepm.groupphase.backend.basetest.TestDataEvent;
 import at.ac.tuwien.sepm.groupphase.backend.basetest.TestAuthentification;
 import at.ac.tuwien.sepm.groupphase.backend.basetest.TestDataFile;
 import at.ac.tuwien.sepm.groupphase.backend.basetest.TestDataNews;
 import at.ac.tuwien.sepm.groupphase.backend.basetest.TestDataTicket;
+import at.ac.tuwien.sepm.groupphase.backend.basetest.TestDataVenue;
 import at.ac.tuwien.sepm.groupphase.backend.config.properties.SecurityProperties;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.EventEndpoint;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.ArtistDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.FileDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.NewsDto;
-import at.ac.tuwien.sepm.groupphase.backend.entity.Address;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.PerformanceDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.EventMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Artist;
-import at.ac.tuwien.sepm.groupphase.backend.entity.Event;
-import at.ac.tuwien.sepm.groupphase.backend.entity.Performance;
-import at.ac.tuwien.sepm.groupphase.backend.entity.File;
 import at.ac.tuwien.sepm.groupphase.backend.entity.News;
 import at.ac.tuwien.sepm.groupphase.backend.repository.AddressRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.ArtistRepository;
@@ -19,6 +23,7 @@ import at.ac.tuwien.sepm.groupphase.backend.repository.EventRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.FileRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.NewsRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.UserRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.VenueRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -40,7 +45,6 @@ import org.springframework.test.web.servlet.MvcResult;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -75,6 +79,9 @@ public class NewsEndpointTest implements TestDataNews, TestDataFile, TestAuthent
     private AddressRepository addressRepository;
 
     @Autowired
+    private VenueRepository venueRepository;
+
+    @Autowired
     private ObjectMapper objectMapper;
 
     @Autowired
@@ -83,16 +90,16 @@ public class NewsEndpointTest implements TestDataNews, TestDataFile, TestAuthent
     @Autowired
     private SecurityProperties securityProperties;
 
-    private Set<File> images = new HashSet<>();
-
-    private Event event;
-
+    private final NewsDto newsDto = NewsDto.builder()
+        .title("Testtitle")
+        .text("Testtext")
+        .author("Testuser")
+        .publishedAt(TEST_NEWS_PUBLISHED_AT)
+        .build();
     private final News news = News.builder()
         .title("Testtitle")
         .text("Testtext")
         .author("Testuser")
-        .event(event)
-        .images(images)
         .publishedAt(TEST_NEWS_PUBLISHED_AT)
         .build();
 
@@ -100,47 +107,48 @@ public class NewsEndpointTest implements TestDataNews, TestDataFile, TestAuthent
 
     @BeforeEach
     public void beforeEach() throws Exception {
-        //newsRepository.deleteAll();
-        //eventRepository.deleteAll();
-        //fileRepository.deleteAll();
-
-        Address address = addressRepository.save(TestDataEvent.TEST_EVENT_LOCATION);
-        Artist artist = artistRepository.save(TestDataEvent.TEST_EVENT_ARTIST);
-
-        Set<Performance> performances = new HashSet<>();
-        performances.add(Performance.builder()
+        PerformanceDto[] performanceDtos = new PerformanceDto[1];
+        performanceDtos[0] = PerformanceDto.builder()
             .title(TestDataEvent.TEST_EVENT_PERFORMANCE_TITLE)
             .description(TestDataEvent.TEST_EVENT_PERFORMANCE_DESCRIPTION)
             .date(TestDataEvent.TEST_PERFORMANCE_DATE)
-            .artist(artist)
-            .location(address)
-            .sectorTypes(TestDataEvent.getTestEventSectortypes())
-            .ticketTypes(TestDataTicket.getTicketTypes())
-            .build()
-        );
+            .artist(TestDataArtist.getArtistDto())
+            .ticketTypes(TestDataTicket.getTicketTypeDtos())
+            .venue(TestDataVenue.getVenueDto())
+            .build();
 
-        event = Event.builder()
+        EventDto eventDto = EventDto.builder()
             .name(TestDataEvent.TEST_EVENT_TITLE)
             .description(TestDataEvent.TEST_EVENT_DESCRIPTION)
             .startDate(TestDataEvent.TEST_EVENT_DATE_FUTURE)
             .endDate(TestDataEvent.TEST_EVENT_DATE_FUTURE2)
             .eventType(TestDataEvent.TEST_EVENT_EVENT_TYPE)
             .duration(TestDataEvent.TEST_EVENT_DURATION)
-            .performances(performances)
+            .performances(performanceDtos)
             .build();
 
-        news.setEvent(event);
+        newsDto.setEvent(eventDto);
 
         fileRepository.save(IMAGE_FILE);
-        images = new HashSet<>();
-        images.add(IMAGE_FILE);
+        newsDto.setImages(new FileDto[]{IMAGE_FILE_DTO});
 
-        eventRepository.save(event);
-
-        //userRepository.deleteAll();
         saveUser(AUTH_USER_ORGANIZER, userRepository, passwordEncoder);
         authToken = authenticate(AUTH_USER_ORGANIZER, mockMvc, objectMapper);
+
+        saveEvent(eventDto);
     }
+
+    private void saveEvent(EventDto eventDto) throws Exception {
+        MvcResult mvcResult = this.mockMvc.perform(
+            post(BASE_URI + "/events")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(eventDto))
+                .header(securityProperties.getAuthHeader(), authToken)
+        ).andReturn();
+    }
+
+
+
 
     @AfterEach
     public void afterEach() {
@@ -150,6 +158,7 @@ public class NewsEndpointTest implements TestDataNews, TestDataFile, TestAuthent
         userRepository.deleteAll();
         addressRepository.deleteAllInBatch();
         artistRepository.deleteAll();
+        venueRepository.deleteAll();
     }
 
     @Test
@@ -241,27 +250,6 @@ public class NewsEndpointTest implements TestDataNews, TestDataFile, TestAuthent
             () -> assertEquals(HttpStatus.BAD_REQUEST.value(), responseL.getStatus()),
             () -> assertEquals(HttpStatus.BAD_REQUEST.value(), responseO.getStatus()),
             () -> assertEquals(HttpStatus.BAD_REQUEST.value(), responseLO.getStatus())
-        );
-    }
-
-    @Test
-    @DisplayName("Should return 201 and news object with set ID and publishing date after create")
-    public void whenCreateNews_then201AndNewsWithIdAndPublishedAt() throws Exception {
-        MvcResult mvcResult = this.mockMvc.perform(
-            post(NEWS_BASE_URI)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(news))
-                .header(securityProperties.getAuthHeader(), authToken)
-        ).andReturn();
-
-        MockHttpServletResponse response = mvcResult.getResponse();
-        assertEquals(HttpStatus.CREATED.value(), response.getStatus());
-        assertEquals(MediaType.APPLICATION_JSON_VALUE, response.getContentType());
-
-        NewsDto savedDto = objectMapper.readValue(response.getContentAsString(), NewsDto.class);
-        assertAll(
-            () -> assertNotNull(savedDto.getId()),
-            () -> assertNotNull(savedDto.getPublishedAt())
         );
     }
 

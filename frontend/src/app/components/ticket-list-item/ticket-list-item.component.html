@@ -1,20 +1,20 @@
 <div class="list-item">
-    <div>
-        <h4>{{sectorType.name}} ({{sectorType.numberOfTickets}} Tickets)</h4>
-        <p>Best experience | EUR 53.00</p>
+  <div>
+    <h4>{{ticketType.title}} (Tickets)</h4>
+    <p>Best experience | {{ticketType.price * 100 | currency}}</p>
+  </div>
+  <div class="options">
+    <div class="age">
+      <select class="form-select" name="age-group" id="age-group">
+        <option>Adult</option>
+        <option>Child</option>
+      </select>
     </div>
-    <div class="options">
-        <div class="age">
-            <select class="form-select" name="age-group" id="age-group">
-                <option>Adult</option>
-                <option>Child</option>
-            </select>
-        </div>
-        <div class="count">
-            <button class="secondary no-shadow no-border"><i class="bi bi-dash-circle"></i></button>
-            <span>0</span>
-            <button class="secondary no-shadow no-border"><i class="bi bi-plus-circle"></i></button>
-        </div>
-        <button class="add primary">Add to Cart</button>
+    <div class="count">
+      <button class="secondary no-shadow no-border"><i class="bi bi-dash-circle"></i></button>
+      <span>0</span>
+      <button class="secondary no-shadow no-border"><i class="bi bi-plus-circle"></i></button>
     </div>
+    <button class="add primary">Add to Cart</button>
+  </div>
 </div>

@@ -13,10 +13,10 @@
           <p>{{performance.artist.firstName}} {{performance.artist.lastName}}</p>
           <h4>Location</h4>
           <p>
-            {{this.performance.location.name}}<br>
-            {{this.performance.location.lineOne}}<br>
-            {{this.performance.location.postcode}} {{this.performance.location.city}} <br>
-            {{this.performance.location.country}}
+            {{this.performance.venue.name}}<br>
+            {{this.performance.venue.address.lineOne}}<br>
+            {{this.performance.venue.address.postcode}} {{this.performance.venue.address.city}} <br>
+            {{this.performance.venue.address.country}}
           </p>
         </div>
       </div>
@@ -41,9 +41,10 @@
 
       <div class="tickets">
         <p class="text-center">We will try to find seats next to each other</p>
-        <div *ngFor="let sectorType of performance.sectorTypes">
-          <app-ticket-list-item [sectorType]="sectorType"></app-ticket-list-item>
-        </div>
+<!--        Commented out because sector types is obsolete -->
+<!--        <div *ngFor="let sectorType of performance.sectorTypes">-->
+<!--          <app-ticket-list-item [sectorType]="sectorType"></app-ticket-list-item>-->
+<!--        </div>-->
       </div>
 
       <div class="selected-items row">

@@ -1,0 +1,62 @@
+<div id="sectorTypeGroup">
+  <h5>Ticket Types</h5>
+  <form class="form" [formGroup]="addTicketTypeForm" (ngSubmit)="addTicketType()">
+    <div class="row">
+      <div class="col-4">
+        <div class="form-group">
+          <label for="name" class="required">Name</label>
+          <input type="text" name="name" formControlName="name" class="text-input form-control"
+                 id="name" placeholder="Enter name">
+          <div *ngIf="submitted && addTicketTypeForm.controls.name.errors" class="error">
+            <small *ngIf="addTicketTypeForm.controls.name.errors.required" class="form-text text-danger">
+              Name is required!
+            </small>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-4">
+        <div class="form-group">
+          <label for="price" class="required">Price (in Cent)</label>
+          <input type="number" name="price" formControlName="price"
+                 class="text-input form-control" id="price" placeholder="Enter price">
+          <div *ngIf="submitted && addTicketTypeForm.controls.price.errors" class="error">
+            <small *ngIf="addTicketTypeForm.controls.price.errors.required" class="form-text text-danger">
+              Price is required!
+            </small>
+            <small *ngIf="addTicketTypeForm.controls.price.errors.min" class="form-text text-danger">
+              Price must be greater at least 0!
+            </small>
+          </div>
+        </div>
+      </div>
+
+      <div class="col">
+        <div class="form-group">
+          <label for="sector">Sector</label>
+          <select name="sector" id="sector" formControlName="sector" class="select-input form-select"
+                  aria-describedby="roleHelp">
+            <option *ngFor="let sector of filteredSectors" [ngValue]="sector"> {{sector.name}} | {{sector.type | titlecase}}</option>
+          </select>
+          <div *ngIf="submitted && addTicketTypeForm.controls.sector.errors" class="error">
+            <small class="form-text text-warning" *ngIf="addTicketTypeForm.controls.sector.errors.required">A Sector is
+              required!
+            </small>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <div class="col-3">
+      <button class="primary" type="submit">Add ticket type</button>
+    </div>
+  </form>
+
+  <div *ngIf="ticketTypes.length > 0">
+    <h5>Ticket Types:</h5>
+    <div class="list">
+      <div class="list-item" *ngFor="let ticketType of ticketTypes"> <strong>{{ticketType.title}}</strong> | Sector: {{ticketType.sector.name}} | {{ticketType.price / 100 | currency:"EUR"}}</div>
+    </div>
+  </div>
+
+</div>

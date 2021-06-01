@@ -20,11 +20,16 @@ import { EventSearchComponent } from './components/search/event-search/event-sea
 import { UserHomeComponent } from './components/user-home/user-home.component';
 import { TicketDetailComponent } from './components/ticket-detail/ticket-detail.component';
 import { TicketListItemComponent } from './components/ticket-list-item/ticket-list-item.component';
-import {AddNewsComponent} from './components/add-news/add-news.component';
+import { AddNewsComponent } from './components/add-news/add-news.component';
 import { AddPerformanceComponent } from './components/event/add-performance/add-performance.component';
 import { AddUserComponent } from './components/add-user/add-user.component';
 import { httpInterceptorProviders } from './interceptors';
-import { AddSectortypeComponent } from './components/event/add-sectortype/add-sectortype.component';
+import { AddVenueComponent } from './components/venue/add-venue/add-venue.component';
+import { VenueCreatorComponent } from './components/venue/venue-creator/venue-creator.component';
+import { VenueLayoutGridComponent } from './components/venue/venue-layout-grid/venue-layout-grid.component';
+import { VenueAddSectorComponent } from './components/venue/venue-add-sector/venue-add-sector.component';
+import { VenueSectorListComponent } from './components/venue/venue-sector-list/venue-sector-list.component';
+import { VenueGridUnitComponent } from './components/venue/venue-grid-unit/venue-grid-unit.component';
 import { AddArtistComponent } from './components/event/add-artist/add-artist.component';
 import { AddAddressComponent } from './components/event/add-address/add-address.component';
 import { AddEventComponent } from './components/event/add-event/add-event.component';
@@ -33,13 +38,14 @@ import { ArtistSearchComponent } from './components/search/artist-search/artist-
 import { AddressSearchComponent } from './components/search/address-search/address-search.component';
 import { ArtistListItemComponent } from './components/search/artist-list-item/artist-list-item.component';
 import { AddressListItemComponent } from './components/search/address-list-item/address-list-item.component';
+import { LoadingAnimationComponent } from './components/loading-animation/loading-animation.component';
 import { PerformanceSearchComponent } from './components/search/performance-search/performance-search.component';
 import { PerformanceListItemComponent } from './components/search/performance-list-item/performance-list-item.component';
-import {LoadingAnimationComponent} from './components/loading-animation/loading-animation.component';
-import { AddTickettypeComponent } from './components/event/add-tickettype/add-tickettype.component';
+import { AddTicketTypeComponent } from './components/event/add-tickettype/add-ticket-type.component';
 import { ArtistDetailComponent } from './components/search/artist-detail/artist-detail.component';
 import { AddressDetailComponent } from './components/search/address-detail/address-detail.component';
 import { SearchEventListComponent } from './components/search/search-event-list/search-event-list.component';
+import { SelectVenueComponent } from './components/event/select-venue/select-venue.component';
 
 @NgModule({
   declarations: [
@@ -62,7 +68,12 @@ import { SearchEventListComponent } from './components/search/search-event-list/
     AddNewsComponent,
     AddPerformanceComponent,
     AddUserComponent,
-    AddSectortypeComponent,
+    AddVenueComponent,
+    VenueCreatorComponent,
+    VenueLayoutGridComponent,
+    VenueAddSectorComponent,
+    VenueSectorListComponent,
+    VenueGridUnitComponent,
     AddArtistComponent,
     AddAddressComponent,
     AddEventComponent,
@@ -74,11 +85,12 @@ import { SearchEventListComponent } from './components/search/search-event-list/
     PerformanceSearchComponent,
     PerformanceListItemComponent,
     LoadingAnimationComponent,
-    AddTickettypeComponent,
+    AddTicketTypeComponent,
     SearchEventListComponent,
-    AddTickettypeComponent,
+    AddTicketTypeComponent,
     ArtistDetailComponent,
-    AddressDetailComponent
+    AddressDetailComponent,
+    SelectVenueComponent,
   ],
   imports: [
     BrowserModule,

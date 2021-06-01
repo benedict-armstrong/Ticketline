@@ -41,9 +41,6 @@ public class MapperTest implements TestDataMapper {
     private PerformanceMapper performanceMapper;
 
     @Autowired
-    private SectorTypeMapper sectorTypeMapper;
-
-    @Autowired
     private UserMapper userMapper;
 
 
