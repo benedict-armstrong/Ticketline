@@ -148,7 +148,7 @@ public class CartItemEndpointTest implements TestDataCartItem, TestDataUser, Tes
         sectorSet.add(sector);
         List<Sector> sectorList = sectorRepository.saveAll(new LinkedList<>(sectorSet));
 
-        TicketType ticketType = TicketType.builder().title("TicketType1").price(1000L).sector(sector).build();
+        TicketType ticketType = TicketType.builder().title("TicketType1").price(1000L).sector(sectorList.get(0)).build();
         Set<TicketType> ticketTypeSet = new HashSet<>();
         ticketTypeSet.add(ticketType);
 
