@@ -27,7 +27,7 @@ export class CartItemService {
       this.closeCart();
     } else {
       this.openCart();
-    }    
+    }
   }
 
   closeCart(): void {
