@@ -1,17 +1,11 @@
 <div class="list-item">
     <div class="row">
         <div class="col-6">
-            <h4>{{ticketType.title}} (X Tickets)</h4>
+            <h4>{{ticketType.sector.name}} | {{ticketType.title}} ({{ticketCount}} Tickets)</h4>
             <span>Best experience | {{ticketType.price / 100 | currency:'EUR'}}</span>
         </div>
         <div class="col-6 formContainer">
-            <form class="options" [formGroup]="ticketForm" (ngSubmit)="addToCart()">
-                <div class="age">
-                    <select class="form-select" name="age-group" id="age-group">
-                        <option>Adult</option>
-                        <option>Child</option>
-                    </select>
-                </div>
+            <form id="form" class="options" [formGroup]="ticketForm" (ngSubmit)="addToCart()">
                 <div class="count inline">
                     <button class="secondary no-shadow no-border" (click)="decAmount()" type="button"><i class="bi bi-dash-circle"></i></button>
                     <input type="number" formControlName="amount" [ngClass]="{'error': validationError}">
@@ -35,5 +29,4 @@
             </button>
         </div>
     </div>
-    <button class="add primary">Add to Cart</button>
 </div>

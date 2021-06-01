@@ -5,6 +5,7 @@ import { TicketType } from '../../dtos/ticketType';
 import { Performance } from '../../dtos/performance';
 import { Ticket } from 'src/app/dtos/ticket';
 import { CartItem } from 'src/app/dtos/cartItem';
+import { Sector } from 'src/app/dtos/sector';
 
 @Component({
   selector: 'app-ticket-list-item',
@@ -13,11 +14,15 @@ import { CartItem } from 'src/app/dtos/cartItem';
 })
 export class TicketListItemComponent implements OnInit {
   @Input()
-  ticketType: TicketType;
-  @Input()
   performance: Performance;
+  @Input()
+  ticketCount: number;
+  @Input()
+  ticketType: TicketType;
 
   ticketForm: FormGroup;
+
+  public sector: Sector;
 
   public validationError = false;
   public error = false;
@@ -32,6 +37,10 @@ export class TicketListItemComponent implements OnInit {
     this.ticketForm = this.formBuilder.group({
       amount: [0, [Validators.min(1)]]
     });
+  }
+
+  ngOnInit(): void {
+    this.sector = this.ticketType.sector;
   }
 
   incAmount(): void {
@@ -59,17 +68,14 @@ export class TicketListItemComponent implements OnInit {
           id: null,
           tickets: []
         };
-        for (let index = 0; index < this.ticketForm.value.amount; index++) {
-          const ticket: Ticket = {
-            id: null,
-            performance: this.performance,
-            ticketType: this.ticketType,
-            seat: null,
-          };
-          cartItem.tickets.push(ticket);
-        }
+        cartItem.tickets.push({
+          id: null,
+          performance: this.performance,
+          ticketType: this.ticketType,
+          seat: null,
+        });
         this.waiting = true;
-        this.cartItemService.addCartItem(cartItem).subscribe(
+        this.cartItemService.addCartItem(cartItem, this.ticketForm.value.amount).subscribe(
           (responseCartItem: CartItem) => {
             this.waiting = false;
             this.success = true;
@@ -95,9 +101,6 @@ export class TicketListItemComponent implements OnInit {
         this.validationError = true;
       }
     }
-  }
-
-  ngOnInit(): void {
   }
 
   vanishAlert(): void {

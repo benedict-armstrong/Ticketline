@@ -224,7 +224,7 @@ public class CartItemEndpointTest implements TestDataCartItem, TestDataUser, Tes
     public void whenCreateCartItem_thenGetBackCorrectCartItem() throws Exception {
 
         MvcResult mvcResult = this.mockMvc.perform(
-            post(TestData.BASE_URI + "/cartItems")
+            post(CART_ITEM_BASE_URI + "/1")
                 .content(
                     objectMapper.writeValueAsString(cartItem)
                 )
@@ -247,7 +247,7 @@ public class CartItemEndpointTest implements TestDataCartItem, TestDataUser, Tes
     public void whenCreateCartItem_thenGetAllCartItems_GetCreatedCartItem() throws Exception {
 
         MvcResult mvcResult = this.mockMvc.perform(
-            post(CART_ITEM_BASE_URI)
+            post(CART_ITEM_BASE_URI  + "/1")
                 .content(
                     objectMapper.writeValueAsString(cartItem)
                 )
@@ -278,7 +278,7 @@ public class CartItemEndpointTest implements TestDataCartItem, TestDataUser, Tes
     @DisplayName("Should return empty list after deleting cartItem")
     public void whenGettingAllCartItems_afterInsertingCartItemAndDeletingCartItem_thenShouldGetEmptyList() throws Exception {
         MvcResult mvcResult = this.mockMvc.perform(
-            post(CART_ITEM_BASE_URI)
+            post(CART_ITEM_BASE_URI  + "/1")
                 .content(
                     objectMapper.writeValueAsString(cartItem)
                 )
@@ -319,7 +319,7 @@ public class CartItemEndpointTest implements TestDataCartItem, TestDataUser, Tes
     @DisplayName("Should return new cartItem when adding a ticket to it")
     public void whenCreateCartItem_thenAddTicket_shouldGiveCorrectCartItem() throws Exception {
         MvcResult mvcResult = this.mockMvc.perform(
-            post(CART_ITEM_BASE_URI)
+            post(CART_ITEM_BASE_URI  + "/1")
                 .content(
                     objectMapper.writeValueAsString(cartItem)
                 )
@@ -348,7 +348,7 @@ public class CartItemEndpointTest implements TestDataCartItem, TestDataUser, Tes
     @DisplayName("Should return NoTicketLeftException when adding too many ticket to it")
     public void whenCreateCartItem_thenAddManyTickets_shouldRespondWithNoTicketFoundException() throws Exception {
         MvcResult mvcResult = this.mockMvc.perform(
-            post(CART_ITEM_BASE_URI)
+            post(CART_ITEM_BASE_URI + "/1")
                 .content(
                     objectMapper.writeValueAsString(cartItem)
                 )
@@ -394,7 +394,7 @@ public class CartItemEndpointTest implements TestDataCartItem, TestDataUser, Tes
     @DisplayName("Should return 200 (true) when checkout")
     public void whenCreateCartItem_thenCheckout_thenCartItemShouldBePaidFor() throws Exception {
         MvcResult mvcResult = this.mockMvc.perform(
-            post(CART_ITEM_BASE_URI)
+            post(CART_ITEM_BASE_URI  + "/1")
                 .content(
                     objectMapper.writeValueAsString(cartItem)
                 )

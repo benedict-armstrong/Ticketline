@@ -11,9 +11,10 @@ public interface CartItemService {
      *
      * @param cartItem the cartItem to be saved.
      * @param status the status should be saved in
+     * @param amount of tickets that should be created in the cartItem
      * @return the newly added cartItem.
      */
-    CartItem save(CartItem cartItem, CartItem.Status status);
+    CartItem save(CartItem cartItem, CartItem.Status status, int amount);
 
     /**
      * Adds a new ticket to a cartItem (seat selection is automatic).

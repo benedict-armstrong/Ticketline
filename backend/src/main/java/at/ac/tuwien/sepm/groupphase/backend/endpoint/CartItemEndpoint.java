@@ -46,14 +46,14 @@ public class CartItemEndpoint {
         return cartItemMapper.cartItemListToCartItemDtoList(cartItemService.getCartItems(CartItem.Status.IN_CART));
     }
 
-    @PostMapping
+    @PostMapping(path = "/{amount}")
     @Secured({"ROLE_USER", "ROLE_ORGANIZER", "ROLE_ADMIN"})
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(summary = "Create a cartItem in cart of user")
-    public CartItemDto createCartTicket(@RequestBody CartItemDto cartItemDto) {
+    public CartItemDto createCartTicket(@RequestBody CartItemDto cartItemDto, @PathVariable int amount) {
         LOGGER.info("POST /api/v1/cartItems {}", cartItemDto);
         return cartItemMapper.cartItemToCartItemDto(cartItemService.save(
-            cartItemMapper.cartItemDtoToCartItem(cartItemDto), CartItem.Status.IN_CART
+            cartItemMapper.cartItemDtoToCartItem(cartItemDto), CartItem.Status.IN_CART, amount
         ));
     }
 

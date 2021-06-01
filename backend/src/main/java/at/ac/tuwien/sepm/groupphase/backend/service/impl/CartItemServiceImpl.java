@@ -4,6 +4,7 @@ import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Booking;
 import at.ac.tuwien.sepm.groupphase.backend.entity.CartItem;
 import at.ac.tuwien.sepm.groupphase.backend.entity.LayoutUnit;
+import at.ac.tuwien.sepm.groupphase.backend.entity.Sector;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Ticket;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Venue;
 import at.ac.tuwien.sepm.groupphase.backend.exception.NoTicketLeftException;
@@ -11,6 +12,7 @@ import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepm.groupphase.backend.repository.CartItemRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.LayoutUnitRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.UserRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.VenueRepository;
 import at.ac.tuwien.sepm.groupphase.backend.security.AuthenticationFacade;
 import at.ac.tuwien.sepm.groupphase.backend.service.BookingService;
 import at.ac.tuwien.sepm.groupphase.backend.service.CartItemService;
@@ -38,22 +40,25 @@ public class CartItemServiceImpl implements CartItemService {
     private final AuthenticationFacade authenticationFacade;
     private final BookingService bookingService;
     private final LayoutUnitRepository layoutUnitRepository;
+    private final VenueRepository venueRepository;
 
     @Autowired
     public CartItemServiceImpl(CartItemRepository cartItemRepository,
                                UserRepository userRepository,
                                AuthenticationFacade authenticationFacade,
                                BookingService bookingService,
-                               LayoutUnitRepository layoutUnitRepository) {
+                               LayoutUnitRepository layoutUnitRepository,
+                               VenueRepository venueRepository) {
         this.cartItemRepository = cartItemRepository;
         this.userRepository = userRepository;
         this.authenticationFacade = authenticationFacade;
         this.bookingService = bookingService;
         this.layoutUnitRepository = layoutUnitRepository;
+        this.venueRepository = venueRepository;
     }
 
     @Override
-    public CartItem save(CartItem cartItem, CartItem.Status status) {
+    public CartItem save(CartItem cartItem, CartItem.Status status, int amount) {
         LOGGER.trace("save({}, {})", cartItem, status);
         cartItem.setUser(
             userRepository.findUserByEmail((String) authenticationFacade.getAuthentication().getPrincipal())
@@ -61,16 +66,45 @@ public class CartItemServiceImpl implements CartItemService {
         cartItem.setStatus(status);
         cartItem.setChangeDate(LocalDateTime.now());
 
-        Set<LayoutUnit> seats = new HashSet<>();
-        for (Ticket ticket : cartItem.getTickets()) {
-            LayoutUnit seat = ticket.getSeat();
-            seat.setTaken(true);
-            seats.add(seat);
+        Ticket template = cartItem.getTickets().iterator().next();
+        Sector sector = template.getTicketType().getSector();
+
+        Optional<Venue> optVenue = venueRepository.findById(template.getPerformance().getVenue().getId());
+        if (optVenue.isPresent()) {
+            Venue venue = optVenue.get();
+            Set<Ticket> ticketSet = new HashSet<>();
+            for (int i = 0; i < amount; i++) {
+                LayoutUnit seat = null;
+                for (LayoutUnit spot : venue.getLayout()) {
+                    if (spot.getSector().getId().equals(sector.getId())) {
+                        if (spot.getTaken() == null || !spot.getTaken()) {
+                            seat = spot;
+                            break;
+                        }
+                    }
+                }
+
+                if (seat == null) {
+                    throw new NoTicketLeftException("No free seat was found.");
+                }
+
+                seat.setTaken(true);
+
+                layoutUnitRepository.save(seat);
+
+                Ticket ticket = Ticket.builder()
+                    .performance(template.getPerformance())
+                    .ticketType(template.getTicketType())
+                    .seat(seat)
+                    .build();
+                ticketSet.add(ticket);
+            }
+
+            cartItem.setTickets(ticketSet);
+
+            return cartItemRepository.save(cartItem);
         }
-
-        layoutUnitRepository.saveAll(seats);
-
-        return cartItemRepository.save(cartItem);
+        throw new NotFoundException("The performance you tried to buy a ticket for was not found.");
     }
 
     @Override
@@ -80,14 +114,18 @@ public class CartItemServiceImpl implements CartItemService {
         if (loadedCartItem.isPresent()) {
             CartItem cartItem = loadedCartItem.get();
             cartItem.setChangeDate(LocalDateTime.now());
+
             Ticket template = cartItem.getTickets().iterator().next();
+            Sector sector = template.getTicketType().getSector();
 
             Venue venue = template.getPerformance().getVenue();
             LayoutUnit seat = null;
             for (LayoutUnit spot : venue.getLayout()) {
-                if (spot.getTaken() == null || !spot.getTaken()) {
-                    seat = spot;
-                    break;
+                if (spot.getSector().getId().equals(sector.getId())) {
+                    if (spot.getTaken() == null || !spot.getTaken()) {
+                        seat = spot;
+                        break;
+                    }
                 }
             }
             if (seat == null) {

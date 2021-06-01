@@ -70,8 +70,8 @@ export class CartItemService {
     return this.httpClient.get<CartItem[]>(this.cartItemBaseUri);
   }
 
-  addCartItem(cartItem: CartItem): Observable<CartItem> {
-    return this.httpClient.post<CartItem>(this.cartItemBaseUri, cartItem);
+  addCartItem(cartItem: CartItem, amount: number): Observable<CartItem> {
+    return this.httpClient.post<CartItem>(this.cartItemBaseUri + '/' + amount, cartItem);
   }
 
   removeCartItem(cartItem: CartItem): Observable<boolean> {
