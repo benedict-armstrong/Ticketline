@@ -114,4 +114,13 @@ export class EventSearchComponent implements OnInit {
     this.page = 0;
     this.size = 8;
   }
+
+  resetSearchFields(){
+    this.eventSearchForm.reset();
+    this.eventSearchForm.value.title = '';
+    this.eventSearchForm.value.description = '';
+    this.eventSearchForm.value.eventType = '';
+    this.resetValues();
+    this.searchEvents();
+  }
 }

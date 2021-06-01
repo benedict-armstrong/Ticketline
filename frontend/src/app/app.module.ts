@@ -50,6 +50,7 @@ import { ArtistDetailComponent } from './components/search/artist-detail/artist-
 import { AddressDetailComponent } from './components/search/address-detail/address-detail.component';
 import { SearchEventListComponent } from './components/search/search-event-list/search-event-list.component';
 import { SelectVenueComponent } from './components/event/select-venue/select-venue.component';
+import { SearchVenueListComponent } from './components/search/search-venue-list/search-venue-list.component';
 
 @NgModule({
   declarations: [
@@ -99,6 +100,7 @@ import { SelectVenueComponent } from './components/event/select-venue/select-ven
     BookingComponent,
     TicketOrderItemComponent,
     SelectVenueComponent,
+    SearchVenueListComponent,
   ],
   imports: [
     BrowserModule,

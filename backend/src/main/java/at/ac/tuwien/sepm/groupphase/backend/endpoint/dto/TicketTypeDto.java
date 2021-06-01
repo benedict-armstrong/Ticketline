@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint.dto;
 
+import at.ac.tuwien.sepm.groupphase.backend.entity.Sector;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -24,5 +25,6 @@ public class TicketTypeDto {
     @PositiveOrZero(message = "Price can't be less than 0")
     private long price; // Cents
 
-    private SectorDto sector;
+    private Sector sector;
+
 }
