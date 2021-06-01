@@ -45,7 +45,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 @SpringBootTest
 @ActiveProfiles("test")
 @AutoConfigureMockMvc
-public class EventEndpointTest implements TestDataEvent, TestDataTicket, TestAuthentification {
+public class EventEndpointTest implements TestDataEvent, TestAuthentification {
     @Autowired
     private MockMvc mockMvc;
 

@@ -11,11 +11,12 @@ import { UserHomeComponent } from './components/user-home/user-home.component';
 import { AddNewsComponent } from './components/add-news/add-news.component';
 import { NewsDetailComponent } from './components/news-detail/news-details.component';
 import { AddUserComponent } from './components/add-user/add-user.component';
-import {AuthGuard} from './guards/auth.guard';
-import {AddEventComponent} from './components/event/add-event/add-event.component';
-import {PerformanceDetailComponent} from './components/performance-detail/performance-detail.component';
-import {AddressDetailComponent} from './components/search/address-detail/address-detail.component';
-import {ArtistDetailComponent} from './components/search/artist-detail/artist-detail.component';
+import { AuthGuard } from './guards/auth.guard';
+import { AddEventComponent } from './components/event/add-event/add-event.component';
+import { PerformanceDetailComponent } from './components/performance-detail/performance-detail.component';
+import { BookingComponent } from './components/booking/booking.component';
+import { AddressDetailComponent } from './components/search/address-detail/address-detail.component';
+import { ArtistDetailComponent } from './components/search/artist-detail/artist-detail.component';
 import { AddVenueComponent } from './components/venue/add-venue/add-venue.component';
 
 const routes: Routes = [
@@ -28,43 +29,14 @@ const routes: Routes = [
   { path: 'address-detail/:id', component: AddressDetailComponent },
   { path: 'artist-detail/:id', component: ArtistDetailComponent },
   { path: 'event-detail/:id', component: EventDetailComponent },
-  {
-    path: 'add-venue',
-    component: AddVenueComponent,
-    canActivate: [AuthGuard],
-    data: { roles: ['ADMIN', 'ORGANIZER'] },
-  },
+  { path: 'add-venue', component: AddVenueComponent, canActivate: [AuthGuard], data: { roles: ['ADMIN', 'ORGANIZER'] } },
   { path: 'performance-detail/:id', component: PerformanceDetailComponent },
-  {
-    path: 'user',
-    component: UserHomeComponent,
-    canActivate: [AuthGuard],
-    data: { roles: ['ADMIN', 'ORGANIZER', 'USER'] },
-  },
-  {
-    path: 'ticket',
-    component: TicketDetailComponent,
-    canActivate: [AuthGuard],
-    data: { roles: ['ADMIN', 'ORGANIZER', 'USER'] },
-  },
-  {
-    path: 'add-news/:id',
-    component: AddNewsComponent,
-    canActivate: [AuthGuard],
-    data: { roles: ['ADMIN', 'ORGANIZER'] },
-  },
-  {
-    path: 'add-user',
-    component: AddUserComponent,
-    canActivate: [AuthGuard],
-    data: { roles: ['ADMIN'] },
-  },
-  {
-    path: 'add-event',
-    component: AddEventComponent,
-    canActivate: [AuthGuard],
-    data: { roles: ['ADMIN', 'ORGANIZER'] },
-  },
+  { path: 'user', component: UserHomeComponent, canActivate: [AuthGuard], data: { roles: ['ADMIN', 'ORGANIZER', 'USER']} },
+  { path: 'ticket', component: TicketDetailComponent, canActivate: [AuthGuard], data: { roles: ['ADMIN', 'ORGANIZER', 'USER']} },
+  { path: 'add-news/:id', component: AddNewsComponent, canActivate: [AuthGuard], data: { roles: ['ADMIN', 'ORGANIZER']} },
+  { path: 'add-user', component: AddUserComponent, canActivate: [AuthGuard], data: { roles: ['ADMIN']} },
+  { path: 'add-event', component: AddEventComponent, canActivate: [AuthGuard], data: { roles: ['ADMIN', 'ORGANIZER']} },
+  { path: 'orders', component: BookingComponent, canActivate: [AuthGuard], data: { roles: ['ADMIN', 'ORGANIZER', 'USER']} },
 ];
 
 @NgModule({

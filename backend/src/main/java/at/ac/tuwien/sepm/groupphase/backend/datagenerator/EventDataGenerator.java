@@ -4,6 +4,7 @@ import at.ac.tuwien.sepm.groupphase.backend.entity.Artist;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Event;
 import at.ac.tuwien.sepm.groupphase.backend.entity.File;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Performance;
+import at.ac.tuwien.sepm.groupphase.backend.entity.Sector;
 import at.ac.tuwien.sepm.groupphase.backend.entity.TicketType;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Venue;
 import at.ac.tuwien.sepm.groupphase.backend.repository.ArtistRepository;
@@ -52,9 +53,9 @@ public class EventDataGenerator {
 
     private Set<TicketType> buildTicketTypes() {
         Set<TicketType> ticketTypes = new HashSet<>();
-        ticketTypes.add(TicketType.builder().title("Standard").price(100).build());
-        ticketTypes.add(TicketType.builder().title("VIP").price(150).build());
-        ticketTypes.add(TicketType.builder().title("Discount").price(50).build());
+        ticketTypes.add(TicketType.builder().title("Standard").price(1000L).build());
+        ticketTypes.add(TicketType.builder().title("VIP").price(1500L).build());
+        ticketTypes.add(TicketType.builder().title("Discount").price(500L).build());
         return ticketTypes;
     }
 
@@ -84,17 +85,28 @@ public class EventDataGenerator {
 
                 //generate 4 performances per event
                 for (int j = 0; j < 4; j++) {
-                    Artist artist = artists.get(artistOffset);
-                    artistOffset = (artistOffset + 1) % artists.size();
+
 
                     Venue venue = venues.get(venueOffset);
                     venueOffset = (venueOffset + 1) % venues.size();
+
+                    Set<TicketType> ticketTypeSet = new HashSet<>();
+
+                    for (Sector sector : venue.getSectors()) {
+                        for (TicketType ticketType : buildTicketTypes()) {
+                            ticketType.setSector(sector);
+                            ticketTypeSet.add(ticketType);
+                        }
+                    }
+
+                    Artist artist = artists.get(artistOffset);
+                    artistOffset = (artistOffset + 1) % artists.size();
 
                     Performance performance = Performance.builder()
                         .title(faker.esports().event())
                         .description(faker.lorem().characters())
                         .date(faker.date().between(startDate, endDate).toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime())
-                        .ticketTypes(buildTicketTypes())
+                        .ticketTypes(ticketTypeSet)
                         .artist(artist)
                         .venue(venue)
                         .build();

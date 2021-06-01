@@ -26,4 +26,6 @@ public class LayoutUnitDto {
     @NotNull
     @JsonIdentityReference(alwaysAsId = true)
     private SectorDto sector;
+
+    private Boolean taken;
 }

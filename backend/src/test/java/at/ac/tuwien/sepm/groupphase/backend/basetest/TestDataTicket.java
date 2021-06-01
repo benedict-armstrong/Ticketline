@@ -4,13 +4,15 @@ import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.TicketTypeDto;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Ticket;
 import at.ac.tuwien.sepm.groupphase.backend.entity.TicketType;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 public interface TestDataTicket extends TestData {
 
     String TICKET_BASE_URI = BASE_URI + "/tickets";
+
+    List<Long> TICKET_SEATS = new ArrayList<>(
+        Arrays.asList(10L)
+    );
 
     TicketType STANDARD_TICKET_TYPE = TicketType.builder()
         .title("Standard")

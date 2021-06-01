@@ -6,7 +6,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.PositiveOrZero;
 
 @Data
 @NoArgsConstructor
@@ -24,10 +23,4 @@ public class TicketDto {
 
     @NotNull(message = "Ticket type is missing")
     private TicketTypeDto ticketType;
-
-    @PositiveOrZero(message = "Total price must be at least zero")
-    private Long totalPrice; // In Cent (lowest denominator of currency used)
-
-    private String status;
-
 }

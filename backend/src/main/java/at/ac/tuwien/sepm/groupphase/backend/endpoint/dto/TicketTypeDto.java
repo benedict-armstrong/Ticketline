@@ -24,4 +24,5 @@ public class TicketTypeDto {
     @PositiveOrZero(message = "Price can't be less than 0")
     private long price; // Cents
 
+    private SectorDto sector;
 }

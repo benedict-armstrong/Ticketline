@@ -18,7 +18,6 @@ import javax.validation.constraints.Size;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@JsonIdentityInfo(scope = SectorDto.class, generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class SectorDto {
 
     private Long id;

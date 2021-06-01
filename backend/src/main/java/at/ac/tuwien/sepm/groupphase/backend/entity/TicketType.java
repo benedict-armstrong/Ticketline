@@ -30,6 +30,5 @@ public class TicketType {
     private Sector sector;
 
     @Column(nullable = false)
-    private long price;
-
+    private Long price;
 }

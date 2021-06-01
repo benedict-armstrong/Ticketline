@@ -20,6 +20,7 @@ import { EventSearchComponent } from './components/search/event-search/event-sea
 import { UserHomeComponent } from './components/user-home/user-home.component';
 import { TicketDetailComponent } from './components/ticket-detail/ticket-detail.component';
 import { TicketListItemComponent } from './components/ticket-list-item/ticket-list-item.component';
+import { ShoppingcartComponent } from './components/shoppingcart/shoppingcart.component';
 import { AddNewsComponent } from './components/add-news/add-news.component';
 import { AddPerformanceComponent } from './components/event/add-performance/add-performance.component';
 import { AddUserComponent } from './components/add-user/add-user.component';
@@ -30,6 +31,7 @@ import { VenueLayoutGridComponent } from './components/venue/venue-layout-grid/v
 import { VenueAddSectorComponent } from './components/venue/venue-add-sector/venue-add-sector.component';
 import { VenueSectorListComponent } from './components/venue/venue-sector-list/venue-sector-list.component';
 import { VenueGridUnitComponent } from './components/venue/venue-grid-unit/venue-grid-unit.component';
+import { CartItemComponent } from './components/shoppingcart/cart-item/cart-item.component';
 import { AddArtistComponent } from './components/event/add-artist/add-artist.component';
 import { AddAddressComponent } from './components/event/add-address/add-address.component';
 import { AddEventComponent } from './components/event/add-event/add-event.component';
@@ -39,6 +41,8 @@ import { AddressSearchComponent } from './components/search/address-search/addre
 import { ArtistListItemComponent } from './components/search/artist-list-item/artist-list-item.component';
 import { AddressListItemComponent } from './components/search/address-list-item/address-list-item.component';
 import { LoadingAnimationComponent } from './components/loading-animation/loading-animation.component';
+import { TicketOrderItemComponent } from './components/ticket-order-item/ticket-order-item.component';
+import { BookingComponent } from './components/booking/booking.component';
 import { PerformanceSearchComponent } from './components/search/performance-search/performance-search.component';
 import { PerformanceListItemComponent } from './components/search/performance-list-item/performance-list-item.component';
 import { AddTicketTypeComponent } from './components/event/add-tickettype/add-ticket-type.component';
@@ -65,9 +69,11 @@ import { SelectVenueComponent } from './components/event/select-venue/select-ven
     UserHomeComponent,
     TicketDetailComponent,
     TicketListItemComponent,
+    ShoppingcartComponent,
     AddNewsComponent,
     AddPerformanceComponent,
     AddUserComponent,
+    CartItemComponent,
     AddVenueComponent,
     VenueCreatorComponent,
     VenueLayoutGridComponent,
@@ -90,6 +96,8 @@ import { SelectVenueComponent } from './components/event/select-venue/select-ven
     AddTicketTypeComponent,
     ArtistDetailComponent,
     AddressDetailComponent,
+    BookingComponent,
+    TicketOrderItemComponent,
     SelectVenueComponent,
   ],
   imports: [
