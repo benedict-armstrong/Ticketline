@@ -57,11 +57,11 @@ public class ArtistEndpointTest implements TestAuthentification, TestDataArtist 
 
     private String authToken;
 
-    private Artist artist;
+    private ArtistDto artistDto;
 
     @BeforeEach
     public void beforeEach() throws Exception {
-        artist = Artist.builder()
+        artistDto = ArtistDto.builder()
             .firstName(TEST_ARTIST_FIRSTNAME)
             .lastName(TEST_ARTIST_LASTNAME)
             .build();
@@ -76,13 +76,22 @@ public class ArtistEndpointTest implements TestAuthentification, TestDataArtist 
         artistRepository.deleteAll();
     }
 
+    private void saveArtist(ArtistDto artistDto) throws Exception {
+        this.mockMvc.perform(
+            post(BASE_URI + "/artists")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(artistDto))
+                .header(securityProperties.getAuthHeader(), authToken)
+        ).andReturn();
+    }
+
     @Test
     @DisplayName("Should return 201 and artist object with set ID")
     public void whenCreateArtist_then201AndArtistWithId() throws Exception {
         MvcResult mvcResult = this.mockMvc.perform(
             post(ARTIST_BASE_URI)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(artist))
+                .content(objectMapper.writeValueAsString(artistDto))
                 .header(securityProperties.getAuthHeader(), authToken)
         ).andReturn();
 
@@ -115,9 +124,7 @@ public class ArtistEndpointTest implements TestAuthentification, TestDataArtist 
     @Test
     @DisplayName("Should return 200 and all artists when no search params are given")
     public void whenArtistGiven_SearchWithNoParams_ShouldReturn200AndArtists() throws Exception {
-        Artist searchArtist = Artist.builder().firstName(TEST_ARTIST_FIRSTNAME).lastName(TEST_ARTIST_LASTNAME).build();
-
-        artistRepository.save(searchArtist);
+        saveArtist(artistDto);
 
         MvcResult mvcResult = this.mockMvc.perform(
             get(ARTIST_BASE_URI)
@@ -139,9 +146,7 @@ public class ArtistEndpointTest implements TestAuthentification, TestDataArtist 
     @Test
     @DisplayName("Should return 200 and artist with first name from search")
     public void whenArtistGiven_SearchWithFirstName_ShouldReturn200AndArtist() throws Exception {
-        Artist searchArtist = Artist.builder().firstName(TEST_ARTIST_FIRSTNAME).lastName(TEST_ARTIST_LASTNAME).build();
-
-        artistRepository.save(searchArtist);
+        saveArtist(artistDto);
 
         MvcResult mvcResult = this.mockMvc.perform(
             get(ARTIST_BASE_URI)
@@ -158,16 +163,14 @@ public class ArtistEndpointTest implements TestAuthentification, TestDataArtist 
             objectMapper.readValue(response.getContentAsString(), ArtistDto[].class)
         );
 
-        assertEquals(searchArtist.getFirstName(), artistDtos.get(0).getFirstName());
+        assertEquals(artistDto.getFirstName(), artistDtos.get(0).getFirstName());
         assertEquals(1, artistDtos.size());
     }
 
     @Test
     @DisplayName("Should return 200 and artist with last name from search")
     public void whenArtistGiven_SearchWithLastName_ShouldReturn200AndArtist() throws Exception {
-        Artist searchArtist = Artist.builder().firstName(TEST_ARTIST_FIRSTNAME).lastName(TEST_ARTIST_LASTNAME).build();
-
-        artistRepository.save(searchArtist);
+        saveArtist(artistDto);
 
         MvcResult mvcResult = this.mockMvc.perform(
             get(ARTIST_BASE_URI)
@@ -184,16 +187,14 @@ public class ArtistEndpointTest implements TestAuthentification, TestDataArtist 
             objectMapper.readValue(response.getContentAsString(), ArtistDto[].class)
         );
 
-        assertEquals(searchArtist.getLastName(), artistDtos.get(0).getLastName());
+        assertEquals(artistDto.getLastName(), artistDtos.get(0).getLastName());
         assertEquals(1, artistDtos.size());
     }
 
     @Test
     @DisplayName("Should return 200 and artist with all search params")
     public void whenArtistGiven_SearchWithAllParams_ShouldReturn200AndArtist() throws Exception {
-        Artist searchArtist = Artist.builder().firstName(TEST_ARTIST_FIRSTNAME).lastName(TEST_ARTIST_LASTNAME).build();
-
-        artistRepository.save(searchArtist);
+        saveArtist(artistDto);
 
         MvcResult mvcResult = this.mockMvc.perform(
             get(ARTIST_BASE_URI)
@@ -211,17 +212,15 @@ public class ArtistEndpointTest implements TestAuthentification, TestDataArtist 
             objectMapper.readValue(response.getContentAsString(), ArtistDto[].class)
         );
 
-        assertEquals(searchArtist.getFirstName(), artistDtos.get(0).getFirstName());
-        assertEquals(searchArtist.getLastName(), artistDtos.get(0).getLastName());
+        assertEquals(artistDto.getFirstName(), artistDtos.get(0).getFirstName());
+        assertEquals(artistDto.getLastName(), artistDtos.get(0).getLastName());
         assertEquals(1, artistDtos.size());
     }
 
     @Test
     @DisplayName("Should return 200 and artist with all search params")
     public void whenArtistGiven_SearchWithWrongFirstName_ShouldReturnNothing() throws Exception {
-        Artist searchArtist = Artist.builder().firstName(TEST_ARTIST_FIRSTNAME).lastName(TEST_ARTIST_LASTNAME).build();
-
-        artistRepository.save(searchArtist);
+        saveArtist(artistDto);
 
         MvcResult mvcResult = this.mockMvc.perform(
             get(ARTIST_BASE_URI)
