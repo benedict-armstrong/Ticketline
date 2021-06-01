@@ -43,7 +43,7 @@ public class CustomPerformanceService implements PerformanceService {
     }
 
     @Override
-    public Performance addEvent(Performance performance) {
+    public Performance addPerformance(Performance performance) {
         LOGGER.trace("addEvent({})", performance);
         return performanceRepository.save(performance);
     }
@@ -63,5 +63,15 @@ public class CustomPerformanceService implements PerformanceService {
         }
 
         return performanceRepository.findAll(builder.build(), pageable).getContent();
+    }
+
+    @Override
+    public List<Performance> findAllPerformancesByVenueAddress(Long addressId, Pageable pageable) {
+        return performanceRepository.findAllByVenue_Address_Id(addressId, pageable).getContent();
+    }
+
+    @Override
+    public List<Performance> findAllPerformancesByArtist(Long artistId, Pageable pageable) {
+        return performanceRepository.findAllByArtistId(artistId, pageable).getContent();
     }
 }

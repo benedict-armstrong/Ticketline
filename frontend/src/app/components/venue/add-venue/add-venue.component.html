@@ -1,0 +1,107 @@
+<h3>Add a new Venue:</h3>
+<form [formGroup]="venueForm" (ngSubmit)="add()" id="venueForm">
+
+  <div class="form-group">
+    <label for="venueName">Venue Name</label>
+    <input type="email" class="text-input form-control" name="venueName" id="venueName" formControlName="venueName"
+      placeholder="Enter venue name">
+    <div *ngIf="submitted && venueForm.controls.venueName.errors" class="error">
+      <small class="form-text text-warning" *ngIf="venueForm.controls.venueName.errors.required">Name
+        is
+        required!
+      </small>
+    </div>
+  </div>
+
+  <h5>Venue Location</h5>
+
+  <div class="form-group">
+    <label for="addressName">Address Name</label>
+    <input type="text" name="addressName" formControlName="addressName" class="text-input form-control" id="addressName"
+      aria-describedby="addressNameHelp" placeholder="Enter Address Name">
+    <div *ngIf="submitted && venueForm.controls.addressName.errors" class="error">
+      <small class="form-text text-warning" *ngIf="venueForm.controls.addressName.errors.required">Your Address Name
+        is
+        required!
+      </small>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label for="lineOne">Line One</label>
+    <input type="text" name="lineOne" formControlName="lineOne" class="text-input form-control" id="lineOne"
+      aria-describedby="lineOneHelp" placeholder="Enter line one">
+    <div *ngIf="submitted && venueForm.controls.lineOne.errors" class="error">
+      <small class="form-text text-warning" *ngIf="venueForm.controls.lineOne.errors.required">Your line one is
+        required!
+      </small>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label for="lineTwo">Line Two</label>
+    <input type="text" name="lineTwo" formControlName="lineTwo" class="text-input form-control" id="lineTwo"
+      aria-describedby="lineTwoHelp" placeholder="Enter line two">
+  </div>
+
+  <div class="row">
+    <div class="col-6">
+      <div class="form-group">
+        <label for="city">City Name</label>
+        <input type="text" name="city" formControlName="city" class="text-input form-control" id="city"
+          aria-describedby="cityHelp" placeholder="Enter City name">
+        <div *ngIf="submitted && venueForm.controls.city.errors" class="error">
+          <small class="form-text text-warning" *ngIf="venueForm.controls.city.errors.required">Your City Name is
+            required!
+          </small>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-6">
+      <div class="form-group">
+        <label for="postcode">Postcode</label>
+        <input type="text" name="postcode" formControlName="postcode" class="text-input form-control" id="postcode"
+          aria-describedby="postcodeHelp" placeholder="Enter Postcode">
+        <div *ngIf="submitted && venueForm.controls.postcode.errors" class="error">
+          <small class="form-text text-warning" *ngIf="venueForm.controls.postcode.errors.required">Your Postcode is
+            required!
+          </small>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label for="country">Country</label>
+    <input type="text" name="country" formControlName="country" class="text-input form-control" id="country"
+      aria-describedby="countryHelp" placeholder="Enter Country">
+    <div *ngIf="submitted && venueForm.controls.country.errors" class="error">
+      <small class="form-text text-warning" *ngIf="venueForm.controls.country.errors.required">Your Country is
+        required!
+      </small>
+    </div>
+  </div>
+
+  <h5>Venue Sectors</h5>
+
+  <app-venue-add-sector (newSector)="updateSector($event)"></app-venue-add-sector>
+
+
+  <app-venue-creator *ngIf="sectors" [sectors]="this.sectors" (createdVenueLayout)="updateLayout($event)">
+  </app-venue-creator>
+
+  <div *ngIf="!sectors" class="text-center">
+    <h5>Add at least one sector</h5>
+  </div>
+
+  <button type="submit" form="venueForm" class="primary" [disabled]="!this.venueLayout"
+    [ngClass]="{'disabled': !this.venueLayout}">Add Venue</button>
+
+  <div *ngIf="error" class="col-12 alert alert-danger alert-dismissible fade show" role="alert">
+    <strong>Error! </strong> {{ errorMessage }}
+    <button type="button" (click)="vanishAlert()" class="close" data-dismiss="alert" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+</form>

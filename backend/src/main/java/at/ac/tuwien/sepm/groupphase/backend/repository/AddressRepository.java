@@ -17,4 +17,12 @@ public interface AddressRepository extends JpaRepository<Address, Long>, JpaSpec
      * @return page of event locations
      */
     Page<Address> findAllByEventLocationTrue(Pageable pageable);
+
+    /**
+     * Find one address by id.
+     *
+     * @param id of the address to find
+     * @return address with the id.
+     */
+    Address findOneById(Long id);
 }

@@ -6,10 +6,7 @@ import at.ac.tuwien.sepm.groupphase.backend.basetest.TestDataFile;
 import at.ac.tuwien.sepm.groupphase.backend.basetest.TestDataTicket;
 import at.ac.tuwien.sepm.groupphase.backend.config.properties.SecurityProperties;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.PerformanceDto;
-import at.ac.tuwien.sepm.groupphase.backend.entity.Address;
-import at.ac.tuwien.sepm.groupphase.backend.entity.Artist;
-import at.ac.tuwien.sepm.groupphase.backend.entity.Performance;
-import at.ac.tuwien.sepm.groupphase.backend.entity.File;
+import at.ac.tuwien.sepm.groupphase.backend.entity.*;
 import at.ac.tuwien.sepm.groupphase.backend.repository.AddressRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.ArtistRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.PerformanceRepository;
@@ -33,10 +30,9 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
-import java.util.HashSet;
-
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 
 @ExtendWith(SpringExtension.class)
@@ -101,8 +97,6 @@ public class PerformanceEndpointTest implements TestDataEvent, TestAuthentificat
             .description(TestDataEvent.TEST_EVENT_DESCRIPTION)
             .date(TestDataEvent.TEST_PERFORMANCE_DATE)
             .artist(artist)
-            .location(address)
-            .sectorTypes(TestDataEvent.getTestEventSectortypes())
             .ticketTypes(TestDataTicket.getTicketTypes())
             .build();
 
@@ -142,6 +136,134 @@ public class PerformanceEndpointTest implements TestDataEvent, TestAuthentificat
         );
     }
 
+    @Test
+    @DisplayName("Should return 200 and performance with the given ID on get by ID")
+    public void givenPerformance_whenGetOneById_then200AndPerformanceWithId() throws Exception {
+        performanceRepository.save(performance);
+
+        assertNotNull(performance);
+
+        MvcResult mvcResult = this.mockMvc.perform(
+            get(PERFORMANCE_BASE_URI + "/" + performance.getId())
+                .header(securityProperties.getAuthHeader(), authToken)
+        ).andReturn();
+
+        MockHttpServletResponse response = mvcResult.getResponse();
+        assertEquals(HttpStatus.OK.value(), response.getStatus());
+        assertEquals(MediaType.APPLICATION_JSON_VALUE, response.getContentType());
+
+        PerformanceDto performanceDto = objectMapper.readValue(response.getContentAsString(), PerformanceDto.class);
+
+        assertEquals(performanceDto.getId(), performance.getId());
+    }
+
+
+    @Test
+    @DisplayName("Should return correctly sized chunk of performances on get all")
+    public void givenPerformance_whenGetAll_thenGetCorrectChunk() throws Exception {
+        int amountOfPerformancesToGenerate = 15;
+        int pageSize = 5;
+
+        for (int i = 0; i < amountOfPerformancesToGenerate; i++) {
+            Performance performance = Performance.builder()
+                .title(TestDataEvent.TEST_EVENT_TITLE)
+                .description(TestDataEvent.TEST_EVENT_DESCRIPTION)
+                .date(TestDataEvent.TEST_PERFORMANCE_DATE)
+                .artist(artist)
+                .ticketTypes(TestDataTicket.getTicketTypes())
+                .build();
+
+            performanceRepository.save(performance);
+        }
+
+        MvcResult mvcResult = this.mockMvc.perform(
+            get(PERFORMANCE_BASE_URI)
+                .param("page", String.valueOf(1))
+                .param("size", String.valueOf(pageSize))
+                .header(securityProperties.getAuthHeader(), authToken)
+        ).andReturn();
+
+        MockHttpServletResponse response = mvcResult.getResponse();
+        assertEquals(HttpStatus.OK.value(), response.getStatus());
+        assertEquals(MediaType.APPLICATION_JSON_VALUE, response.getContentType());
+
+        PerformanceDto[] performanceDtos = objectMapper.readValue(response.getContentAsString(), PerformanceDto[].class);
+        assertEquals(pageSize, performanceDtos.length);
+    }
+
+    @Test
+    @DisplayName("Should return correctly sized chunk of performances on get by artist")
+    public void givenPerformance_whenGetByArtist_thenGetCorrectChunk() throws Exception {
+        int amountOfPerformancesToGenerate = 15;
+        int pageSize = 5;
+
+        artistRepository.save(TestDataEvent.TEST_EVENT_ARTIST);
+        addressRepository.save(TestDataEvent.TEST_EVENT_LOCATION);
+
+        for (int i = 0; i < amountOfPerformancesToGenerate; i++) {
+            Performance performance = Performance.builder()
+                .title(TestDataEvent.TEST_EVENT_TITLE)
+                .description(TestDataEvent.TEST_EVENT_DESCRIPTION)
+                .date(TestDataEvent.TEST_PERFORMANCE_DATE)
+                .artist(artist)
+                .ticketTypes(TestDataTicket.getTicketTypes())
+                .build();
+
+            performanceRepository.save(performance);
+        }
+
+        MvcResult mvcResult = this.mockMvc.perform(
+            get(PERFORMANCE_BASE_URI)
+                .param("artistId", artist.getId().toString())
+                .param("page", String.valueOf(1))
+                .param("size", String.valueOf(pageSize))
+                .header(securityProperties.getAuthHeader(), authToken)
+        ).andReturn();
+
+        MockHttpServletResponse response = mvcResult.getResponse();
+        assertEquals(HttpStatus.OK.value(), response.getStatus());
+        assertEquals(MediaType.APPLICATION_JSON_VALUE, response.getContentType());
+
+        PerformanceDto[] performanceDtos = objectMapper.readValue(response.getContentAsString(), PerformanceDto[].class);
+        assertEquals(pageSize, performanceDtos.length);
+    }
+
+    @Test
+    @DisplayName("Should return correctly sized chunk of performances on get by location")
+    public void givenPerformance_whenGetByLocation_thenGetCorrectChunk() throws Exception {
+        int amountOfPerformancesToGenerate = 15;
+        int pageSize = 5;
+
+        artistRepository.save(TestDataEvent.TEST_EVENT_ARTIST);
+        addressRepository.save(TestDataEvent.TEST_EVENT_LOCATION);
+
+        for (int i = 0; i < amountOfPerformancesToGenerate; i++) {
+            Performance performance = Performance.builder()
+                .title(TestDataEvent.TEST_EVENT_TITLE)
+                .description(TestDataEvent.TEST_EVENT_DESCRIPTION)
+                .date(TestDataEvent.TEST_PERFORMANCE_DATE)
+                .artist(artist)
+                .ticketTypes(TestDataTicket.getTicketTypes())
+                .build();
+
+            performanceRepository.save(performance);
+        }
+
+        MvcResult mvcResult = this.mockMvc.perform(
+            get(PERFORMANCE_BASE_URI)
+                .param("addressId", address.getId().toString())
+                .param("page", String.valueOf(1))
+                .param("size", String.valueOf(pageSize))
+                .header(securityProperties.getAuthHeader(), authToken)
+        ).andReturn();
+
+        MockHttpServletResponse response = mvcResult.getResponse();
+        assertEquals(HttpStatus.OK.value(), response.getStatus());
+        assertEquals(MediaType.APPLICATION_JSON_VALUE, response.getContentType());
+
+        PerformanceDto[] performanceDtos = objectMapper.readValue(response.getContentAsString(), PerformanceDto[].class);
+        assertEquals(pageSize, performanceDtos.length);
+    }
 
     @Test
     @DisplayName("Should return 400 when Date is in past")
@@ -151,8 +273,6 @@ public class PerformanceEndpointTest implements TestDataEvent, TestAuthentificat
             .description(TestDataEvent.TEST_EVENT_DESCRIPTION)
             .date(TestDataEvent.TEST_PERFORMANCE_DATE.minusYears(10))
             .artist(TestDataEvent.TEST_EVENT_ARTIST)
-            .location(TestDataEvent.TEST_EVENT_LOCATION)
-            .sectorTypes(TestDataEvent.getTestEventSectortypes())
             .build();
 
         MvcResult mvcResult = this.mockMvc.perform(
@@ -174,8 +294,6 @@ public class PerformanceEndpointTest implements TestDataEvent, TestAuthentificat
             .description(TestDataEvent.TEST_EVENT_DESCRIPTION)
             .date(TestDataEvent.TEST_PERFORMANCE_DATE)
             .artist(TestDataEvent.TEST_EVENT_ARTIST)
-            .location(TestDataEvent.TEST_EVENT_LOCATION)
-            .sectorTypes(new HashSet<>())
             .build();
 
         MvcResult mvcResult = this.mockMvc.perform(

@@ -1,32 +1,24 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper;
 
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.TicketDto;
-import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
-import at.ac.tuwien.sepm.groupphase.backend.entity.Event;
-import at.ac.tuwien.sepm.groupphase.backend.entity.Performance;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Ticket;
 import org.mapstruct.Mapper;
 
-@Mapper
+import java.util.List;
+import java.util.Set;
+
+@Mapper(uses = {TicketTypeMapper.class, LayoutUnitMapper.class, PerformanceMapper.class})
 public interface TicketMapper {
 
     TicketDto ticketToTicketDto(Ticket ticket);
 
+    List<TicketDto> ticketListToTicketDtoList(List<Ticket> tickets);
+
+    List<Ticket> ticketDtoListToTicketList(List<TicketDto> ticketDtos);
+
     Ticket ticketDtoToTicket(TicketDto ticketDto);
 
-    /*
-    default Long map(ApplicationUser value) {
+    TicketDto[] ticketSetToTicketDtoArray(Set<Ticket> set);
 
-    default Long map(Performance value) {
-        return value.getId();
-    }
-
-    default ApplicationUser mapToUser(Long value) {
-        return ApplicationUser.builder().id(value).build();
-    }
-
-    default Performance mapToPerformance(Long value) {
-        return Performance.builder().id(value).build();
-    }
-    */
+    Set<Ticket> ticketDtoArrayToTicketSet(TicketDto[] ticketArray);
 }

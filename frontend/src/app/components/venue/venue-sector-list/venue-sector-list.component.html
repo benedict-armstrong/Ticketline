@@ -1,0 +1,11 @@
+<div class="sector">
+  <div class="info">
+    <strong>{{sector.name}}</strong> | {{sector.description}} | {{sector.type | titlecase}} | Color: <svg width="12"
+      height="12">
+      <rect width="12" height="12" [attr.fill]="sector.color" />
+    </svg>
+  </div>
+  <div class="options">
+    <button type="button" class="secondary" (click)="this.delete()">Remove</button>
+  </div>
+</div>

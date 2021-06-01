@@ -28,7 +28,24 @@ public interface PerformanceService {
      * @param performance to be added
      * @return the added performance with id set
      */
-    Performance addEvent(Performance performance);
+    Performance addPerformance(Performance performance);
+
+    /**
+     * find all performances for one location.
+     *
+     * @param addressId id of the location
+     * @param pageable pagination
+     * @return all performances of this artist or location
+     */
+    List<Performance> findAllPerformancesByVenueAddress(Long addressId, Pageable pageable);
+
+    /**
+     * find all performances for one artist.
+     *
+     * @param artistId id of the artist
+     * @return all performances of this artist
+     */
+    List<Performance> findAllPerformancesByArtist(Long artistId, Pageable pageable);
 
     /**
      * Returns a list of performances which match the search values.

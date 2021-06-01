@@ -40,10 +40,8 @@ export class ArtistSearchComponent implements OnInit {
     if (this.artistSearchForm.value.firstName === '' && this.artistSearchForm.value.lastName === '') {
       this.artistService.getArtists(this.page, this.size).subscribe(
         response => {
-          const nonEmptyArtist = response.filter((artist) => (artist.performances.length !== 0));
-
-          this.artists.push(...nonEmptyArtist);
-          if (nonEmptyArtist.length < this.size) {
+          this.artists.push(...response);
+          if (response.length < this.size) {
             this.noArtist = true;
           } else {
             this.page++;

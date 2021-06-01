@@ -65,4 +65,26 @@ export class ApplicationPerformanceService {
 
     return this.httpClient.get<Performance[]>(this.performanceBaseUri, { params });
   }
+
+  /**
+   * Loads all events for one artist from the backend with pagination
+   */
+  getPerformancesForArtistId(id: number, page: number, size: number): Observable<Performance[]> {
+    let params = new HttpParams();
+    params = params.set('page', String(page));
+    params = params.set('size', String(size));
+    params = params.set('artistId', String(id));
+    return this.httpClient.get<Performance[]>(this.performanceBaseUri, { params });
+  }
+
+  /**
+   * Loads all events for one address from the backend with pagination
+   */
+  getPerformancesForAddressId(id: number, page: number, size: number): Observable<Performance[]> {
+    let params = new HttpParams();
+    params = params.set('page', String(page));
+    params = params.set('size', String(size));
+    params = params.set('addressId', String(id));
+    return this.httpClient.get<Performance[]>(this.performanceBaseUri, { params });
+  }
 }

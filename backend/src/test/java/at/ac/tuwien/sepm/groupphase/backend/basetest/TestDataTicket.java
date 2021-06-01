@@ -3,37 +3,36 @@ package at.ac.tuwien.sepm.groupphase.backend.basetest;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Ticket;
 import at.ac.tuwien.sepm.groupphase.backend.entity.TicketType;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 public interface TestDataTicket extends TestData {
 
     String TICKET_BASE_URI = BASE_URI + "/tickets";
 
+    List<Long> TICKET_SEATS = new ArrayList<>(
+        Arrays.asList(10L)
+    );
+
     TicketType STANDARD_TICKET_TYPE = TicketType.builder()
         .title("Standard")
-        .multiplier(1.0)
+        .price(100L)
         .build();
     TicketType VIP_TICKET_TYPE = TicketType.builder()
         .title("VIP")
-        .multiplier(2.33)
+        .price(200L)
         .build();
     TicketType DISCOUNT_TICKET_TYPE = TicketType.builder()
         .title("Discount")
-        .multiplier(0.85)
+        .price(50L)
         .build();
 
     Ticket STANDARD_TICKET = Ticket.builder()
-        .seats(Arrays.asList(1L, 5L, 6L))
         .ticketType(STANDARD_TICKET_TYPE)
         .build();
     Ticket VIP_TICKET = Ticket.builder()
-        .seats(Arrays.asList(1L, 5L, 6L))
         .ticketType(VIP_TICKET_TYPE)
         .build();
     Ticket DISCOUNT_TICKET = Ticket.builder()
-        .seats(Arrays.asList(1L, 5L, 6L))
         .ticketType(DISCOUNT_TICKET_TYPE)
         .build();
 
@@ -42,19 +41,19 @@ public interface TestDataTicket extends TestData {
         set.add(
             TicketType.builder()
                 .title(STANDARD_TICKET_TYPE.getTitle())
-                .multiplier(STANDARD_TICKET_TYPE.getMultiplier())
+                .price(STANDARD_TICKET_TYPE.getPrice())
                 .build()
         );
         set.add(
             TicketType.builder()
                 .title(VIP_TICKET_TYPE.getTitle())
-                .multiplier(VIP_TICKET_TYPE.getMultiplier())
+                .price(VIP_TICKET_TYPE.getPrice())
                 .build()
         );
         set.add(
             TicketType.builder()
                 .title(DISCOUNT_TICKET_TYPE.getTitle())
-                .multiplier(DISCOUNT_TICKET_TYPE.getMultiplier())
+                .price(DISCOUNT_TICKET_TYPE.getPrice())
                 .build()
         );
         return set;

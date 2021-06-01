@@ -47,10 +47,8 @@ export class AddressSearchComponent implements OnInit {
       && this.addressSearchForm.value.postCode === '' && this.addressSearchForm.value.country === '') {
       this.addressService.getAddresses(this.page, this.size).subscribe(
         response => {
-          const nonEmptyAddress = response.filter((address) => (address.performances.length !== 0));
-
-          this.addresses.push(...nonEmptyAddress);
-          if (nonEmptyAddress.length < this.size) {
+          this.addresses.push(...response);
+          if (response.length < this.size) {
             this.noAddress = true;
           } else {
             this.page++;

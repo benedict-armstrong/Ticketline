@@ -21,12 +21,14 @@ export class UserHomeComponent implements OnInit {
 
   // Show User Actions
   userActions = false;
+  loading = false;
 
   // If password change is submitted
   passwordSubmitted = false;
 
   user: User;
   userRole: string;
+  orders: [];
   passwordChangeForm: FormGroup;
 
   constructor(
@@ -56,11 +58,31 @@ export class UserHomeComponent implements OnInit {
     this.userService.getUserByEmail(email).subscribe(
       (response) => {
         this.user = response;
+        this.loading = true;
+        this.loadOrders();
       },
       (error) => {
         this.defaultServiceErrorHandling(error);
       }
     );
+  }
+
+  /**
+   * Load User with email from Backend.
+   */
+  loadOrders() {
+    console.log('loading orders');
+    this.loading = false;
+    /*
+    this.userService.getUserByEmail(email).subscribe(
+      (response) => {
+        this.orders = response;
+      },
+      (error) => {
+        this.defaultServiceErrorHandling(error);
+      }
+    );
+     */
   }
 
   /**

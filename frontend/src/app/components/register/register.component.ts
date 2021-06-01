@@ -68,7 +68,6 @@ export class RegisterComponent implements OnInit {
           this.registerForm.value.city,
           this.registerForm.value.postcode,
           this.registerForm.value.country,
-          null,
           false
         )
       );

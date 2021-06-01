@@ -1,0 +1,105 @@
+<div class="venue-creator">
+  <h5>Venue Layout</h5>
+  <a class="" data-bs-toggle="collapse" href="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+    Help</a>
+  <div class="collapse" id="collapseExample">
+    <p>
+      Instructions: Lorem ipsum dolor sit amet consectetur, adipisicing elit. Praesentium dolorem, et beatae excepturi
+      mollitia voluptatem provident. Eaque rerum velit ab atque quaerat, non odit, nam error eos aliquid ipsa? Hic velit
+      omnis earum esse sunt iusto, debitis.
+    </p>
+  </div>
+
+  <div class="toolbar row">
+    <div class="toolbar-group col">
+      <div class="toolbar-header text-center">
+        Grid
+      </div>
+      <div class="toolbar-body">
+        <form [formGroup]="venueLayoutForm" (ngSubmit)="makeGrid()">
+          <div class="grid-size">
+            <div class="form-group">
+              <input type="number" id="gridSizeX" name="gridSizeX" formControlName="gridSizeX"
+                class="text-input form-control" placeholder="X" aria-label="grid size X" min="10" max="500">
+            </div>
+            <div>X</div>
+            <input type="number" id="gridSizeY" name="gridSizeY" formControlName="gridSizeY"
+              class="text-input form-control" min="10" max="500" placeholder="Y" aria-label="grid size Y">
+
+            <button class="primary" type="button" (click)="makeGrid()" id="make-grid">Update</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <div class="toolbar-group col">
+      <div class="toolbar-header text-center">
+        Tools
+      </div>
+      <div class="toolbar-body">
+        <button class="secondary" type='button' (click)="this.toggleAdd()">
+          <i class="bi bi-plus-square-fill" *ngIf="this.activeTool.action == 'add'"></i>
+          <i class="bi bi-plus-square" *ngIf="this.activeTool.action != 'add'"></i>
+        </button>
+        <button class="secondary" type='button' (click)="this.toggleRemove()">
+          <i class="bi bi-dash-square-fill" *ngIf="this.activeTool.action == 'remove'"></i>
+          <i class="bi bi-dash-square" *ngIf="this.activeTool.action != 'remove'"></i>
+        </button>
+        <button class="secondary" type='button' [ngClass]="{'active': this.activeTool.action == 'assignSector'}"
+          (click)="this.toggleSector()">
+          Assign
+        </button>
+      </div>
+
+    </div>
+
+    <div class="toolbar-group col">
+      <div class="toolbar-header text-center">
+        Options
+      </div>
+      <div class="toolbar-body">
+        <button class="secondary" type='button' [ngClass]="{'active': this.activeTool.scope == 'single'}"
+          (click)="this.toggleSingle()">
+          Single
+        </button>
+        <button class="secondary" type='button' [ngClass]="{'active': this.activeTool.scope == 'column'}"
+          (click)="this.toggleColumn()">
+          Column
+        </button>
+        <button class="secondary" type='button' [ngClass]="{'active': this.activeTool.scope == 'row'}"
+          (click)="this.toggleRow()">
+          Row
+        </button>
+      </div>
+    </div>
+
+    <div class="toolbar-group col">
+      <div class="toolbar-header text-center">
+        Sector
+      </div>
+      <div class="toolbar-body">
+        <button class="secondary" type='button' [ngClass]="{'active': this.activeTool.reassign}"
+          (click)="this.toggleReassign()">
+          Reassign
+        </button>
+        <div class="form-group select-sector">
+          <select class="select-input form-select" id="type" [(ngModel)]="this.activeTool.sector">
+            <option *ngFor="let sector of sectors" [ngValue]="sector">{{sector.name}}</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div *ngIf="venueLayoutForm.controls.gridSizeX.errors || venueLayoutForm.controls.gridSizeY.errors" class="error">
+      <small class="form-text text-warning">
+        Grid size must be between 10 and 50</small>
+    </div>
+  </div>
+
+  <div class="venue-layout-grid">
+    <div>Front</div>
+    <app-venue-layout-grid [venueLayout]="this.venueLayout" [activeTool]="this.activeTool"></app-venue-layout-grid>
+  </div>
+
+  <button class="secondary" type='button' (click)="save()">Save Layout</button>
+
+</div>

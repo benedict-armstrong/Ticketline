@@ -1,5 +1,6 @@
+@import "../../../colors.scss";
+
 .list-item {
-  display: flex;
   justify-content: space-between;
   align-items: center;
   min-height: 100px;
@@ -20,6 +21,7 @@
 }
 
 .count {
+  margin: 0 20px;
   font-size: 15pt;
   display: flex;
   align-items: center;
@@ -27,4 +29,18 @@
 
 .add {
   max-width: 150px;
+}
+
+.error {
+  border-color: $primary
+}
+
+#form {
+  float: right;
+  margin-right: 10px;
+}
+
+.alert {
+  margin-bottom: 0;
+  margin-top: 5px;
 }

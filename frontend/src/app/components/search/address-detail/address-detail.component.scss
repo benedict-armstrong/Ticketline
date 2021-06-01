@@ -1,0 +1,26 @@
+@import "../../../../colors.scss";
+
+h4 {
+  margin: 10px 0;
+}
+
+.performance {
+  display: flex;
+  flex-direction: row;
+  max-height: 90px;
+  margin-top: 5px;
+  align-items: center;
+  background-color: $gray-242;
+}
+
+.info {
+  display: flex;
+}
+
+#performances {
+  margin-bottom: 30px;
+}
+
+.more {
+  margin: 20px 0;
+}

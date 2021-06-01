@@ -11,7 +11,6 @@ import lombok.ToString;
 @AllArgsConstructor
 @Builder
 public class FileDto {
-
     private Long id;
     @ToString.Exclude
     private byte[] data;
