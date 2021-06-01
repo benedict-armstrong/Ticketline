@@ -91,6 +91,9 @@ public class CartItemEndpointTest implements TestDataCartItem, TestDataUser, Tes
     @Autowired
     private TicketMapper ticketMapper;
 
+    @Autowired
+    private LayoutUnitRepository layoutUnitRepository;
+
     private CartItemDto cartItem;
 
     @BeforeEach
@@ -181,9 +184,6 @@ public class CartItemEndpointTest implements TestDataCartItem, TestDataUser, Tes
             .build()
         );
 
-        System.out.println("Layout pre Mapper: " + savedVenue.getLayout());
-        System.out.println("Layout pos Mapper: " + venueMapper.venueToVenueDto(savedVenue).getLayout());
-
         Performance savedPerformance = performanceRepository.save(Performance.builder()
             .ticketTypes(ticketTypeSet)
             .date(LocalDateTime.now())
@@ -201,8 +201,6 @@ public class CartItemEndpointTest implements TestDataCartItem, TestDataUser, Tes
             .build();
         Set<Ticket> ticketSet = new HashSet<>();
         ticketSet.add(ticket1);
-
-        System.out.println("DEBUG: " + ticketMapper.ticketToTicketDto(ticket1));
 
         cartItem = CartItemDto.builder()
             .tickets(ticketMapper.ticketSetToTicketDtoArray(ticketSet))
@@ -240,8 +238,7 @@ public class CartItemEndpointTest implements TestDataCartItem, TestDataUser, Tes
         CartItemDto cartItemDto = objectMapper.readValue(response.getContentAsString(), CartItemDto.class);
         assertAll(
             () -> assertNotNull(cartItemDto.getId()),
-            () -> assertEquals(cartItem.getTickets().length, cartItemDto.getTickets().length),
-            () -> assertEquals(CartItem.Status.IN_CART.toString(), cartItemDto.getStatus())
+            () -> assertEquals(cartItem.getTickets().length, cartItemDto.getTickets().length)
         );
     }
 
@@ -318,35 +315,80 @@ public class CartItemEndpointTest implements TestDataCartItem, TestDataUser, Tes
         );
     }
 
-    /*@Test
-    @DisplayName("Should return 200 when updating tickets and canceling it")
-    public void whenCreateTicket_thenCancelTicket_thenGetCorrectResponse() throws Exception {
+    @Test
+    @DisplayName("Should return new cartItem when adding a ticket to it")
+    public void whenCreateCartItem_thenAddTicket_shouldGiveCorrectCartItem() throws Exception {
         MvcResult mvcResult = this.mockMvc.perform(
-            post(TICKET_BASE_URI + "/cart")
+            post(CART_ITEM_BASE_URI)
                 .content(
-                    objectMapper.writeValueAsString(ticketDto)
+                    objectMapper.writeValueAsString(cartItem)
                 )
                 .contentType(MediaType.APPLICATION_JSON)
                 .header(securityProperties.getAuthHeader(), authToken)
         ).andReturn();
         MockHttpServletResponse response = mvcResult.getResponse();
-        TicketDto newTicketDto = objectMapper.readValue(response.getContentAsString(), TicketDto.class);
+        CartItemDto newCartItemDto = objectMapper.readValue(response.getContentAsString(), CartItemDto.class);
 
         mvcResult = this.mockMvc.perform(
-            put(TICKET_BASE_URI + "/" + newTicketDto.getId() + "/cancel")
+            post(CART_ITEM_BASE_URI + "/" + newCartItemDto.getId() + "/addTicket")
                 .header(securityProperties.getAuthHeader(), authToken)
         ).andReturn();
         response = mvcResult.getResponse();
-        assertEquals(HttpStatus.OK.value(), response.getStatus());
+        assertEquals(HttpStatus.CREATED.value(), response.getStatus());
         assertEquals(MediaType.APPLICATION_JSON_VALUE, response.getContentType());
 
-        TicketDto newNewTicketDto = objectMapper.readValue(response.getContentAsString(), TicketDto.class);
+        CartItemDto newNewCartItemDto = objectMapper.readValue(response.getContentAsString(), CartItemDto.class);
         assertAll(
-            () -> assertEquals(newTicketDto.getId() ,newNewTicketDto.getId()),
-            () -> assertEquals(newTicketDto.getSeats(), newNewTicketDto.getSeats()),
-            () -> assertEquals(Ticket.Status.CANCELLED.toString(), newNewTicketDto.getStatus())
+            () -> assertEquals(newCartItemDto.getId() ,newNewCartItemDto.getId()),
+            () -> assertEquals(2 ,newNewCartItemDto.getTickets().length)
         );
-    }*/
+    }
+
+    @Test
+    @DisplayName("Should return NoTicketLeftException when adding too many ticket to it")
+    public void whenCreateCartItem_thenAddManyTickets_shouldRespondWithNoTicketFoundException() throws Exception {
+        MvcResult mvcResult = this.mockMvc.perform(
+            post(CART_ITEM_BASE_URI)
+                .content(
+                    objectMapper.writeValueAsString(cartItem)
+                )
+                .contentType(MediaType.APPLICATION_JSON)
+                .header(securityProperties.getAuthHeader(), authToken)
+        ).andReturn();
+        MockHttpServletResponse response = mvcResult.getResponse();
+        CartItemDto newCartItemDto = objectMapper.readValue(response.getContentAsString(), CartItemDto.class);
+
+        mvcResult = this.mockMvc.perform(
+            post(CART_ITEM_BASE_URI + "/" + newCartItemDto.getId() + "/addTicket")
+                .header(securityProperties.getAuthHeader(), authToken)
+        ).andReturn();
+        response = mvcResult.getResponse();
+        assertEquals(HttpStatus.CREATED.value(), response.getStatus());
+        assertEquals(MediaType.APPLICATION_JSON_VALUE, response.getContentType());
+
+        mvcResult = this.mockMvc.perform(
+            post(CART_ITEM_BASE_URI + "/" + newCartItemDto.getId() + "/addTicket")
+                .header(securityProperties.getAuthHeader(), authToken)
+        ).andReturn();
+        response = mvcResult.getResponse();
+        assertEquals(HttpStatus.CREATED.value(), response.getStatus());
+        assertEquals(MediaType.APPLICATION_JSON_VALUE, response.getContentType());
+
+        mvcResult = this.mockMvc.perform(
+            post(CART_ITEM_BASE_URI + "/" + newCartItemDto.getId() + "/addTicket")
+                .header(securityProperties.getAuthHeader(), authToken)
+        ).andReturn();
+        response = mvcResult.getResponse();
+        assertEquals(HttpStatus.CREATED.value(), response.getStatus());
+        assertEquals(MediaType.APPLICATION_JSON_VALUE, response.getContentType());
+
+        mvcResult = this.mockMvc.perform(
+            post(CART_ITEM_BASE_URI + "/" + newCartItemDto.getId() + "/addTicket")
+                .header(securityProperties.getAuthHeader(), authToken)
+        ).andReturn();
+        response = mvcResult.getResponse();
+        assertEquals(HttpStatus.NOT_FOUND.value(), response.getStatus());
+    }
 
     @Test
     @DisplayName("Should return 200 (true) when checkout")
@@ -389,6 +431,7 @@ public class CartItemEndpointTest implements TestDataCartItem, TestDataUser, Tes
 
         assertAll(
             () -> assertNotNull(cartItemList),
+            () -> assertNotNull(cartItemList.get(0)),
             () -> assertEquals(CartItem.Status.PAID_FOR, cartItemList.get(0).getStatus())
         );
     }

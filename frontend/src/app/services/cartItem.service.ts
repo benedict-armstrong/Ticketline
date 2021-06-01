@@ -1,15 +1,15 @@
 import { Injectable } from '@angular/core';
-import {HttpClient, HttpParams} from '@angular/common/http';
-import {Globals} from '../global/globals';
-import {Observable} from 'rxjs';
-import {Ticket} from '../dtos/ticket';
-import {TicketUpdate} from '../dtos/ticketUpdate';
+import { HttpClient } from '@angular/common/http';
+import { Globals } from '../global/globals';
+import { Observable } from 'rxjs';
+import { TicketUpdate } from '../dtos/ticketUpdate';
+import { CartItem } from '../dtos/cartItem';
 
 @Injectable({
   providedIn: 'root'
 })
-export class TicketService {
-  public cart: Ticket[] = [];
+export class CartItemService {
+  public cart: CartItem[] = [];
   public showCart = false;
   public waiting = false;
   public success = false;
@@ -26,7 +26,8 @@ export class TicketService {
     if (!this.showCart) {
       this.loading = true;
       this.getShoppingCart().subscribe(
-        (responseList: Ticket[]) => {
+        (responseList: CartItem[]) => {
+          console.log(responseList);
           this.loading = false;
           this.success = true;
           this.cart = responseList;
@@ -45,7 +46,8 @@ export class TicketService {
     this.error = false;
     this.loading = true;
     this.getShoppingCart().subscribe(
-      (responseList: Ticket[]) => {
+      (responseList: CartItem[]) => {
+        console.log(responseList);
         this.loading = false;
         this.success = true;
         this.cart = responseList;
@@ -61,28 +63,34 @@ export class TicketService {
   updatePrice(): void {
     this.total = 0;
     this.cart.forEach(item => {
-      this.total += item.ticketType.price * item.seats[0];
+      item.tickets.forEach(ticket => {
+        this.total += ticket.ticketType.price;
+      });
     });
   }
 
-  getShoppingCart(): Observable<Ticket[]> {
-    return this.httpClient.get<Ticket[]>(this.cartItemBaseUri);
+  getShoppingCart(): Observable<CartItem[]> {
+    return this.httpClient.get<CartItem[]>(this.cartItemBaseUri);
   }
 
-  addTicket(ticket: Ticket): Observable<Ticket> {
-    return this.httpClient.post<Ticket>(this.cartItemBaseUri, ticket);
+  addCartItem(cartItem: CartItem): Observable<CartItem> {
+    return this.httpClient.post<CartItem>(this.cartItemBaseUri, cartItem);
   }
 
-  updateAmount(ticketUpdate: TicketUpdate): Observable<TicketUpdate> {
-    return this.httpClient.put<TicketUpdate>(this.cartItemBaseUri + '/amount', ticketUpdate);
-  }
-
-  removeTicket(ticket: Ticket): Observable<boolean> {
-    return this.httpClient.delete<boolean>(this.cartItemBaseUri + '/' + ticket.id);
+  removeCartItem(cartItem: CartItem): Observable<boolean> {
+    return this.httpClient.delete<boolean>(this.cartItemBaseUri + '/' + cartItem.id);
   }
 
   checkout(): Observable<boolean> {
     return this.httpClient.put<boolean>(this.cartItemBaseUri + '/checkout', null);
+  }
+
+  addTicketToCart(cartItem: CartItem): Observable<CartItem> {
+    return this.httpClient.post<CartItem>(this.cartItemBaseUri + '/' + cartItem.id + '/addTicket', null);
+  }
+
+  removeTicketFromCart(cartItemId: number, ticketId: number): Observable<boolean> {
+    return this.httpClient.delete<boolean>(this.cartItemBaseUri + '/' + cartItemId + '/' + ticketId);
   }
 
   private defaultServiceErrorHandling(error: any) {

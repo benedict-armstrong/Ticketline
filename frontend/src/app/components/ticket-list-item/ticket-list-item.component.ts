@@ -1,9 +1,10 @@
 import {Component, Input, OnInit} from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { TicketService } from 'src/app/services/cartItem.service';
+import { CartItemService } from 'src/app/services/cartItem.service';
 import { TicketType } from '../../dtos/ticketType';
 import { Performance } from '../../dtos/performance';
 import { Ticket } from 'src/app/dtos/ticket';
+import { CartItem } from 'src/app/dtos/cartItem';
 
 @Component({
   selector: 'app-ticket-list-item',
@@ -26,7 +27,7 @@ export class TicketListItemComponent implements OnInit {
 
   constructor(
     private formBuilder: FormBuilder,
-    private ticketService: TicketService
+    private cartItemService: CartItemService
   ) {
     this.ticketForm = this.formBuilder.group({
       amount: [0, [Validators.min(1)]]
@@ -54,30 +55,35 @@ export class TicketListItemComponent implements OnInit {
     if (!this.waiting) {
       if (this.ticketForm.valid) {
         this.validationError = false;
-        const ticket: Ticket = {
+        let cartItem: CartItem = {
           id: null,
-          performance: this.performance,
-          ticketType: this.ticketType,
-          seats: [this.ticketForm.value.amount],
-          // status: null
-        };
+          tickets: []
+        }
+        for (let index = 0; index < this.ticketForm.value.amount; index++) {
+          const ticket: Ticket = {
+            id: null,
+            performance: this.performance,
+            ticketType: this.ticketType,
+            seat: null,
+          };
+          cartItem.tickets.push(ticket);
+        }
         this.waiting = true;
-        this.ticketService.addTicket(ticket).subscribe(
-          (responseTicket: Ticket) => {
+        this.cartItemService.addCartItem(cartItem).subscribe(
+          (responseCartItem: CartItem) => {
             this.waiting = false;
             this.success = true;
-            for (let i = 0; i < this.ticketService.cart.length; i++) {
-              if (this.ticketService.cart[i].id === responseTicket.id
-                || this.ticketService.cart[i].ticketType.id === responseTicket.ticketType.id) {
-                this.ticketService.cart[i] = responseTicket;
-                responseTicket = null;
+            for (let i = 0; i < this.cartItemService.cart.length; i++) {
+              if (this.cartItemService.cart[i].id === responseCartItem.id) {
+                this.cartItemService.cart[i] = responseCartItem;
+                responseCartItem = null;
                 break;
               }
             }
-            if (responseTicket != null) {
-              this.ticketService.cart.push(responseTicket);
+            if (responseCartItem != null) {
+              this.cartItemService.cart.push(responseCartItem);
             }
-            this.ticketService.updatePrice();
+            this.cartItemService.updatePrice();
           },
           (error) => {
             this.waiting = false;

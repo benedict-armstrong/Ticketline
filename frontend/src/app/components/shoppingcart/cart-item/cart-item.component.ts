@@ -1,7 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { CartItem } from 'src/app/dtos/cartItem';
 import { TicketUpdate } from 'src/app/dtos/ticketUpdate';
-import { TicketService } from 'src/app/services/cartItem.service';
+import { CartItemService } from 'src/app/services/cartItem.service';
 
 @Component({
   selector: 'app-cart-item',
@@ -11,6 +12,7 @@ import { TicketService } from 'src/app/services/cartItem.service';
 export class CartItemComponent implements OnInit {
   @Input()
   i: number;
+  
   cartItemForm: FormGroup;
 
   public success = false;
@@ -20,7 +22,7 @@ export class CartItemComponent implements OnInit {
 
   constructor(
     private formBuilder: FormBuilder,
-    public ticketService: TicketService
+    public cartItemService: CartItemService
   ) {
     this.cartItemForm = this.formBuilder.group({
       amount: [0, [Validators.min(1)]]
@@ -28,7 +30,7 @@ export class CartItemComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.cartItemForm.setValue({amount: this.ticketService.cart[this.i].seats[0]});
+    this.cartItemForm.setValue({amount: this.cartItemService.cart[this.i].tickets.length});
   }
 
   removeFromCart(): void {
@@ -37,44 +39,40 @@ export class CartItemComponent implements OnInit {
     }
   }
 
-  incAmount(): void {
+  removeTicketFromCart(j: number): void {
     if (!this.waiting) {
-      this.updateAmount(this.i, this.cartItemForm.value.amount + 1);
+      this.removeTicketFromCartHandler(this.i, j);
     }
   }
 
-  decAmount(): void {
+  addTicketToCart(): void {
     if (!this.waiting) {
-      if (this.cartItemForm.value.amount > 0) {
-        this.updateAmount(this.i, this.cartItemForm.value.amount - 1);
-      }
+      this.addTicketToCartHandler(this.i);
     }
   }
 
-  setAmount(): void {
-    if (!this.waiting) {
-      if (this.cartItemForm.value.amount < 0) {
-        this.cartItemForm.setValue({amount: 0});
-      }
-      this.updateAmount(this.i, this.cartItemForm.value.amount);
-    }
-  }
-
-  updateAmount(i: number, amount: number) {
+  addTicketToCartHandler(i: number) {
     this.waiting = true;
     this.vanishAlert();
-    const oldAmount = this.ticketService.cart[i].seats[0];
-    this.ticketService.updateAmount({id: this.ticketService.cart[i].id, seats: [amount]}).subscribe(
-      (responseTicket: TicketUpdate) => {
+    this.cartItemService.addTicketToCart(this.cartItemService.cart[i]).subscribe(
+      (responseCartItem: CartItem) => {
+        console.log(responseCartItem);
         this.waiting = false;
         this.success = true;
-        this.ticketService.cart[i].seats = responseTicket.seats;
-        this.ticketService.updatePrice();
-        this.cartItemForm.setValue({amount: this.ticketService.cart[i].seats[0]});
+        for (let i = 0; i < this.cartItemService.cart.length; i++) {
+          if (this.cartItemService.cart[i].id === responseCartItem.id) {
+            this.cartItemService.cart[i] = responseCartItem;
+            responseCartItem = null;
+            break;
+          }
+        }
+        if (responseCartItem != null) {
+          this.cartItemService.cart.push(responseCartItem);
+        }
+        this.cartItemService.updatePrice();
       },
       (error) => {
         this.waiting = false;
-        this.cartItemForm.setValue({amount: oldAmount});
         this.defaultServiceErrorHandling(error);
       }
     );
@@ -82,18 +80,36 @@ export class CartItemComponent implements OnInit {
 
   removeFromCartHandler(i: number) {
     this.waiting = true;
-    this.ticketService.removeTicket(this.ticketService.cart[i]).subscribe(
+    this.cartItemService.removeCartItem(this.cartItemService.cart[i]).subscribe(
       (response: boolean) => {
         this.waiting = false;
         this.success = true;
         if (response) {
-          this.ticketService.cart.splice(i, 1);
-          this.ticketService.updatePrice();
+          this.cartItemService.cart.splice(i, 1);
+          this.cartItemService.updatePrice();
         }
       },
       (error) => {
         this.waiting = false;
-        this.ticketService.reload();
+        this.cartItemService.reload();
+      }
+    );
+  }
+
+  removeTicketFromCartHandler(i: number, j: number) {
+    this.waiting = true;
+    this.cartItemService.removeTicketFromCart(this.cartItemService.cart[i].id, this.cartItemService.cart[i].tickets[j].id).subscribe(
+      (response: boolean) => {
+        this.waiting = false;
+        this.success = true;
+        if (response) {
+          this.cartItemService.cart[i].tickets.splice(j, 1);
+          this.cartItemService.updatePrice();
+        }
+      },
+      (error) => {
+        this.waiting = false;
+        this.cartItemService.reload();
       }
     );
   }

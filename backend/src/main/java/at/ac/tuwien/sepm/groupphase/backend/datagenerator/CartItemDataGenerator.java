@@ -3,11 +3,13 @@ package at.ac.tuwien.sepm.groupphase.backend.datagenerator;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepm.groupphase.backend.entity.CartItem;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Event;
+import at.ac.tuwien.sepm.groupphase.backend.entity.LayoutUnit;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Performance;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Ticket;
 import at.ac.tuwien.sepm.groupphase.backend.entity.TicketType;
 import at.ac.tuwien.sepm.groupphase.backend.repository.CartItemRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.EventRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.LayoutUnitRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,12 +34,14 @@ public class CartItemDataGenerator {
     private final CartItemRepository cartItemRepository;
     private final EventRepository eventRepository;
     private final UserRepository userRepository;
+    private final LayoutUnitRepository layoutUnitRepository;
 
     public CartItemDataGenerator(CartItemRepository cartItemRepository, EventRepository eventRepository,
-                                 UserRepository userRepository) {
+                                 UserRepository userRepository, LayoutUnitRepository layoutUnitRepository) {
         this.cartItemRepository = cartItemRepository;
         this.eventRepository = eventRepository;
         this.userRepository = userRepository;
+        this.layoutUnitRepository = layoutUnitRepository;
     }
 
     @PostConstruct
@@ -57,23 +61,25 @@ public class CartItemDataGenerator {
                 LOGGER.debug("Can only generate {} tickets due to limited amount of seats at venue", NUMBER_OF_CART_ITEMS_TO_GENERATE);
             }
 
+            Set<Ticket> ticketSet = new HashSet<>();
             for (int i = 0; i < NUMBER_OF_CART_ITEMS_TO_GENERATE; i++) {
-                Set<Ticket> ticketSet = new HashSet<>();
+                LayoutUnit seat = performance.getVenue().getLayout().get(i);
+                seat.setTaken(true);
+                layoutUnitRepository.save(seat);
                 ticketSet.add(Ticket.builder()
                     .ticketType(ticketType)
                     .performance(performance)
-                    .seat(performance.getVenue().getLayout().get(i))
+                    .seat(seat)
                     .build()
                 );
-
-                CartItem cartItem = CartItem.builder()
-                    .tickets(ticketSet)
-                    .changeDate(LocalDateTime.now().plusMinutes(10))
-                    .status(CartItem.Status.IN_CART)
-                    .user(user)
-                    .build();
-                cartItemRepository.save(cartItem);
             }
+            CartItem cartItem = CartItem.builder()
+                .tickets(ticketSet)
+                .changeDate(LocalDateTime.now().plusMinutes(100))
+                .status(CartItem.Status.IN_CART)
+                .user(user)
+                .build();
+            cartItemRepository.save(cartItem);
         }
     }
 }

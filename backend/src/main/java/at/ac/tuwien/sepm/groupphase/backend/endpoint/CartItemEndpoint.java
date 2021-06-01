@@ -52,20 +52,21 @@ public class CartItemEndpoint {
     @Operation(summary = "Create a cartItem in cart of user")
     public CartItemDto createCartTicket(@RequestBody CartItemDto cartItemDto) {
         LOGGER.info("POST /api/v1/cartItems {}", cartItemDto);
-        System.out.println("POST /api/v1/cartItems" + cartItemDto);
         return cartItemMapper.cartItemToCartItemDto(cartItemService.save(
             cartItemMapper.cartItemDtoToCartItem(cartItemDto), CartItem.Status.IN_CART
         ));
     }
 
-    /*@PutMapping("/amount")
+    @PostMapping(path = "/{id}/addTicket")
     @Secured({"ROLE_USER", "ROLE_ORGANIZER", "ROLE_ADMIN"})
-    @ResponseStatus(HttpStatus.OK)
-    @Operation(summary = "Update a tickets seats")
-    public TicketUpdateDto updateAmount(@RequestBody TicketUpdateDto ticketUpdate) {
-        LOGGER.info("PUT /api/v1/tickets/seats {}", ticketUpdate);
-        return ticketService.updateSeats(ticketUpdate);
-    }*/
+    @ResponseStatus(HttpStatus.CREATED)
+    @Operation(summary = "Add a ticket to a cartItem in cart of user")
+    public CartItemDto addTicket(@PathVariable Long id) {
+        LOGGER.info("POST /api/v1/{}/addTicket", id);
+        return cartItemMapper.cartItemToCartItemDto(cartItemService.addTicket(
+            id
+        ));
+    }
 
     @PutMapping("/checkout")
     @Secured({"ROLE_USER", "ROLE_ORGANIZER", "ROLE_ADMIN"})
@@ -93,6 +94,15 @@ public class CartItemEndpoint {
     public boolean delete(@PathVariable Long id) {
         LOGGER.info("DELETE /api/v1/cartItems/{}", id);
         return cartItemService.delete(id);
+    }
+
+    @DeleteMapping(path = "/{id}/{ticketId}")
+    @Secured({"ROLE_USER", "ROLE_ORGANIZER", "ROLE_ADMIN"})
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(summary = "Delete cartItem")
+    public boolean delete(@PathVariable Long id, @PathVariable Long ticketId) {
+        LOGGER.info("DELETE /api/v1/cartItems/{}/{}", id, ticketId);
+        return cartItemService.deleteTicket(id, ticketId);
     }
 
     @GetMapping("/paid")
