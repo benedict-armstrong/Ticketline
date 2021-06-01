@@ -2,8 +2,8 @@ import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { ApplicationEventService } from 'src/app/services/event.service';
 import { ApplicationPerformanceService } from 'src/app/services/performance.service';
-import {Performance} from '../../../dtos/performance';
-import {Event} from '../../../dtos/event';
+import { Performance } from '../../../dtos/performance';
+import { Event } from '../../../dtos/event';
 import { Venue } from 'src/app/dtos/venue';
 
 @Component({
@@ -30,6 +30,7 @@ export class PerformanceSearchComponent implements OnInit {
   size = 8;
   selectedEvent = null;
   selectedVenue = null;
+  doDateSearch = true;
 
   constructor(private formBuilder: FormBuilder, private performanceService: ApplicationPerformanceService,
     private eventService: ApplicationEventService) { }
@@ -45,9 +46,9 @@ export class PerformanceSearchComponent implements OnInit {
 
   searchPerformances() {
 
-    if(this.performanceSearchForm.value.date === '' && this.performanceSearchForm.value.price === ''
-        && this.performanceSearchForm.value.time === '' && this.performanceSearchForm.value.event === ''
-        && this.performanceSearchForm.value.venue === '') {
+    if (this.performanceSearchForm.value.date === '' && this.performanceSearchForm.value.price === ''
+      && this.performanceSearchForm.value.time === '' && this.performanceSearchForm.value.event === ''
+      && this.performanceSearchForm.value.venue === '') {
 
       this.performanceService.getPerformances(this.page, this.size).subscribe(
         response => {
@@ -67,6 +68,7 @@ export class PerformanceSearchComponent implements OnInit {
       );
 
     } else {
+      this.doDateSearch = true;
 
       let date = null;
       if (this.performanceSearchForm.value.date !== '' && this.performanceSearchForm.value.date !== null) {
@@ -77,55 +79,57 @@ export class PerformanceSearchComponent implements OnInit {
         }
       } else {
         if (this.performanceSearchForm.value.time !== '') {
-          //date = new Date('T' + this.performanceSearchForm.value.time); TODO
+          this.doDateSearch = false;
         }
       }
 
       let eventId;
 
-      if(this.selectedEvent){
+      if (this.selectedEvent) {
         eventId = this.selectedEvent.id;
-      }else{
+      } else {
         eventId = null;
       }
 
       let venueId;
 
-      if(this.selectedVenue){
+      if (this.selectedVenue) {
         venueId = this.selectedVenue.id;
-      }else{
+      } else {
         venueId = null;
       }
 
-      this.performanceService.searchPerformances(this.page, this.size, date, eventId,
-        this.performanceSearchForm.value.price, venueId).subscribe(
-        response => {
-          console.log(response);
-          this.performances.push(...response);
+      if (this.doDateSearch) {
+        this.performanceService.searchPerformances(this.page, this.size, date, eventId,
+          this.performanceSearchForm.value.price, venueId).subscribe(
+            response => {
+              console.log(response);
+              this.performances.push(...response);
 
-          if (response.length < this.size) {
-            this.noPerformance = true;
-          } else {
-            this.page++;
-            this.noPerformance = false;
-          }
+              if (response.length < this.size) {
+                this.noPerformance = true;
+              } else {
+                this.page++;
+                this.noPerformance = false;
+              }
 
-          this.searchedPerformances.emit(this.performances);
-          this.searchedNoPerformance.emit(this.noPerformance);
-          if (this.selectedEvent) {
-            this.searchedEventPerformance.emit(this.selectedEvent);
-          } else {
-            this.searchedEventPerformance.emit(undefined);
-          }
-          if (this.selectedVenue) {
-            this.searchedVenuePerformance.emit(this.selectedVenue);
-          } else {
-            this.searchedVenuePerformance.emit(undefined);
-          }
-        }, error => {
-          console.error(error);
-        }
-      );
+              this.searchedPerformances.emit(this.performances);
+              this.searchedNoPerformance.emit(this.noPerformance);
+              if (this.selectedEvent) {
+                this.searchedEventPerformance.emit(this.selectedEvent);
+              } else {
+                this.searchedEventPerformance.emit(undefined);
+              }
+              if (this.selectedVenue) {
+                this.searchedVenuePerformance.emit(this.selectedVenue);
+              } else {
+                this.searchedVenuePerformance.emit(undefined);
+              }
+            }, error => {
+              console.error(error);
+            }
+          );
+      }
     }
   }
 
@@ -136,15 +140,15 @@ export class PerformanceSearchComponent implements OnInit {
     this.size = 8;
   }
 
-  setSelectedEvent(event: Event){
+  setSelectedEvent(event: Event) {
     this.selectedEvent = event[0];
   }
 
-  setSelectedVenue(venue: Venue){
+  setSelectedVenue(venue: Venue) {
     this.selectedVenue = venue[0];
   }
 
-  resetSearchFields(){
+  resetSearchFields() {
     this.performanceSearchForm.reset();
     this.performanceSearchForm.value.date = '';
     this.performanceSearchForm.value.price = '';

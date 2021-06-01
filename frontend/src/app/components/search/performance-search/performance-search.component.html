@@ -24,6 +24,9 @@
                                     </div>
                                 </div>
                             </div>
+                            <div *ngIf="!doDateSearch" class="error">
+                                <small class="form-text text-warning">Please give a date with time! </small>
+                            </div>
                         </div>
                         <div class="row">
                             <div class="col">
