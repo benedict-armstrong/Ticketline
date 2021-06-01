@@ -9,7 +9,7 @@ import {Booking} from '../dtos/booking';
 })
 export class BookingService {
 
-  private newsBaseUri: string = this.globals.backendUri + '/bookings';
+  private bookingBaseUri: string = this.globals.backendUri + '/bookings';
 
   constructor(private httpClient: HttpClient, private globals: Globals) {
   }
@@ -20,7 +20,7 @@ export class BookingService {
    */
   getBookings(): Observable<Booking[]> {
     console.log('Loading bookings');
-    return this.httpClient.get<Booking[]>(this.newsBaseUri);
+    return this.httpClient.get<Booking[]>(this.bookingBaseUri);
   }
 
 }
