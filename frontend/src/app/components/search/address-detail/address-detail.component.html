@@ -4,7 +4,7 @@
   <div>{{address.city}}, {{address.postcode}}</div>
   <div>{{address.country}}</div>
 </div>
-<hr/>
+<hr />
 <h4>Performances</h4>
 <div id="performances">
   <div *ngFor="let performance of performances">
@@ -14,7 +14,7 @@
           <h5>{{performance.title}}</h5>
           <span class="date-time">{{performance.date | date:'EEEE, MMM d, y HH:mm'}}: </span>
           <span class="artist">{{performance.artist.firstName}} {{performance.artist.lastName}}, </span>
-          <span class="location">{{performance.location.name}}</span>
+          <span class="location">{{performance.venue.address.name}}</span>
         </div>
       </div>
     </div>

@@ -9,7 +9,7 @@ import { CartItem } from 'src/app/dtos/cartItem';
 @Component({
   selector: 'app-ticket-list-item',
   templateUrl: './ticket-list-item.component.html',
-  styleUrls: ['./ticket-list-item.component.scss']
+  styleUrls: ['./ticket-list-item.component.scss'],
 })
 export class TicketListItemComponent implements OnInit {
   @Input()
@@ -55,10 +55,10 @@ export class TicketListItemComponent implements OnInit {
     if (!this.waiting) {
       if (this.ticketForm.valid) {
         this.validationError = false;
-        let cartItem: CartItem = {
+        const cartItem: CartItem = {
           id: null,
           tickets: []
-        }
+        };
         for (let index = 0; index < this.ticketForm.value.amount; index++) {
           const ticket: Ticket = {
             id: null,

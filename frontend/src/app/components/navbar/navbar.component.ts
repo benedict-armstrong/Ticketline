@@ -9,18 +9,19 @@ import { CartItemService } from 'src/app/services/cartItem.service';
 })
 export class NavbarComponent implements OnInit {
 
-  constructor(private authService: AuthService, private ticketService: CartItemService) {}
+  constructor(private authService: AuthService, private cartItemService: CartItemService) {}
 
   ngOnInit(): void {}
 
   toggleCart() {
-    this.ticketService.toggleStatus();
+    this.cartItemService.toggleStatus();
   }
 
   /**
    * Logout current user.
    */
   logoutUser(): void {
+    this.cartItemService.closeCart();
     this.authService.logoutUser();
   }
 

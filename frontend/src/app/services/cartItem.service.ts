@@ -23,23 +23,20 @@ export class CartItemService {
   constructor(private httpClient: HttpClient, private globals: Globals) { }
 
   toggleStatus(): void {
-    if (!this.showCart) {
-      this.loading = true;
-      this.getShoppingCart().subscribe(
-        (responseList: CartItem[]) => {
-          console.log(responseList);
-          this.loading = false;
-          this.success = true;
-          this.cart = responseList;
-          this.updatePrice();
-        },
-        (error) => {
-          this.loading = false;
-          this.defaultServiceErrorHandling(error);
-        }
-      );
-    }
-    this.showCart = !this.showCart;
+    if (this.showCart) {
+      this.closeCart();
+    } else {
+      this.openCart();
+    }    
+  }
+
+  closeCart(): void {
+    this.showCart = false;
+  }
+
+  openCart(): void {
+    this.reload();
+    this.showCart = true;
   }
 
   reload(): void {

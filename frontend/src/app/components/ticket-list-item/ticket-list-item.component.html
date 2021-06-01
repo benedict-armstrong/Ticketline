@@ -1,7 +1,7 @@
 <div class="list-item">
     <div class="row">
         <div class="col-6">
-            <h4>{{ticketType.title}} {{ticketType.sectorType.name}} ({{ticketType.sectorType.numberOfTickets}} Tickets)</h4>
+            <h4>{{ticketType.title}} (X Tickets)</h4>
             <span>Best experience | {{ticketType.price / 100 | currency:'EUR'}}</span>
         </div>
         <div class="col-6 formContainer">
@@ -35,4 +35,5 @@
             </button>
         </div>
     </div>
+    <button class="add primary">Add to Cart</button>
 </div>

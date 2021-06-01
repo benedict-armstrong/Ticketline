@@ -12,7 +12,7 @@ import { CartItemService } from 'src/app/services/cartItem.service';
 export class CartItemComponent implements OnInit {
   @Input()
   i: number;
-  
+
   cartItemForm: FormGroup;
 
   public success = false;
@@ -59,9 +59,9 @@ export class CartItemComponent implements OnInit {
         console.log(responseCartItem);
         this.waiting = false;
         this.success = true;
-        for (let i = 0; i < this.cartItemService.cart.length; i++) {
-          if (this.cartItemService.cart[i].id === responseCartItem.id) {
-            this.cartItemService.cart[i] = responseCartItem;
+        for (let j = 0; j < this.cartItemService.cart.length; j++) {
+          if (this.cartItemService.cart[j].id === responseCartItem.id) {
+            this.cartItemService.cart[j] = responseCartItem;
             responseCartItem = null;
             break;
           }
