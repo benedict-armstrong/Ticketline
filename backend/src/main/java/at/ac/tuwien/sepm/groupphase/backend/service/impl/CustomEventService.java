@@ -3,6 +3,7 @@ package at.ac.tuwien.sepm.groupphase.backend.service.impl;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Event;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Performance;
 import at.ac.tuwien.sepm.groupphase.backend.repository.EventRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.PerformanceRepository;
 import at.ac.tuwien.sepm.groupphase.backend.service.EventService;
 import at.ac.tuwien.sepm.groupphase.backend.specification.EventSpecificationBuilder;
 import org.slf4j.Logger;
@@ -55,6 +56,14 @@ public class CustomEventService implements EventService {
                 throw new IllegalArgumentException("Date of performances must be in period of event");
             }
         }
+
+        Event eventCreated = eventRepository.save(event);
+
+        for (Performance performance : performanceSet) {
+            performance.setEvent(eventCreated);
+        }
+
+        eventCreated.setPerformances(performanceSet);
 
         return eventRepository.save(event);
     }
