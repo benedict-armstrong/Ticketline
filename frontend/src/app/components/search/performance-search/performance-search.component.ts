@@ -16,7 +16,7 @@ export class PerformanceSearchComponent implements OnInit {
   @Output() searchedPerformances = new EventEmitter<Performance[]>();
   @Output() searchedNoPerformance = new EventEmitter<any>();
   @Output() searchedEventPerformance = new EventEmitter<any>();
-  @Output() searchedVenuePerformance = new EventEmitter<any>()
+  @Output() searchedVenuePerformance = new EventEmitter<any>();
 
   // Error flag
   error = false;
@@ -77,11 +77,9 @@ export class PerformanceSearchComponent implements OnInit {
         }
       } else {
         if (this.performanceSearchForm.value.time !== '') {
-          //date = new Date('T' + this.performanceSearchForm.value.time);
+          //date = new Date('T' + this.performanceSearchForm.value.time); TODO
         }
       }
-
-      console.log(date) //TODO
 
       let eventId;
 
