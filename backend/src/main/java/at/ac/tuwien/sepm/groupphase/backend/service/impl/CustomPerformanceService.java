@@ -62,6 +62,10 @@ public class CustomPerformanceService implements PerformanceService {
             builder.with("event", ":", performance.getEventId());
         }
 
+        if (performance.getVenue() != null) {
+            builder.with("venue", ":", performance.getVenue());
+        }
+
         return performanceRepository.findAll(builder.build(), pageable).getContent();
     }
 

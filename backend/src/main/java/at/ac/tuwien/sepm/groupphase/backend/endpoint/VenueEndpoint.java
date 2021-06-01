@@ -45,7 +45,6 @@ public class VenueEndpoint {
         return venueMapper.venueToVenueDto(venueService.add(venueMapper.venueDtoToVenue(venueDto)));
     }
 
-    @Secured("ROLE_ORGANIZER")
     @GetMapping
     @Operation(summary = "Get all venues")
     public List<VenueDto> getAll() {
