@@ -106,17 +106,41 @@ public interface TestDataVenue extends TestData {
         return Sector.builder().name("SectorDto seated").color("#867FD2").type(Sector.SectorType.SEATED).build();
     }
 
+    static SectorDto getSeatedSectorDto() {
+        return SectorDto.builder().name("SectorDto seated").color("#867FD2").type(Sector.SectorType.SEATED).build();
+    }
+
     static List<LayoutUnit> getVenueLayout(Sector sector) {
         return Arrays.asList(
             LayoutUnit.builder().sector(sector).customLabel("1").build(),
             LayoutUnit.builder().sector(sector).customLabel("2").build(),
             LayoutUnit.builder().sector(sector).customLabel("3").build(),
-            LayoutUnit.builder().sector(sector).customLabel("4").build(),
+            LayoutUnit.builder().sector(sector).customLabel("11").build(),
             null,
             LayoutUnit.builder().sector(sector).customLabel("6").build(),
             LayoutUnit.builder().sector(sector).customLabel("7").build(),
             LayoutUnit.builder().sector(sector).customLabel("8").build(),
             null
+        );
+    }
+
+    static List<List<LayoutUnitDto>> getVenueLayoutDto(SectorDto sectorDto) {
+        return Arrays.asList(
+            Arrays.asList(
+                LayoutUnitDto.builder().sector(SECTOR_DTO_STAGE).customLabel("1").build(),
+                LayoutUnitDto.builder().sector(SECTOR_DTO_STAGE).customLabel("2").build(),
+                LayoutUnitDto.builder().sector(SECTOR_DTO_STAGE).customLabel("3").build()
+            ),
+            Arrays.asList(
+                LayoutUnitDto.builder().sector(SECTOR_DTO_SEATED).customLabel("4").build(),
+                null,
+                LayoutUnitDto.builder().sector(SECTOR_DTO_SEATED).customLabel("6").build()
+            ),
+            Arrays.asList(
+                LayoutUnitDto.builder().sector(SECTOR_DTO_STANDING).customLabel("7").build(),
+                LayoutUnitDto.builder().sector(SECTOR_DTO_STANDING).customLabel("8").build(),
+                null
+            )
         );
     }
 

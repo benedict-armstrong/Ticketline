@@ -25,6 +25,19 @@ public interface TestDataTicket extends TestData {
         .price(50L)
         .build();
 
+    TicketTypeDto STANDARD_TICKET_TYPE_DTO = TicketTypeDto.builder()
+        .title("Standard")
+        .price(100L)
+        .build();
+    TicketTypeDto VIP_TICKET_TYPE_DTO = TicketTypeDto.builder()
+        .title("VIP")
+        .price(200L)
+        .build();
+    TicketTypeDto DISCOUNT_TICKET_TYPE_DTO = TicketTypeDto.builder()
+        .title("Discount")
+        .price(50L)
+        .build();
+
     Ticket STANDARD_TICKET = Ticket.builder()
         .ticketType(STANDARD_TICKET_TYPE)
         .build();
