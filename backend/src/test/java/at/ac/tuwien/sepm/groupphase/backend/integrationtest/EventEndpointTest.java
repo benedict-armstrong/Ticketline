@@ -3,28 +3,20 @@ package at.ac.tuwien.sepm.groupphase.backend.integrationtest;
 import at.ac.tuwien.sepm.groupphase.backend.basetest.TestAuthentification;
 import at.ac.tuwien.sepm.groupphase.backend.basetest.TestDataArtist;
 import at.ac.tuwien.sepm.groupphase.backend.basetest.TestDataEvent;
-import at.ac.tuwien.sepm.groupphase.backend.basetest.TestDataFile;
 import at.ac.tuwien.sepm.groupphase.backend.basetest.TestDataTicket;
 import at.ac.tuwien.sepm.groupphase.backend.basetest.TestDataVenue;
 import at.ac.tuwien.sepm.groupphase.backend.config.properties.SecurityProperties;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.ArtistDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.PerformanceDto;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.SectorDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.VenueDto;
-import at.ac.tuwien.sepm.groupphase.backend.entity.Event;
-import at.ac.tuwien.sepm.groupphase.backend.entity.File;
-import at.ac.tuwien.sepm.groupphase.backend.entity.Performance;
-import at.ac.tuwien.sepm.groupphase.backend.entity.Venue;
 import at.ac.tuwien.sepm.groupphase.backend.repository.AddressRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.ArtistRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.EventRepository;
-import at.ac.tuwien.sepm.groupphase.backend.repository.FileRepository;
-import at.ac.tuwien.sepm.groupphase.backend.repository.SectorRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.PerformanceRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.VenueRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.deser.impl.PropertyBasedObjectIdGenerator;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -43,9 +35,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -63,6 +53,9 @@ public class EventEndpointTest implements TestDataEvent, TestDataTicket, TestAut
     private EventRepository eventRepository;
 
     @Autowired
+    private PerformanceRepository performanceRepository;
+
+    @Autowired
     private UserRepository userRepository;
 
     @Autowired
@@ -70,6 +63,9 @@ public class EventEndpointTest implements TestDataEvent, TestDataTicket, TestAut
 
     @Autowired
     private VenueRepository venueRepository;
+
+    @Autowired
+    private AddressRepository addressRepository;
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -118,9 +114,11 @@ public class EventEndpointTest implements TestDataEvent, TestDataTicket, TestAut
     @AfterEach
     public void afterEach() {
         eventRepository.deleteAll();
-        artistRepository.deleteAll();
+        performanceRepository.deleteAll();
         venueRepository.deleteAll();
         userRepository.deleteAll();
+        artistRepository.deleteAll();
+        addressRepository.deleteAll();
     }
 
     private void saveEvent(EventDto eventDto) throws Exception {
