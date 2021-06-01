@@ -22,7 +22,7 @@ public class TicketTypeDto {
 
     @NotNull(message = "Price is required")
     @PositiveOrZero(message = "Price can't be less than 0")
-    private Long price;
+    private long price; // Cents
 
     private SectorDto sector;
 }
