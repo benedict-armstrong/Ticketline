@@ -128,7 +128,7 @@ public class EventDataGenerator {
 
                     Performance performance = Performance.builder()
                         .title(faker.esports().event())
-                        .description(faker.lorem().characters())
+                        .description("Performance description " + j + " that was generated for event " + i + ".")
                         .date(faker.date().between(startDate, endDate).toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime())
                         .ticketTypes(ticketTypeSet)
                         .artist(artist)
