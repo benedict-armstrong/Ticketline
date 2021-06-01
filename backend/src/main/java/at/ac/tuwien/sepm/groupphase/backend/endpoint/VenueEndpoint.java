@@ -46,6 +46,7 @@ public class VenueEndpoint {
     }
 
     @GetMapping
+    @PermitAll
     @Operation(summary = "Get all venues")
     public List<VenueDto> getAll() {
         LOGGER.info("GET /api/v1/venues/");
