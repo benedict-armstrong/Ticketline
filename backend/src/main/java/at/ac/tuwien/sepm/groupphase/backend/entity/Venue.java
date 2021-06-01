@@ -46,7 +46,7 @@ public class Venue {
     private List<Sector> sectors;
 
     @LazyCollection(LazyCollectionOption.FALSE)
-    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE})
     private List<LayoutUnit> layout;
 
 }

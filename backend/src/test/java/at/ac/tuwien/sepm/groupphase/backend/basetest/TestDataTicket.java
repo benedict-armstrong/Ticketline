@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepm.groupphase.backend.basetest;
 
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.TicketTypeDto;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Ticket;
 import at.ac.tuwien.sepm.groupphase.backend.entity.TicketType;
 
@@ -55,6 +56,23 @@ public interface TestDataTicket extends TestData {
                 .build()
         );
         return set;
+    }
+
+    static TicketTypeDto[] getTicketTypeDtos() {
+        TicketTypeDto[] dtos = new TicketTypeDto[3];
+        dtos[0] = TicketTypeDto.builder()
+            .title(STANDARD_TICKET_TYPE.getTitle())
+            .price(STANDARD_TICKET_TYPE.getPrice())
+            .build();
+        dtos[1] = TicketTypeDto.builder()
+            .title(VIP_TICKET_TYPE.getTitle())
+            .price(VIP_TICKET_TYPE.getPrice())
+            .build();
+        dtos[2] = TicketTypeDto.builder()
+            .title(DISCOUNT_TICKET_TYPE.getTitle())
+            .price(DISCOUNT_TICKET_TYPE.getPrice())
+            .build();
+        return dtos;
     }
 
 }

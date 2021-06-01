@@ -5,6 +5,7 @@ import at.ac.tuwien.sepm.groupphase.backend.basetest.TestDataEvent;
 import at.ac.tuwien.sepm.groupphase.backend.basetest.TestDataFile;
 import at.ac.tuwien.sepm.groupphase.backend.basetest.TestDataTicket;
 import at.ac.tuwien.sepm.groupphase.backend.config.properties.SecurityProperties;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.UserEndpoint;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventDto;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Address;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Artist;
@@ -74,7 +75,6 @@ public class EventEndpointTest implements TestDataEvent, TestDataTicket, TestAut
 
     @Autowired
     private SecurityProperties securityProperties;
-
 
     private final File file = File.builder()
         .data(TestDataFile.TEST_FILE_DATA)

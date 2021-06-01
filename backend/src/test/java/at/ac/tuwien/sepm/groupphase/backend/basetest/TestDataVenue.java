@@ -1,10 +1,15 @@
 package at.ac.tuwien.sepm.groupphase.backend.basetest;
 
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.AddressDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.LayoutUnitDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.SectorDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.VenueDto;
+import at.ac.tuwien.sepm.groupphase.backend.entity.Address;
 import at.ac.tuwien.sepm.groupphase.backend.entity.LayoutUnit;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Sector;
+import at.ac.tuwien.sepm.groupphase.backend.entity.Venue;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -62,5 +67,42 @@ public interface TestDataVenue extends TestData {
         null
     );
 
+    static Venue getVenue() {
+        return Venue.builder()
+            .name(VENUE_NAME)
+            .sectors(Arrays.asList(SECTOR_SEATED, SECTOR_STAGE, SECTOR_STANDING))
+            .address(
+                Address.builder()
+                    .name(VENUE_ADDRESS_NAME)
+                    .lineOne(VENUE_ADDRESS_LINE_ONE)
+                    .city(VENUE_ADDRESS_CITY)
+                    .postcode(VENUE_ADDRESS_POSTCODE)
+                    .country(VENUE_ADDRESS_COUNTRY)
+                    .eventLocation(false)
+                    .build())
+            .layout(VENUE_LAYOUT)
+            .build();
+    }
+
+    static VenueDto getVenueDto() {
+        return VenueDto.builder()
+            .name(VENUE_NAME)
+            .sectors(Arrays.asList(SECTOR_DTO_SEATED, SECTOR_DTO_STAGE, SECTOR_DTO_STANDING))
+            .address(
+                AddressDto.builder()
+                    .name(VENUE_ADDRESS_NAME)
+                    .lineOne(VENUE_ADDRESS_LINE_ONE)
+                    .city(VENUE_ADDRESS_CITY)
+                    .postcode(VENUE_ADDRESS_POSTCODE)
+                    .country(VENUE_ADDRESS_COUNTRY)
+                    .eventLocation(false)
+                    .build())
+            .layout(VENUE_LAYOUT_DTO)
+            .build();
+    }
+
+    static Sector getSeatedSector() {
+        return Sector.builder().id(1L).name("SectorDto seated").color("#867FD2").type(Sector.SectorType.SEATED).build();
+    }
 
 }
