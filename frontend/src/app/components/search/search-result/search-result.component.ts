@@ -4,6 +4,7 @@ import {Event} from '../../../dtos/event';
 import {Artist} from '../../../dtos/artist';
 import {Address} from '../../../dtos/address';
 import {Performance} from '../../../dtos/performance';
+import { Venue } from 'src/app/dtos/venue';
 
 @Component({
   selector: 'app-search-result',
@@ -28,6 +29,7 @@ export class SearchResultComponent implements OnInit {
   addressSearched = false;
   performanceSearched = false;
   eventPerformance = null;
+  venuePerformance = null;
   search = false;
 
   constructor(private eventService: ApplicationEventService) { }
@@ -127,5 +129,9 @@ export class SearchResultComponent implements OnInit {
 
   setSearchedEventPerformance(event: Event){
     this.eventPerformance = event;
+  }
+
+  setSearchedVenuePerformance(venue: Venue){
+    this.venuePerformance = venue;
   }
 }

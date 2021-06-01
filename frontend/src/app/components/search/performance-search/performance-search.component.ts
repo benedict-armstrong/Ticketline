@@ -4,6 +4,7 @@ import { ApplicationEventService } from 'src/app/services/event.service';
 import { ApplicationPerformanceService } from 'src/app/services/performance.service';
 import {Performance} from '../../../dtos/performance';
 import {Event} from '../../../dtos/event';
+import { Venue } from 'src/app/dtos/venue';
 
 @Component({
   selector: 'app-performance-search',
@@ -15,6 +16,7 @@ export class PerformanceSearchComponent implements OnInit {
   @Output() searchedPerformances = new EventEmitter<Performance[]>();
   @Output() searchedNoPerformance = new EventEmitter<any>();
   @Output() searchedEventPerformance = new EventEmitter<any>();
+  @Output() searchedVenuePerformance = new EventEmitter<any>()
 
   // Error flag
   error = false;
@@ -27,6 +29,7 @@ export class PerformanceSearchComponent implements OnInit {
   page = 0;
   size = 8;
   selectedEvent = null;
+  selectedVenue = null;
 
   constructor(private formBuilder: FormBuilder, private performanceService: ApplicationPerformanceService,
     private eventService: ApplicationEventService) { }
@@ -35,7 +38,6 @@ export class PerformanceSearchComponent implements OnInit {
     this.performanceSearchForm = this.formBuilder.group({
       date: ['', []],
       price: ['', []],
-      venue: ['', []],
       time: ['', []],
     });
 
@@ -67,13 +69,19 @@ export class PerformanceSearchComponent implements OnInit {
     } else {
 
       let date = null;
-      if (this.performanceSearchForm.value.date !== '') {
+      if (this.performanceSearchForm.value.date !== '' && this.performanceSearchForm.value.date !== null) {
         if (this.performanceSearchForm.value.time !== '') {
           date = new Date(this.performanceSearchForm.value.date + 'T' + this.performanceSearchForm.value.time);
         } else {
           date = new Date(this.performanceSearchForm.value.date);
         }
+      } else {
+        if (this.performanceSearchForm.value.time !== '') {
+          //date = new Date('T' + this.performanceSearchForm.value.time);
+        }
       }
+
+      console.log(date) //TODO
 
       let eventId;
 
@@ -83,7 +91,16 @@ export class PerformanceSearchComponent implements OnInit {
         eventId = null;
       }
 
-      this.performanceService.searchPerformances(this.page, this.size, date, eventId).subscribe(
+      let venueId;
+
+      if(this.selectedVenue){
+        venueId = this.selectedVenue.id;
+      }else{
+        venueId = null;
+      }
+
+      this.performanceService.searchPerformances(this.page, this.size, date, eventId,
+        this.performanceSearchForm.value.price, venueId).subscribe(
         response => {
           console.log(response);
           this.performances.push(...response);
@@ -101,6 +118,11 @@ export class PerformanceSearchComponent implements OnInit {
             this.searchedEventPerformance.emit(this.selectedEvent);
           } else {
             this.searchedEventPerformance.emit(undefined);
+          }
+          if (this.selectedVenue) {
+            this.searchedVenuePerformance.emit(this.selectedVenue);
+          } else {
+            this.searchedVenuePerformance.emit(undefined);
           }
         }, error => {
           console.error(error);
@@ -120,12 +142,16 @@ export class PerformanceSearchComponent implements OnInit {
     this.selectedEvent = event[0];
   }
 
+  setSelectedVenue(venue: Venue){
+    this.selectedVenue = venue[0];
+  }
+
   resetSearchFields(){
     this.performanceSearchForm.reset();
     this.performanceSearchForm.value.date = '';
     this.performanceSearchForm.value.price = '';
     this.performanceSearchForm.value.time = '';
-    this.performanceSearchForm.value.event = '';
-    this.performanceSearchForm.value.venue = '';
+    this.selectedEvent = null;
+    this.selectedVenue = null;
   }
 }
