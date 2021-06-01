@@ -1,29 +1,16 @@
 package at.ac.tuwien.sepm.groupphase.backend.integrationtest;
 
 import at.ac.tuwien.sepm.groupphase.backend.basetest.TestAuthentification;
-import at.ac.tuwien.sepm.groupphase.backend.basetest.TestDataArtist;
 import at.ac.tuwien.sepm.groupphase.backend.basetest.TestDataEvent;
-import at.ac.tuwien.sepm.groupphase.backend.basetest.TestDataFile;
-import at.ac.tuwien.sepm.groupphase.backend.basetest.TestDataTicket;
-import at.ac.tuwien.sepm.groupphase.backend.basetest.TestDataVenue;
 import at.ac.tuwien.sepm.groupphase.backend.config.properties.SecurityProperties;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.AddressDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.ArtistDto;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.PerformanceDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.TicketTypeDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.VenueDto;
-import at.ac.tuwien.sepm.groupphase.backend.entity.Address;
-import at.ac.tuwien.sepm.groupphase.backend.entity.Artist;
-import at.ac.tuwien.sepm.groupphase.backend.entity.LayoutUnit;
-import at.ac.tuwien.sepm.groupphase.backend.entity.Performance;
-import at.ac.tuwien.sepm.groupphase.backend.entity.File;
-import at.ac.tuwien.sepm.groupphase.backend.entity.Venue;
 import at.ac.tuwien.sepm.groupphase.backend.repository.AddressRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.ArtistRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.PerformanceRepository;
-import at.ac.tuwien.sepm.groupphase.backend.repository.FileRepository;
-import at.ac.tuwien.sepm.groupphase.backend.repository.SectorRepository;
-import at.ac.tuwien.sepm.groupphase.backend.repository.TicketRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.VenueRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -44,7 +31,9 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
+import java.time.LocalDateTime;
 import java.util.Arrays;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -60,20 +49,10 @@ public class PerformanceEndpointTest implements TestDataEvent, TestAuthentificat
     @Autowired
     private MockMvc mockMvc;
 
-    @Autowired
-    private PerformanceRepository performanceRepository;
+    // Authentication beans
 
     @Autowired
     private UserRepository userRepository;
-
-    @Autowired
-    private ArtistRepository artistRepository;
-
-    @Autowired
-    private TicketRepository ticketRepository;
-
-    @Autowired
-    private VenueRepository venueRepository;
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -84,29 +63,96 @@ public class PerformanceEndpointTest implements TestDataEvent, TestAuthentificat
     @Autowired
     private SecurityProperties securityProperties;
 
-
-    private final File file = File.builder()
-        .data(TestDataFile.TEST_FILE_DATA)
-        .type(TestDataFile.TEST_FILE_TYPE)
-        .build();
-
-    private VenueDto venueDto;
-
-    private ArtistDto artistDto;
-
     private String authToken;
 
-    private PerformanceDto performance;
+    // Other beans
+    @Autowired
+    private VenueRepository venueRepository;
+
+    @Autowired
+    private PerformanceRepository performanceRepository;
+
+    @Autowired
+    private ArtistRepository artistRepository;
+
+    @Autowired
+    private AddressRepository addressRepository;
+
+    private VenueDto venueDto = VenueDto.builder()
+        .name(VENUE_NAME)
+        .sectors( Arrays.asList(SECTOR_DTO_SEATED, SECTOR_DTO_STAGE, SECTOR_DTO_STANDING))
+        .address(
+            AddressDto.builder()
+                .name(VENUE_ADDRESS_NAME)
+                .lineOne(VENUE_ADDRESS_LINE_ONE)
+                .city(VENUE_ADDRESS_CITY)
+                .postcode(VENUE_ADDRESS_POSTCODE)
+                .country(VENUE_ADDRESS_COUNTRY)
+                .eventLocation(false)
+                .build())
+        .layout(VENUE_LAYOUT_DTO)
+        .build();
+    private ArtistDto artistDto = ArtistDto.builder()
+        .firstName("Art")
+        .lastName("ist")
+        .build();
+    private TicketTypeDto[] ticketTypeDtos = new TicketTypeDto[]{
+        TicketTypeDto.builder()
+            .title("TTD").price(500)
+            .build()
+    };
+    private PerformanceDto performanceDto = PerformanceDto.builder()
+        .title("Perf Dto")
+        .description("Perf Desc")
+        .venue(venueDto)
+        .artist(artistDto)
+        .ticketTypes(ticketTypeDtos)
+        .date(LocalDateTime.now().plusDays(10))
+        .build();
 
     @BeforeEach
     public void beforeEach() throws Exception {
         saveUser(AUTH_USER_ORGANIZER, userRepository, passwordEncoder);
         authToken = authenticate(AUTH_USER_ORGANIZER, mockMvc, objectMapper);
 
-        venueDto = saveVenue(TestDataVenue.getVenueDto());
-        artistDto = saveArtist(TestDataArtist.getArtistDto());
+        venueDto = VenueDto.builder()
+            .name("VenueDto")
+            .sectors( Arrays.asList(SECTOR_DTO_SEATED, SECTOR_DTO_STAGE, SECTOR_DTO_STANDING))
+            .address(
+                AddressDto.builder()
+                    .name(VENUE_ADDRESS_NAME)
+                    .lineOne(VENUE_ADDRESS_LINE_ONE)
+                    .city(VENUE_ADDRESS_CITY)
+                    .postcode(VENUE_ADDRESS_POSTCODE)
+                    .country(VENUE_ADDRESS_COUNTRY)
+                    .eventLocation(false)
+                    .build()
+                )
+            .layout(VENUE_LAYOUT_DTO)
+            .build();
+        artistDto = ArtistDto.builder()
+            .firstName("Art")
+            .lastName("ist")
+            .build();
+        ticketTypeDtos = new TicketTypeDto[]{
+            TicketTypeDto.builder()
+                .title("TTD").price(500)
+                .build()
+        };
+        performanceDto = PerformanceDto.builder()
+            .title("Perf Dto")
+            .description("Perf Desc")
+            .venue(venueDto)
+            .artist(artistDto)
+            .ticketTypes(ticketTypeDtos)
+            .date(LocalDateTime.now().plusDays(10))
+            .build();
 
-        performance = TestDataEvent.getPerformanceDto(artistDto, venueDto);
+        ArtistDto savedArtistDto = saveArtist(artistDto);
+        performanceDto.setArtist(savedArtistDto);
+
+        VenueDto savedVenueDto = saveVenue(venueDto);
+        performanceDto.setVenue(savedVenueDto);
     }
 
     @AfterEach
@@ -115,21 +161,28 @@ public class PerformanceEndpointTest implements TestDataEvent, TestAuthentificat
         venueRepository.deleteAll();
         userRepository.deleteAll();
         artistRepository.deleteAll();
-        ticketRepository.deleteAll();
+        addressRepository.deleteAll();
     }
 
-    private void savePerformance(PerformanceDto performanceDto) throws Exception {
+    @Test
+    @DisplayName("Should return 201 and a DTO with set ID back after creating performance")
+    public void whenCreatePerformance_then201AndGetDtoWithIdBack() throws Exception {
         MvcResult mvcResult = this.mockMvc.perform(
             post(PERFORMANCE_BASE_URI)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(performanceDto))
                 .header(securityProperties.getAuthHeader(), authToken)
         ).andReturn();
-
         MockHttpServletResponse response = mvcResult.getResponse();
         assertEquals(HttpStatus.CREATED.value(), response.getStatus());
         assertEquals(MediaType.APPLICATION_JSON_VALUE, response.getContentType());
+
+        PerformanceDto savedPerformanceDto = objectMapper.readValue(response.getContentAsString(), PerformanceDto.class);
+
+        assertNotNull(savedPerformanceDto.getId());
     }
+
+    // Methods for saving dependent entities
 
     private ArtistDto saveArtist(ArtistDto artistDto) throws Exception {
         MvcResult mvcResult = this.mockMvc.perform(
@@ -138,13 +191,7 @@ public class PerformanceEndpointTest implements TestDataEvent, TestAuthentificat
                 .content(objectMapper.writeValueAsString(artistDto))
                 .header(securityProperties.getAuthHeader(), authToken)
         ).andReturn();
-
-        MockHttpServletResponse response = mvcResult.getResponse();
-        assertEquals(HttpStatus.CREATED.value(), response.getStatus());
-        assertEquals(MediaType.APPLICATION_JSON_VALUE, response.getContentType());
-
-        return objectMapper.readValue(response.getContentAsString(),
-            ArtistDto.class);
+        return objectMapper.readValue(mvcResult.getResponse().getContentAsString(), ArtistDto.class);
     }
 
     private VenueDto saveVenue(VenueDto venueDto) throws Exception {
@@ -154,180 +201,7 @@ public class PerformanceEndpointTest implements TestDataEvent, TestAuthentificat
                 .content(objectMapper.writeValueAsString(venueDto))
                 .header(securityProperties.getAuthHeader(), authToken)
         ).andReturn();
-
-        MockHttpServletResponse response = mvcResult.getResponse();
-        assertEquals(HttpStatus.CREATED.value(), response.getStatus());
-        assertEquals(MediaType.APPLICATION_JSON_VALUE, response.getContentType());
-
-        return objectMapper.readValue(response.getContentAsString(),
-            VenueDto.class);
+        return objectMapper.readValue(mvcResult.getResponse().getContentAsString(), VenueDto.class);
     }
 
-    @Test
-    @DisplayName("Should return 201 and performance object with set ID")
-    public void whenCreatePerformance_then201AndPerformanceWithId() throws Exception {
-        MvcResult mvcResult = this.mockMvc.perform(
-            post(TestDataEvent.PERFORMANCE_BASE_URI)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(performance))
-                .header(securityProperties.getAuthHeader(), authToken)
-        ).andReturn();
-
-        MockHttpServletResponse response = mvcResult.getResponse();
-        assertEquals(HttpStatus.CREATED.value(), response.getStatus());
-        assertEquals(MediaType.APPLICATION_JSON_VALUE, response.getContentType());
-
-        PerformanceDto savedDto = objectMapper.readValue(response.getContentAsString(), PerformanceDto.class);
-        assertAll(
-            () -> assertNotNull(savedDto.getId())
-        );
-    }
-
-    @Test
-    @DisplayName("Should return 200 and performance with the given ID on get by ID")
-    public void givenPerformance_whenGetOneById_then200AndPerformanceWithId() throws Exception {
-        savePerformance(performance);
-        assertNotNull(performance);
-
-        MvcResult mvcResult = this.mockMvc.perform(
-            get(PERFORMANCE_BASE_URI + "/" + performance.getId())
-                .header(securityProperties.getAuthHeader(), authToken)
-        ).andReturn();
-
-        MockHttpServletResponse response = mvcResult.getResponse();
-        assertEquals(HttpStatus.OK.value(), response.getStatus());
-        assertEquals(MediaType.APPLICATION_JSON_VALUE, response.getContentType());
-
-        PerformanceDto performanceDto = objectMapper.readValue(response.getContentAsString(), PerformanceDto.class);
-
-        assertEquals(performanceDto.getId(), performance.getId());
-    }
-
-
-    @Test
-    @DisplayName("Should return correctly sized chunk of performances on get all")
-    public void givenPerformance_whenGetAll_thenGetCorrectChunk() throws Exception {
-        int amountOfPerformancesToGenerate = 15;
-        int pageSize = 5;
-
-        for (int i = 0; i < amountOfPerformancesToGenerate; i++) {
-            PerformanceDto performance = PerformanceDto.builder()
-                .title(TestDataEvent.TEST_EVENT_TITLE)
-                .description(TestDataEvent.TEST_EVENT_DESCRIPTION)
-                .date(TestDataEvent.TEST_PERFORMANCE_DATE)
-                .artist(artistDto)
-                .venue(venueDto)
-                .ticketTypes(TestDataTicket.getTicketTypeDtos())
-                .build();
-
-            savePerformance(performance);
-        }
-
-        MvcResult mvcResult = this.mockMvc.perform(
-            get(PERFORMANCE_BASE_URI)
-                .param("page", String.valueOf(1))
-                .param("size", String.valueOf(pageSize))
-                .header(securityProperties.getAuthHeader(), authToken)
-        ).andReturn();
-
-        MockHttpServletResponse response = mvcResult.getResponse();
-        assertEquals(HttpStatus.OK.value(), response.getStatus());
-        assertEquals(MediaType.APPLICATION_JSON_VALUE, response.getContentType());
-
-        PerformanceDto[] performanceDtos = objectMapper.readValue(response.getContentAsString(), PerformanceDto[].class);
-        assertEquals(pageSize, performanceDtos.length);
-    }
-
-    @Test
-    @DisplayName("Should return correctly sized chunk of performances on get by artist")
-    public void givenPerformance_whenGetByArtist_thenGetCorrectChunk() throws Exception {
-        int amountOfPerformancesToGenerate = 15;
-        int pageSize = 5;
-
-        for (int i = 0; i < amountOfPerformancesToGenerate; i++) {
-            PerformanceDto performance = PerformanceDto.builder()
-                .title(TestDataEvent.TEST_EVENT_TITLE)
-                .description(TestDataEvent.TEST_EVENT_DESCRIPTION)
-                .date(TestDataEvent.TEST_PERFORMANCE_DATE)
-                .artist(artistDto)
-                .venue(venueDto)
-                .ticketTypes(TestDataTicket.getTicketTypeDtos())
-                .build();
-
-            savePerformance(performance);
-        }
-
-        MvcResult mvcResult = this.mockMvc.perform(
-            get(PERFORMANCE_BASE_URI)
-                .param("artistId", artistDto.getId().toString())
-                .param("page", String.valueOf(1))
-                .param("size", String.valueOf(pageSize))
-                .header(securityProperties.getAuthHeader(), authToken)
-        ).andReturn();
-
-        MockHttpServletResponse response = mvcResult.getResponse();
-        assertEquals(HttpStatus.OK.value(), response.getStatus());
-        assertEquals(MediaType.APPLICATION_JSON_VALUE, response.getContentType());
-
-        PerformanceDto[] performanceDtos = objectMapper.readValue(response.getContentAsString(), PerformanceDto[].class);
-        assertEquals(pageSize, performanceDtos.length);
-    }
-
-    @Test
-    @DisplayName("Should return correctly sized chunk of performances on get by location")
-    public void givenPerformance_whenGetByLocation_thenGetCorrectChunk() throws Exception {
-        int amountOfPerformancesToGenerate = 15;
-        int pageSize = 5;
-
-        for (int i = 0; i < amountOfPerformancesToGenerate; i++) {
-            PerformanceDto performance = PerformanceDto.builder()
-                .title(TestDataEvent.TEST_EVENT_TITLE)
-                .description(TestDataEvent.TEST_EVENT_DESCRIPTION)
-                .date(TestDataEvent.TEST_PERFORMANCE_DATE)
-                .artist(artistDto)
-                .venue(venueDto)
-                .ticketTypes(TestDataTicket.getTicketTypeDtos())
-                .build();
-
-            savePerformance(performance);
-        }
-
-        MvcResult mvcResult = this.mockMvc.perform(
-            get(PERFORMANCE_BASE_URI)
-                .param("addressId", venueDto.getId().toString())
-                .param("page", String.valueOf(1))
-                .param("size", String.valueOf(pageSize))
-                .header(securityProperties.getAuthHeader(), authToken)
-        ).andReturn();
-
-        MockHttpServletResponse response = mvcResult.getResponse();
-        assertEquals(HttpStatus.OK.value(), response.getStatus());
-        assertEquals(MediaType.APPLICATION_JSON_VALUE, response.getContentType());
-
-        PerformanceDto[] performanceDtos = objectMapper.readValue(response.getContentAsString(), PerformanceDto[].class);
-        assertEquals(pageSize, performanceDtos.length);
-    }
-
-    @Test
-    @DisplayName("Should return 400 when Date is in past")
-    public void whenCreatePerformanceWithPastDate_then400() throws Exception {
-        PerformanceDto invalidPerformance = PerformanceDto.builder()
-            .title(TestDataEvent.TEST_EVENT_TITLE)
-            .description(TestDataEvent.TEST_EVENT_DESCRIPTION)
-            .date(TestDataEvent.TEST_PERFORMANCE_DATE.minusYears(10))
-            .artist(artistDto)
-            .venue(venueDto)
-            .ticketTypes(TestDataTicket.getTicketTypeDtos())
-            .build();
-
-        MvcResult mvcResult = this.mockMvc.perform(
-            post(TestDataEvent.PERFORMANCE_BASE_URI)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(invalidPerformance))
-                .header(securityProperties.getAuthHeader(), authToken)
-        ).andReturn();
-
-        MockHttpServletResponse response = mvcResult.getResponse();
-        assertEquals(HttpStatus.BAD_REQUEST.value(), response.getStatus());
-    }
 }
