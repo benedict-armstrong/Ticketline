@@ -1,34 +1,37 @@
 <div class="cartItem">
     <div class="row ticketHeader">
         <div class="col-9">
-            <span>{{this.ticketService.cart[this.i].performance.title}}</span>
+            <span>{{this.cartItemService.cart[this.i].tickets[0].performance.title}}</span>
         </div>
         <div class="col-3 closeContainer">
             <button class="close" type="button" [ngClass]="{'locked': this.waiting}" (click)="removeFromCart()">X</button>
         </div>
     </div>
-    <div class="row ticketBody">
-        <div class="col-8">
-            <span>{{this.ticketService.cart[this.i].ticketType.title}} {{this.ticketService.cart[this.i].ticketType.sectorType.name}}</span>
-        </div>
-
-        <div class="col-4 prices">
-            <span class="price">{{this.ticketService.cart[this.i].ticketType.price / 100 | currency:'EUR'}}</span>
+    <div class="row ticketBody mainBody">
+        <div class="col-12">
+            <span>Ticket Type: {{this.cartItemService.cart[this.i].tickets[0].ticketType.title}}</span>
         </div>
     </div>
-    <div class="row ticketBody">
-        <div class="col-8 counts">
-            <form [formGroup]="cartItemForm">
-                <div class="inline">
-                    <button class="secondary no-shadow no-border" [ngClass]="{'locked': this.waiting}" type="button" (click)="decAmount()"><i class="bi bi-dash-circle"></i></button>
-                    <input type="number" formControlName="amount" (change)="setAmount()">
-                    <button class="secondary no-shadow no-border" [ngClass]="{'locked': this.waiting}" type="button" (click)="incAmount()"><i class="bi bi-plus-circle"></i></button>
-                </div>
-            </form>
+    <div class="row ticketBody" *ngFor="let ticket of cartItemService.cart[this.i].tickets; index as j;">
+        <div class="col-6">
+            <span>Seat: {{ticket.seat.customLabel}}</span>
         </div>
-        <div class="col-4 prices">
-            <span class="price">{{this.ticketService.cart[this.i].ticketType.price * cartItemForm.value.amount / 100 | currency:'EUR'}}</span>
+
+        <div class="col-6 prices">
+            <span class="price">{{this.cartItemService.cart[this.i].tickets[0].ticketType.price / 100 | currency:'EUR'}}</span>
+            <button class="secondary removeTicket no-shadow no-border" [ngClass]="{'locked': this.waiting}" type="button" (click)="removeTicketFromCart(j)"><i class="bi bi-trash"></i></button>
         </div>
+    </div>
+    <div class="row ticketBody mainBody">
+        <div class="col-6 counts">
+            <span>{{this.cartItemService.cart[this.i].tickets.length}} Tickets</span>
+        </div>
+        <div class="col-6 prices">
+            <span class="price">Total: {{this.cartItemService.cart[this.i].tickets[0].ticketType.price * this.cartItemService.cart[this.i].tickets.length / 100 | currency:'EUR'}}</span>
+        </div>
+    </div>
+    <div class="row ticketBody mainBody">
+        <button class="secondary addButton" [ngClass]="{'locked': this.waiting}" type="button" (click)="addTicketToCart()">Add One More</button>
     </div>
     <div class="row ticketBody">
         <div *ngIf="error" class="col-12 alert alert-danger alert-dismissible fade show" role="alert">

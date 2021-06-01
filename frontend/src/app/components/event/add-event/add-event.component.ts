@@ -69,6 +69,7 @@ export class AddEventComponent implements OnInit {
           this.event.images.push(f);
           count--;
           if (count === 0) {
+            console.log(this.event);
             this.eventService.addEvent(this.event).subscribe((response) => {
               this.success = true;
               this.router.navigate(['/event-detail', response.id]);

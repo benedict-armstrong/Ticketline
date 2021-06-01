@@ -7,7 +7,6 @@ export class Ticket {
     public id: number,
     public ticketType: TicketType,
     public performance: Performance,
-    public seats: number[],
-    // public seat: LayoutUnit // delete seats uncomment this
+    public seat: LayoutUnit
   ) {}
 }

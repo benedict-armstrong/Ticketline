@@ -1,22 +1,28 @@
 import {Component, Input, OnInit} from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { TicketService } from 'src/app/services/ticket.service';
+import { CartItemService } from 'src/app/services/cartItem.service';
 import { TicketType } from '../../dtos/ticketType';
 import { Performance } from '../../dtos/performance';
 import { Ticket } from 'src/app/dtos/ticket';
+import { CartItem } from 'src/app/dtos/cartItem';
+import { Sector } from 'src/app/dtos/sector';
 
 @Component({
   selector: 'app-ticket-list-item',
   templateUrl: './ticket-list-item.component.html',
-  styleUrls: ['./ticket-list-item.component.scss']
+  styleUrls: ['./ticket-list-item.component.scss'],
 })
 export class TicketListItemComponent implements OnInit {
   @Input()
-  ticketType: TicketType;
-  @Input()
   performance: Performance;
+  @Input()
+  ticketCount: number;
+  @Input()
+  ticketType: TicketType;
 
   ticketForm: FormGroup;
+
+  public sector: Sector;
 
   public validationError = false;
   public error = false;
@@ -26,11 +32,15 @@ export class TicketListItemComponent implements OnInit {
 
   constructor(
     private formBuilder: FormBuilder,
-    private ticketService: TicketService
+    private cartItemService: CartItemService
   ) {
     this.ticketForm = this.formBuilder.group({
       amount: [0, [Validators.min(1)]]
     });
+  }
+
+  ngOnInit(): void {
+    this.sector = this.ticketType.sector;
   }
 
   incAmount(): void {
@@ -54,30 +64,32 @@ export class TicketListItemComponent implements OnInit {
     if (!this.waiting) {
       if (this.ticketForm.valid) {
         this.validationError = false;
-        const ticket: Ticket = {
+        const cartItem: CartItem = {
+          id: null,
+          tickets: []
+        };
+        cartItem.tickets.push({
           id: null,
           performance: this.performance,
           ticketType: this.ticketType,
-          seats: [this.ticketForm.value.amount],
-          // status: null
-        };
+          seat: null,
+        });
         this.waiting = true;
-        this.ticketService.addTicket(ticket).subscribe(
-          (responseTicket: Ticket) => {
+        this.cartItemService.addCartItem(cartItem, this.ticketForm.value.amount).subscribe(
+          (responseCartItem: CartItem) => {
             this.waiting = false;
             this.success = true;
-            for (let i = 0; i < this.ticketService.cart.length; i++) {
-              if (this.ticketService.cart[i].id === responseTicket.id
-                || this.ticketService.cart[i].ticketType.id === responseTicket.ticketType.id) {
-                this.ticketService.cart[i] = responseTicket;
-                responseTicket = null;
+            for (let i = 0; i < this.cartItemService.cart.length; i++) {
+              if (this.cartItemService.cart[i].id === responseCartItem.id) {
+                this.cartItemService.cart[i] = responseCartItem;
+                responseCartItem = null;
                 break;
               }
             }
-            if (responseTicket != null) {
-              this.ticketService.cart.push(responseTicket);
+            if (responseCartItem != null) {
+              this.cartItemService.cart.push(responseCartItem);
             }
-            this.ticketService.updatePrice();
+            this.cartItemService.updatePrice();
           },
           (error) => {
             this.waiting = false;
@@ -89,9 +101,6 @@ export class TicketListItemComponent implements OnInit {
         this.validationError = true;
       }
     }
-  }
-
-  ngOnInit(): void {
   }
 
   vanishAlert(): void {

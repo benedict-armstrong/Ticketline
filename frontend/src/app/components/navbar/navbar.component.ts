@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { AuthService } from 'src/app/services/auth.service';
-import { TicketService } from 'src/app/services/ticket.service';
+import { CartItemService } from 'src/app/services/cartItem.service';
 
 @Component({
   selector: 'app-navbar',
@@ -9,18 +9,19 @@ import { TicketService } from 'src/app/services/ticket.service';
 })
 export class NavbarComponent implements OnInit {
 
-  constructor(private authService: AuthService, private ticketService: TicketService) {}
+  constructor(private authService: AuthService, private cartItemService: CartItemService) {}
 
   ngOnInit(): void {}
 
   toggleCart() {
-    this.ticketService.toggleStatus();
+    this.cartItemService.toggleStatus();
   }
 
   /**
    * Logout current user.
    */
   logoutUser(): void {
+    this.cartItemService.closeCart();
     this.authService.logoutUser();
   }
 

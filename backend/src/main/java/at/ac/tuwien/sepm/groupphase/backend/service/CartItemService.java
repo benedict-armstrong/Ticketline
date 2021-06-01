@@ -7,16 +7,25 @@ import java.util.List;
 public interface CartItemService {
 
     /**
-     * Saves a order in the database.
+     * Saves a cartItem in the database.
      *
-     * @param cartItem the order to be saved.
+     * @param cartItem the cartItem to be saved.
      * @param status the status should be saved in
-     * @return the newly added order.
+     * @param amount of tickets that should be created in the cartItem
+     * @return the newly added cartItem.
      */
-    CartItem save(CartItem cartItem, CartItem.Status status);
+    CartItem save(CartItem cartItem, CartItem.Status status, int amount);
 
     /**
-     * Gets all order of a user with the given status.
+     * Adds a new ticket to a cartItem (seat selection is automatic).
+     *
+     * @param id the id of the cartItem.
+     * @return the cartItem with the new ticket.
+     */
+    CartItem addTicket(Long id);
+
+    /**
+     * Gets all cartItems of a user with the given status.
      *
      * @param status the status should be searched in
      * @return list of cartItems.
@@ -31,16 +40,24 @@ public interface CartItemService {
     boolean checkout();
 
     /**
-     * Deletes a order and all included tickets.
+     * Deletes a cartItem and all included tickets.
      *
-     * @param id of the order
-     * @return true if the order has been deleted, else false
+     * @param id of the cartItem
+     * @return true if the cartItem has been deleted, else false
      */
     boolean delete(Long id);
+
+    /**
+     * Deletes a ticket from a cartItem.
+     *
+     * @param id of the cartItem
+     * @param ticketId of the ticket
+     * @return true if the ticket has been deleted, else false
+     */
+    boolean deleteTicket(Long id, Long ticketId);
 
     /**
      * Deletes all cartItems in the cart that are to old.
      */
     void pruneCartItems();
-
 }
