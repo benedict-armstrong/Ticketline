@@ -9,8 +9,8 @@ import at.ac.tuwien.sepm.groupphase.backend.entity.LayoutUnit;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Sector;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Venue;
 
-import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public interface TestDataVenue extends TestData {
@@ -68,9 +68,10 @@ public interface TestDataVenue extends TestData {
     );
 
     static Venue getVenue() {
+        Sector sector = getSeatedSector();
         return Venue.builder()
             .name(VENUE_NAME)
-            .sectors(Arrays.asList(SECTOR_SEATED, SECTOR_STAGE, SECTOR_STANDING))
+            .sectors(Collections.singletonList(sector))
             .address(
                 Address.builder()
                     .name(VENUE_ADDRESS_NAME)
@@ -80,7 +81,7 @@ public interface TestDataVenue extends TestData {
                     .country(VENUE_ADDRESS_COUNTRY)
                     .eventLocation(false)
                     .build())
-            .layout(VENUE_LAYOUT)
+            .layout(getVenueLayout(sector))
             .build();
     }
 
@@ -102,7 +103,21 @@ public interface TestDataVenue extends TestData {
     }
 
     static Sector getSeatedSector() {
-        return Sector.builder().id(1L).name("SectorDto seated").color("#867FD2").type(Sector.SectorType.SEATED).build();
+        return Sector.builder().name("SectorDto seated").color("#867FD2").type(Sector.SectorType.SEATED).build();
+    }
+
+    static List<LayoutUnit> getVenueLayout(Sector sector) {
+        return Arrays.asList(
+            LayoutUnit.builder().sector(sector).customLabel("1").build(),
+            LayoutUnit.builder().sector(sector).customLabel("2").build(),
+            LayoutUnit.builder().sector(sector).customLabel("3").build(),
+            LayoutUnit.builder().sector(sector).customLabel("4").build(),
+            null,
+            LayoutUnit.builder().sector(sector).customLabel("6").build(),
+            LayoutUnit.builder().sector(sector).customLabel("7").build(),
+            LayoutUnit.builder().sector(sector).customLabel("8").build(),
+            null
+        );
     }
 
 }
