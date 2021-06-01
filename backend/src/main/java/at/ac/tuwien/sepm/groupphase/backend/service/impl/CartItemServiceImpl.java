@@ -220,8 +220,12 @@ public class CartItemServiceImpl implements CartItemService {
             }
 
             if (returnVal) {
-                cartItem.setTickets(ticketSet);
-                cartItemRepository.save(cartItem);
+                if (ticketSet.size() > 0) {
+                    cartItem.setTickets(ticketSet);
+                    cartItemRepository.save(cartItem);
+                } else {
+                    cartItemRepository.delete(cartItem);
+                }
             }
             return returnVal;
         } else {
