@@ -6,6 +6,7 @@ import at.ac.tuwien.sepm.groupphase.backend.basetest.TestDataArtist;
 import at.ac.tuwien.sepm.groupphase.backend.basetest.TestDataEvent;
 import at.ac.tuwien.sepm.groupphase.backend.basetest.TestDataTicket;
 import at.ac.tuwien.sepm.groupphase.backend.basetest.TestDataUser;
+import at.ac.tuwien.sepm.groupphase.backend.basetest.TestDataVenue;
 import at.ac.tuwien.sepm.groupphase.backend.config.properties.SecurityProperties;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.LayoutUnitDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.TicketDto;
@@ -15,9 +16,11 @@ import at.ac.tuwien.sepm.groupphase.backend.entity.*;
 import at.ac.tuwien.sepm.groupphase.backend.repository.AddressRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.ArtistRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.PerformanceRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.SectorRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.TicketRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.TicketTypeRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.UserRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.VenueRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -37,6 +40,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
 import java.util.Arrays;
+import java.util.Collections;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -83,6 +87,12 @@ public class TicketEndpointTest implements TestAuthentification, TestDataTicket 
     @Autowired
     private AddressRepository addressRepository;
 
+    @Autowired
+    private VenueRepository venueRepository;
+
+    @Autowired
+    private SectorRepository sectorRepository;
+
     // Mappers
 
     @Autowired
@@ -104,6 +114,17 @@ public class TicketEndpointTest implements TestAuthentification, TestDataTicket 
     public void beforeEach() throws Exception {
         artistRepository.save(artist);
 
+        Sector sector = sectorRepository.save(TestDataVenue.getSeatedSector());
+        Venue venue = TestDataVenue.getVenue();
+        for (LayoutUnit layoutUnit : venue.getLayout()) {
+            if (layoutUnit != null) {
+                layoutUnit.setSector(sector);
+            }
+        }
+        venue.setSectors(Collections.singletonList(sector));
+        Venue savedVenue = venueRepository.save(venue);
+        performance.setVenue(savedVenue);
+
         saveUser(user, userRepository, passwordEncoder);
         authToken = authenticate(user, mockMvc, objectMapper);
 
@@ -122,6 +143,8 @@ public class TicketEndpointTest implements TestAuthentification, TestDataTicket 
         performanceRepository.deleteAll();
         ticketTypeRepository.deleteAll();
         artistRepository.deleteAll();
+        venueRepository.deleteAll();
+        sectorRepository.deleteAll();
         addressRepository.deleteAll();
     }
 
