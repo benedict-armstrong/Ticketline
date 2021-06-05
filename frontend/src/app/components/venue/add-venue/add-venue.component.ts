@@ -84,6 +84,10 @@ export class AddVenueComponent implements OnInit {
     this.errorMessage = '';
   }
 
+  vanishSuccess() {
+    this.success = false;
+  }
+
   private defaultServiceErrorHandling(error: any) {
     console.log(error);
     this.error = true;
