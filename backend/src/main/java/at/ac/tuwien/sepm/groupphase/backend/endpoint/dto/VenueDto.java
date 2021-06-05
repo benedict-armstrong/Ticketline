@@ -18,6 +18,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@JsonIdentityInfo(scope = VenueDto.class, generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class VenueDto {
 
     private Long id;
@@ -32,6 +33,6 @@ public class VenueDto {
     @Size(min = 1)
     private List<SectorDto> sectors;
 
-    @CustomLayoutConstraint(message = "Layout must be a well formed matrix")
+    @CustomLayoutConstraint(message = "Layout must be a non empty well formed matrix")
     private List<List<LayoutUnitDto>> layout;
 }
