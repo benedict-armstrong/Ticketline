@@ -36,4 +36,8 @@ export class BookingComponent implements OnInit {
       }
     );
   }
+
+  onStornoClick(id) {
+    alert('Storno: ' + id);
+  }
 }

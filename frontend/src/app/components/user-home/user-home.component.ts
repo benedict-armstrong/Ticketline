@@ -4,6 +4,9 @@ import { Router } from '@angular/router';
 import { User } from 'src/app/dtos/user';
 import { AuthService } from 'src/app/services/auth.service';
 import { UserService } from 'src/app/services/user.service';
+import {CartItemService} from '../../services/cartItem.service';
+import {Ticket} from '../../dtos/ticket';
+import {TicketGroup} from '../../dtos/ticketGroup';
 
 @Component({
   selector: 'app-user-home',
@@ -22,18 +25,22 @@ export class UserHomeComponent implements OnInit {
   // Show User Actions
   userActions = false;
   loading = false;
+  showAll = false;
 
   // If password change is submitted
   passwordSubmitted = false;
 
   user: User;
   userRole: string;
-  orders: [];
+  tickets: Ticket[] = [];
+  orders: TicketGroup[] = [];
+  newOrders: TicketGroup[] = [];
   passwordChangeForm: FormGroup;
 
   constructor(
     private userService: UserService,
     private authService: AuthService,
+    private cartItemService: CartItemService,
     private router: Router,
     private formBuilder: FormBuilder
   ) { }
@@ -68,21 +75,42 @@ export class UserHomeComponent implements OnInit {
   }
 
   /**
-   * Load User with email from Backend.
+   * Gets all paid tickets from Backend and sorts by performance.
    */
   loadOrders() {
     console.log('loading orders');
-    this.loading = false;
-    /*
-    this.userService.getUserByEmail(email).subscribe(
+    this.cartItemService.getPaidItems().subscribe(
       (response) => {
-        this.orders = response;
+        // Get all tickets
+        for (const item of response) {
+          item.tickets.forEach(value => {
+            this.createTicketGroups(value);
+          });
+        }
+
+        this.orders.sort((x, y) => Date.parse(x.tickets[0].performance.date) - Date.parse(y.tickets[0].performance.date)).reverse();
+        this.newOrders = this.orders.filter(item => item.old === false);
+        this.loading = false;
       },
       (error) => {
         this.defaultServiceErrorHandling(error);
       }
     );
-     */
+  }
+
+  /**
+   * Sorting ticket into right TicketGroup
+   */
+  createTicketGroups(ticket) {
+    const ticketGroup = this.orders.find(i => i.id === ticket.performance.id);
+    if (ticketGroup == null) {
+      const date = Date.parse(ticket.performance.date);
+      const old = date < Date.now();
+      const newGroup = new TicketGroup(ticket.performance.id, [ticket], old);
+      this.orders.push(newGroup);
+    } else {
+      ticketGroup.tickets.push(ticket);
+    }
   }
 
   /**

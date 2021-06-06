@@ -70,6 +70,10 @@ export class CartItemService {
     return this.httpClient.get<CartItem[]>(this.cartItemBaseUri);
   }
 
+  getPaidItems(): Observable<CartItem[]> {
+    return this.httpClient.get<CartItem[]>(this.cartItemBaseUri + '/paid');
+  }
+
   addCartItem(cartItem: CartItem, amount: number): Observable<CartItem> {
     return this.httpClient.post<CartItem>(this.cartItemBaseUri + '/' + amount, cartItem);
   }
