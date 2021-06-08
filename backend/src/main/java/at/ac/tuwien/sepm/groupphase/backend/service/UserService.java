@@ -45,7 +45,7 @@ public interface UserService extends UserDetailsService {
     ApplicationUser updateUser(ApplicationUser user);
 
     /**
-     * Updates User with new password and sends it per mail
+     * Updates User with new password and sends it per mail.
      *
      * @param user to update
      */
