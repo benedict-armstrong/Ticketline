@@ -4,8 +4,10 @@ import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Booking;
 import at.ac.tuwien.sepm.groupphase.backend.entity.CartItem;
 import at.ac.tuwien.sepm.groupphase.backend.entity.LayoutUnit;
+import at.ac.tuwien.sepm.groupphase.backend.entity.Performance;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Sector;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Ticket;
+import at.ac.tuwien.sepm.groupphase.backend.entity.TicketType;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Venue;
 import at.ac.tuwien.sepm.groupphase.backend.exception.NoTicketLeftException;
 import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
@@ -58,18 +60,19 @@ public class CartItemServiceImpl implements CartItemService {
     }
 
     @Override
-    public CartItem save(CartItem cartItem, CartItem.Status status, int amount) {
-        LOGGER.trace("save({}, {})", cartItem, status);
-        cartItem.setUser(
-            userRepository.findUserByEmail((String) authenticationFacade.getAuthentication().getPrincipal())
-        );
-        cartItem.setStatus(status);
-        cartItem.setChangeDate(LocalDateTime.now());
+    public CartItem save(Performance performance, TicketType ticketType, CartItem.Status status, int amount) {
+        LOGGER.trace("save({}, {},  {}, {})", performance, ticketType, status, amount);
+        CartItem cartItem = CartItem.builder()
+            .user(
+                userRepository.findUserByEmail((String) authenticationFacade.getAuthentication().getPrincipal())
+            )
+            .status(status)
+            .changeDate(LocalDateTime.now())
+            .build();
 
-        Ticket template = cartItem.getTickets().iterator().next();
-        Sector sector = template.getTicketType().getSector();
+        Sector sector = ticketType.getSector();
 
-        Optional<Venue> optVenue = venueRepository.findById(template.getPerformance().getVenue().getId());
+        Optional<Venue> optVenue = venueRepository.findById(performance.getVenue().getId());
         if (optVenue.isPresent()) {
             Venue venue = optVenue.get();
             Set<Ticket> ticketSet = new HashSet<>();
@@ -93,8 +96,8 @@ public class CartItemServiceImpl implements CartItemService {
                 layoutUnitRepository.save(seat);
 
                 Ticket ticket = Ticket.builder()
-                    .performance(template.getPerformance())
-                    .ticketType(template.getTicketType())
+                    .performance(performance)
+                    .ticketType(ticketType)
                     .seat(seat)
                     .build();
                 ticketSet.add(ticket);
