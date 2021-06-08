@@ -14,6 +14,7 @@ export class LoginComponent implements OnInit {
 
   loginForm: FormGroup;
   success = false;
+  badCredentials = false;
   // Error flag
   error = false;
   errorMessage = '';
@@ -51,12 +52,30 @@ export class LoginComponent implements OnInit {
         },
         error => {
           this.defaultServiceErrorHandling(error);
+          if (error.status === 401) {
+            this.badCredentials = true;
+          }
         }
       );
     } else {
       this.errorMessage = 'Invalid input';
       this.error = true;
     }
+  }
+
+  /**
+   * Send reset email
+   */
+  reset() {
+    const email = this.loginForm.value.email;
+    this.error = false;
+    this.userService.resetPassword(email).subscribe(
+      response => {
+        this.success = true;
+      }, error => {
+        console.error(error);
+      }
+    );
   }
 
   vanishAlert(): void {

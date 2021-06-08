@@ -61,4 +61,14 @@ export class UserService {
     console.log('Update user with email ' + user.email);
     return this.httpClient.put<User>(this.userBaseUri, user);
   }
+
+  /**
+   * Reset password in the backend
+   *
+   * @param user to update
+   */
+  resetPassword(email: string): Observable<User> {
+    console.log('Reset password for user with email ' + email);
+    return this.httpClient.put<User>(this.userBaseUri + '/reset', email);
+  }
 }

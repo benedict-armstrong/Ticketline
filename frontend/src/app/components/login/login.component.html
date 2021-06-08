@@ -7,7 +7,7 @@
       </button>
     </div>
     <div *ngIf="success" class="col-12 alert alert-success alert-dismissible fade show" role="alert">
-      <strong>Success!</strong> The password has been changed.
+      <strong>Success!</strong> New password sent to the given email!
       <button type="button" (click)="vanishAlert()" class="close" data-dismiss="alert" aria-label="Close">
         <span aria-hidden="true">&times;</span>
       </button>
@@ -36,6 +36,9 @@
     <div>
       <button class="secondary" type="signup" name="signup" id="signup" [routerLink]="['/register']">SIGN
         UP</button>
+    </div>
+    <div *ngIf="badCredentials">
+      <button class="secondary" type="rest" name="rest" id="rest" (click)="reset()">Reset Password</button>
     </div>
   </div>
 </div>
