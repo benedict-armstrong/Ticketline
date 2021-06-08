@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Globals } from '../global/globals';
 import { Observable } from 'rxjs';
-import { TicketUpdate } from '../dtos/ticketUpdate';
+import { NewCartItem } from '../dtos/newCartItem';
 import { CartItem } from '../dtos/cartItem';
 
 @Injectable({
@@ -74,8 +74,8 @@ export class CartItemService {
     return this.httpClient.get<CartItem[]>(this.cartItemBaseUri + '/paid');
   }
 
-  addCartItem(cartItem: CartItem, amount: number): Observable<CartItem> {
-    return this.httpClient.post<CartItem>(this.cartItemBaseUri + '/' + amount, cartItem);
+  addCartItem(addTicket: NewCartItem, amount: number): Observable<CartItem> {
+    return this.httpClient.post<CartItem>(this.cartItemBaseUri + '/' + amount, addTicket);
   }
 
   removeCartItem(cartItem: CartItem): Observable<boolean> {
