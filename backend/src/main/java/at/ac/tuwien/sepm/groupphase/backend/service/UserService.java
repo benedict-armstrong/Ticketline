@@ -48,6 +48,7 @@ public interface UserService extends UserDetailsService {
      * Updates User with new password and sends it per mail.
      *
      * @param user to update
+     * @return updated User
      */
     ApplicationUser resetPassword(ApplicationUser user);
 
