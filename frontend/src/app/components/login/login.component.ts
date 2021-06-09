@@ -72,6 +72,7 @@ export class LoginComponent implements OnInit {
     this.userService.resetPassword(email).subscribe(
       response => {
         this.success = true;
+        this.badCredentials = false;
       }, error => {
         console.error(error);
       }
