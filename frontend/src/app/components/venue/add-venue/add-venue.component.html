@@ -92,7 +92,15 @@
   </app-venue-creator>
 
   <div *ngIf="!sectors" class="text-center">
-    <h5>Add at least one sector</h5>
+    <p>Add at least one sector.</p>
+  </div>
+
+  <div *ngIf="!venueLayout" class="text-center">
+    <p>Create a venue Layout first.</p>
+  </div>
+
+  <div *ngIf="venueLayout" class="text-center">
+    <h5>Saved venue Layout ({{venueLayout.length}}x{{venueLayout[0].length}})</h5>
   </div>
 
   <button type="submit" form="venueForm" class="primary" [disabled]="!this.venueLayout"
@@ -100,8 +108,12 @@
 
   <div *ngIf="error" class="col-12 alert alert-danger alert-dismissible fade show" role="alert">
     <strong>Error! </strong> {{ errorMessage }}
-    <button type="button" (click)="vanishAlert()" class="close" data-dismiss="alert" aria-label="Close">
-      <span aria-hidden="true">&times;</span>
+    <button type="button" (click)="vanishSuccess()" class="btn-close" data-dismiss="alert" aria-label="Close">
+    </button>
+  </div>
+  <div *ngIf="success" class="col-12 alert alert-success alert-dismissible fade show" role="alert">
+    <strong>Success</strong> Successfully added venue.
+    <button type="button" (click)="vanishSuccess()" class="btn-close" data-dismiss="alert" aria-label="Close">
     </button>
   </div>
 </form>

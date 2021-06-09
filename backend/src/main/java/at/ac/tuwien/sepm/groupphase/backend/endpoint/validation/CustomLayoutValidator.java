@@ -22,11 +22,20 @@ public class CustomLayoutValidator implements ConstraintValidator<CustomLayoutCo
         if (width < 2) {
             return false;
         }
+        boolean isEmpty = true;
         for (List<LayoutUnitDto> row : lists) {
             if (row.size() != width) {
                 return false;
             }
+            if (isEmpty) {
+                for (LayoutUnitDto lu : row) {
+                    if (lu != null) {
+                        isEmpty = false;
+                        break;
+                    }
+                }
+            }
         }
-        return true;
+        return !isEmpty;
     }
 }
