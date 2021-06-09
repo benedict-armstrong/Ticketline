@@ -2,7 +2,6 @@
 
 .booking {
   display: flex;
-  // max-height: 130px;
   margin-top: 20px;
   justify-content: space-between;
   align-items: center;
@@ -16,7 +15,6 @@
 .ticket {
   display: flex;
   flex-direction: row;
-  // max-height: 90px;
   margin-top: 5px;
   align-items: center;
   cursor: pointer;
@@ -29,6 +27,7 @@
 
 .info {
   display: flex;
+  width: 100%;
 }
 
 .price {
@@ -38,4 +37,10 @@
 
 .detail {
   margin-left: 10px;
+  width: 100%;
+}
+
+.detail button {
+  width: 25%;
+  margin: 0px 10px;
 }
