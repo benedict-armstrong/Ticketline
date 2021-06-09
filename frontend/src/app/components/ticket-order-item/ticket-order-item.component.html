@@ -6,39 +6,31 @@
     </div>
     <div class="card-text">
       <p>
-        {{startTime}}<br>
-        {{location}}
+        {{performance.date  | date:'EEEE, MMM d, y HH:mm'}}<br>
+        {{performance.venue.name}}
       </p>
-      <!--
-      <p>
-        {{performance.date}}<br>
-        {{performance.location.name}}
-      </p>
-      <div *ngFor="let entry of tickets">
-        <div class="row">
-          <div class="col">
-            {{entry.ticketType.multiplier}}x {{entry.ticketType.title}}
+      <div *ngIf="!tooLong">
+        <div *ngFor="let entry of tickets">
+          <div class="row">
+            <div class="col">
+              {{entry.ticketType.title}}
+            </div>
+            <div class="col price">
+              Seat {{entry.seat.customLabel}}
+            </div>
           </div>
-          <div class="col price">
-            EUR {{entry.sectorType.price}}
-          </div>
-        </div>
-      </div>-->
-
-      <div class="row">
-        <div class="col">
-          2x Adults
-        </div>
-        <div class="col price">
-          EUR 59.00
         </div>
       </div>
-      <div class="row">
-        <div class="col">
-          2x Children
-        </div>
-        <div class="col price">
-          EUR 29.00
+      <div *ngIf="tooLong">
+        <div *ngFor="let entry of altTickets">
+          <div class="row">
+            <div class="col">
+              {{entry.id}}x {{entry.ticketType.title}}
+            </div>
+            <div class="col price">
+              {{entry.ticketType.sector.name}}
+            </div>
+          </div>
         </div>
       </div>
     </div>

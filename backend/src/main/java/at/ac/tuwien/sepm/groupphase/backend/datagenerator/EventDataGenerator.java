@@ -10,6 +10,7 @@ import at.ac.tuwien.sepm.groupphase.backend.entity.Venue;
 import at.ac.tuwien.sepm.groupphase.backend.repository.ArtistRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.EventRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.FileRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.PerformanceRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.VenueRepository;
 import com.github.javafaker.Faker;
 import org.slf4j.Logger;
@@ -42,13 +43,16 @@ public class EventDataGenerator {
     private final FileRepository fileRepository;
     private final ArtistRepository artistRepository;
     private final VenueRepository venueRepository;
+    private final PerformanceRepository performanceRepository;
 
     public EventDataGenerator(EventRepository eventRepository, FileRepository fileRepository,
-                              ArtistRepository artistRepository, VenueRepository venueRepository) {
+                              ArtistRepository artistRepository, VenueRepository venueRepository,
+                              PerformanceRepository performanceRepository) {
         this.eventRepository = eventRepository;
         this.fileRepository = fileRepository;
         this.artistRepository = artistRepository;
         this.venueRepository = venueRepository;
+        this.performanceRepository = performanceRepository;
     }
 
     private Set<TicketType> buildTicketTypes() {
@@ -80,8 +84,28 @@ public class EventDataGenerator {
                 int venueOffset = 0;
                 int artistOffset = 0;
 
+
+                Set<File> eventImages = new HashSet<>();
+                eventImages.add(images.get(imageOffset));
+                eventImages.add(images.get(imageOffset + 1));
+                imageOffset += 2;
+
                 Date startDate = faker.date().future(800, TimeUnit.DAYS);
                 Date endDate = faker.date().future(30, TimeUnit.DAYS, startDate);
+                LocalDate eventStart = startDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                LocalDate eventEnd = endDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+
+                Event event = Event.builder()
+                    .name("Event " + i)
+                    .description(faker.lorem().characters())
+                    .eventType(Event.EventType.CONCERT)
+                    .duration(100 + 50 * i)
+                    .startDate(eventStart)
+                    .endDate(eventEnd)
+                    .images(eventImages)
+                    .build();
+
+                eventRepository.save(event);
 
                 //generate 4 performances per event
                 for (int j = 0; j < 4; j++) {
@@ -104,34 +128,20 @@ public class EventDataGenerator {
 
                     Performance performance = Performance.builder()
                         .title(faker.esports().event())
-                        .description(faker.lorem().characters())
+                        .description("Performance description " + j + " that was generated for event " + i + ".")
                         .date(faker.date().between(startDate, endDate).toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime())
                         .ticketTypes(ticketTypeSet)
                         .artist(artist)
                         .venue(venue)
+                        .event(event)
                         .build();
+
+                    performanceRepository.save(performance);
 
                     performances.add(performance);
                 }
 
-                Set<File> eventImages = new HashSet<>();
-                eventImages.add(images.get(imageOffset));
-                eventImages.add(images.get(imageOffset + 1));
-                imageOffset += 2;
-
-                LocalDate eventStart = startDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-                LocalDate eventEnd = endDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-
-                Event event = Event.builder()
-                    .name("Event " + i)
-                    .description(faker.lorem().characters())
-                    .eventType(Event.EventType.CONCERT)
-                    .duration(100 + 50 * i)
-                    .startDate(eventStart)
-                    .endDate(eventEnd)
-                    .images(eventImages)
-                    .performances(performances)
-                    .build();
+                event.setPerformances(performances);
 
                 LOGGER.debug("saving event {}", event);
                 eventRepository.save(event);

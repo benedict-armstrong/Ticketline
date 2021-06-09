@@ -77,14 +77,15 @@ public class VenueServiceImpl implements VenueService {
     @Override
     public List<Venue> getAll() {
 
-        ApplicationUser user = userRepository.findUserByEmail(authenticationFacade.getMail());
+        /*ApplicationUser user = userRepository.findUserByEmail(authenticationFacade.getMail());
         LOGGER.trace("getAll({})", user.getEmail());
 
         if (authenticationFacade.isAdmin()) {
             return venueRepository.findAll();
         } else {
             return venueRepository.findAllByOwnerIs(user);
-        }
+        }*/
 
+        return venueRepository.findAll();
     }
 }

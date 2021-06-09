@@ -6,6 +6,7 @@ import at.ac.tuwien.sepm.groupphase.backend.basetest.TestDataTicket;
 import at.ac.tuwien.sepm.groupphase.backend.config.properties.SecurityProperties;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.AddressDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.ArtistDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.PerformanceDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.TicketTypeDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.VenueDto;
@@ -35,6 +36,7 @@ import org.springframework.test.web.servlet.MvcResult;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -382,6 +384,72 @@ public class PerformanceEndpointTest implements TestDataEvent, TestAuthentificat
                 .header(securityProperties.getAuthHeader(), authToken)
         ).andReturn();
         return objectMapper.readValue(mvcResult.getResponse().getContentAsString(), VenueDto.class);
+    }
+
+    @Test
+    @DisplayName("Should return 200 and performance with date from search")
+    public void whenEventsGiven_SearchWithDate_ShouldReturn200AndPerformance() throws Exception {
+        // Create
+        MvcResult mvcResult = this.mockMvc.perform(
+            post(PERFORMANCE_BASE_URI)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(performanceDto))
+                .header(securityProperties.getAuthHeader(), authToken)
+        ).andReturn();
+        MockHttpServletResponse response = mvcResult.getResponse();
+        assertEquals(HttpStatus.CREATED.value(), response.getStatus());
+        assertEquals(MediaType.APPLICATION_JSON_VALUE, response.getContentType());
+        PerformanceDto savedDto = objectMapper.readValue(response.getContentAsString(), PerformanceDto.class);
+
+        // Get
+        MvcResult mvcResultGet = this.mockMvc.perform(
+            get(PERFORMANCE_BASE_URI)
+                .param("page", "0")
+                .param("size", "10")
+                .param("date", savedDto.getDate().toString())
+                .header(securityProperties.getAuthHeader(), authToken)
+        ).andReturn();
+
+        MockHttpServletResponse responseGet = mvcResultGet.getResponse();
+        assertEquals(HttpStatus.OK.value(), responseGet.getStatus());
+        assertEquals(MediaType.APPLICATION_JSON_VALUE, responseGet.getContentType());
+
+        PerformanceDto performanceDto = objectMapper.readValue(response.getContentAsString(), PerformanceDto.class);
+
+        assertEquals(performanceDto.getId(), savedDto.getId());
+    }
+
+    @Test
+    @DisplayName("Should return 200 and performance with venue from search")
+    public void whenEventsGiven_SearchWithVenue_ShouldReturn200AndPerformance() throws Exception {
+        // Create
+        MvcResult mvcResult = this.mockMvc.perform(
+            post(PERFORMANCE_BASE_URI)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(performanceDto))
+                .header(securityProperties.getAuthHeader(), authToken)
+        ).andReturn();
+        MockHttpServletResponse response = mvcResult.getResponse();
+        assertEquals(HttpStatus.CREATED.value(), response.getStatus());
+        assertEquals(MediaType.APPLICATION_JSON_VALUE, response.getContentType());
+        PerformanceDto savedDto = objectMapper.readValue(response.getContentAsString(), PerformanceDto.class);
+
+        // Get
+        MvcResult mvcResultGet = this.mockMvc.perform(
+            get(PERFORMANCE_BASE_URI)
+                .param("page", "0")
+                .param("size", "10")
+                .param("venue", savedDto.getVenue().getId().toString())
+                .header(securityProperties.getAuthHeader(), authToken)
+        ).andReturn();
+
+        MockHttpServletResponse responseGet = mvcResultGet.getResponse();
+        assertEquals(HttpStatus.OK.value(), responseGet.getStatus());
+        assertEquals(MediaType.APPLICATION_JSON_VALUE, responseGet.getContentType());
+
+        PerformanceDto performanceDto = objectMapper.readValue(response.getContentAsString(), PerformanceDto.class);
+
+        assertEquals(performanceDto.getId(), savedDto.getId());
     }
 
 }

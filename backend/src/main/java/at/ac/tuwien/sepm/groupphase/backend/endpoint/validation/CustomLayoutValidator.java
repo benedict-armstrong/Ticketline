@@ -28,7 +28,7 @@ public class CustomLayoutValidator implements ConstraintValidator<CustomLayoutCo
                 return false;
             }
             if (isEmpty) {
-                for (LayoutUnitDto lu: row) {
+                for (LayoutUnitDto lu : row) {
                     if (lu != null) {
                         isEmpty = false;
                         break;

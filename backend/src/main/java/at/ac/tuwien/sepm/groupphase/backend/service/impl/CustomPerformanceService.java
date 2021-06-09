@@ -59,23 +59,11 @@ public class CustomPerformanceService implements PerformanceService {
         }
 
         if (performance.getEventId() != null) {
-            Event event = eventRepository.findOneById(performance.getEventId());
-            List<Performance> retList = new ArrayList<>();
+            builder.with("event", ":", performance.getEventId());
+        }
 
-            if (event != null) {
-                List<Performance> performances = performanceRepository.findAll(builder.build(), pageable).getContent();
-
-                for (Performance p : performances) {
-                    for (Performance p2 : event.getPerformances()) {
-                        if (p.equals(p2)) {
-                            retList.add(p2);
-                        }
-                    }
-                }
-            }
-
-            return retList;
-
+        if (performance.getVenue() != null) {
+            builder.with("venue", ":", performance.getVenue());
         }
 
         return performanceRepository.findAll(builder.build(), pageable).getContent();

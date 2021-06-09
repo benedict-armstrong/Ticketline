@@ -47,9 +47,6 @@ export class SearchEventListComponent implements OnInit {
 
     });
 
-    if(this.filteredEvents.length === 0){
-
-    }
   }else{
     this.filteredEvents = this.events;
   }
