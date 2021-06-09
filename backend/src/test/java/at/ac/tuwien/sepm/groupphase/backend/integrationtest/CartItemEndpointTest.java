@@ -2,14 +2,17 @@ package at.ac.tuwien.sepm.groupphase.backend.integrationtest;
 
 import at.ac.tuwien.sepm.groupphase.backend.basetest.*;
 import at.ac.tuwien.sepm.groupphase.backend.config.properties.SecurityProperties;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.NewCartItemDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.CartItemDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.CartItemMapper;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.LayoutUnitMapper;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.PerformanceMapper;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.TicketMapper;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.VenueMapper;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.TicketTypeMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.*;
 import at.ac.tuwien.sepm.groupphase.backend.repository.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -83,10 +86,10 @@ public class CartItemEndpointTest implements TestDataCartItem, TestDataUser, Tes
     private CartItemMapper cartItemMapper;
 
     @Autowired
-    private VenueMapper venueMapper;
+    private PerformanceMapper performanceMapper;
 
     @Autowired
-    private LayoutUnitMapper layoutUnitMapper;
+    private TicketTypeMapper ticketTypeMapper;
 
     @Autowired
     private TicketMapper ticketMapper;
@@ -95,6 +98,10 @@ public class CartItemEndpointTest implements TestDataCartItem, TestDataUser, Tes
     private LayoutUnitRepository layoutUnitRepository;
 
     private CartItemDto cartItem;
+
+    private NewCartItemDto newCartItem;
+
+    private final int ticketAmount = 1;
 
     @BeforeEach
     public void beforeEach() throws Exception {
@@ -148,7 +155,7 @@ public class CartItemEndpointTest implements TestDataCartItem, TestDataUser, Tes
         sectorSet.add(sector);
         List<Sector> sectorList = sectorRepository.saveAll(new LinkedList<>(sectorSet));
 
-        TicketType ticketType = TicketType.builder().title("TicketType1").price(1000L).sector(sector).build();
+        TicketType ticketType = TicketType.builder().title("TicketType1").price(1000L).sector(sectorList.get(0)).build();
         Set<TicketType> ticketTypeSet = new HashSet<>();
         ticketTypeSet.add(ticketType);
 
@@ -202,8 +209,14 @@ public class CartItemEndpointTest implements TestDataCartItem, TestDataUser, Tes
         Set<Ticket> ticketSet = new HashSet<>();
         ticketSet.add(ticket1);
 
-        cartItem = CartItemDto.builder()
+        /*cartItem = CartItemDto.builder()
             .tickets(ticketMapper.ticketSetToTicketDtoArray(ticketSet))
+            .build();
+        */
+
+        newCartItem = NewCartItemDto.builder()
+            .performance(performanceMapper.performanceToPerformanceDto(savedPerformance))
+            .ticketType(ticketTypeMapper.ticketTypeToTicketTypeDto(ticketType))
             .build();
     }
 
@@ -223,10 +236,12 @@ public class CartItemEndpointTest implements TestDataCartItem, TestDataUser, Tes
     @DisplayName("Should save correct cartItem when creating one")
     public void whenCreateCartItem_thenGetBackCorrectCartItem() throws Exception {
 
+        System.out.println(objectMapper.writeValueAsString(newCartItem));
+
         MvcResult mvcResult = this.mockMvc.perform(
-            post(CART_ITEM_BASE_URI + "/1")
+            post(CART_ITEM_BASE_URI + "/" + ticketAmount)
                 .content(
-                    objectMapper.writeValueAsString(cartItem)
+                    objectMapper.writeValueAsString(newCartItem)
                 )
                 .contentType(MediaType.APPLICATION_JSON)
                 .header(securityProperties.getAuthHeader(), authToken)
@@ -238,7 +253,7 @@ public class CartItemEndpointTest implements TestDataCartItem, TestDataUser, Tes
         CartItemDto cartItemDto = objectMapper.readValue(response.getContentAsString(), CartItemDto.class);
         assertAll(
             () -> assertNotNull(cartItemDto.getId()),
-            () -> assertEquals(cartItem.getTickets().length, cartItemDto.getTickets().length)
+            () -> assertEquals(ticketAmount, cartItemDto.getTickets().length)
         );
     }
 
@@ -247,9 +262,9 @@ public class CartItemEndpointTest implements TestDataCartItem, TestDataUser, Tes
     public void whenCreateCartItem_thenGetAllCartItems_GetCreatedCartItem() throws Exception {
 
         MvcResult mvcResult = this.mockMvc.perform(
-            post(CART_ITEM_BASE_URI  + "/1")
+            post(CART_ITEM_BASE_URI  + "/" + ticketAmount)
                 .content(
-                    objectMapper.writeValueAsString(cartItem)
+                    objectMapper.writeValueAsString(newCartItem)
                 )
                 .contentType(MediaType.APPLICATION_JSON)
                 .header(securityProperties.getAuthHeader(), authToken)
@@ -278,9 +293,9 @@ public class CartItemEndpointTest implements TestDataCartItem, TestDataUser, Tes
     @DisplayName("Should return empty list after deleting cartItem")
     public void whenGettingAllCartItems_afterInsertingCartItemAndDeletingCartItem_thenShouldGetEmptyList() throws Exception {
         MvcResult mvcResult = this.mockMvc.perform(
-            post(CART_ITEM_BASE_URI  + "/1")
+            post(CART_ITEM_BASE_URI  + "/" + ticketAmount)
                 .content(
-                    objectMapper.writeValueAsString(cartItem)
+                    objectMapper.writeValueAsString(newCartItem)
                 )
                 .contentType(MediaType.APPLICATION_JSON)
                 .header(securityProperties.getAuthHeader(), authToken)
@@ -319,9 +334,9 @@ public class CartItemEndpointTest implements TestDataCartItem, TestDataUser, Tes
     @DisplayName("Should return new cartItem when adding a ticket to it")
     public void whenCreateCartItem_thenAddTicket_shouldGiveCorrectCartItem() throws Exception {
         MvcResult mvcResult = this.mockMvc.perform(
-            post(CART_ITEM_BASE_URI  + "/1")
+            post(CART_ITEM_BASE_URI  + "/" + ticketAmount)
                 .content(
-                    objectMapper.writeValueAsString(cartItem)
+                    objectMapper.writeValueAsString(newCartItem)
                 )
                 .contentType(MediaType.APPLICATION_JSON)
                 .header(securityProperties.getAuthHeader(), authToken)
@@ -337,10 +352,16 @@ public class CartItemEndpointTest implements TestDataCartItem, TestDataUser, Tes
         assertEquals(HttpStatus.CREATED.value(), response.getStatus());
         assertEquals(MediaType.APPLICATION_JSON_VALUE, response.getContentType());
 
-        CartItemDto newNewCartItemDto = objectMapper.readValue(response.getContentAsString(), CartItemDto.class);
+        System.out.println(response.getContentAsString());
+
+        JSONObject jsonResponse = new JSONObject(response.getContentAsString());
+        Long id = jsonResponse.getLong("id");
+        JSONArray ticketArray = jsonResponse.getJSONArray("tickets");
+
+        //CartItemDto newNewCartItemDto = objectMapper.readValue(response.getContentAsString(), CartItemDto.class);
         assertAll(
-            () -> assertEquals(newCartItemDto.getId() ,newNewCartItemDto.getId()),
-            () -> assertEquals(2 ,newNewCartItemDto.getTickets().length)
+            () -> assertEquals(newCartItemDto.getId(), id),
+            () -> assertEquals(2, ticketArray.length())
         );
     }
 
@@ -348,9 +369,9 @@ public class CartItemEndpointTest implements TestDataCartItem, TestDataUser, Tes
     @DisplayName("Should return NoTicketLeftException when adding too many ticket to it")
     public void whenCreateCartItem_thenAddManyTickets_shouldRespondWithNoTicketFoundException() throws Exception {
         MvcResult mvcResult = this.mockMvc.perform(
-            post(CART_ITEM_BASE_URI + "/1")
+            post(CART_ITEM_BASE_URI + "/" + ticketAmount)
                 .content(
-                    objectMapper.writeValueAsString(cartItem)
+                    objectMapper.writeValueAsString(newCartItem)
                 )
                 .contentType(MediaType.APPLICATION_JSON)
                 .header(securityProperties.getAuthHeader(), authToken)
@@ -394,9 +415,9 @@ public class CartItemEndpointTest implements TestDataCartItem, TestDataUser, Tes
     @DisplayName("Should return 200 (true) when checkout")
     public void whenCreateCartItem_thenCheckout_thenCartItemShouldBePaidFor() throws Exception {
         MvcResult mvcResult = this.mockMvc.perform(
-            post(CART_ITEM_BASE_URI  + "/1")
+            post(CART_ITEM_BASE_URI  + "/" + ticketAmount)
                 .content(
-                    objectMapper.writeValueAsString(cartItem)
+                    objectMapper.writeValueAsString(newCartItem)
                 )
                 .contentType(MediaType.APPLICATION_JSON)
                 .header(securityProperties.getAuthHeader(), authToken)

@@ -1,21 +1,24 @@
 <div class="user-home" *ngIf="this.user">
     <h3>Welcome Back {{this.user.firstName}}!</h3>
     <div class="user-booking cards">
-        <!--
         <h3>Your Tickets</h3>
         <div *ngIf="loading" class="col">
           <app-loading-animation></app-loading-animation>
         </div>
-        <div *ngIf="!loading" class="row row-cols-1 row-cols-md-4 g-4">
-          <div *ngFor="let entry of orders" class="col">
-            <app-ticket-order-item [ticketItem]="entry"></app-ticket-order-item>
+        <div *ngIf="!loading">
+          <div *ngIf="!showAll" class="row row-cols-1 row-cols-md-4 g-4">
+            <div *ngFor="let entry of newOrders" class="col">
+              <app-ticket-order-item [ticketItem]="entry"></app-ticket-order-item>
+            </div>
           </div>
-
-          <app-ticket-order-item></app-ticket-order-item>
-          <app-ticket-order-item></app-ticket-order-item>
+          <div *ngIf="showAll" class="row row-cols-1 row-cols-md-4 g-4">
+            <div *ngFor="let entry of orders" class="col">
+              <app-ticket-order-item [ticketItem]="entry"></app-ticket-order-item>
+            </div>
+          </div>
         </div>
-        -->
 
+        <button class="secondary" *ngIf="!showAll" (click)="showAll = true">Show expired tickets</button>
     </div>
     <div class="user-info cards">
         <h3>Address and Contact Info</h3>

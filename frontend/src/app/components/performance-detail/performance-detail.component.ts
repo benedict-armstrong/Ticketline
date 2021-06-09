@@ -37,9 +37,7 @@ export class PerformanceDetailComponent implements OnInit {
           for (const cell of row) {
             for (let i = 0; i < response.ticketTypes.length; i++) {
               if (cell !== null) {
-                const sector: any = cell.sector;
-                const sector2: Sector = sector;
-                if (sector2.id === response.ticketTypes[i].sector.id) {
+                if (cell.sector === response.ticketTypes[i].sector.id) {
                   this.ticketCounts[i] += 1;
                 }
               }

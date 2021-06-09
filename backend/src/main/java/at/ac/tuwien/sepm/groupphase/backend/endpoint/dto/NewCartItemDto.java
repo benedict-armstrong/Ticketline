@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint.dto;
 
+import at.ac.tuwien.sepm.groupphase.backend.entity.Performance;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -11,9 +12,9 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class TicketUpdateDto {
+public class NewCartItemDto {
 
-    private Long id;
+    private PerformanceDto performance;
 
-    private List<Long> seats;
+    private TicketTypeDto ticketType;
 }

@@ -39,4 +39,6 @@ public class PerformanceDto {
     @NotNull(message = "Performance date is required")
     @Future
     private LocalDateTime date;
+
+
 }

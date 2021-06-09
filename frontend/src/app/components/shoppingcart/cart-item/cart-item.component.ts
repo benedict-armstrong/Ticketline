@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CartItem } from 'src/app/dtos/cartItem';
-import { TicketUpdate } from 'src/app/dtos/ticketUpdate';
+import { NewCartItem } from 'src/app/dtos/newCartItem';
 import { CartItemService } from 'src/app/services/cartItem.service';
 
 @Component({
