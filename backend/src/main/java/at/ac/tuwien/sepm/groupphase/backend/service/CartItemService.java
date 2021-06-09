@@ -1,6 +1,9 @@
 package at.ac.tuwien.sepm.groupphase.backend.service;
 
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.TicketTypeMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.CartItem;
+import at.ac.tuwien.sepm.groupphase.backend.entity.Performance;
+import at.ac.tuwien.sepm.groupphase.backend.entity.TicketType;
 
 import java.util.List;
 
@@ -9,12 +12,13 @@ public interface CartItemService {
     /**
      * Saves a cartItem in the database.
      *
-     * @param cartItem the cartItem to be saved.
+     * @param performance of the tickets that should be added to the cartItem to be saved.
+     * @param ticketType of the tickets that should be added to the cartItem to be saved.
      * @param status the status should be saved in
      * @param amount of tickets that should be created in the cartItem
      * @return the newly added cartItem.
      */
-    CartItem save(CartItem cartItem, CartItem.Status status, int amount);
+    CartItem save(Performance performance, TicketType ticketType, CartItem.Status status, int amount);
 
     /**
      * Adds a new ticket to a cartItem (seat selection is automatic).

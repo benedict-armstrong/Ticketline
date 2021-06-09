@@ -1,7 +1,10 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint;
 
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.NewCartItemDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.CartItemDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.CartItemMapper;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.PerformanceMapper;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.TicketTypeMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.CartItem;
 import at.ac.tuwien.sepm.groupphase.backend.service.CartItemService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -30,11 +33,16 @@ public class CartItemEndpoint {
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final CartItemService cartItemService;
     private final CartItemMapper cartItemMapper;
+    private final PerformanceMapper performanceMapper;
+    private final TicketTypeMapper ticketTypeMapper;
 
     @Autowired
-    public CartItemEndpoint(CartItemService cartItemService, CartItemMapper cartItemMapper) {
+    public CartItemEndpoint(CartItemService cartItemService, CartItemMapper cartItemMapper,
+                            PerformanceMapper performanceMapper, TicketTypeMapper ticketTypeMapper) {
         this.cartItemService = cartItemService;
         this.cartItemMapper = cartItemMapper;
+        this.performanceMapper = performanceMapper;
+        this.ticketTypeMapper = ticketTypeMapper;
     }
 
     @GetMapping
@@ -50,10 +58,12 @@ public class CartItemEndpoint {
     @Secured({"ROLE_USER", "ROLE_ORGANIZER", "ROLE_ADMIN"})
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(summary = "Create a cartItem in cart of user")
-    public CartItemDto createCartTicket(@RequestBody CartItemDto cartItemDto, @PathVariable int amount) {
-        LOGGER.info("POST /api/v1/cartItems {}", cartItemDto);
+    public CartItemDto createCartItem(@RequestBody NewCartItemDto addTicketDto, @PathVariable int amount) {
+        LOGGER.info("POST /api/v1/cartItems/{} {}", amount, addTicketDto);
         return cartItemMapper.cartItemToCartItemDto(cartItemService.save(
-            cartItemMapper.cartItemDtoToCartItem(cartItemDto), CartItem.Status.IN_CART, amount
+            performanceMapper.performanceDtoToPerformance(addTicketDto.getPerformance()),
+            ticketTypeMapper.ticketTypeDtoToTicketType(addTicketDto.getTicketType()),
+            CartItem.Status.IN_CART, amount
         ));
     }
 
