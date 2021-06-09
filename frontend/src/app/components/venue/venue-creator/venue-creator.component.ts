@@ -133,7 +133,6 @@ export class VenueCreatorComponent implements OnInit {
 
     if (valid) {
       this.createdVenueLayout.emit(layout);
-      alert('Saved Venue');
     } else {
       alert('Please assign all seats');
     }

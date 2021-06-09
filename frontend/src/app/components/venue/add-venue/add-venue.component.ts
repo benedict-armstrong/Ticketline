@@ -15,6 +15,7 @@ export class AddVenueComponent implements OnInit {
   venueForm: FormGroup;
   submitted = false;
   error = false;
+  success = false;
   errorMessage = '';
 
   sectors: Sector[] = [];
@@ -67,14 +68,14 @@ export class AddVenueComponent implements OnInit {
       );
       this.venueService.create(venue).subscribe(
         () => {
-          alert('Venue created');
+          this.success = true;
         },
         (error) => {
           this.defaultServiceErrorHandling(error);
         }
       );
     } else {
-      alert('Some values are not correct or missing');
+      this.defaultServiceErrorHandling({error: 'Some values are not correct or missing'});
     }
   }
 
@@ -83,10 +84,15 @@ export class AddVenueComponent implements OnInit {
     this.errorMessage = '';
   }
 
+  vanishSuccess() {
+    this.success = false;
+  }
+
   private defaultServiceErrorHandling(error: any) {
     console.log(error);
     this.error = true;
     if (typeof error.error === 'object') {
+      console.log('error');
       this.errorMessage = error.error.error;
     } else {
       this.errorMessage = error.error;
