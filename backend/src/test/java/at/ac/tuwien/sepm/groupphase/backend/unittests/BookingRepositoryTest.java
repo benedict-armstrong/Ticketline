@@ -167,7 +167,7 @@ public class BookingRepositoryTest implements TestDataTicket, TestDataEvent, Tes
         ticketSet.add(ticket1);
 
         booking = Booking.builder()
-            .buyDate(LocalDateTime.now())
+            .createDate(LocalDateTime.now())
             .user(savedUser)
             .tickets(ticketSet)
             .invoice(null)
@@ -193,7 +193,7 @@ public class BookingRepositoryTest implements TestDataTicket, TestDataEvent, Tes
         Booking newBooking = bookingRepository.save(booking);
         assertAll(
             () -> assertNotNull(booking.getId()),
-            () -> assertEquals(newBooking.getBuyDate(), booking.getBuyDate()),
+            () -> assertEquals(newBooking.getCreateDate(), booking.getCreateDate()),
             () -> assertEquals(newBooking.getUser(), booking.getUser()),
             () -> assertEquals(newBooking.getTickets(), booking.getTickets()),
             () -> assertEquals(newBooking.getInvoice(), booking.getInvoice())

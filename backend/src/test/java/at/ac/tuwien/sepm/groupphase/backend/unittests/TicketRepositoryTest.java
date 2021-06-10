@@ -58,15 +58,19 @@ public class TicketRepositoryTest implements TestDataUser, TestDataVenue, TestDa
 
     private Ticket ticket;
 
+    private Performance savedPerformance;
+
+    private Sector savedSector;
+
     @BeforeEach
     public void beforeEach() throws Exception {
         ApplicationUser savedUser = userRepository.save(TestDataUser.getAdmin());
         Artist savedArtist = artistRepository.save(TestDataArtist.getArtist());
 
         Venue savedVenue = venueRepository.save(TestDataVenue.getVenue());
-        sectorRepository.saveAll(savedVenue.getSectors());
+        savedSector = sectorRepository.saveAll(savedVenue.getSectors()).get(0);
 
-        Performance savedPerformance = performanceRepository.save(Performance.builder()
+        savedPerformance = performanceRepository.save(Performance.builder()
             .title(TestDataEvent.TEST_EVENT_TITLE)
             .description(TestDataEvent.TEST_EVENT_DESCRIPTION)
             .date(TestDataEvent.TEST_PERFORMANCE_DATE)
@@ -111,6 +115,18 @@ public class TicketRepositoryTest implements TestDataUser, TestDataVenue, TestDa
             () -> assertEquals(ticket.getTicketType(), savedTicket.getTicketType()),
             () -> assertEquals(ticket.getSeat(), savedTicket.getSeat()),
             () -> assertEquals(ticket.getChangeDate(), savedTicket.getChangeDate())
+        );
+    }
+
+    @Test
+    @DisplayName("Should return free seat entitys when asking for them")
+    public void whenGetFreeSeats_thenListOfFreeSeats() {
+        List<LayoutUnit> seats = ticketRepository.getFreeSeatsInPerfromanceAndSector(savedPerformance, savedSector);
+
+        System.out.println(seats);
+
+        assertAll(
+            () -> assertNotNull(seats)
         );
     }
 }

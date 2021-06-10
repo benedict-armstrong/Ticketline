@@ -13,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.stereotype.Service;
 
-import java.awt.print.Book;
 import java.lang.invoke.MethodHandles;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -43,7 +42,7 @@ public class BookingServiceImpl implements BookingService {
         ApplicationUser user = userRepository.findUserByEmail((String) authenticationFacade.getAuthentication().getPrincipal());
         Booking booking = Booking.builder()
             .user(user)
-            .buyDate(LocalDateTime.now())
+            .createDate(LocalDateTime.now())
             .tickets(tickets)
             .invoice(null)
             .build();
@@ -53,7 +52,7 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     public Booking save(Booking booking) {
-        booking.setBuyDate(LocalDateTime.now());
+        booking.setCreateDate(LocalDateTime.now());
         booking.setUser(userRepository.findUserByEmail((String) authenticationFacade.getAuthentication().getPrincipal()));
         booking.setInvoice(null);
         return bookingRepository.save(booking);

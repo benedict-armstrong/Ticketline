@@ -63,7 +63,6 @@ public class TicketDataGenerator {
             Set<Ticket> ticketSet = new HashSet<>();
             for (int i = 0; i < NUMBER_OF_CART_ITEMS_TO_GENERATE; i++) {
                 LayoutUnit seat = performance.getVenue().getLayout().get(i);
-                seat.setTaken(true);
                 layoutUnitRepository.save(seat);
                 ticketSet.add(Ticket.builder()
                     .ticketType(ticketType)

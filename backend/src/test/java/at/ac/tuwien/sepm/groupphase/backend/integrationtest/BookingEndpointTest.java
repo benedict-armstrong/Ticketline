@@ -220,7 +220,7 @@ public class BookingEndpointTest implements TestAuthentification, TestDataTicket
             .build();
 
         booking = Booking.builder()
-            .buyDate(LocalDateTime.now())
+            .createDate(LocalDateTime.now())
             .user(savedUser)
             .tickets(ticketSet)
             .invoice(null)

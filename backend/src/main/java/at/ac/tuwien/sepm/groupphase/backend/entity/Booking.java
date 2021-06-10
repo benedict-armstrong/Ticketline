@@ -34,7 +34,7 @@ public class Booking {
     private Long id;
 
     @Column(nullable = false)
-    private LocalDateTime buyDate;
+    private LocalDateTime createDate;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn
