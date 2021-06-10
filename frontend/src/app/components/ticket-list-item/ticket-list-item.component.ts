@@ -73,17 +73,26 @@ export class TicketListItemComponent implements OnInit {
           (responseTickets: Ticket[]) => {
             this.waiting = false;
             this.success = true;
-            for (let j = 0; j < responseTickets.length; j++) {
-              for (let i = 0; i < this.ticketService.cart.length; i++) {
-                if (this.ticketService.cart[i].id === responseTickets[j].id) {
-                  this.ticketService.cart[i] = responseTickets[j];
-                  responseTickets[j] = null;
+
+            let done = false;
+            for (let i = 0; i < this.ticketService.cart.length; i++) {
+              if (this.ticketService.cart[i].length == 0) {
+                this.ticketService.cart[i] = responseTickets;
+                done = true;
+                break;
+              } else {
+                if (this.ticketService.cart[i][0].performance.id == responseTickets[0].performance.id) {
+                  responseTickets.forEach(ticket => {
+                    this.ticketService.cart[i].push(ticket);
+                  });
+                  done = true;
                   break;
                 }
               }
-              if (responseTickets[j] != null) {
-                this.ticketService.cart.push(responseTickets[j]);
-              }
+            }
+
+            if (!done) {
+              this.ticketService.cart.push(responseTickets);
             }
             this.ticketService.updatePrice();
           },

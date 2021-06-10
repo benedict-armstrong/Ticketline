@@ -1,6 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NewTicket } from 'src/app/dtos/newTicket';
+import { Ticket } from 'src/app/dtos/ticket';
 import { TicketService } from 'src/app/services/ticket.service';
 
 @Component({
@@ -35,66 +36,71 @@ export class CartItemComponent implements OnInit {
   removeAllTickets(): void {
     if (!this.waiting) {
       this.waiting = true;
-      for (let j = 0; j < this.ticketService.cart[this.i].length; j++) {
-        this.removeTicketFromCartHandler(this.i, j);
-      }
+      this.ticketService.removeMultipleTickets(this.ticketService.cart[this.i]).subscribe(
+        (response: boolean) => {
+          this.waiting = false;
+          this.success = true;
+          if (response) {
+            this.ticketService.cart.splice(this.i, 1);
+            this.ticketService.updatePrice();
+          }
+        },
+        (error) => {
+          this.waiting = false;
+          this.ticketService.reload();
+        }
+      );
     }
   }
 
   removeTicket(j: number): void {
     if (!this.waiting) {
       this.waiting = true;
-      this.removeTicketFromCartHandler(this.i, j);
+      this.ticketService.removeTicket(this.ticketService.cart[this.i][j]).subscribe(
+        (response: boolean) => {
+          this.waiting = false;
+          this.success = true;
+          if (response) {
+            if (this.ticketService.cart[this.i].length == 1) {
+              this.ticketService.cart.splice(this.i, 1);
+            } else {
+              this.ticketService.cart[this.i].splice(j, 1);
+            }
+            this.ticketService.updatePrice();
+          }
+        },
+        (error) => {
+          this.waiting = false;
+          this.ticketService.reload();
+        }
+      );
     }
   }
 
-  // addTicketToCart(): void {
-  //   if (!this.waiting) {
-  //     this.addTicketToCartHandler(this.i);
-  //   }
-  // }
-
-  // addTicketToCartHandler(i: number) {
-  //   this.waiting = true;
-  //   this.vanishAlert();
-  //   this.ticketService.addTicketToCart(this.ticketService.cart[i]).subscribe(
-  //     (responseCartItem: CartItem) => {
-  //       this.waiting = false;
-  //       this.success = true;
-  //       for (let j = 0; j < this.ticketService.cart.length; j++) {
-  //         if (this.ticketService.cart[j].id === responseCartItem.id) {
-  //           this.ticketService.cart[j] = responseCartItem;
-  //           responseCartItem = null;
-  //           break;
-  //         }
-  //       }
-  //       if (responseCartItem != null) {
-  //         this.ticketService.cart.push(responseCartItem);
-  //       }
-  //       this.ticketService.updatePrice();
-  //     },
-  //     (error) => {
-  //       this.waiting = false;
-  //       this.defaultServiceErrorHandling(error);
-  //     }
-  //   );
-  // }
-
-  removeTicketFromCartHandler(i: number, j: number) {
-    this.ticketService.removeTicket(this.ticketService.cart[i][j]).subscribe(
-      (response: boolean) => {
-        this.waiting = false;
-        this.success = true;
-        if (response) {
-          this.ticketService.cart[this.i].splice(j, 1);
+  addTicketToCart(): void {
+    if (!this.waiting) {
+      this.waiting = true;
+      this.vanishAlert();
+      const addTicket: NewTicket = {
+        performance: this.ticketService.cart[this.i][0].performance,
+        ticketType: this.ticketService.cart[this.i][0].ticketType,
+      };
+      this.ticketService.addTicket(addTicket, 1).subscribe(
+        (responseTickets: Ticket[]) => {
+          this.waiting = false;
+          this.success = true;
+          if (responseTickets.length == 1) {
+            this.ticketService.cart[this.i].push(responseTickets[0]);
+          }
+          
           this.ticketService.updatePrice();
+        },
+        (error) => {
+          this.waiting = false;
+          this.defaultServiceErrorHandling(error);
         }
-      },
-      (error) => {
-        this.waiting = false;
-        this.ticketService.reload();
-      }
-    );
+      );
+    }
   }
 
   vanishAlert(): void {

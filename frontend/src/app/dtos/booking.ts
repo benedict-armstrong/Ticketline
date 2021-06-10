@@ -4,7 +4,7 @@ import { Ticket } from './ticket';
 export class Booking {
   constructor(
     public id: number,
-    public buyDate: Date,
+    public createDate: Date,
     public tickets: Ticket[],
     public invoice: CustomFile
   ) {}

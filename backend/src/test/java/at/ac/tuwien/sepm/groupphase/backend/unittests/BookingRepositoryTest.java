@@ -50,7 +50,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 @AutoConfigureMockMvc
 public class BookingRepositoryTest implements TestDataTicket, TestDataEvent, TestDataUser {
     @Autowired
-    private TicketRepository cartItemRepository;
+    private TicketRepository ticketRepository;
 
     @Autowired
     private PerformanceRepository performanceRepository;
@@ -177,7 +177,7 @@ public class BookingRepositoryTest implements TestDataTicket, TestDataEvent, Tes
     @AfterEach
     public void afterEach () {
         bookingRepository.deleteAll();
-        cartItemRepository.deleteAll();
+        ticketRepository.deleteAll();
         performanceRepository.deleteAll();
         venueRepository.deleteAll();
         ticketTypeRepository.deleteAll();

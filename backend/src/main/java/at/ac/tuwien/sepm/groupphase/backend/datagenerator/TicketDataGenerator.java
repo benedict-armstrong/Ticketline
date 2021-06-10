@@ -28,7 +28,7 @@ import java.util.Set;
 public class TicketDataGenerator {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
-    private static int NUMBER_OF_CART_ITEMS_TO_GENERATE = 10;
+    private static int NUMBER_OF_TICKETS_TO_GENERATE = 10;
 
     private final TicketRepository ticketRepository;
     private final EventRepository eventRepository;
@@ -48,20 +48,20 @@ public class TicketDataGenerator {
         if (ticketRepository.findAll().size() > 0) {
             LOGGER.debug("Tickets have already been generated");
         } else {
-            LOGGER.debug("Generating {} tickets", NUMBER_OF_CART_ITEMS_TO_GENERATE);
+            LOGGER.debug("Generating {} tickets", NUMBER_OF_TICKETS_TO_GENERATE);
 
             ApplicationUser user = userRepository.findAll().get(0);
             Event event = eventRepository.findAll().get(0);
             Performance performance = (Performance) event.getPerformances().toArray()[0];
             TicketType ticketType = (TicketType) performance.getTicketTypes().toArray()[0];
 
-            if (NUMBER_OF_CART_ITEMS_TO_GENERATE > performance.getVenue().getLayout().size()) {
-                NUMBER_OF_CART_ITEMS_TO_GENERATE = performance.getVenue().getLayout().size();
-                LOGGER.debug("Can only generate {} tickets due to limited amount of seats at venue", NUMBER_OF_CART_ITEMS_TO_GENERATE);
+            if (NUMBER_OF_TICKETS_TO_GENERATE > performance.getVenue().getLayout().size()) {
+                NUMBER_OF_TICKETS_TO_GENERATE = performance.getVenue().getLayout().size();
+                LOGGER.debug("Can only generate {} tickets due to limited amount of seats at venue", NUMBER_OF_TICKETS_TO_GENERATE);
             }
 
             Set<Ticket> ticketSet = new HashSet<>();
-            for (int i = 0; i < NUMBER_OF_CART_ITEMS_TO_GENERATE; i++) {
+            for (int i = 0; i < NUMBER_OF_TICKETS_TO_GENERATE; i++) {
                 LayoutUnit seat = performance.getVenue().getLayout().get(i);
                 layoutUnitRepository.save(seat);
                 ticketSet.add(Ticket.builder()

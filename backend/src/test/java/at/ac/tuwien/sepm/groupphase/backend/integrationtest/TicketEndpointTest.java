@@ -86,7 +86,7 @@ public class TicketEndpointTest implements TestDataTicket, TestDataUser, TestDat
     private String authToken;
 
     @Autowired
-    private TicketRepository cartItemRepository;
+    private TicketRepository ticketRepository;
 
     @Autowired
     private PerformanceRepository performanceRepository;
@@ -205,7 +205,7 @@ public class TicketEndpointTest implements TestDataTicket, TestDataUser, TestDat
     @AfterEach
     public void afterEach () {
         bookingRepository.deleteAll();
-        cartItemRepository.deleteAll();
+        ticketRepository.deleteAll();
         performanceRepository.deleteAll();
         venueRepository.deleteAll();
         ticketTypeRepository.deleteAll();
@@ -215,8 +215,8 @@ public class TicketEndpointTest implements TestDataTicket, TestDataUser, TestDat
     }
 
     @Test
-    @DisplayName("Should save correct cartItem when creating one")
-    public void whenCreateCartItem_thenGetBackCorrectCartItem() throws Exception {
+    @DisplayName("Should save correct ticket when creating one")
+    public void whenCreateTicket_thenGetBackCorrectTicket() throws Exception {
 
         System.out.println(objectMapper.writeValueAsString(newTicketDto));
 
@@ -244,7 +244,7 @@ public class TicketEndpointTest implements TestDataTicket, TestDataUser, TestDat
 
     @Test
     @DisplayName("Should return NoTicketLeftException")
-    public void whenCreateCartItem_butTooManyTickets_thenNoTicketLeftException() throws Exception {
+    public void whenCreateTicket_butTooManyTickets_thenNoTicketLeftException() throws Exception {
 
         System.out.println(objectMapper.writeValueAsString(newTicketDto));
 
@@ -261,8 +261,8 @@ public class TicketEndpointTest implements TestDataTicket, TestDataUser, TestDat
     }
 
     @Test
-    @DisplayName("Should return the list of cartItems after creating one")
-    public void whenCreateCartItem_thenGetAllCartItems_GetCreatedCartItem() throws Exception {
+    @DisplayName("Should return the list of tickets after creating one")
+    public void whenCreateTicket_thenGetAllTickets_GetCreatedTicket() throws Exception {
 
         MvcResult mvcResult = this.mockMvc.perform(
             post(TICKET_BASE_URI  + "/" + ticketAmount)
@@ -293,8 +293,8 @@ public class TicketEndpointTest implements TestDataTicket, TestDataUser, TestDat
     }
 
     @Test
-    @DisplayName("Should return empty list after deleting cartItem")
-    public void whenGettingAllCartItems_afterInsertingCartItemAndDeletingCartItem_thenShouldGetEmptyList() throws Exception {
+    @DisplayName("Should return empty list after deleting ticket")
+    public void whenGettingAllTickets_afterInsertingTicketAndDeletingTicket_thenShouldGetEmptyList() throws Exception {
         MvcResult mvcResult = this.mockMvc.perform(
             post(TICKET_BASE_URI  + "/" + ticketAmount)
                 .content(
@@ -339,7 +339,7 @@ public class TicketEndpointTest implements TestDataTicket, TestDataUser, TestDat
 
     @Test
     @DisplayName("Should return 200 (true) when checkout")
-    public void whenCreateCartItem_thenCheckout_thenCartItemShouldBePaidFor() throws Exception {
+    public void whenCreateTicket_thenCheckout_thenTicketShouldBePaidFor() throws Exception {
         MvcResult mvcResult = this.mockMvc.perform(
             post(TICKET_BASE_URI  + "/" + ticketAmount)
                 .content(

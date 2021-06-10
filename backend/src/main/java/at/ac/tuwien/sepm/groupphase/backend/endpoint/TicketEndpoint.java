@@ -58,7 +58,7 @@ public class TicketEndpoint {
     @Secured({"ROLE_USER", "ROLE_ORGANIZER", "ROLE_ADMIN"})
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(summary = "Create a ticket in cart of user")
-    public List<TicketDto> createCartItem(@RequestBody NewTicketDto addTicketDto, @PathVariable int amount) {
+    public List<TicketDto> createTicket(@RequestBody NewTicketDto addTicketDto, @PathVariable int amount) {
         LOGGER.info("POST /api/v1/tickets/{} {}", amount, addTicketDto);
         return ticketMapper.ticketListToTicketDtoList(ticketService.save(
             performanceMapper.performanceDtoToPerformance(addTicketDto.getPerformance()),
@@ -80,9 +80,9 @@ public class TicketEndpoint {
     @PutMapping(path = "/{id}/cancel")
     @Secured({"ROLE_USER", "ROLE_ORGANIZER", "ROLE_ADMIN"})
     @ResponseStatus(HttpStatus.OK)
-    @Operation(summary = "Cancel a cartItem")
+    @Operation(summary = "Cancel a ticket")
     public OrderDto cancelOrder(@PathVariable Long id) {
-        LOGGER.info("POST /api/v1/cartItems/{}/cancel", id);
+        LOGGER.info("POST /api/v1/tickets/{}/cancel", id);
         return orderMapper.orderToOrderDto(orderService.cancel(id));
     }*/
 
@@ -95,11 +95,20 @@ public class TicketEndpoint {
         return ticketService.delete(id);
     }
 
+    @DeleteMapping()
+    @Secured({"ROLE_USER", "ROLE_ORGANIZER", "ROLE_ADMIN"})
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(summary = "Delete tickets")
+    public boolean delete(@RequestBody List<Long> ids) {
+        LOGGER.info("DELETE /api/v1/tickets {}", ids);
+        return ticketService.delete(ids);
+    }
+
     @GetMapping("/paid")
     @Secured({"ROLE_USER", "ROLE_ORGANIZER", "ROLE_ADMIN"})
     @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "Get tickets from user that have been paid for")
-    public List<TicketDto> getPaidCartItems() {
+    public List<TicketDto> getPaidTickets() {
         LOGGER.info("GET /api/v1/tickets/paid");
         return ticketMapper.ticketListToTicketDtoList(ticketService.getTickets(Ticket.Status.PAID_FOR));
     }

@@ -6,6 +6,7 @@ import at.ac.tuwien.sepm.groupphase.backend.entity.Performance;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Sector;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Ticket;
 import at.ac.tuwien.sepm.groupphase.backend.entity.TicketType;
+import at.ac.tuwien.sepm.groupphase.backend.entity.Venue;
 import at.ac.tuwien.sepm.groupphase.backend.exception.NoTicketLeftException;
 import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepm.groupphase.backend.repository.TicketRepository;
@@ -86,7 +87,30 @@ public class TicketServiceImpl implements TicketService {
     public List<Ticket> getTickets(Ticket.Status status) {
         LOGGER.trace("getTickets({})", status);
         ApplicationUser user = userRepository.findUserByEmail((String) authenticationFacade.getAuthentication().getPrincipal());
-        return ticketRepository.findByUserAndStatus(user, status);
+        List<Ticket> list = ticketRepository.findByUserAndStatus(user, status);
+        List<Ticket> newList = new LinkedList<>();
+        for (Ticket ticket : list) {
+            Performance performance = ticket.getPerformance();
+            Venue venue = performance.getVenue();
+            List<Sector> sectorList = new LinkedList<>();
+            for (Sector sector : venue.getSectors()) {
+                boolean done = false;
+                for (Sector newSector : sectorList) {
+                    if (newSector.getId().equals(sector.getId())) {
+                        done = true;
+                        break;
+                    }
+                }
+                if (!done) {
+                    sectorList.add(sector);
+                }
+            }
+            venue.setSectors(sectorList);
+            performance.setVenue(venue);
+            ticket.setPerformance(performance);
+            newList.add(ticket);
+        }
+        return newList;
     }
 
     @Override
@@ -113,16 +137,29 @@ public class TicketServiceImpl implements TicketService {
         Optional<Ticket> optionalTicket = ticketRepository.findById(id);
 
         if (optionalTicket.isEmpty()) {
-            throw new NotFoundException("This ticket does not exist.");
+            return false;
         }
         ticketRepository.deleteById(id);
         return true;
     }
 
     @Override
+    public boolean delete(List<Long> ids) {
+        LOGGER.trace("delete({})", ids);
+        List<Ticket> tickets = ticketRepository.findByIdList(ids);
+
+        if (tickets.size() < 1) {
+            return false;
+        }
+
+        ticketRepository.deleteAll(tickets);
+        return true;
+    }
+
+    @Override
     @Scheduled(fixedDelay = 60000)
     public void pruneTickets() {
-        LOGGER.trace("pruneCartItems()");
+        LOGGER.trace("pruneTickets()");
         List<Ticket> toBeDeleted = ticketRepository.findByChangeDateBeforeAndStatus(LocalDateTime.now().minusMinutes(1), Ticket.Status.IN_CART);
         if (toBeDeleted.size() > 0) {
             LOGGER.info("Deleting {} stale tickets from carts", toBeDeleted.size());

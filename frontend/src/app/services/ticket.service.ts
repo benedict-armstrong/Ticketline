@@ -9,7 +9,7 @@ import { Ticket } from '../dtos/ticket';
   providedIn: 'root'
 })
 export class TicketService {
-  public cart = [];
+  public cart: Ticket[][] = [];
   public showCart = false;
   public waiting = false;
   public success = false;
@@ -44,6 +44,7 @@ export class TicketService {
     this.loading = true;
     this.getShoppingCart().subscribe(
       (responseList: Ticket[]) => {
+        console.log(responseList);
         this.loading = false;
         this.success = true;
 
@@ -106,6 +107,14 @@ export class TicketService {
 
   removeTicket(ticket: Ticket): Observable<boolean> {
     return this.httpClient.delete<boolean>(this.ticketBaseUri + '/' + ticket.id);
+  }
+
+  removeMultipleTickets(tickets: Ticket[]): Observable<boolean> {
+    let ids: number[] = [];
+    tickets.forEach(ticket => {
+      ids.push(ticket.id);
+    });
+    return this.httpClient.request<boolean>('DELETE', this.ticketBaseUri, { body: ids });
   }
 
   checkout(): Observable<boolean> {

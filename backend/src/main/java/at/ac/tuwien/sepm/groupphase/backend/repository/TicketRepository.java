@@ -42,4 +42,13 @@ public interface TicketRepository extends JpaRepository<Ticket, Long> {
      */
     @Query("select l from LayoutUnit l left join Ticket t on t.seat = l and t.performance = :performance where t.id is null and l.sector = :sector")
     List<LayoutUnit> getFreeSeatsInPerfromanceAndSector(@Param("performance") Performance performance, @Param("sector") Sector sector);
+
+    /**
+     * Find all tickets from a list of ids.
+     *
+     * @param ids list of the ids
+     * @return list of all found tickets
+     */
+    @Query("select t from Ticket t where t.id in :ids")
+    List<Ticket> findByIdList(@Param("ids") List<Long> ids);
 }

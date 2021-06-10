@@ -11,39 +11,47 @@ public interface TicketService {
     /**
      * Saves a amount of tickets in the database.
      *
-     * @param performance of the tickets that should be added to the cartItem to be saved.
-     * @param ticketType of the tickets that should be added to the cartItem to be saved.
+     * @param performance of the tickets to be saved
+     * @param ticketType of the tickets to be saved
      * @param status the status should be saved in
-     * @param amount of tickets that should be created in the cartItem
+     * @param amount of tickets that should be created
      * @return the newly added tickets.
      */
     List<Ticket> save(Performance performance, TicketType ticketType, Ticket.Status status, int amount);
 
     /**
-     * Gets all cartItems of a user with the given status.
+     * Gets all tickets of a user with the given status.
      *
      * @param status the status should be searched in
-     * @return list of cartItems.
+     * @return list of tickets.
      */
     List<Ticket> getTickets(Ticket.Status status);
 
     /**
-     * Adds all the cartItems in the users cart to a booking entity and changes their status to PAID_FOR.
+     * Adds all the tickets in the users cart to a booking entity and changes their status to PAID_FOR.
      *
      * @return true if successfully
      */
     boolean checkout();
 
     /**
-     * Deletes a cartItem and all included tickets.
+     * Deletes a ticket.
      *
-     * @param id of the cartItem
-     * @return true if the cartItem has been deleted, else false
+     * @param id of the ticket
+     * @return true if the ticket has been deleted, else false
      */
     boolean delete(Long id);
 
     /**
-     * Deletes all cartItems in the cart that are to old.
+     * Deletes a list of tickets.
+     *
+     * @param ids of the tickets
+     * @return true if the tickets have been deleted, false if no tickets were deleted
+     */
+    boolean delete(List<Long> ids);
+
+    /**
+     * Deletes all tickets in the cart that are to old.
      */
     void pruneTickets();
 }

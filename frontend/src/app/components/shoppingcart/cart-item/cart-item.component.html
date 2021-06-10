@@ -27,7 +27,7 @@
         </div>
     </div>
     <div class="row ticketBody mainBody">
-        <button class="secondary addButton" [ngClass]="{'locked': this.waiting}" type="button">Add One More</button>
+        <button class="secondary addButton" [ngClass]="{'locked': this.waiting}" (click)="addTicketToCart()" type="button">Add One More</button>
     </div>
     <div class="row ticketBody">
         <div *ngIf="error" class="col-12 alert alert-danger alert-dismissible fade show" role="alert">
