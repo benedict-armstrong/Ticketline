@@ -51,6 +51,7 @@ import { AddressDetailComponent } from './components/search/address-detail/addre
 import { SearchEventListComponent } from './components/search/search-event-list/search-event-list.component';
 import { SelectVenueComponent } from './components/event/select-venue/select-venue.component';
 import { SearchVenueListComponent } from './components/search/search-venue-list/search-venue-list.component';
+import { ExploreComponent } from './components/explore/explore.component';
 
 @NgModule({
   declarations: [
@@ -101,6 +102,7 @@ import { SearchVenueListComponent } from './components/search/search-venue-list/
     TicketOrderItemComponent,
     SelectVenueComponent,
     SearchVenueListComponent,
+    ExploreComponent,
   ],
   imports: [
     BrowserModule,
