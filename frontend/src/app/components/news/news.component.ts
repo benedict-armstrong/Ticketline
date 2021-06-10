@@ -19,7 +19,7 @@ export class NewsComponent implements OnInit {
   noNews = false;
   loadingOnlyUnread = true;
   finishedAfter = false;
-  lastReadNews = null; // Local copy used for comparison - should not be uploaded
+  lastReadNews: number = null; // Local copy used for comparison - should not be uploaded
 
   wasError = false;
   errorMessage: string;
@@ -72,15 +72,15 @@ export class NewsComponent implements OnInit {
 
             // Set unread and read according to LastReadNews
             if (this.user != null) {
-              this.lastReadNews = this.user.lastReadNews;
+              this.lastReadNews = this.user.lastReadNewsId;
               if (this.lastReadNews == null) {
-                this.lastReadNews = {id: 0};
+                this.lastReadNews = 0;
               }
-              unread = response.filter(item => item.id > this.lastReadNews.id);
-              read = response.filter(item => item.id <= this.lastReadNews.id);
+              unread = response.filter(item => item.id > this.lastReadNews);
+              read = response.filter(item => item.id <= this.lastReadNews);
             } else {
               read = response;
-              this.lastReadNews = response[0];
+              this.lastReadNews = response[0].id;
             }
 
             // push response and set variables for UI
@@ -116,8 +116,8 @@ export class NewsComponent implements OnInit {
 
   markAllAsRead() {
     this.loadingOnlyUnread = false;
-    this.user.lastReadNews = this.news[0];
-    this.userService.updateUser(this.user).subscribe(
+    this.user.lastReadNewsId = this.news[0].id;
+    this.userService.updateLastRead(this.user, this.user.lastReadNewsId).subscribe(
       user => {
         this.user = user;
       }, error => {

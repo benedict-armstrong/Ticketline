@@ -128,6 +128,20 @@ public class CustomUserDetailService implements UserService {
     }
 
     @Override
+    public ApplicationUser updateLastRead(Long userId, Long lastReadNewsId) {
+        LOGGER.trace("updateLastRead({}, {})", userId, lastReadNewsId);
+
+        String email = (String) authenticationFacade.getAuthentication().getPrincipal();
+        ApplicationUser user = userRepository.findUserByEmail(email);
+        if (!user.getId().equals(userId)) {
+            throw new IllegalArgumentException("Attempted to update another user's lastReadNews");
+        }
+
+        user.setLastReadNewsId(lastReadNewsId);
+        return userRepository.save(user);
+    }
+
+    @Override
     public ApplicationUser resetPassword(ApplicationUser user) {
         String newGeneratedPassword = RandomStringUtils.randomAscii(16);
         user.setPassword(newGeneratedPassword);

@@ -5,8 +5,8 @@ import { FileService } from 'src/app/services/file.service';
 import { ApplicationNewsService } from 'src/app/services/news.service';
 import {AuthService} from '../../services/auth.service';
 import {UserService} from '../../services/user.service';
-import {Performance} from '../../dtos/performance';
 import {Event} from '../../dtos/event';
+import {User} from '../../dtos/user';
 
 @Component({
   selector: 'app-news-detail',
@@ -62,16 +62,16 @@ export class NewsDetailComponent implements OnInit {
 
   markOlderAsRead() {
     const email = this.authService.getUserEmail();
-    let userToChange;
+    let userToChange: User;
 
     if (email != null) {
       this.userService.getUserByEmail(email).subscribe(
         user => {
           userToChange = user;
-          if (userToChange.lastReadNews == null || userToChange.lastReadNews.id < this.newsItem.id) {
-            userToChange.lastReadNews = this.newsItem;
+          if (userToChange.lastReadNewsId == null || userToChange.lastReadNewsId < this.newsItem.id) {
+            userToChange.lastReadNewsId = this.newsItem.id;
           }
-          this.userService.updateUser(userToChange).subscribe(
+          this.userService.updateLastRead(userToChange, userToChange.lastReadNewsId).subscribe(
             () => {
             }, error => {
               this.defaultServiceErrorHandling(error);

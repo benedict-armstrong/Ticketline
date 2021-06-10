@@ -45,7 +45,7 @@ public class UserDto  {
 
     private LocalDateTime lastLogin;
 
-    private NewsDto lastReadNews;
+    private Long lastReadNewsId;
 
     @PositiveOrZero(message = "Negative points values are not allowed")
     private int points;

@@ -62,10 +62,15 @@ export class UserService {
     return this.httpClient.put<User>(this.userBaseUri, user);
   }
 
+  updateLastRead(user: User, newsId: number): Observable<User> {
+    //console.log('Update user\'s last read');
+    return this.httpClient.put<User>(this.userBaseUri + '/' + user.id, newsId);
+  }
+
   /**
    * Reset password in the backend
    *
-   * @param user to update
+   * @param email to update
    */
   resetPassword(email: string): Observable<User> {
     console.log('Reset password for user with email ' + email);

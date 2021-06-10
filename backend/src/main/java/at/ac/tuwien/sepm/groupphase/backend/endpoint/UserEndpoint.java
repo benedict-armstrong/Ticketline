@@ -63,6 +63,14 @@ public class UserEndpoint {
         return userMapper.applicationUserToUserDto(userService.updateUser(userMapper.userDtoToApplicationUser(userDto)));
     }
 
+    @PutMapping("/{id}")
+    @Secured("ROLE_USER")
+    @Operation(summary = "Update User")
+    public UserDto updateLastRead(@Valid @PathVariable("id") Long userId, @Valid @RequestBody Long lastReadNewsId) {
+        LOGGER.info("PUT /api/v1/users/{} (lastReadNews={})", userId, lastReadNewsId);
+        return userMapper.applicationUserToUserDto(userService.updateLastRead(userId, lastReadNewsId));
+    }
+
     @PutMapping("/reset")
     @PermitAll
     @ResponseStatus(HttpStatus.OK)
