@@ -19,7 +19,7 @@ export class BookingService {
    *
    */
   getBookings(): Observable<Booking[]> {
-    //console.log('Loading bookings');
+    // console.log('Loading bookings');
     return this.httpClient.get<Booking[]>(this.bookingBaseUri);
   }
 
