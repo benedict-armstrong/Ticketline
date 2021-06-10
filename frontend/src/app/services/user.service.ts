@@ -27,7 +27,7 @@ export class UserService {
    * @param id of user to load
    */
   getUserById(id: number): Observable<User> {
-    console.log('Load user details for ' + id);
+    //console.log('Load user details for ' + id);
     return this.httpClient.get<User>(this.userBaseUri + '/' + id);
   }
 
@@ -36,10 +36,10 @@ export class UserService {
    *
    * @param email of user to load
    */
-     getUserByEmail(email: string): Observable<User> {
-      console.log('Load user details for ' + email);
-      return this.httpClient.get<User>(this.userBaseUri + '/' + email);
-    }
+   getUserByEmail(email: string): Observable<User> {
+     //console.log('Load user details for ' + email);
+     return this.httpClient.get<User>(this.userBaseUri + '/' + email);
+   }
 
   /**
    * Persists user to the backend
@@ -47,7 +47,7 @@ export class UserService {
    * @param user to persist
    */
   createUser(user: User): Observable<User> {
-    console.log('Create user with email ' + user.email);
+    //console.log('Create user with email ' + user.email);
     return this.httpClient.post<User>(this.userBaseUri, user);
   }
 
@@ -57,8 +57,8 @@ export class UserService {
    *
    * @param user to update
    */
-   updateUser(user: User): Observable<User> {
-    console.log('Update user with email ' + user.email);
+  updateUser(user: User): Observable<User> {
+    //console.log('Update user with email ' + user.email);
     return this.httpClient.put<User>(this.userBaseUri, user);
   }
 
@@ -73,7 +73,7 @@ export class UserService {
    * @param email to update
    */
   resetPassword(email: string): Observable<User> {
-    console.log('Reset password for user with email ' + email);
+    //console.log('Reset password for user with email ' + email);
     return this.httpClient.put<User>(this.userBaseUri + '/reset', email);
   }
 }

@@ -44,7 +44,7 @@ export class NewsDetailComponent implements OnInit {
             this.setURL(img, i);
           }
 
-          console.log(this.imgURL);
+          //console.log(this.imgURL);
         }
         this.markOlderAsRead();
       },
