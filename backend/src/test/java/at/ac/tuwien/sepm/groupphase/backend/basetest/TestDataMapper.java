@@ -109,7 +109,7 @@ public interface TestDataMapper extends TestData, TestDataAddress, TestDataNews,
         .title(TestDataNews.TEST_NEWS_TITLE)
         .text(TestDataNews.TEST_NEWS_TEXT)
         .author("Testuser")
-        .event(EVENT_DTO)
+        .event(EVENT_DTO.getId())
         .publishedAt(TEST_NEWS_PUBLISHED_AT)
         .build();
 

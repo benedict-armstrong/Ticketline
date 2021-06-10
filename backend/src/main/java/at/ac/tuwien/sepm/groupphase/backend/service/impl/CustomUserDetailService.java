@@ -8,6 +8,7 @@ import at.ac.tuwien.sepm.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepm.groupphase.backend.security.AuthenticationFacade;
 import at.ac.tuwien.sepm.groupphase.backend.service.SimpleMailService;
 import at.ac.tuwien.sepm.groupphase.backend.service.UserService;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -115,15 +116,44 @@ public class CustomUserDetailService implements UserService {
         LOGGER.debug("Update User");
         ApplicationUser oldUser = userRepository.findUserByEmail(user.getEmail());
 
-        if (oldUser != null) {
-            if (!oldUser.getPassword().equals(user.getPassword())) {
-                user.setPassword(passwordEncoder.encode(user.getPassword()));
-            }
-
-            return userRepository.save(user);
+        if (oldUser == null) {
+            throw new NotFoundException(String.format("Could not find the user with the email address %s", user.getEmail()));
         }
 
-        throw new NotFoundException(String.format("Could not find the user with the email address %s", user.getEmail()));
+        if (!oldUser.getPassword().equals(user.getPassword())) {
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
+        }
+
+        return userRepository.save(user);
+    }
+
+    @Override
+    public ApplicationUser updateLastRead(Long userId, Long lastReadNewsId) {
+        LOGGER.trace("updateLastRead({}, {})", userId, lastReadNewsId);
+
+        String email = (String) authenticationFacade.getAuthentication().getPrincipal();
+        ApplicationUser user = userRepository.findUserByEmail(email);
+        if (!user.getId().equals(userId)) {
+            throw new IllegalArgumentException("Attempted to update another user's lastReadNews");
+        }
+
+        user.setLastReadNewsId(lastReadNewsId);
+        return userRepository.save(user);
+    }
+
+    @Override
+    public ApplicationUser resetPassword(ApplicationUser user) {
+        String newGeneratedPassword = RandomStringUtils.randomAscii(16);
+        user.setPassword(newGeneratedPassword);
+
+        ApplicationUser newUser = updateUser(user);
+
+        if (newUser != null) {
+            simpleMailService.sendMail(user.getEmail(), "[Ticketline] Password reset", String.format("Hello %s %s,\n\nYour password was changed to '%s' (without ')!"
+                + " It can be changed in the 'My Account' Tab, after you logged in.", user.getFirstName(), user.getLastName(), newGeneratedPassword));
+        }
+
+        return newUser;
     }
 
     @Override

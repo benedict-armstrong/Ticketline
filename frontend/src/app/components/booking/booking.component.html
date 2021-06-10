@@ -8,7 +8,10 @@
       <div class="info">
         <div class="detail">
           <h5>{{booking.buyDate | date:'EEEE, MMM d, y HH:mm'}}</h5>
-          <!-- <p [routerLink]="['/downloadInvoice']">Click for invoice download</p> -->
+          <!--
+            <button class="secondary" type="button" [routerLink]="['/downloadInvoice']">Click for invoice download</button>
+            <button class="secondary" type="button" (click)="onStornoClick(booking.id)">Storno</button>
+          -->
         </div>
       </div>
     </div>
@@ -17,10 +20,8 @@
         <div class="info">
           <div class="detail">
             <h5>{{cartItem.tickets[0].performance.title}}</h5>
-            <div *ngFor="let ticket of cartItem.tickets">
-              <span> {{ticket.ticketType.sector.name}}: Seat {{ticket.seat.customLabel}}</span>
-              <span class="price"> à {{ticket.ticketType.price / 100 | currency:'EUR'}}</span>
-            </div>
+            <span> {{cartItem.tickets[0].ticketType.title}} / {{cartItem.tickets[0].ticketType.sector.name}}: {{cartItem.tickets.length}}x</span>
+            <span class="price"> à {{cartItem.tickets[0].ticketType.price / 100 | currency:'EUR'}}</span>
           </div>
         </div>
       </div>

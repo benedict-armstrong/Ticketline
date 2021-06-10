@@ -8,7 +8,6 @@ import at.ac.tuwien.sepm.groupphase.backend.config.properties.SecurityProperties
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.BookingDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.CartItemDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.TicketDto;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.TicketUpdateDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.CartItemMapper;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.PerformanceMapper;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.TicketMapper;

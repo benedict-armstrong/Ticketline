@@ -6,6 +6,7 @@ import { Performance } from '../../dtos/performance';
 import { Ticket } from 'src/app/dtos/ticket';
 import { CartItem } from 'src/app/dtos/cartItem';
 import { Sector } from 'src/app/dtos/sector';
+import { NewCartItem } from 'src/app/dtos/newCartItem';
 
 @Component({
   selector: 'app-ticket-list-item',
@@ -64,18 +65,12 @@ export class TicketListItemComponent implements OnInit {
     if (!this.waiting) {
       if (this.ticketForm.valid) {
         this.validationError = false;
-        const cartItem: CartItem = {
-          id: null,
-          tickets: []
-        };
-        cartItem.tickets.push({
-          id: null,
+        const addTicket: NewCartItem = {
           performance: this.performance,
           ticketType: this.ticketType,
-          seat: null,
-        });
+        };
         this.waiting = true;
-        this.cartItemService.addCartItem(cartItem, this.ticketForm.value.amount).subscribe(
+        this.cartItemService.addCartItem(addTicket, this.ticketForm.value.amount).subscribe(
           (responseCartItem: CartItem) => {
             this.waiting = false;
             this.success = true;
