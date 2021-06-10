@@ -48,20 +48,20 @@ export class TicketService {
         this.loading = false;
         this.success = true;
 
-        let newCart: Ticket[][] = [];
+        const newCart: Ticket[][] = [];
         responseList.forEach(ticket => {
-          if (newCart.length == 0) {
+          if (newCart.length === 0) {
             newCart.push([ticket]);
           } else {
             let done = false;
-            for (let i = 0; i < newCart.length; i++) {
-              if (newCart[i].length == 0) {
-                newCart[i].push(ticket);
+            for (const newCartInner of newCart) {
+              if (newCartInner.length === 0) {
+                newCartInner.push(ticket);
                 done = true;
                 break;
               } else {
-                if (newCart[i][0].performance.id == ticket.performance.id) {
-                  newCart[i].push(ticket);
+                if (newCartInner[0].performance.id === ticket.performance.id) {
+                  newCartInner.push(ticket);
                   done = true;
                   break;
                 }
@@ -110,7 +110,7 @@ export class TicketService {
   }
 
   removeMultipleTickets(tickets: Ticket[]): Observable<boolean> {
-    let ids: number[] = [];
+    const ids: number[] = [];
     tickets.forEach(ticket => {
       ids.push(ticket.id);
     });

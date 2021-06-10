@@ -61,7 +61,7 @@ export class CartItemComponent implements OnInit {
           this.waiting = false;
           this.success = true;
           if (response) {
-            if (this.ticketService.cart[this.i].length == 1) {
+            if (this.ticketService.cart[this.i].length === 1) {
               this.ticketService.cart.splice(this.i, 1);
             } else {
               this.ticketService.cart[this.i].splice(j, 1);
@@ -89,10 +89,9 @@ export class CartItemComponent implements OnInit {
         (responseTickets: Ticket[]) => {
           this.waiting = false;
           this.success = true;
-          if (responseTickets.length == 1) {
+          if (responseTickets.length === 1) {
             this.ticketService.cart[this.i].push(responseTickets[0]);
           }
-          
           this.ticketService.updatePrice();
         },
         (error) => {

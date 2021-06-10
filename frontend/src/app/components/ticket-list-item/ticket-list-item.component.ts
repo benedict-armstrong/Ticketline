@@ -76,12 +76,12 @@ export class TicketListItemComponent implements OnInit {
 
             let done = false;
             for (let i = 0; i < this.ticketService.cart.length; i++) {
-              if (this.ticketService.cart[i].length == 0) {
+              if (this.ticketService.cart[i].length === 0) {
                 this.ticketService.cart[i] = responseTickets;
                 done = true;
                 break;
               } else {
-                if (this.ticketService.cart[i][0].performance.id == responseTickets[0].performance.id) {
+                if (this.ticketService.cart[i][0].performance.id === responseTickets[0].performance.id) {
                   responseTickets.forEach(ticket => {
                     this.ticketService.cart[i].push(ticket);
                   });
