@@ -18,8 +18,9 @@ public interface NewsMapper extends FileTypeMapper {
     List<NewsDto> newsListToNewsDtoList(List<News> news);
 
     default Long map(EventDto value) {
-        if (value == null)
+        if (value == null) {
             return null;
+        }
         return value.getId();
     }
 
