@@ -3,6 +3,7 @@ package at.ac.tuwien.sepm.groupphase.backend.entity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
@@ -34,6 +35,12 @@ public class Ticket {
     private Long id;
 
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
+    @JoinColumn(name = "USER_ID")
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    private ApplicationUser user;
+
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
     @JoinColumn(name = "TYPE_ID", nullable = false)
     private TicketType ticketType;
 
@@ -44,5 +51,16 @@ public class Ticket {
 
     @ManyToOne
     private LayoutUnit seat;
+
+    @Column(nullable = false)
+    private LocalDateTime changeDate;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private Status status;
+
+    public enum Status {
+        PAID_FOR, RESERVED, IN_CART, CANCELLED
+    }
 
 }

@@ -7,7 +7,6 @@ import at.ac.tuwien.sepm.groupphase.backend.entity.Address;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Artist;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Booking;
-import at.ac.tuwien.sepm.groupphase.backend.entity.CartItem;
 import at.ac.tuwien.sepm.groupphase.backend.entity.LayoutUnit;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Performance;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Sector;
@@ -17,7 +16,7 @@ import at.ac.tuwien.sepm.groupphase.backend.entity.Venue;
 import at.ac.tuwien.sepm.groupphase.backend.repository.AddressRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.ArtistRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.BookingRepository;
-import at.ac.tuwien.sepm.groupphase.backend.repository.CartItemRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.TicketRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.PerformanceRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.SectorRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.TicketTypeRepository;
@@ -51,7 +50,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 @AutoConfigureMockMvc
 public class BookingRepositoryTest implements TestDataTicket, TestDataEvent, TestDataUser {
     @Autowired
-    private CartItemRepository cartItemRepository;
+    private TicketRepository cartItemRepository;
 
     @Autowired
     private PerformanceRepository performanceRepository;
@@ -157,26 +156,20 @@ public class BookingRepositoryTest implements TestDataTicket, TestDataEvent, Tes
         );
 
         Ticket ticket1 = Ticket.builder()
+            .user(savedUser)
             .ticketType(ticketType)
             .performance(savedPerformance)
             .seat(layoutUnit)
+            .status(Ticket.Status.IN_CART)
+            .changeDate(LocalDateTime.now())
             .build();
         Set<Ticket> ticketSet = new HashSet<>();
         ticketSet.add(ticket1);
 
-        CartItem cartItem = cartItemRepository.save(CartItem.builder()
-            .status(CartItem.Status.IN_CART)
-            .changeDate(LocalDateTime.now())
-            .tickets(ticketSet)
-            .user(savedUser)
-            .build());
-        Set<CartItem> cartItems = new HashSet<>();
-        cartItems.add(cartItem);
-
         booking = Booking.builder()
             .buyDate(LocalDateTime.now())
             .user(savedUser)
-            .cartItems(cartItems)
+            .tickets(ticketSet)
             .invoice(null)
             .build();
     }
@@ -202,7 +195,7 @@ public class BookingRepositoryTest implements TestDataTicket, TestDataEvent, Tes
             () -> assertNotNull(booking.getId()),
             () -> assertEquals(newBooking.getBuyDate(), booking.getBuyDate()),
             () -> assertEquals(newBooking.getUser(), booking.getUser()),
-            () -> assertEquals(newBooking.getCartItems(), booking.getCartItems()),
+            () -> assertEquals(newBooking.getTickets(), booking.getTickets()),
             () -> assertEquals(newBooking.getInvoice(), booking.getInvoice())
         );
     }

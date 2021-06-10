@@ -6,9 +6,7 @@ import at.ac.tuwien.sepm.groupphase.backend.basetest.TestDataTicket;
 import at.ac.tuwien.sepm.groupphase.backend.basetest.TestDataUser;
 import at.ac.tuwien.sepm.groupphase.backend.config.properties.SecurityProperties;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.BookingDto;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.CartItemDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.TicketDto;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.CartItemMapper;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.PerformanceMapper;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.TicketMapper;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.TicketTypeMapper;
@@ -33,7 +31,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
 import java.time.LocalDateTime;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -69,7 +66,7 @@ public class BookingEndpointTest implements TestAuthentification, TestDataTicket
     // Custom beans
 
     @Autowired
-    private CartItemRepository cartItemRepository;
+    private TicketRepository ticketRepository;
 
     @Autowired
     private PerformanceRepository performanceRepository;
@@ -105,9 +102,6 @@ public class BookingEndpointTest implements TestAuthentification, TestDataTicket
 
     @Autowired
     private PerformanceMapper performanceMapper;
-
-    @Autowired
-    private CartItemMapper cartItemMapper;
 
     @BeforeEach
     public void beforeEach() throws Exception {
@@ -207,34 +201,28 @@ public class BookingEndpointTest implements TestAuthentification, TestDataTicket
             .build()
         );
 
-        Ticket ticket1 = Ticket.builder()
+        Ticket ticket1 = ticketRepository.save(Ticket.builder()
+            .user(savedUser)
+            .status(Ticket.Status.PAID_FOR)
+            .changeDate(LocalDateTime.now())
             .ticketType(ticketType)
             .performance(savedPerformance)
             .seat(layoutUnitList.get(0))
-            .build();
+            .build()
+        );
         Set<Ticket> ticketSet = new HashSet<>();
         ticketSet.add(ticket1);
 
-        CartItem cartItem = cartItemRepository.save(CartItem.builder()
-            .status(CartItem.Status.PAID_FOR)
-            .changeDate(LocalDateTime.now())
-            .tickets(ticketSet)
-            .user(savedUser)
-            .build());
-        Set<CartItem> cartItems = new HashSet<>();
-        cartItems.add(cartItem);
-
-        CartItemDto[] dtoArray = cartItemMapper.cartItemSetToCartItemDtoArray(cartItems);
+        TicketDto[] dtoArray = ticketMapper.ticketSetToTicketDtoArray(ticketSet);
 
         bookingDto = BookingDto.builder()
-            .cartItems(dtoArray)
+            .tickets(dtoArray)
             .build();
-
 
         booking = Booking.builder()
             .buyDate(LocalDateTime.now())
             .user(savedUser)
-            .cartItems(cartItems)
+            .tickets(ticketSet)
             .invoice(null)
             .build();
     }
@@ -242,7 +230,7 @@ public class BookingEndpointTest implements TestAuthentification, TestDataTicket
     @AfterEach
     public void afterEach () {
         bookingRepository.deleteAll();
-        cartItemRepository.deleteAll();
+        ticketRepository.deleteAll();
         performanceRepository.deleteAll();
         venueRepository.deleteAll();
         ticketTypeRepository.deleteAll();

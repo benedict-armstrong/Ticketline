@@ -1,13 +1,12 @@
 package at.ac.tuwien.sepm.groupphase.backend.datagenerator;
 
 import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
-import at.ac.tuwien.sepm.groupphase.backend.entity.CartItem;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Event;
 import at.ac.tuwien.sepm.groupphase.backend.entity.LayoutUnit;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Performance;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Ticket;
 import at.ac.tuwien.sepm.groupphase.backend.entity.TicketType;
-import at.ac.tuwien.sepm.groupphase.backend.repository.CartItemRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.TicketRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.EventRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.LayoutUnitRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.UserRepository;
@@ -26,19 +25,19 @@ import java.util.Set;
 @Profile("generateData")
 @Component
 @DependsOn({"eventDataGenerator", "userDataGenerator"})
-public class CartItemDataGenerator {
+public class TicketDataGenerator {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private static int NUMBER_OF_CART_ITEMS_TO_GENERATE = 10;
 
-    private final CartItemRepository cartItemRepository;
+    private final TicketRepository ticketRepository;
     private final EventRepository eventRepository;
     private final UserRepository userRepository;
     private final LayoutUnitRepository layoutUnitRepository;
 
-    public CartItemDataGenerator(CartItemRepository cartItemRepository, EventRepository eventRepository,
-                                 UserRepository userRepository, LayoutUnitRepository layoutUnitRepository) {
-        this.cartItemRepository = cartItemRepository;
+    public TicketDataGenerator(TicketRepository ticketRepository, EventRepository eventRepository,
+                               UserRepository userRepository, LayoutUnitRepository layoutUnitRepository) {
+        this.ticketRepository = ticketRepository;
         this.eventRepository = eventRepository;
         this.userRepository = userRepository;
         this.layoutUnitRepository = layoutUnitRepository;
@@ -46,7 +45,7 @@ public class CartItemDataGenerator {
 
     @PostConstruct
     public void generateTickets() throws Exception {
-        if (cartItemRepository.findAll().size() > 0) {
+        if (ticketRepository.findAll().size() > 0) {
             LOGGER.debug("Tickets have already been generated");
         } else {
             LOGGER.debug("Generating {} tickets", NUMBER_OF_CART_ITEMS_TO_GENERATE);
@@ -69,17 +68,14 @@ public class CartItemDataGenerator {
                 ticketSet.add(Ticket.builder()
                     .ticketType(ticketType)
                     .performance(performance)
+                    .changeDate(LocalDateTime.now().plusMinutes(100))
+                    .user(user)
                     .seat(seat)
+                    .status(Ticket.Status.IN_CART)
                     .build()
                 );
             }
-            CartItem cartItem = CartItem.builder()
-                .tickets(ticketSet)
-                .changeDate(LocalDateTime.now().plusMinutes(100))
-                .status(CartItem.Status.IN_CART)
-                .user(user)
-                .build();
-            cartItemRepository.save(cartItem);
+            ticketRepository.saveAll(ticketSet);
         }
     }
 }

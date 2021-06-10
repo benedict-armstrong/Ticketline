@@ -44,7 +44,7 @@ public class Booking {
 
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
     @NotNull
-    private Set<CartItem> cartItems = new HashSet<>();
+    private Set<Ticket> tickets = new HashSet<>();
 
     @OneToOne(fetch = FetchType.EAGER)
     @EqualsAndHashCode.Exclude
