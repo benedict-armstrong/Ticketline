@@ -34,7 +34,6 @@ public class NewsDto {
 
     @NotNull(message = "Event is required")
     private Long event;
-    //private EventDto event;
 
     @Size(max = 10, message = "Upload 10 images or less")
     private FileDto[] images = new FileDto[10];
