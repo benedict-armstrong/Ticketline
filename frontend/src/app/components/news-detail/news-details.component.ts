@@ -7,6 +7,7 @@ import {AuthService} from '../../services/auth.service';
 import {UserService} from '../../services/user.service';
 import {Event} from '../../dtos/event';
 import {User} from '../../dtos/user';
+import {ApplicationEventService} from '../../services/event.service';
 
 @Component({
   selector: 'app-news-detail',
@@ -28,7 +29,8 @@ export class NewsDetailComponent implements OnInit {
               private route: Router,
               private actRoute: ActivatedRoute,
               private authService: AuthService,
-              private userService: UserService) {
+              private userService: UserService,
+              private eventService: ApplicationEventService) {
   }
 
   ngOnInit(): void {
@@ -36,7 +38,14 @@ export class NewsDetailComponent implements OnInit {
     this.newsService.getNewsById(this.newsId).subscribe(
       (response) => {
         this.newsItem = response;
-        this.correspondingEvent = this.newsItem.event;
+        //this.correspondingEvent = this.newsItem.event;
+        this.eventService.getEventById(this.newsItem.event).subscribe(
+          (event) => {
+            this.correspondingEvent = event;
+          }, (error) => {
+            this.defaultServiceErrorHandling(error);
+          }
+        );
         this.date = new Date(response.publishedAt);
         if (this.newsItem.images.length > 0) {
           for (let i = 0; i < this.newsItem.images.length; i++) {
