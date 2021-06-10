@@ -1,5 +1,4 @@
 import { Address } from './address';
-import {News} from './news';
 
 export class User {
   constructor(
@@ -10,7 +9,7 @@ export class User {
     public email: string,
     public password: string,
     public lastLogin: Date,
-    public lastReadNews: News,
+    public lastReadNewsId: number,
     public points: number,
     public status: 'ACTIVE' | 'BANNED',
     public role: 'CLIENT' | 'ORGANIZER' | 'ADMIN',

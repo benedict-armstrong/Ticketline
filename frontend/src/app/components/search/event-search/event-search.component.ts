@@ -40,7 +40,7 @@ export class EventSearchComponent implements OnInit {
 
   searchEvents() {
 
-    console.log(this.eventSearchForm.value);
+    //console.log(this.eventSearchForm.value);
 
     if (this.eventSearchForm.value.title === '' && this.eventSearchForm.value.description === ''
       && this.eventSearchForm.value.duration === null && this.eventSearchForm.value.eventType === '') {

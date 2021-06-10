@@ -45,6 +45,15 @@ public interface UserService extends UserDetailsService {
     ApplicationUser updateUser(ApplicationUser user);
 
     /**
+     * Marks that a user read a particular news.
+     *
+     * @param userId the ID of the user.
+     * @param lastReadNewsId the ID of the last read news.
+     * @return the updated user.
+     */
+    ApplicationUser updateLastRead(Long userId, Long lastReadNewsId);
+
+    /**
      * Updates User with new password and sends it per mail.
      *
      * @param user to update
