@@ -2,10 +2,13 @@
 @import "./colors.scss";
 
 body {
-  font-family: "Red Hat Display", sans-serif !important;
+  font-family: "Heebo", sans-serif !important;
 }
 
-::selection { background: $secondary; }
+::selection {
+  background: $secondary;
+  color: white;
+}
 
 .header {
   font-weight: 800;

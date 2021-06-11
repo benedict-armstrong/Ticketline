@@ -53,6 +53,7 @@ import { SelectVenueComponent } from './components/event/select-venue/select-ven
 import { SearchVenueListComponent } from './components/search/search-venue-list/search-venue-list.component';
 import { ExploreComponent } from './components/explore/explore.component';
 import { BarComponent } from './components/graphs/bar/bar.component';
+import { ExploreEventListItemComponent } from './components/explore/explore-event-list-item/explore-event-list-item.component';
 
 @NgModule({
   declarations: [
@@ -105,6 +106,7 @@ import { BarComponent } from './components/graphs/bar/bar.component';
     SearchVenueListComponent,
     ExploreComponent,
     BarComponent,
+    ExploreEventListItemComponent,
   ],
   imports: [
     BrowserModule,
