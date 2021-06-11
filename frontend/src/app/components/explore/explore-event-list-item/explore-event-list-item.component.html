@@ -1,0 +1,10 @@
+<div class="list-item" [routerLink]="['/event-detail', event.id]">
+  <div class="info">
+    <img src="{{previewImageUrl}}" alt="">
+    <div class="detail">
+      <h5>{{event.name}}</h5>
+      <p class="date-time">{{event.startDate | date:'EEEE, MMM d, y HH:mm'}} - {{event.endDate | date:'EEEE, MMM d, y HH:mm'}}</p>
+    </div>
+  </div>
+</div>
+
