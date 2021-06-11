@@ -47,9 +47,7 @@ public class ApplicationUser {
     @Column(nullable = false, name = "last_login")
     private LocalDateTime lastLogin;
 
-    @OneToOne
-    @JoinColumn(name = "last_read_news")
-    private News lastReadNews;
+    private Long lastReadNewsId;
 
     @Column()
     private int points;

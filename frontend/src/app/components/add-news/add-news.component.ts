@@ -58,7 +58,7 @@ export class AddNewsComponent implements OnInit {
       // Add additional news data
       this.news.title = this.addNewsForm.value.title;
       this.news.text = this.addNewsForm.value.text;
-      this.news.event = this.event;
+      this.news.event = this.eventId;
       this.news.author = this.addNewsForm.value.author;
 
       const fileService = this.fileService;

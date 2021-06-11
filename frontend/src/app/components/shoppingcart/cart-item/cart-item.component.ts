@@ -1,8 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { CartItem } from 'src/app/dtos/cartItem';
-import { NewCartItem } from 'src/app/dtos/newCartItem';
-import { CartItemService } from 'src/app/services/cartItem.service';
+import { NewTicket } from 'src/app/dtos/newTicket';
+import { Ticket } from 'src/app/dtos/ticket';
+import { TicketService } from 'src/app/services/ticket.service';
 
 @Component({
   selector: 'app-cart-item',
@@ -22,7 +22,7 @@ export class CartItemComponent implements OnInit {
 
   constructor(
     private formBuilder: FormBuilder,
-    public cartItemService: CartItemService
+    public ticketService: TicketService
   ) {
     this.cartItemForm = this.formBuilder.group({
       amount: [0, [Validators.min(1)]]
@@ -30,91 +30,76 @@ export class CartItemComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.cartItemForm.setValue({amount: this.cartItemService.cart[this.i].tickets.length});
+    this.cartItemForm.setValue({amount: this.ticketService.cart.length});
   }
 
-  removeFromCart(): void {
+  removeAllTickets(): void {
     if (!this.waiting) {
-      this.removeFromCartHandler(this.i);
+      this.waiting = true;
+      this.ticketService.removeMultipleTickets(this.ticketService.cart[this.i]).subscribe(
+        (response: boolean) => {
+          this.waiting = false;
+          this.success = true;
+          if (response) {
+            this.ticketService.cart.splice(this.i, 1);
+            this.ticketService.updatePrice();
+          }
+        },
+        (error) => {
+          this.waiting = false;
+          this.ticketService.reload();
+        }
+      );
     }
   }
 
-  removeTicketFromCart(j: number): void {
+  removeTicket(j: number): void {
     if (!this.waiting) {
-      if (this.cartItemService.cart[this.i].tickets.length > 1) {
-        this.removeTicketFromCartHandler(this.i, j);
-      } else {
-        this.removeFromCartHandler(this.i);
-      }
+      this.waiting = true;
+      this.ticketService.removeTicket(this.ticketService.cart[this.i][j]).subscribe(
+        (response: boolean) => {
+          this.waiting = false;
+          this.success = true;
+          if (response) {
+            if (this.ticketService.cart[this.i].length === 1) {
+              this.ticketService.cart.splice(this.i, 1);
+            } else {
+              this.ticketService.cart[this.i].splice(j, 1);
+            }
+            this.ticketService.updatePrice();
+          }
+        },
+        (error) => {
+          this.waiting = false;
+          this.ticketService.reload();
+        }
+      );
     }
   }
 
   addTicketToCart(): void {
     if (!this.waiting) {
-      this.addTicketToCartHandler(this.i);
-    }
-  }
-
-  addTicketToCartHandler(i: number) {
-    this.waiting = true;
-    this.vanishAlert();
-    this.cartItemService.addTicketToCart(this.cartItemService.cart[i]).subscribe(
-      (responseCartItem: CartItem) => {
-        this.waiting = false;
-        this.success = true;
-        for (let j = 0; j < this.cartItemService.cart.length; j++) {
-          if (this.cartItemService.cart[j].id === responseCartItem.id) {
-            this.cartItemService.cart[j] = responseCartItem;
-            responseCartItem = null;
-            break;
+      this.waiting = true;
+      this.vanishAlert();
+      const addTicket: NewTicket = {
+        performance: this.ticketService.cart[this.i][0].performance,
+        ticketType: this.ticketService.cart[this.i][0].ticketType,
+      };
+      this.ticketService.addTicket(addTicket, 1).subscribe(
+        (responseTickets: Ticket[]) => {
+          this.waiting = false;
+          this.success = true;
+          if (responseTickets.length === 1) {
+            this.ticketService.cart[this.i].push(responseTickets[0]);
           }
+          this.ticketService.updatePrice();
+        },
+        (error) => {
+          this.waiting = false;
+          this.defaultServiceErrorHandling(error);
         }
-        if (responseCartItem != null) {
-          this.cartItemService.cart.push(responseCartItem);
-        }
-        this.cartItemService.updatePrice();
-      },
-      (error) => {
-        this.waiting = false;
-        this.defaultServiceErrorHandling(error);
-      }
-    );
-  }
-
-  removeFromCartHandler(i: number) {
-    this.waiting = true;
-    this.cartItemService.removeCartItem(this.cartItemService.cart[i]).subscribe(
-      (response: boolean) => {
-        this.waiting = false;
-        this.success = true;
-        if (response) {
-          this.cartItemService.cart.splice(i, 1);
-          this.cartItemService.updatePrice();
-        }
-      },
-      (error) => {
-        this.waiting = false;
-        this.cartItemService.reload();
-      }
-    );
-  }
-
-  removeTicketFromCartHandler(i: number, j: number) {
-    this.waiting = true;
-    this.cartItemService.removeTicketFromCart(this.cartItemService.cart[i].id, this.cartItemService.cart[i].tickets[j].id).subscribe(
-      (response: boolean) => {
-        this.waiting = false;
-        this.success = true;
-        if (response) {
-          this.cartItemService.cart[i].tickets.splice(j, 1);
-          this.cartItemService.updatePrice();
-        }
-      },
-      (error) => {
-        this.waiting = false;
-        this.cartItemService.reload();
-      }
-    );
+      );
+    }
   }
 
   vanishAlert(): void {

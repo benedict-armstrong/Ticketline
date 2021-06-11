@@ -31,8 +31,6 @@ export class PerformanceDetailComponent implements OnInit {
           this.ticketCounts.push(0);
         });
 
-        console.log(response);
-
         for (const row of response.venue.layout) {
           for (const cell of row) {
             for (let i = 0; i < response.ticketTypes.length; i++) {

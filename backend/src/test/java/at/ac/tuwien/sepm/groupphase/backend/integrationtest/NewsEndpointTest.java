@@ -14,9 +14,12 @@ import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.FileDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.NewsDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.PerformanceDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.VenueDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.EventMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Artist;
+import at.ac.tuwien.sepm.groupphase.backend.entity.Event;
 import at.ac.tuwien.sepm.groupphase.backend.entity.News;
+import at.ac.tuwien.sepm.groupphase.backend.entity.Performance;
 import at.ac.tuwien.sepm.groupphase.backend.repository.AddressRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.ArtistRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.EventRepository;
@@ -46,6 +49,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 
+import static at.ac.tuwien.sepm.groupphase.backend.basetest.TestDataVenue.VENUE_BASE_URI;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
@@ -107,6 +111,9 @@ public class NewsEndpointTest implements TestDataNews, TestDataFile, TestAuthent
 
     @BeforeEach
     public void beforeEach() throws Exception {
+        saveUser(AUTH_USER_ORGANIZER, userRepository, passwordEncoder);
+        authToken = authenticate(AUTH_USER_ORGANIZER, mockMvc, objectMapper);
+
         PerformanceDto[] performanceDtos = new PerformanceDto[1];
         performanceDtos[0] = PerformanceDto.builder()
             .title(TestDataEvent.TEST_EVENT_PERFORMANCE_TITLE)
@@ -116,6 +123,11 @@ public class NewsEndpointTest implements TestDataNews, TestDataFile, TestAuthent
             .ticketTypes(TestDataTicket.getTicketTypeDtos())
             .venue(TestDataVenue.getVenueDto())
             .build();
+
+        for (PerformanceDto performanceDto : performanceDtos) {
+            VenueDto saved = saveVenue(performanceDto.getVenue());
+            performanceDto.setVenue(saved);
+        }
 
         EventDto eventDto = EventDto.builder()
             .name(TestDataEvent.TEST_EVENT_TITLE)
@@ -127,38 +139,42 @@ public class NewsEndpointTest implements TestDataNews, TestDataFile, TestAuthent
             .performances(performanceDtos)
             .build();
 
-        newsDto.setEvent(eventDto);
-
         fileRepository.save(IMAGE_FILE);
         newsDto.setImages(new FileDto[]{IMAGE_FILE_DTO});
 
-        saveUser(AUTH_USER_ORGANIZER, userRepository, passwordEncoder);
-        authToken = authenticate(AUTH_USER_ORGANIZER, mockMvc, objectMapper);
-
-        saveEvent(eventDto);
+        EventDto savedEventDto = saveEvent(eventDto);
+        newsDto.setEvent(savedEventDto.getId());
     }
 
-    private void saveEvent(EventDto eventDto) throws Exception {
+    private EventDto saveEvent(EventDto eventDto) throws Exception {
         MvcResult mvcResult = this.mockMvc.perform(
             post(BASE_URI + "/events")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(eventDto))
                 .header(securityProperties.getAuthHeader(), authToken)
         ).andReturn();
+        return objectMapper.readValue(mvcResult.getResponse().getContentAsString(), EventDto.class);
     }
 
-
-
+    private VenueDto saveVenue(VenueDto venueDto) throws Exception {
+        MvcResult mvcResult = this.mockMvc.perform(
+            post(VENUE_BASE_URI)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(venueDto))
+                .header(securityProperties.getAuthHeader(), authToken)
+        ).andReturn();
+        return objectMapper.readValue(mvcResult.getResponse().getContentAsString(), VenueDto.class);
+    }
 
     @AfterEach
     public void afterEach() {
         newsRepository.deleteAll();
         eventRepository.deleteAll();
         fileRepository.deleteAll();
-        userRepository.deleteAll();
-        addressRepository.deleteAllInBatch();
         artistRepository.deleteAll();
         venueRepository.deleteAll();
+        userRepository.deleteAll();
+        addressRepository.deleteAll();
     }
 
     @Test

@@ -32,7 +32,7 @@ export class ArtistService {
    */
   searchArtists(page: number, size: number, firstName: string, lastName: string): Observable<Artist[]> {
     let params = new HttpParams();
-    console.log(page);
+    //console.log(page);
     params = params.set('page', String(page));
     params = params.set('size', String(size));
     if (firstName !== '') {

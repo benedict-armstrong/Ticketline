@@ -28,7 +28,7 @@ export class TicketOrderItemComponent implements OnInit {
       this.tooLong = true;
       this.tickets.forEach(ticket => this.createAltTickets(ticket));
     }
-    console.log(this.altTickets);
+    //console.log(this.altTickets);
 
     // Formatting Eventtype
     // this.eventType = item.event.eventType.charAt(0) + item.event.eventType.slice(1).toLowerCase();

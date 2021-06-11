@@ -1,12 +1,11 @@
 import {Component, Input, OnInit} from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { CartItemService } from 'src/app/services/cartItem.service';
+import { TicketService } from 'src/app/services/ticket.service';
 import { TicketType } from '../../dtos/ticketType';
 import { Performance } from '../../dtos/performance';
 import { Ticket } from 'src/app/dtos/ticket';
-import { CartItem } from 'src/app/dtos/cartItem';
 import { Sector } from 'src/app/dtos/sector';
-import { NewCartItem } from 'src/app/dtos/newCartItem';
+import { NewTicket } from 'src/app/dtos/newTicket';
 
 @Component({
   selector: 'app-ticket-list-item',
@@ -33,7 +32,7 @@ export class TicketListItemComponent implements OnInit {
 
   constructor(
     private formBuilder: FormBuilder,
-    private cartItemService: CartItemService
+    private ticketService: TicketService
   ) {
     this.ticketForm = this.formBuilder.group({
       amount: [0, [Validators.min(1)]]
@@ -65,26 +64,37 @@ export class TicketListItemComponent implements OnInit {
     if (!this.waiting) {
       if (this.ticketForm.valid) {
         this.validationError = false;
-        const addTicket: NewCartItem = {
+        const addTicket: NewTicket = {
           performance: this.performance,
           ticketType: this.ticketType,
         };
         this.waiting = true;
-        this.cartItemService.addCartItem(addTicket, this.ticketForm.value.amount).subscribe(
-          (responseCartItem: CartItem) => {
+        this.ticketService.addTicket(addTicket, this.ticketForm.value.amount).subscribe(
+          (responseTickets: Ticket[]) => {
             this.waiting = false;
             this.success = true;
-            for (let i = 0; i < this.cartItemService.cart.length; i++) {
-              if (this.cartItemService.cart[i].id === responseCartItem.id) {
-                this.cartItemService.cart[i] = responseCartItem;
-                responseCartItem = null;
+
+            let done = false;
+            for (let i = 0; i < this.ticketService.cart.length; i++) {
+              if (this.ticketService.cart[i].length === 0) {
+                this.ticketService.cart[i] = responseTickets;
+                done = true;
                 break;
+              } else {
+                if (this.ticketService.cart[i][0].performance.id === responseTickets[0].performance.id) {
+                  responseTickets.forEach(ticket => {
+                    this.ticketService.cart[i].push(ticket);
+                  });
+                  done = true;
+                  break;
+                }
               }
             }
-            if (responseCartItem != null) {
-              this.cartItemService.cart.push(responseCartItem);
+
+            if (!done) {
+              this.ticketService.cart.push(responseTickets);
             }
-            this.cartItemService.updatePrice();
+            this.ticketService.updatePrice();
           },
           (error) => {
             this.waiting = false;
