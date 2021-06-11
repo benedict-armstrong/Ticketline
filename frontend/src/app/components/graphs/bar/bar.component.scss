@@ -1,0 +1,36 @@
+@import "src/colors";
+
+.chart {
+  margin: 20px;
+}
+
+.chart-labels {
+  display: flex;
+  justify-content: space-between;
+}
+
+.chart-label {
+  display: flex;
+  min-width: 100px;
+  justify-content: center;
+}
+
+.chart-data {
+  min-height: 100px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.chart-item {
+  height: 100px;
+  min-width: 100px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+.bar {
+  background-color: $primary;
+  min-width: 30px;
+  border-radius: 5px;
+}

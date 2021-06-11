@@ -23,16 +23,13 @@
 }
 
 .grid-unit.unavailable {
-  background-color: none !important;
+  background-color: transparent !important;
 }
 
 .grid-unit.available:hover {
   background-color: rgb(255, 210, 210);
 }
 
-.grid-unit.sector0 {
-  background-color: red;
-}
 
 .hide {
   opacity: 0;

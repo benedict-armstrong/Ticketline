@@ -11,7 +11,7 @@
 
 .performance:hover {
   box-shadow: none;
-  border: 1px solid #c14953;
+  border: 1px solid $primary;
 }
 
 .info {
@@ -23,7 +23,7 @@
 }
 
 .date-time {
-  color: #c14953;
+  color: $primary;
 }
 
 .detail {
