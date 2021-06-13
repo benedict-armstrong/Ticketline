@@ -57,7 +57,7 @@ public class UserEndpoint {
 
     @GetMapping(value = {"/id/{id}"})
     @PermitAll
-    @Operation(summary = "Find User by Email")
+    @Operation(summary = "Find User by Id")
     public UserDto findById(@Valid @PathVariable("id") long id) {
         LOGGER.info("GET /api/v1/users/{}", id);
         return userMapper.applicationUserToUserDto(userService.findApplicationUserById(id));
