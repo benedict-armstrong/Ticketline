@@ -17,6 +17,7 @@ export class PerformanceDetailComponent implements OnInit {
   error = false;
   errorMessage = '';
   ticketCounts: number[] = [];
+  selectSeats: boolean = false;
 
   constructor(private performanceService: ApplicationPerformanceService,
               private activeRoute: ActivatedRoute) { }
@@ -52,6 +53,10 @@ export class PerformanceDetailComponent implements OnInit {
 
   vanishAlert(): void {
     this.error = false;
+  }
+
+  selectSeatsFunc(value: boolean) {
+    this.selectSeats = value;
   }
 
   private defaultServiceErrorHandling(error: any) {
