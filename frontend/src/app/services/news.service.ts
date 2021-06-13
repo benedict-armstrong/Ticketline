@@ -20,7 +20,7 @@ export class ApplicationNewsService {
    * @param news to persist
    */
   publishNews(news: News): Observable<News> {
-    //console.log('Create news with title ' + news.title);
+    // console.log('Create news with title ' + news.title);
     return this.httpClient.post<News>(this.newsBaseUri, news);
   }
 
@@ -43,7 +43,7 @@ export class ApplicationNewsService {
    * @param id of news to load
    */
   getNewsById(id: number): Observable<News> {
-    //console.log('Load news details for ' + id);
+    // console.log('Load news details for ' + id);
     return this.httpClient.get<News>(this.newsBaseUri + '/' + id);
   }
 
