@@ -46,6 +46,17 @@ public interface TicketRepository extends JpaRepository<Ticket, Long> {
     List<LayoutUnit> getFreeSeatsInPerformanceAndSector(@Param("performance") Performance performance, @Param("sector") Sector sector);
 
     /**
+     * Find all layoutUnit entries that are referenced in a ticket of the given performance.
+     *
+     * @param performance of the tickets
+     * @return list of all taken seats
+     */
+    @Query("select l from LayoutUnit l "
+        + "inner join Ticket t on t.seat = l "
+        + "where t.performance = :performance")
+    List<LayoutUnit> getTakenSeatsInPerformance(@Param("performance") Performance performance);
+
+    /**
     * Check if the given seat in the given performance is free.
     *
     * @param performance to check in

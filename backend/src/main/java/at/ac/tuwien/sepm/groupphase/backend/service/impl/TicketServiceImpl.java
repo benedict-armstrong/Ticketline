@@ -113,6 +113,11 @@ public class TicketServiceImpl implements TicketService {
         return newList;
     }
 
+    public List<LayoutUnit> getTakenSeatsInPerformance(Performance performance) {
+        LOGGER.trace("getTakenSeatsInPerformance({})", performance);
+        return ticketRepository.getTakenSeatsInPerformance(performance);
+    }
+
     @Override
     public boolean checkout() {
         LOGGER.trace("checkout()");
