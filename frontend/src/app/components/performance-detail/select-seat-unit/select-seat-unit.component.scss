@@ -1,3 +1,5 @@
+@import "src/colors";
+
 .grid-unit-wrapper {
   padding: 1.5px;
 }
@@ -26,8 +28,9 @@
   background-color: transparent !important;
 }
 
-.grid-unit.available:hover {
-  background-color: rgb(255, 210, 210);
+.grid-unit-wrapper.seated .grid-unit:hover {
+  transform: scale(2);
+  border: 1px solid white;
 }
 
 .hide {

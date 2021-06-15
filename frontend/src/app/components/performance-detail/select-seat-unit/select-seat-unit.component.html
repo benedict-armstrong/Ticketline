@@ -1,12 +1,16 @@
 <div class="grid-unit-wrapper"
-     title="{{this.layoutUnit ? 'Seat number:' + this.layoutUnit.customLabel : 'Not available'}}"
+     title="{{this.layoutUnit && $any(this.layoutUnit.sector).type != 'STAGE' ? this.layoutUnit.free ? 'Seat: ' + this.layoutUnit.customLabel: 'Booked' : 'Not available'}}"
      [ngClass]="this.layoutUnit ? {
-      'standing': this.layoutUnit.sector && ($any(this.layoutUnit.sector).type == 'STANDING'),
-      'stage': this.layoutUnit.sector && ($any(this.layoutUnit.sector).type == 'STAGE')
+      'standing': $any(this.layoutUnit!.sector).type == 'STANDING',
+      'stage': $any(this.layoutUnit!.sector).type == 'STAGE',
+      'seated': $any(this.layoutUnit!.sector).type == 'SEATED'
       }: {}"
 >
   <div class="grid-unit" [ngClass]="{'available': this.layoutUnit}"
-       [ngStyle]="{'background-color': this.layoutUnit ? $any(this.layoutUnit.sector).color.toString(): 'transparent'}"
+       [ngStyle]="{
+       'background-color': this.layoutUnit ? $any(this.layoutUnit.sector).color.toString(): 'transparent',
+       'opacity': this.layoutUnit && this.layoutUnit.free ? 1 : 0.2
+       }"
   >
   </div>
 </div>
