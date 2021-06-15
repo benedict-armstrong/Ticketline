@@ -7,7 +7,7 @@ import java.util.List;
 public interface SectorService {
 
     /**
-     * save multiple sectors
+     * save multiple sectors.
      *
      * @param sectors to be persisted
      * @return the created sectors

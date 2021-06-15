@@ -17,7 +17,7 @@ public interface LayoutUnitService {
     LayoutUnit add(LayoutUnit layoutUnit);
 
     /**
-     * save multiple layoutUnits
+     * save multiple layoutUnits.
      *
      * @param layoutUnits to be persisted
      * @return the created layoutUnits
