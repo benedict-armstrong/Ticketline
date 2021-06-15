@@ -9,7 +9,11 @@
 
   <h2>This weeks most popular events:</h2>
   <div class="event-list">
-    <app-explore-event-list-item *ngFor="let event of events" [event]="event"></app-explore-event-list-item>
+    <app-explore-event-list-item *ngFor="let event of events" [event]="event" [data]="{
+    soldTickets: 10,
+    totalTickets: 20,
+    hot: true
+    }"></app-explore-event-list-item>
   </div>
 
 </div>
