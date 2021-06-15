@@ -48,7 +48,6 @@ export class AddEventComponent implements OnInit {
 
   addEvent(): void {
     this.submitted = true;
-
     if (this.addEventForm.valid
       && this.performances.length !== 0
       && this.files.length !== 0
@@ -69,7 +68,7 @@ export class AddEventComponent implements OnInit {
           this.event.images.push(f);
           count--;
           if (count === 0) {
-            //console.log(this.event);
+            // console.log(this.event);
             this.eventService.addEvent(this.event).subscribe((response) => {
               this.success = true;
               this.router.navigate(['/event-detail', response.id]);
@@ -125,7 +124,7 @@ export class AddEventComponent implements OnInit {
         this.fileTooBig = true;
       } else {
         this.files.push(file);
-        //console.log(this.event.images);
+        // console.log(this.event.images);
       }
     }
   }
