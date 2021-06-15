@@ -10,6 +10,11 @@ import {FileService} from '../../../services/file.service';
 export class ExploreEventListItemComponent implements OnInit {
 
   @Input() event: Event;
+  @Input() data: {
+    totalTickets: number;
+    soldTickets: number;
+    hot: boolean;
+  };
   previewImageUrl: string | ArrayBuffer;
 
   constructor() { }
