@@ -18,6 +18,9 @@ import at.ac.tuwien.sepm.groupphase.backend.repository.VenueRepository;
 import at.ac.tuwien.sepm.groupphase.backend.security.AuthenticationFacade;
 import at.ac.tuwien.sepm.groupphase.backend.service.BookingService;
 import at.ac.tuwien.sepm.groupphase.backend.service.CartItemService;
+import at.ac.tuwien.sepm.groupphase.backend.service.LayoutUnitService;
+import at.ac.tuwien.sepm.groupphase.backend.service.UserService;
+import at.ac.tuwien.sepm.groupphase.backend.service.VenueService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +28,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.lang.invoke.MethodHandles;
 import java.time.LocalDateTime;
 import java.util.HashSet;
@@ -38,33 +42,34 @@ public class CartItemServiceImpl implements CartItemService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final CartItemRepository cartItemRepository;
-    private final UserRepository userRepository;
+    private final UserService userService;
     private final AuthenticationFacade authenticationFacade;
     private final BookingService bookingService;
-    private final LayoutUnitRepository layoutUnitRepository;
-    private final VenueRepository venueRepository;
+    private final LayoutUnitService layoutUnitService;
+    private final VenueService venueService;
 
     @Autowired
     public CartItemServiceImpl(CartItemRepository cartItemRepository,
-                               UserRepository userRepository,
+                               UserService userService,
                                AuthenticationFacade authenticationFacade,
                                BookingService bookingService,
-                               LayoutUnitRepository layoutUnitRepository,
-                               VenueRepository venueRepository) {
+                               LayoutUnitService layoutUnitService,
+                               VenueService venueService) {
         this.cartItemRepository = cartItemRepository;
-        this.userRepository = userRepository;
+        this.userService = userService;
         this.authenticationFacade = authenticationFacade;
         this.bookingService = bookingService;
-        this.layoutUnitRepository = layoutUnitRepository;
-        this.venueRepository = venueRepository;
+        this.layoutUnitService = layoutUnitService;
+        this.venueService = venueService;
     }
 
     @Override
+    @Transactional
     public CartItem save(Performance performance, TicketType ticketType, CartItem.Status status, int amount) {
         LOGGER.trace("save({}, {},  {}, {})", performance, ticketType, status, amount);
         CartItem cartItem = CartItem.builder()
             .user(
-                userRepository.findUserByEmail((String) authenticationFacade.getAuthentication().getPrincipal())
+                userService.findApplicationUserByEmail((String) authenticationFacade.getAuthentication().getPrincipal())
             )
             .status(status)
             .changeDate(LocalDateTime.now())
@@ -72,45 +77,42 @@ public class CartItemServiceImpl implements CartItemService {
 
         Sector sector = ticketType.getSector();
 
-        Optional<Venue> optVenue = venueRepository.findById(performance.getVenue().getId());
-        if (optVenue.isPresent()) {
-            Venue venue = optVenue.get();
-            Set<Ticket> ticketSet = new HashSet<>();
-            for (int i = 0; i < amount; i++) {
-                LayoutUnit seat = null;
-                for (LayoutUnit spot : venue.getLayout()) {
-                    if (spot.getSector().getId().equals(sector.getId())) {
-                        if (spot.getTaken() == null || !spot.getTaken()) {
-                            seat = spot;
-                            break;
-                        }
+        Venue venue = venueService.getOneById(performance.getVenue().getId());
+        Set<Ticket> ticketSet = new HashSet<>();
+        for (int i = 0; i < amount; i++) {
+            LayoutUnit seat = null;
+            for (LayoutUnit spot : venue.getLayout()) {
+                if (spot.getSector().getId().equals(sector.getId())) {
+                    if (spot.getTaken() == null || !spot.getTaken()) {
+                        seat = spot;
+                        break;
                     }
                 }
-
-                if (seat == null) {
-                    throw new NoTicketLeftException("No free seat was found.");
-                }
-
-                seat.setTaken(true);
-
-                layoutUnitRepository.save(seat);
-
-                Ticket ticket = Ticket.builder()
-                    .performance(performance)
-                    .ticketType(ticketType)
-                    .seat(seat)
-                    .build();
-                ticketSet.add(ticket);
             }
 
-            cartItem.setTickets(ticketSet);
+            if (seat == null) {
+                throw new NoTicketLeftException("No free seat was found.");
+            }
 
-            return cartItemRepository.save(cartItem);
+            seat.setTaken(true);
+
+            layoutUnitService.add(seat);
+
+            Ticket ticket = Ticket.builder()
+                .performance(performance)
+                .ticketType(ticketType)
+                .seat(seat)
+                .build();
+            ticketSet.add(ticket);
         }
-        throw new NotFoundException("The performance you tried to buy a ticket for was not found.");
+
+        cartItem.setTickets(ticketSet);
+
+        return cartItemRepository.save(cartItem);
     }
 
     @Override
+    @Transactional
     public CartItem addTicket(Long id) {
         LOGGER.trace("addTicket({})", id);
         Optional<CartItem> loadedCartItem = cartItemRepository.findById(id);
@@ -137,7 +139,7 @@ public class CartItemServiceImpl implements CartItemService {
 
             seat.setTaken(true);
 
-            layoutUnitRepository.save(seat);
+            layoutUnitService.add(seat);
 
             Ticket ticket = Ticket.builder()
                 .ticketType(template.getTicketType())
@@ -157,14 +159,15 @@ public class CartItemServiceImpl implements CartItemService {
     @Override
     public List<CartItem> getCartItems(CartItem.Status status) {
         LOGGER.trace("getCartItems({})", status);
-        ApplicationUser user = userRepository.findUserByEmail((String) authenticationFacade.getAuthentication().getPrincipal());
+        ApplicationUser user = userService.findApplicationUserByEmail((String) authenticationFacade.getAuthentication().getPrincipal());
         return cartItemRepository.findByUserAndStatus(user, status);
     }
 
     @Override
+    @Transactional
     public boolean checkout() {
         LOGGER.trace("checkout()");
-        ApplicationUser user = userRepository.findUserByEmail((String) authenticationFacade.getAuthentication().getPrincipal());
+        ApplicationUser user = userService.findApplicationUserByEmail((String) authenticationFacade.getAuthentication().getPrincipal());
         List<CartItem> cartItems = cartItemRepository.findByUserAndStatus(user, CartItem.Status.IN_CART);
         if (cartItems.size() > 0) {
             for (CartItem cartItem : cartItems) {
@@ -181,6 +184,7 @@ public class CartItemServiceImpl implements CartItemService {
     }
 
     @Override
+    @Transactional
     public boolean delete(Long id) {
         LOGGER.trace("delete({})", id);
 
@@ -194,7 +198,7 @@ public class CartItemServiceImpl implements CartItemService {
                 seat.setTaken(false);
                 seats.add(seat);
             }
-            layoutUnitRepository.saveAll(seats);
+            layoutUnitService.saveAll(seats);
             cartItemRepository.deleteById(id);
             return true;
         } else {
@@ -203,6 +207,7 @@ public class CartItemServiceImpl implements CartItemService {
     }
 
     @Override
+    @Transactional
     public boolean deleteTicket(Long id, Long ticketId) {
         LOGGER.trace("deleteTicket({})", id);
         Optional<CartItem> opCartItem = cartItemRepository.findById(id);
@@ -216,7 +221,7 @@ public class CartItemServiceImpl implements CartItemService {
                     returnVal = true;
                     LayoutUnit seat = ticket.getSeat();
                     seat.setTaken(false);
-                    layoutUnitRepository.save(seat);
+                    layoutUnitService.add(seat);
                 } else {
                     ticketSet.add(ticket);
                 }
@@ -238,6 +243,7 @@ public class CartItemServiceImpl implements CartItemService {
 
     @Override
     @Scheduled(fixedDelay = 60000)
+    @Transactional
     public void pruneCartItems() {
         LOGGER.trace("pruneCartItems()");
         List<CartItem> toBeDeleted = cartItemRepository.findByChangeDateBeforeAndStatus(LocalDateTime.now().minusMinutes(1), CartItem.Status.IN_CART);
@@ -251,7 +257,7 @@ public class CartItemServiceImpl implements CartItemService {
                     seats.add(seat);
                 }
             }
-            layoutUnitRepository.saveAll(seats);
+            layoutUnitService.saveAll(seats);
         }
         cartItemRepository.deleteAll(toBeDeleted);
     }
