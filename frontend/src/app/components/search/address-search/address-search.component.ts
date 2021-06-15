@@ -88,4 +88,16 @@ export class AddressSearchComponent implements OnInit {
     this.page = 0;
     this.size = 8;
   }
+
+  resetSearchFields() {
+    this.addressSearchForm.reset();
+    this.addressSearchForm.value.title = '';
+    this.addressSearchForm.value.lineOne = '';
+    this.addressSearchForm.value.lineTwo = '';
+    this.addressSearchForm.value.city = '';
+    this.addressSearchForm.value.postCode = '';
+    this.addressSearchForm.value.country = '';
+    this.resetValues();
+    this.searchAddress();
+  }
 }
