@@ -1,0 +1,12 @@
+<div class="grid-unit-wrapper"
+     title="{{this.layoutUnit ? 'Seat number:' + this.layoutUnit.customLabel : 'Not available'}}"
+     [ngClass]="this.layoutUnit ? {
+      'standing': this.layoutUnit.sector && ($any(this.layoutUnit.sector).type == 'STANDING'),
+      'stage': this.layoutUnit.sector && ($any(this.layoutUnit.sector).type == 'STAGE')
+      }: {}"
+>
+  <div class="grid-unit" [ngClass]="{'available': this.layoutUnit}"
+       [ngStyle]="{'background-color': this.layoutUnit ? $any(this.layoutUnit.sector).color.toString(): 'transparent'}"
+  >
+  </div>
+</div>

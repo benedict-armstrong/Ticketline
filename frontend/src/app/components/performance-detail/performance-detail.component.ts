@@ -17,12 +17,13 @@ export class PerformanceDetailComponent implements OnInit {
   error = false;
   errorMessage = '';
   ticketCounts: number[] = [];
-  selectSeats: boolean = false;
+  selectSeats: boolean;
 
   constructor(private performanceService: ApplicationPerformanceService,
               private activeRoute: ActivatedRoute) { }
 
   ngOnInit(): void {
+    this.selectSeats = false;
     const performanceId = this.activeRoute.snapshot.params.id;
     this.performanceService.getPerformanceById(performanceId).subscribe(
       (response) => {

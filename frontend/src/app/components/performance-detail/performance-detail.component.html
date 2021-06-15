@@ -45,11 +45,13 @@
         </div>
       </div>
       <div class="seatSelect" *ngIf="selectSeats">
+
         <app-venue-sector-list *ngFor="let sector of this.performance.venue.sectors" [sector]="sector">
         </app-venue-sector-list>
-        <div class="venue-layout-grid">
-          <app-venue-layout-grid [venueLayout]="this.performance.venue.layout"></app-venue-layout-grid>
-        </div>
+
+          <div class="seat-select">
+            <app-select-seat [venue]="performance.venue"></app-select-seat>
+          </div>
       </div>
     </div>
   </div>
