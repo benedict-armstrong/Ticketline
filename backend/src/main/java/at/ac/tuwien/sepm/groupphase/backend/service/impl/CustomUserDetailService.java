@@ -165,10 +165,4 @@ public class CustomUserDetailService implements UserService {
 
         return newUser;
     }
-
-    @Override
-    public ApplicationUser findUserById(Long id) {
-        LOGGER.debug("Find user by id");
-        return userRepository.getOne(id);
-    }
 }

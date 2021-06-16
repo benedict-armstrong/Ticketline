@@ -69,13 +69,4 @@ public interface UserService extends UserDetailsService {
      */
     ApplicationUser resetPassword(ApplicationUser user);
 
-
-    /**
-     * Find a user based on the id.
-     *
-     * @param id the user id
-     * @return a application user
-     */
-    ApplicationUser findUserById(Long id);
-
 }
