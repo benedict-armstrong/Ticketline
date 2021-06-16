@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.lang.invoke.MethodHandles;
 import java.util.List;
 import java.util.Set;
@@ -40,6 +41,7 @@ public class CustomEventService implements EventService {
     }
 
     @Override
+    @Transactional
     public Event addEvent(Event event) {
         LOGGER.trace("addEvent({})", event);
 

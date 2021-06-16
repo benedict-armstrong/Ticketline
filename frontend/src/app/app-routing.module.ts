@@ -18,6 +18,7 @@ import { BookingComponent } from './components/booking/booking.component';
 import { AddressDetailComponent } from './components/search/address-detail/address-detail.component';
 import { ArtistDetailComponent } from './components/search/artist-detail/artist-detail.component';
 import { AddVenueComponent } from './components/venue/add-venue/add-venue.component';
+import {EditUserComponent} from './components/edit-user/edit-user.component';
 
 const routes: Routes = [
   { path: '', component: HomePageComponent },
@@ -37,6 +38,7 @@ const routes: Routes = [
   { path: 'add-user', component: AddUserComponent, canActivate: [AuthGuard], data: { roles: ['ADMIN']} },
   { path: 'add-event', component: AddEventComponent, canActivate: [AuthGuard], data: { roles: ['ADMIN', 'ORGANIZER']} },
   { path: 'orders', component: BookingComponent, canActivate: [AuthGuard], data: { roles: ['ADMIN', 'ORGANIZER', 'USER']} },
+  { path: 'edit-user/:id', component: EditUserComponent, canActivate: [AuthGuard], data: { roles: ['ADMIN']} },
 ];
 
 @NgModule({

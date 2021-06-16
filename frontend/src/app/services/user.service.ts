@@ -25,10 +25,11 @@ export class UserService {
    * Loads specific user from the backend
    *
    * @param id of user to load
+   * @return user with this id
    */
   getUserById(id: number): Observable<User> {
-    //console.log('Load user details for ' + id);
-    return this.httpClient.get<User>(this.userBaseUri + '/' + id);
+    // console.log('Load user details for ' + id);
+    return this.httpClient.get<User>(this.userBaseUri + '/id/' + id);
   }
 
   /**
@@ -37,7 +38,7 @@ export class UserService {
    * @param email of user to load
    */
    getUserByEmail(email: string): Observable<User> {
-     //console.log('Load user details for ' + email);
+     // console.log('Load user details for ' + email);
      return this.httpClient.get<User>(this.userBaseUri + '/' + email);
    }
 
@@ -47,7 +48,7 @@ export class UserService {
    * @param user to persist
    */
   createUser(user: User): Observable<User> {
-    //console.log('Create user with email ' + user.email);
+    // console.log('Create user with email ' + user.email);
     return this.httpClient.post<User>(this.userBaseUri, user);
   }
 
@@ -58,12 +59,12 @@ export class UserService {
    * @param user to update
    */
   updateUser(user: User): Observable<User> {
-    //console.log('Update user with email ' + user.email);
+    // console.log('Update user with email ' + user.email);
     return this.httpClient.put<User>(this.userBaseUri, user);
   }
 
   updateLastRead(user: User, newsId: number): Observable<User> {
-    //console.log('Update user\'s last read');
+    // console.log('Update user\'s last read');
     return this.httpClient.put<User>(this.userBaseUri + '/' + user.id, newsId);
   }
 
@@ -73,7 +74,7 @@ export class UserService {
    * @param email to update
    */
   resetPassword(email: string): Observable<User> {
-    //console.log('Reset password for user with email ' + email);
+    // console.log('Reset password for user with email ' + email);
     return this.httpClient.put<User>(this.userBaseUri + '/reset', email);
   }
 }
