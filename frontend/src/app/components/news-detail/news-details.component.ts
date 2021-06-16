@@ -38,7 +38,7 @@ export class NewsDetailComponent implements OnInit {
     this.newsService.getNewsById(this.newsId).subscribe(
       (response) => {
         this.newsItem = response;
-        //this.correspondingEvent = this.newsItem.event;
+        // this.correspondingEvent = this.newsItem.event;
         this.eventService.getEventById(this.newsItem.event).subscribe(
           (event) => {
             this.correspondingEvent = event;
@@ -53,7 +53,7 @@ export class NewsDetailComponent implements OnInit {
             this.setURL(img, i);
           }
 
-          //console.log(this.imgURL);
+          // console.log(this.imgURL);
         }
         this.markOlderAsRead();
       },

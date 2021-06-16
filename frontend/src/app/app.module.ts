@@ -53,6 +53,7 @@ import { SelectVenueComponent } from './components/event/select-venue/select-ven
 import { SearchVenueListComponent } from './components/search/search-venue-list/search-venue-list.component';
 import { SelectSeatComponent } from './components/performance-detail/select-seat/select-seat.component';
 import { SelectSeatUnitComponent } from './components/performance-detail/select-seat-unit/select-seat-unit.component';
+import { EditUserComponent } from './components/edit-user/edit-user.component';
 
 @NgModule({
   declarations: [
@@ -105,6 +106,7 @@ import { SelectSeatUnitComponent } from './components/performance-detail/select-
     SearchVenueListComponent,
     SelectSeatComponent,
     SelectSeatUnitComponent,
+    EditUserComponent
   ],
   imports: [
     BrowserModule,

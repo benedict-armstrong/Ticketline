@@ -13,12 +13,12 @@ export class VenueService {
   constructor(private globals: Globals, private httpClient: HttpClient) {}
 
   create(venue: Venue): Observable<Venue> {
-    //console.log('Save Venue');
+    // console.log('Save Venue');
     return this.httpClient.post<Venue>(this.userBaseUri, venue);
   }
 
   getVenues(): Observable<Venue[]> {
-    //console.log('Fetching Venues');
+    // console.log('Fetching Venues');
     return this.httpClient.get<Venue[]>(this.userBaseUri);
   }
 }
