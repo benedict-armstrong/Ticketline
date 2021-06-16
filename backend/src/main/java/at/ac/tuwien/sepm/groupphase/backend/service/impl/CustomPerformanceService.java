@@ -22,12 +22,10 @@ public class CustomPerformanceService implements PerformanceService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final PerformanceRepository performanceRepository;
-    private final EventRepository eventRepository;
 
     @Autowired
-    public CustomPerformanceService(PerformanceRepository performanceRepository,  EventRepository eventRepository) {
+    public CustomPerformanceService(PerformanceRepository performanceRepository) {
         this.performanceRepository = performanceRepository;
-        this.eventRepository = eventRepository;
     }
 
     @Override
