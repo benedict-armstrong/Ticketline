@@ -12,6 +12,7 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.User;
@@ -174,5 +175,17 @@ public class CustomUserDetailService implements UserService {
             return applicationUser;
         }
         throw new NotFoundException(String.format("Could not find the user with the id %d", id));
+    }
+
+    @Override
+    @Scheduled(fixedDelay = 18000)
+    public void resetPasswordAttemptCount() {
+        LOGGER.trace("resetPasswordAttemptCount()");
+        List<ApplicationUser> users = userRepository.findAllByPointsGreaterThan(0);
+
+        for (ApplicationUser user : users) {
+            user.setPoints(0);
+            userRepository.save(user);
+        }
     }
 }
