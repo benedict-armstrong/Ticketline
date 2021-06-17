@@ -55,6 +55,9 @@ export class UserManagementComponent implements OnInit {
   }
 
   toggleStatus(user: User) {
+    if (user.id === this.managingUser.id) {
+      return;
+    }
     if (user.status === 'ACTIVE') {
       user.status = 'BANNED';
     } else if (user.status === 'BANNED') {

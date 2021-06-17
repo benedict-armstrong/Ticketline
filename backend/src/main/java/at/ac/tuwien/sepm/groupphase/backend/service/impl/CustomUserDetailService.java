@@ -135,6 +135,8 @@ public class CustomUserDetailService implements UserService {
             user.setPassword(passwordEncoder.encode(user.getPassword()));
         }
 
+        user.setStatus(ApplicationUser.UserStatus.ACTIVE); // Prevent the admin from banning themself
+
         return userRepository.save(user);
     }
 
