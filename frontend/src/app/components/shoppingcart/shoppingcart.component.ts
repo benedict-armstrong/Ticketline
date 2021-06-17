@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { CartItemService } from 'src/app/services/cartItem.service';
+import { TicketService } from 'src/app/services/ticket.service';
 
 @Component({
   selector: 'app-shoppingcart',
@@ -11,20 +11,20 @@ export class ShoppingcartComponent implements OnInit {
   public error = false;
   public errorMessage = '';
 
-  constructor(public cartItemService: CartItemService) {}
+  constructor(public ticketService: TicketService) {}
 
   ngOnInit(): void {
   }
 
   close(): void {
-    this.cartItemService.toggleStatus();
+    this.ticketService.toggleStatus();
   }
 
   checkout(): void {
-    this.cartItemService.checkout().subscribe(
+    this.ticketService.checkout().subscribe(
       (response) => {
         if (response) {
-          this.cartItemService.reload();
+          this.ticketService.reload();
         }
       },
       (error) => {

@@ -1,19 +1,41 @@
 package at.ac.tuwien.sepm.groupphase.backend.integrationtest;
 
-import at.ac.tuwien.sepm.groupphase.backend.basetest.*;
+import at.ac.tuwien.sepm.groupphase.backend.basetest.TestAuthentification;
+import at.ac.tuwien.sepm.groupphase.backend.basetest.TestDataAddress;
+import at.ac.tuwien.sepm.groupphase.backend.basetest.TestDataArtist;
+import at.ac.tuwien.sepm.groupphase.backend.basetest.TestDataEvent;
+import at.ac.tuwien.sepm.groupphase.backend.basetest.TestDataTicket;
+import at.ac.tuwien.sepm.groupphase.backend.basetest.TestDataUser;
+import at.ac.tuwien.sepm.groupphase.backend.basetest.TestDataVenue;
 import at.ac.tuwien.sepm.groupphase.backend.config.properties.SecurityProperties;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.NewCartItemDto;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.CartItemDto;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.CartItemMapper;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.NewTicketDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.TicketDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.PerformanceMapper;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.TicketMapper;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.TicketTypeMapper;
-import at.ac.tuwien.sepm.groupphase.backend.entity.*;
-import at.ac.tuwien.sepm.groupphase.backend.repository.*;
+import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
+import at.ac.tuwien.sepm.groupphase.backend.entity.Artist;
+import at.ac.tuwien.sepm.groupphase.backend.entity.LayoutUnit;
+import at.ac.tuwien.sepm.groupphase.backend.entity.Performance;
+import at.ac.tuwien.sepm.groupphase.backend.entity.Sector;
+import at.ac.tuwien.sepm.groupphase.backend.entity.Ticket;
+import at.ac.tuwien.sepm.groupphase.backend.entity.TicketType;
+import at.ac.tuwien.sepm.groupphase.backend.entity.Venue;
+import at.ac.tuwien.sepm.groupphase.backend.repository.AddressRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.ArtistRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.BookingRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.LayoutUnitRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.PerformanceRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.SectorRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.TicketRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.TicketTypeRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.UserRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.VenueRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.json.JSONArray;
-import org.json.JSONObject;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -28,19 +50,27 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
 @ActiveProfiles("test")
 @AutoConfigureMockMvc
-public class CartItemEndpointTest implements TestDataCartItem, TestDataUser, TestDataVenue, TestDataArtist, TestDataEvent, TestAuthentification {
+public class TicketEndpointTest implements TestDataTicket, TestDataUser, TestDataVenue, TestDataArtist, TestDataEvent, TestAuthentification {
     @Autowired
     private MockMvc mockMvc;
 
@@ -56,7 +86,7 @@ public class CartItemEndpointTest implements TestDataCartItem, TestDataUser, Tes
     private String authToken;
 
     @Autowired
-    private CartItemRepository cartItemRepository;
+    private TicketRepository ticketRepository;
 
     @Autowired
     private PerformanceRepository performanceRepository;
@@ -83,9 +113,6 @@ public class CartItemEndpointTest implements TestDataCartItem, TestDataUser, Tes
     private BookingRepository bookingRepository;
 
     @Autowired
-    private CartItemMapper cartItemMapper;
-
-    @Autowired
     private PerformanceMapper performanceMapper;
 
     @Autowired
@@ -97,51 +124,19 @@ public class CartItemEndpointTest implements TestDataCartItem, TestDataUser, Tes
     @Autowired
     private LayoutUnitRepository layoutUnitRepository;
 
-    private CartItemDto cartItem;
+    private Ticket ticket;
 
-    private NewCartItemDto newCartItem;
+    private NewTicketDto newTicketDto;
 
     private final int ticketAmount = 1;
 
     @BeforeEach
     public void beforeEach() throws Exception {
-        Address address = Address.builder()
-            .name("Max Mustermann")
-            .lineOne("Teststraße 2")
-            .city("Wieadn")
-            .postcode("1010")
-            .country("Österreich")
-            .eventLocation(true)
-            .build();
-
-        ApplicationUser user = ApplicationUser.builder()
-            .firstName(ADMIN_FIRST_NAME)
-            .lastName(ADMIN_LAST_NAME)
-            .email(ADMIN_EMAIL)
-            .lastLogin(ADMIN_LAST_LOGIN)
-            .role(ADMIN_ROLE)
-            .status(ADMIN_USER_STATUS)
-            .password(ADMIN_PASSWORD)
-            .points(ADMIN_POINTS)
-            .address(Address.builder()
-                .name("Max Mustermann")
-                .lineOne("Teststraße 2")
-                .city("Wien")
-                .postcode("1010")
-                .country("Österreich")
-                .eventLocation(false)
-                .build())
-            .telephoneNumber(ADMIN_PHONE_NUMBER)
-            .build();
-
+        ApplicationUser user = TestDataUser.getUser();
         ApplicationUser savedUser = saveUser(user, userRepository, passwordEncoder);
         authToken = authenticate(user, mockMvc, objectMapper);
 
-        Artist savedArtist = artistRepository.save(Artist.builder()
-            .firstName("First")
-            .lastName("Last")
-            .build()
-        );
+        Artist savedArtist = artistRepository.save(TestDataArtist.getArtist());
 
         Sector sector = Sector.builder()
             .name("Sector1")
@@ -185,7 +180,7 @@ public class CartItemEndpointTest implements TestDataCartItem, TestDataUser, Tes
             .sectors(sectorList)
             .layout(layoutUnitList)
             .name("VANUE1")
-            .address(address)
+            .address(TestDataAddress.getAddress())
             .width(1)
             .owner(savedUser)
             .build()
@@ -201,20 +196,7 @@ public class CartItemEndpointTest implements TestDataCartItem, TestDataUser, Tes
             .build()
         );
 
-        Ticket ticket1 = Ticket.builder()
-            .ticketType(ticketType)
-            .performance(savedPerformance)
-            .seat(layoutUnitList.get(0))
-            .build();
-        Set<Ticket> ticketSet = new HashSet<>();
-        ticketSet.add(ticket1);
-
-        /*cartItem = CartItemDto.builder()
-            .tickets(ticketMapper.ticketSetToTicketDtoArray(ticketSet))
-            .build();
-        */
-
-        newCartItem = NewCartItemDto.builder()
+        newTicketDto = NewTicketDto.builder()
             .performance(performanceMapper.performanceToPerformanceDto(savedPerformance))
             .ticketType(ticketTypeMapper.ticketTypeToTicketTypeDto(ticketType))
             .build();
@@ -223,7 +205,7 @@ public class CartItemEndpointTest implements TestDataCartItem, TestDataUser, Tes
     @AfterEach
     public void afterEach () {
         bookingRepository.deleteAll();
-        cartItemRepository.deleteAll();
+        ticketRepository.deleteAll();
         performanceRepository.deleteAll();
         venueRepository.deleteAll();
         ticketTypeRepository.deleteAll();
@@ -233,15 +215,15 @@ public class CartItemEndpointTest implements TestDataCartItem, TestDataUser, Tes
     }
 
     @Test
-    @DisplayName("Should save correct cartItem when creating one")
-    public void whenCreateCartItem_thenGetBackCorrectCartItem() throws Exception {
+    @DisplayName("Should save correct ticket when creating one")
+    public void whenCreateTicket_thenGetBackCorrectTicket() throws Exception {
 
-        System.out.println(objectMapper.writeValueAsString(newCartItem));
+        System.out.println(objectMapper.writeValueAsString(newTicketDto));
 
         MvcResult mvcResult = this.mockMvc.perform(
-            post(CART_ITEM_BASE_URI + "/" + ticketAmount)
+            post(TICKET_BASE_URI + "/" + ticketAmount)
                 .content(
-                    objectMapper.writeValueAsString(newCartItem)
+                    objectMapper.writeValueAsString(newTicketDto)
                 )
                 .contentType(MediaType.APPLICATION_JSON)
                 .header(securityProperties.getAuthHeader(), authToken)
@@ -250,183 +232,130 @@ public class CartItemEndpointTest implements TestDataCartItem, TestDataUser, Tes
         assertEquals(HttpStatus.CREATED.value(), response.getStatus());
         assertEquals(MediaType.APPLICATION_JSON_VALUE, response.getContentType());
 
-        CartItemDto cartItemDto = objectMapper.readValue(response.getContentAsString(), CartItemDto.class);
+        List<TicketDto> ticketDtos = Arrays.asList(
+            objectMapper.readValue(response.getContentAsString(), TicketDto[].class)
+        );
+
         assertAll(
-            () -> assertNotNull(cartItemDto.getId()),
-            () -> assertEquals(ticketAmount, cartItemDto.getTickets().length)
+            () -> assertNotNull(ticketDtos.get(0).getId()),
+            () -> assertEquals(ticketAmount, ticketDtos.size())
         );
     }
 
     @Test
-    @DisplayName("Should return the list of cartItems after creating one")
-    public void whenCreateCartItem_thenGetAllCartItems_GetCreatedCartItem() throws Exception {
+    @DisplayName("Should return NoTicketLeftException")
+    public void whenCreateTicket_butTooManyTickets_thenNoTicketLeftException() throws Exception {
+
+        System.out.println(objectMapper.writeValueAsString(newTicketDto));
 
         MvcResult mvcResult = this.mockMvc.perform(
-            post(CART_ITEM_BASE_URI  + "/" + ticketAmount)
+            post(TICKET_BASE_URI + "/" + 10000)
                 .content(
-                    objectMapper.writeValueAsString(newCartItem)
+                    objectMapper.writeValueAsString(newTicketDto)
                 )
                 .contentType(MediaType.APPLICATION_JSON)
                 .header(securityProperties.getAuthHeader(), authToken)
         ).andReturn();
         MockHttpServletResponse response = mvcResult.getResponse();
-
-        mvcResult = this.mockMvc.perform(
-            get(CART_ITEM_BASE_URI)
-                .contentType(MediaType.APPLICATION_JSON)
-                .header(securityProperties.getAuthHeader(), authToken)
-        ).andReturn();
-        response = mvcResult.getResponse();
-        assertEquals(HttpStatus.OK.value(), response.getStatus());
-        assertEquals(MediaType.APPLICATION_JSON_VALUE, response.getContentType());
-
-        List<CartItemDto> cartItemDtoList = Arrays.asList(
-            objectMapper.readValue(response.getContentAsString(), CartItemDto[].class)
-        );
-        assertAll(
-            () -> assertNotNull(cartItemDtoList),
-            () -> assertEquals(1, cartItemDtoList.size())
-        );
-    }
-
-    @Test
-    @DisplayName("Should return empty list after deleting cartItem")
-    public void whenGettingAllCartItems_afterInsertingCartItemAndDeletingCartItem_thenShouldGetEmptyList() throws Exception {
-        MvcResult mvcResult = this.mockMvc.perform(
-            post(CART_ITEM_BASE_URI  + "/" + ticketAmount)
-                .content(
-                    objectMapper.writeValueAsString(newCartItem)
-                )
-                .contentType(MediaType.APPLICATION_JSON)
-                .header(securityProperties.getAuthHeader(), authToken)
-        ).andReturn();
-        MockHttpServletResponse response = mvcResult.getResponse();
-        CartItemDto newCartItemDto = objectMapper.readValue(response.getContentAsString(), CartItemDto.class);
-
-        assertNotNull(newCartItemDto);
-
-        mvcResult = this.mockMvc.perform(
-            delete(CART_ITEM_BASE_URI + "/" + newCartItemDto.getId())
-                .header(securityProperties.getAuthHeader(), authToken)
-        ).andReturn();
-        response = mvcResult.getResponse();
-        assertEquals(HttpStatus.OK.value(), response.getStatus());
-
-        mvcResult = this.mockMvc.perform(
-            get(CART_ITEM_BASE_URI)
-                .header(securityProperties.getAuthHeader(), authToken)
-        ).andReturn();
-        response = mvcResult.getResponse();
-        assertEquals(HttpStatus.OK.value(), response.getStatus());
-        assertEquals(MediaType.APPLICATION_JSON_VALUE, response.getContentType());
-
-        List<CartItemDto> cartItemDtoList = Arrays.asList(
-            objectMapper.readValue(response.getContentAsString(), CartItemDto[].class)
-        );
-
-        assertAll(
-            () -> assertNotNull(cartItemDtoList),
-            () -> assertEquals(0, cartItemDtoList.size())
-        );
-    }
-
-    @Test
-    @DisplayName("Should return new cartItem when adding a ticket to it")
-    public void whenCreateCartItem_thenAddTicket_shouldGiveCorrectCartItem() throws Exception {
-        MvcResult mvcResult = this.mockMvc.perform(
-            post(CART_ITEM_BASE_URI  + "/" + ticketAmount)
-                .content(
-                    objectMapper.writeValueAsString(newCartItem)
-                )
-                .contentType(MediaType.APPLICATION_JSON)
-                .header(securityProperties.getAuthHeader(), authToken)
-        ).andReturn();
-        MockHttpServletResponse response = mvcResult.getResponse();
-        CartItemDto newCartItemDto = objectMapper.readValue(response.getContentAsString(), CartItemDto.class);
-
-        mvcResult = this.mockMvc.perform(
-            post(CART_ITEM_BASE_URI + "/" + newCartItemDto.getId() + "/addTicket")
-                .header(securityProperties.getAuthHeader(), authToken)
-        ).andReturn();
-        response = mvcResult.getResponse();
-        assertEquals(HttpStatus.CREATED.value(), response.getStatus());
-        assertEquals(MediaType.APPLICATION_JSON_VALUE, response.getContentType());
-
-        System.out.println(response.getContentAsString());
-
-        JSONObject jsonResponse = new JSONObject(response.getContentAsString());
-        Long id = jsonResponse.getLong("id");
-        JSONArray ticketArray = jsonResponse.getJSONArray("tickets");
-
-        //CartItemDto newNewCartItemDto = objectMapper.readValue(response.getContentAsString(), CartItemDto.class);
-        assertAll(
-            () -> assertEquals(newCartItemDto.getId(), id),
-            () -> assertEquals(2, ticketArray.length())
-        );
-    }
-
-    @Test
-    @DisplayName("Should return NoTicketLeftException when adding too many ticket to it")
-    public void whenCreateCartItem_thenAddManyTickets_shouldRespondWithNoTicketFoundException() throws Exception {
-        MvcResult mvcResult = this.mockMvc.perform(
-            post(CART_ITEM_BASE_URI + "/" + ticketAmount)
-                .content(
-                    objectMapper.writeValueAsString(newCartItem)
-                )
-                .contentType(MediaType.APPLICATION_JSON)
-                .header(securityProperties.getAuthHeader(), authToken)
-        ).andReturn();
-        MockHttpServletResponse response = mvcResult.getResponse();
-        CartItemDto newCartItemDto = objectMapper.readValue(response.getContentAsString(), CartItemDto.class);
-
-        mvcResult = this.mockMvc.perform(
-            post(CART_ITEM_BASE_URI + "/" + newCartItemDto.getId() + "/addTicket")
-                .header(securityProperties.getAuthHeader(), authToken)
-        ).andReturn();
-        response = mvcResult.getResponse();
-        assertEquals(HttpStatus.CREATED.value(), response.getStatus());
-        assertEquals(MediaType.APPLICATION_JSON_VALUE, response.getContentType());
-
-        mvcResult = this.mockMvc.perform(
-            post(CART_ITEM_BASE_URI + "/" + newCartItemDto.getId() + "/addTicket")
-                .header(securityProperties.getAuthHeader(), authToken)
-        ).andReturn();
-        response = mvcResult.getResponse();
-        assertEquals(HttpStatus.CREATED.value(), response.getStatus());
-        assertEquals(MediaType.APPLICATION_JSON_VALUE, response.getContentType());
-
-        mvcResult = this.mockMvc.perform(
-            post(CART_ITEM_BASE_URI + "/" + newCartItemDto.getId() + "/addTicket")
-                .header(securityProperties.getAuthHeader(), authToken)
-        ).andReturn();
-        response = mvcResult.getResponse();
-        assertEquals(HttpStatus.CREATED.value(), response.getStatus());
-        assertEquals(MediaType.APPLICATION_JSON_VALUE, response.getContentType());
-
-        mvcResult = this.mockMvc.perform(
-            post(CART_ITEM_BASE_URI + "/" + newCartItemDto.getId() + "/addTicket")
-                .header(securityProperties.getAuthHeader(), authToken)
-        ).andReturn();
-        response = mvcResult.getResponse();
         assertEquals(HttpStatus.NOT_FOUND.value(), response.getStatus());
     }
 
     @Test
-    @DisplayName("Should return 200 (true) when checkout")
-    public void whenCreateCartItem_thenCheckout_thenCartItemShouldBePaidFor() throws Exception {
+    @DisplayName("Should return the list of tickets after creating one")
+    public void whenCreateTicket_thenGetAllTickets_GetCreatedTicket() throws Exception {
+
         MvcResult mvcResult = this.mockMvc.perform(
-            post(CART_ITEM_BASE_URI  + "/" + ticketAmount)
+            post(TICKET_BASE_URI  + "/" + ticketAmount)
                 .content(
-                    objectMapper.writeValueAsString(newCartItem)
+                    objectMapper.writeValueAsString(newTicketDto)
                 )
                 .contentType(MediaType.APPLICATION_JSON)
                 .header(securityProperties.getAuthHeader(), authToken)
         ).andReturn();
         MockHttpServletResponse response = mvcResult.getResponse();
-        CartItemDto cartItemDto = objectMapper.readValue(response.getContentAsString(), CartItemDto.class);
 
         mvcResult = this.mockMvc.perform(
-            put(CART_ITEM_BASE_URI + "/checkout")
+            get(TICKET_BASE_URI)
+                .contentType(MediaType.APPLICATION_JSON)
+                .header(securityProperties.getAuthHeader(), authToken)
+        ).andReturn();
+        response = mvcResult.getResponse();
+        assertEquals(HttpStatus.OK.value(), response.getStatus());
+        assertEquals(MediaType.APPLICATION_JSON_VALUE, response.getContentType());
+
+        List<TicketDto> ticketDtos = Arrays.asList(
+            objectMapper.readValue(response.getContentAsString(), TicketDto[].class)
+        );
+        assertAll(
+            () -> assertNotNull(ticketDtos),
+            () -> assertEquals(1, ticketDtos.size())
+        );
+    }
+
+    @Test
+    @DisplayName("Should return empty list after deleting ticket")
+    public void whenGettingAllTickets_afterInsertingTicketAndDeletingTicket_thenShouldGetEmptyList() throws Exception {
+        MvcResult mvcResult = this.mockMvc.perform(
+            post(TICKET_BASE_URI  + "/" + ticketAmount)
+                .content(
+                    objectMapper.writeValueAsString(newTicketDto)
+                )
+                .contentType(MediaType.APPLICATION_JSON)
+                .header(securityProperties.getAuthHeader(), authToken)
+        ).andReturn();
+        MockHttpServletResponse response = mvcResult.getResponse();
+
+        List<TicketDto> ticketDtos = Arrays.asList(
+            objectMapper.readValue(response.getContentAsString(), TicketDto[].class)
+        );
+
+        assertNotNull(ticketDtos.get(0));
+
+        mvcResult = this.mockMvc.perform(
+            delete(TICKET_BASE_URI + "/" + ticketDtos.get(0).getId())
+                .header(securityProperties.getAuthHeader(), authToken)
+        ).andReturn();
+        response = mvcResult.getResponse();
+        assertEquals(HttpStatus.OK.value(), response.getStatus());
+
+        mvcResult = this.mockMvc.perform(
+            get(TICKET_BASE_URI)
+                .header(securityProperties.getAuthHeader(), authToken)
+        ).andReturn();
+        response = mvcResult.getResponse();
+        assertEquals(HttpStatus.OK.value(), response.getStatus());
+        assertEquals(MediaType.APPLICATION_JSON_VALUE, response.getContentType());
+
+        List<TicketDto> newTicketDtos = Arrays.asList(
+            objectMapper.readValue(response.getContentAsString(), TicketDto[].class)
+        );
+
+        assertAll(
+            () -> assertNotNull(newTicketDtos),
+            () -> assertEquals(0, newTicketDtos.size())
+        );
+    }
+
+
+    @Test
+    @DisplayName("Should return 200 (true) when checkout")
+    public void whenCreateTicket_thenCheckout_thenTicketShouldBePaidFor() throws Exception {
+        MvcResult mvcResult = this.mockMvc.perform(
+            post(TICKET_BASE_URI  + "/" + ticketAmount)
+                .content(
+                    objectMapper.writeValueAsString(newTicketDto)
+                )
+                .contentType(MediaType.APPLICATION_JSON)
+                .header(securityProperties.getAuthHeader(), authToken)
+        ).andReturn();
+        MockHttpServletResponse response = mvcResult.getResponse();
+
+        List<TicketDto> ticketDtos = Arrays.asList(
+            objectMapper.readValue(response.getContentAsString(), TicketDto[].class)
+        );
+
+        mvcResult = this.mockMvc.perform(
+            put(TICKET_BASE_URI + "/checkout")
                 .header(securityProperties.getAuthHeader(), authToken)
         ).andReturn();
         response = mvcResult.getResponse();
@@ -437,23 +366,23 @@ public class CartItemEndpointTest implements TestDataCartItem, TestDataUser, Tes
         assertTrue(succeeded);
 
         mvcResult = this.mockMvc.perform(
-            get(CART_ITEM_BASE_URI + "/paid")
+            get(TICKET_BASE_URI + "/paid")
                 .header(securityProperties.getAuthHeader(), authToken)
         ).andReturn();
         response = mvcResult.getResponse();
         assertEquals(HttpStatus.OK.value(), response.getStatus());
         assertEquals(MediaType.APPLICATION_JSON_VALUE, response.getContentType());
 
-        List<CartItemDto> cartItemDtoList = Arrays.asList(
-            objectMapper.readValue(response.getContentAsString(), CartItemDto[].class)
+        List<TicketDto> newTicketDtos = Arrays.asList(
+            objectMapper.readValue(response.getContentAsString(), TicketDto[].class)
         );
 
-        List<CartItem> cartItemList = cartItemMapper.cartItemDtoListToCartItemList(cartItemDtoList);
+        List<Ticket> ticketList = ticketMapper.ticketDtoListToTicketList(newTicketDtos);
 
         assertAll(
-            () -> assertNotNull(cartItemList),
-            () -> assertNotNull(cartItemList.get(0)),
-            () -> assertEquals(CartItem.Status.PAID_FOR, cartItemList.get(0).getStatus())
+            () -> assertNotNull(ticketList),
+            () -> assertNotNull(ticketList.get(0)),
+            () -> assertEquals(Ticket.Status.PAID_FOR, ticketList.get(0).getStatus())
         );
     }
 
@@ -462,7 +391,7 @@ public class CartItemEndpointTest implements TestDataCartItem, TestDataUser, Tes
     public void whenCheckout_andEmptyCart_thenReturnFalse() throws Exception {
 
         MvcResult mvcResult = this.mockMvc.perform(
-            put(CART_ITEM_BASE_URI + "/checkout")
+            put(TICKET_BASE_URI + "/checkout")
                 .header(securityProperties.getAuthHeader(), authToken)
         ).andReturn();
         MockHttpServletResponse response = mvcResult.getResponse();

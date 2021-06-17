@@ -24,7 +24,7 @@ export class BookingComponent implements OnInit {
 
   loadBookings() {
     this.bookingService.getBookings().subscribe(
-      response => {
+      (response) => {
         this.bookings.push(...response);
         this.bookings.reverse();
         if (this.bookings.length > 0 ) {

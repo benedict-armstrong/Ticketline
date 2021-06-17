@@ -23,4 +23,6 @@ public class TicketDto {
 
     @NotNull(message = "Ticket type is missing")
     private TicketTypeDto ticketType;
+
+    private String status;
 }

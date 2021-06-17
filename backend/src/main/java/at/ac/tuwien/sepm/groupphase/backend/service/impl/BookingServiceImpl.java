@@ -2,6 +2,7 @@ package at.ac.tuwien.sepm.groupphase.backend.service.impl;
 
 import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Booking;
+import at.ac.tuwien.sepm.groupphase.backend.entity.Ticket;
 import at.ac.tuwien.sepm.groupphase.backend.repository.BookingRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepm.groupphase.backend.security.AuthenticationFacade;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Service;
 import java.lang.invoke.MethodHandles;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 
 @Service
 @EnableScheduling
@@ -36,14 +38,27 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
+    public Booking save(Set<Ticket> tickets) {
+        LOGGER.trace("saveBooking({})", tickets);
+        ApplicationUser user = userService.findApplicationUserByEmail((String) authenticationFacade.getAuthentication().getPrincipal());
+        Booking booking = Booking.builder()
+            .user(user)
+            .createDate(LocalDateTime.now())
+            .tickets(tickets)
+            .invoice(null)
+            .build();
+
+        return bookingRepository.save(booking);
+    }
+
+    @Override
     public Booking save(Booking booking) {
         LOGGER.trace("saveBooking({})", booking);
         booking.setUser(
             userService.findApplicationUserByEmail((String) authenticationFacade.getAuthentication().getPrincipal())
         );
-        booking.setBuyDate(LocalDateTime.now());
+        booking.setCreateDate(LocalDateTime.now());
         booking.setInvoice(null);
-
         return bookingRepository.save(booking);
     }
 

@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { User } from 'src/app/dtos/user';
 import { AuthService } from 'src/app/services/auth.service';
 import { UserService } from 'src/app/services/user.service';
-import {CartItemService} from '../../services/cartItem.service';
+import {TicketService} from '../../services/ticket.service';
 import {Ticket} from '../../dtos/ticket';
 import {TicketGroup} from '../../dtos/ticketGroup';
 
@@ -40,7 +40,7 @@ export class UserHomeComponent implements OnInit {
   constructor(
     private userService: UserService,
     private authService: AuthService,
-    private cartItemService: CartItemService,
+    private ticketService: TicketService,
     private router: Router,
     private formBuilder: FormBuilder
   ) { }
@@ -79,14 +79,12 @@ export class UserHomeComponent implements OnInit {
    */
   loadOrders() {
     console.log('loading orders');
-    this.cartItemService.getPaidItems().subscribe(
+    this.ticketService.getPaidItems().subscribe(
       (response) => {
         // Get all tickets
-        for (const item of response) {
-          item.tickets.forEach(value => {
-            this.createTicketGroups(value);
-          });
-        }
+        response.forEach(value => {
+          this.createTicketGroups(value);
+        });
 
         this.orders.sort((x, y) => Date.parse(x.tickets[0].performance.date) - Date.parse(y.tickets[0].performance.date)).reverse();
         this.newOrders = this.orders.filter(item => item.old === false);
