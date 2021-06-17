@@ -75,9 +75,15 @@ public class BookingServiceImpl implements BookingService {
             Ticket.Status status;
 
             switch (booking.getStatus()) {
-                case PAID_FOR: status = Ticket.Status.PAID_FOR;
-                case RESERVED: status = Ticket.Status.RESERVED;
-                case CANCELLED: status = Ticket.Status.CANCELLED;
+                case PAID_FOR:
+                    status = Ticket.Status.PAID_FOR;
+                    break;
+                case RESERVED: 
+                    status = Ticket.Status.RESERVED;
+                    break;
+                case CANCELLED:
+                    status = Ticket.Status.CANCELLED;
+                    break;
                 default: status = Ticket.Status.RESERVED;
             }
 
