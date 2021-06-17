@@ -121,6 +121,10 @@ export class TicketService {
     return this.httpClient.put<boolean>(this.ticketBaseUri + '/checkout', null);
   }
 
+  reserve(): Observable<boolean> {
+    return this.httpClient.put<boolean>(this.ticketBaseUri + '/reserve', null);
+  }
+
   private defaultServiceErrorHandling(error: any) {
     console.log(error);
     this.error = true;

@@ -37,6 +37,16 @@ export class BookingComponent implements OnInit {
     );
   }
 
+  onUpdateClick(booking) {
+    this.bookingService.updateBooking(booking).subscribe(
+      (response) => {
+        console.log(response);
+      }, error => {
+        console.error(error);
+      }
+    );
+  }
+
   onStornoClick(id) {
     alert('Storno: ' + id);
   }

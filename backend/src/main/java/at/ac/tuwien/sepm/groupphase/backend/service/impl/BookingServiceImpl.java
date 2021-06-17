@@ -4,7 +4,6 @@ import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Booking;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Ticket;
 import at.ac.tuwien.sepm.groupphase.backend.repository.BookingRepository;
-import at.ac.tuwien.sepm.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepm.groupphase.backend.security.AuthenticationFacade;
 import at.ac.tuwien.sepm.groupphase.backend.service.BookingService;
 import at.ac.tuwien.sepm.groupphase.backend.service.UserService;
@@ -38,7 +37,7 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public Booking save(Set<Ticket> tickets) {
+    public Booking save(Set<Ticket> tickets, Booking.Status status) {
         LOGGER.trace("saveBooking({})", tickets);
         ApplicationUser user = userService.findApplicationUserByEmail((String) authenticationFacade.getAuthentication().getPrincipal());
         Booking booking = Booking.builder()
@@ -46,6 +45,7 @@ public class BookingServiceImpl implements BookingService {
             .createDate(LocalDateTime.now())
             .tickets(tickets)
             .invoice(null)
+            .status(status)
             .build();
 
         return bookingRepository.save(booking);
@@ -59,7 +59,36 @@ public class BookingServiceImpl implements BookingService {
         );
         booking.setCreateDate(LocalDateTime.now());
         booking.setInvoice(null);
+        if (booking.getStatus() == null) {
+            booking.setStatus(Booking.Status.RESERVED);
+        }
         return bookingRepository.save(booking);
+    }
+
+    @Override
+    public Booking update(Booking booking) {
+        ApplicationUser user = userService.findApplicationUserByEmail((String) authenticationFacade.getAuthentication().getPrincipal());
+        Booking oldBooking = bookingRepository.findByUserAndId(user, booking.getId());
+
+        //Booking.Status changed
+        if (booking.getStatus() != oldBooking.getStatus()) {
+            Ticket.Status status;
+
+            switch (booking.getStatus()) {
+                case PAID_FOR: status = Ticket.Status.PAID_FOR;
+                case RESERVED: status = Ticket.Status.RESERVED;
+                case CANCELLED: status = Ticket.Status.CANCELLED;
+                default: status = Ticket.Status.RESERVED;
+            }
+
+            if (status != Ticket.Status.CANCELLED) {
+                // TODO Change Status of all tickets
+            }
+        }
+
+
+        oldBooking.setStatus(booking.getStatus());
+        return bookingRepository.save(oldBooking);
     }
 
     @Override

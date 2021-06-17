@@ -15,4 +15,13 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
      * @return ordered list of all found bookings
      */
     List<Booking> findByUser(ApplicationUser user);
+
+    /**
+     * Find booking by user and id.
+     *
+     * @param user of the booking to find
+     * @param id of the booking to find
+     * @return ordered list of all found bookings
+     */
+    Booking findByUserAndId(ApplicationUser user, long id);
 }

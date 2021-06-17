@@ -33,6 +33,19 @@ export class ShoppingcartComponent implements OnInit {
     );
   }
 
+  reserve(): void {
+    this.ticketService.reserve().subscribe(
+      (response) => {
+        if (response) {
+          this.ticketService.reload();
+        }
+      },
+      (error) => {
+        this.defaultServiceErrorHandling(error);
+      }
+    );
+  }
+
   vanishAlert(): void {
     this.error = false;
   }

@@ -35,6 +35,13 @@ public interface TicketService {
     boolean checkout();
 
     /**
+     * Adds all the tickets in the users cart to a booking entity and changes their status to RESERVED.
+     *
+     * @return true if successfully
+     */
+    boolean reserve();
+
+    /**
      * Deletes a ticket.
      *
      * @param id of the ticket

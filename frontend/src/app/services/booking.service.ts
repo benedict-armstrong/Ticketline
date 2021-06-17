@@ -23,6 +23,11 @@ export class BookingService {
     return this.httpClient.get<Booking[]>(this.bookingBaseUri);
   }
 
+  updateBooking(booking): Observable<Booking> {
+    console.log(this.bookingBaseUri + '/change');
+    return this.httpClient.put<Booking>(this.bookingBaseUri + '/change', booking);
+  }
+
 }
 
 

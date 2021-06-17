@@ -1,6 +1,7 @@
 package at.ac.tuwien.sepm.groupphase.backend.service.impl;
 
 import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
+import at.ac.tuwien.sepm.groupphase.backend.entity.Booking;
 import at.ac.tuwien.sepm.groupphase.backend.entity.LayoutUnit;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Performance;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Sector;
@@ -127,7 +128,24 @@ public class TicketServiceImpl implements TicketService {
             ticket.setStatus(Ticket.Status.PAID_FOR);
         }
         ticketRepository.saveAll(tickets);
-        bookingService.save(new HashSet<>(tickets));
+        bookingService.save(new HashSet<>(tickets), Booking.Status.PAID_FOR);
+        return true;
+    }
+
+    @Override
+    public boolean reserve() {
+        LOGGER.trace("reserve()");
+        ApplicationUser user = userService.findApplicationUserByEmail((String) authenticationFacade.getAuthentication().getPrincipal());
+        List<Ticket> tickets = ticketRepository.findByUserAndStatus(user, Ticket.Status.IN_CART);
+        if (tickets.size() < 1) {
+            return false;
+        }
+
+        for (Ticket ticket : tickets) {
+            ticket.setStatus(Ticket.Status.RESERVED);
+        }
+        ticketRepository.saveAll(tickets);
+        bookingService.save(new HashSet<>(tickets), Booking.Status.RESERVED);
         return true;
     }
 
