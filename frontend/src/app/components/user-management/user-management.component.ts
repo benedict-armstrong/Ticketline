@@ -38,7 +38,7 @@ export class UserManagementComponent implements OnInit {
       users => {
         this.users.push(...users);
         this.page++;
-        if (users.length !== +this.size) {
+        if (users.length !== this.size) {
           this.nothingToLoad = true;
         }
       }, error => {
