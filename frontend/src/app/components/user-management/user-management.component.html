@@ -35,7 +35,9 @@
         <div class="actions-cell">
           <i class="bi bi-three-dots"></i>
           <i [routerLink]="['/edit-user/' + user.id]" class="bi bi-pencil" title="Edit"></i>
-          <i class="bi bi-person-x" [class.deactivated]="user.id === managingUser.id" title="Ban"></i>
+          <i (click)="toggleStatus(user)" class="bi" [class.deactivated]="user.id === managingUser.id"
+             [class.bi-person-x]="user.status === 'ACTIVE'" [class.bi-person-check]="user.status === 'BANNED'"
+             [attr.title]="user.status === 'ACTIVE' ? 'Ban' : 'Unban'"></i>
         </div>
       </td>
     </tr>

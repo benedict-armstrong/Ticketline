@@ -54,4 +54,19 @@ export class UserManagementComponent implements OnInit {
     this.nothingToLoad = false;
   }
 
+  toggleStatus(user: User) {
+    if (user.status === 'ACTIVE') {
+      user.status = 'BANNED';
+    } else if (user.status === 'BANNED') {
+      user.status = 'ACTIVE';
+    }
+    this.userService.updateUser(user).subscribe(
+      response => {
+        user = response;
+      }, error => {
+        alert(error);
+      }
+    );
+  }
+
 }
