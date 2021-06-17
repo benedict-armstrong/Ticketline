@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {User} from '../../dtos/user';
 import {UserService} from '../../services/user.service';
 import {AuthService} from '../../services/auth.service';
@@ -11,10 +11,12 @@ import {AuthService} from '../../services/auth.service';
 export class UserManagementComponent implements OnInit {
 
   managingUser: User;
-  users: User[];
+  users: User[] = [];
 
   page = 0;
   size = 10;
+
+  nothingToLoad = false;
 
   constructor(private userService: UserService,
               private authService: AuthService) { }
@@ -28,13 +30,28 @@ export class UserManagementComponent implements OnInit {
         alert(error);
       }
     );
+    this.loadBatch();
+  }
+
+  loadBatch() {
     this.userService.getAll(this.page, this.size).subscribe(
       users => {
-        this.users = users;
+        this.users.push(...users);
+        this.page++;
+        if (users.length !== +this.size) {
+          this.nothingToLoad = true;
+        }
       }, error => {
         alert(error);
       }
     );
+  }
+
+  reload() {
+    this.page = 0;
+    this.users = [];
+    this.loadBatch();
+    this.nothingToLoad = false;
   }
 
 }

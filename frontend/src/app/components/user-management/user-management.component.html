@@ -1,24 +1,37 @@
-<h3>Manage Users</h3><br/>
+<div class="top-wrapper">
+  <h3>Manage Users</h3>
+  <div class="right-wrapper">
+    <div>
+      <label for="size">Show:</label>
+    </div>
+    <select [(ngModel)]="size" (ngModelChange)="reload()" name="size" id="size" class="form-select form-select-sm">
+      <option value="10">10</option>
+      <option value="25">25</option>
+      <option value="50">50</option>
+      <option value="100">100</option>
+    </select>
+  </div>
+</div>
 
 <table class="table table-striped table-hover">
   <thead>
     <tr>
-      <th scope="col">ID</th>
+      <th scope="col" class="center-cell">ID</th>
       <th scope="col">Email</th>
       <th scope="col">Name</th>
       <th scope="col">Role</th>
       <th scope="col">Status</th>
-      <th scope="col">Actions</th>
+      <th scope="col" class="center-cell">Actions</th>
     </tr>
   </thead>
   <tbody>
     <tr *ngFor="let user of users" [class.managing-row]="user.id === managingUser.id">
-      <td>{{user.id}}</td>
+      <td class="center-cell">{{user.id}}</td>
       <td>{{user.email}}</td>
       <td>{{user.firstName + ' ' + user.lastName}}</td>
       <td>{{user.role | titlecase}}</td>
       <td>{{user.status | titlecase}}</td>
-      <td>
+      <td class="center-cell">
         <div class="actions-cell">
           <i class="bi bi-three-dots"></i>
           <i [routerLink]="['/edit-user/' + user.id]" class="bi bi-pencil" title="Edit"></i>
@@ -28,3 +41,11 @@
     </tr>
   </tbody>
 </table>
+
+<div *ngIf="!nothingToLoad" class="text-center">
+  <h4>Load More</h4>
+  <h4><i class="bi bi-arrow-bar-down" (click)="loadBatch()"></i></h4>
+</div>
+<div *ngIf="nothingToLoad" class="text-center">
+  <h4>No more users to load.</h4>
+</div>
