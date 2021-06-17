@@ -1,0 +1,13 @@
+.managing-row {
+  background-color: lightcyan;
+  font-weight: bold;
+}
+
+div.actions-cell {
+  display: flex;
+  justify-content: space-around;
+}
+
+.deactivated {
+  color: lightgray;
+}

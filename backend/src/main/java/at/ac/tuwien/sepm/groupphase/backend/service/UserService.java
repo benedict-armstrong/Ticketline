@@ -1,9 +1,12 @@
 package at.ac.tuwien.sepm.groupphase.backend.service;
 
 import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+
+import java.util.List;
 
 public interface UserService extends UserDetailsService {
 
@@ -68,5 +71,13 @@ public interface UserService extends UserDetailsService {
      * @return updated User
      */
     ApplicationUser resetPassword(ApplicationUser user);
+
+    /**
+     * Retrieves a list of all users.
+     *
+     * @param pageRequest the page and size to be retrieved.
+     * @return the list of users on this page.
+     */
+    List<ApplicationUser> getAll(Pageable pageRequest);
 
 }

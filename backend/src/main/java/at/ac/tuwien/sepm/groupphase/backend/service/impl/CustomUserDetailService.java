@@ -12,6 +12,7 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.User;
@@ -153,6 +154,8 @@ public class CustomUserDetailService implements UserService {
 
     @Override
     public ApplicationUser resetPassword(ApplicationUser user) {
+        LOGGER.trace("resetPassword({})", user);
+
         String newGeneratedPassword = RandomStringUtils.randomAscii(16);
         user.setPassword(newGeneratedPassword);
 
@@ -165,4 +168,11 @@ public class CustomUserDetailService implements UserService {
 
         return newUser;
     }
+
+    @Override
+    public List<ApplicationUser> getAll(Pageable pageRequest) {
+        LOGGER.trace("getAll({})", pageRequest);
+        return userRepository.findAll(pageRequest).getContent();
+    }
+
 }

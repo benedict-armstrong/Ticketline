@@ -1,6 +1,8 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint;
 
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.PaginationDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.PaginationMapper;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.UserMapper;
 import at.ac.tuwien.sepm.groupphase.backend.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -23,6 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.annotation.security.PermitAll;
 import javax.validation.Valid;
 import java.lang.invoke.MethodHandles;
+import java.util.List;
 
 
 @RestController
@@ -32,11 +35,13 @@ public class UserEndpoint {
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final UserService userService;
     private final UserMapper userMapper;
+    private final PaginationMapper paginationMapper;
 
     @Autowired
-    public UserEndpoint(UserService userService, UserMapper userMapper) {
+    public UserEndpoint(UserService userService, UserMapper userMapper, PaginationMapper paginationMapper) {
         this.userMapper = userMapper;
         this.userService = userService;
+        this.paginationMapper = paginationMapper;
     }
 
     @PostMapping
@@ -87,4 +92,15 @@ public class UserEndpoint {
         LOGGER.info("PUT /api/v1/users/reset {}", email);
         return userMapper.applicationUserToUserDto(userService.resetPassword(userService.findApplicationUserByEmail(email)));
     }
+
+    @GetMapping
+    @Secured("ROLE_ADMIN")
+    @Operation(summary = "Retrieve all users")
+    public List<UserDto> getAll(PaginationDto paginationDto) {
+        LOGGER.info("GET /api/v1/users {}", paginationDto);
+        return userMapper.applicationUserListToUserDtoList(
+            userService.getAll(paginationMapper.paginationDtoToPageable(paginationDto))
+        );
+    }
+
 }

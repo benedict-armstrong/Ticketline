@@ -155,6 +155,17 @@
           </div>
         </div>
       </div>
+      <div *ngIf="this.user.role === 'ADMIN'" class="col">
+        <div class="card h-100">
+          <div class="card-body">
+            <div>
+              <i class="bi bi-person-bounding-box"></i>
+              <h5 class="card-title">User Management</h5>
+            </div>
+            <button class="primary" [routerLink]="['/users']">View Users</button>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>
