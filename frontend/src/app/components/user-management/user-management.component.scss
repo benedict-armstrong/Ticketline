@@ -8,6 +8,11 @@ div.actions-cell {
   justify-content: space-around;
 }
 
+div.actions-cell i.bi:not(.deactivated):hover {
+  transform: scale(1.25);
+  transition: 0.1s;
+}
+
 .deactivated {
   color: lightgray;
 }

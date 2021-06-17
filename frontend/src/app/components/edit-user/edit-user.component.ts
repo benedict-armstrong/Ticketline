@@ -4,7 +4,6 @@ import {ActivatedRoute, Router} from '@angular/router';
 import { Address } from 'src/app/dtos/address';
 import { User } from '../../dtos/user';
 import { UserService } from '../../services/user.service';
-import {FileService} from '../../services/file.service';
 
 @Component({
   selector: 'app-add-user',
@@ -26,7 +25,8 @@ export class EditUserComponent implements OnInit {
   constructor(
     private userService: UserService,
     private formBuilder: FormBuilder,
-    private actRoute: ActivatedRoute
+    private actRoute: ActivatedRoute,
+    private router: Router
   ) {
     this.editUserForm = this.formBuilder.group({
       firstName: ['', [Validators.required]],
@@ -78,6 +78,9 @@ export class EditUserComponent implements OnInit {
       this.userService.updateUser(user).subscribe(
         () => {
           this.success = true;
+          setTimeout(() => {
+            this.router.navigate(['/users']);
+          }, 3000);
         },
         (error) => {
           this.defaultServiceErrorHandling(error);
