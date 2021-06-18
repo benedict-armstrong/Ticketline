@@ -13,9 +13,10 @@ export class TicketOrderItemComponent implements OnInit {
   tickets: Ticket[];
   altTickets: Ticket[] = [];
   performance: Performance;
-  eventType = 'Cinema';
+  eventType = '';
 
   old = false;
+  reserved = false;
   tooLong = false;
 
   @Input() set ticketItem(item: TicketGroup) {
@@ -23,12 +24,12 @@ export class TicketOrderItemComponent implements OnInit {
     this.tickets = item.tickets.sort((x, y) => parseInt(x.seat.customLabel, 10) - parseInt(y.seat.customLabel, 10));
     this.performance = item.tickets[0].performance;
     this.old = item.old;
+    this.reserved = item.reserved;
 
     if (this.tickets.length > 5) {
       this.tooLong = true;
       this.tickets.forEach(ticket => this.createAltTickets(ticket));
     }
-    //console.log(this.altTickets);
 
     // Formatting Eventtype
     // this.eventType = item.event.eventType.charAt(0) + item.event.eventType.slice(1).toLowerCase();

@@ -112,4 +112,13 @@ public class TicketEndpoint {
         LOGGER.info("GET /api/v1/tickets/paid");
         return ticketMapper.ticketListToTicketDtoList(ticketService.getTickets(Ticket.Status.PAID_FOR));
     }
+
+    @GetMapping("/reserved")
+    @Secured({"ROLE_USER", "ROLE_ORGANIZER", "ROLE_ADMIN"})
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(summary = "Get tickets from user that have been reserved")
+    public List<TicketDto> getReservedTickets() {
+        LOGGER.info("GET /api/v1/tickets/reserved");
+        return ticketMapper.ticketListToTicketDtoList(ticketService.getTickets(Ticket.Status.RESERVED));
+    }
 }

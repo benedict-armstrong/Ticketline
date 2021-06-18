@@ -19,6 +19,7 @@
         </div>
 
         <button class="secondary" *ngIf="!showAll" (click)="showAll = true">Show expired tickets</button>
+        <button class="secondary" *ngIf="notPaid" [routerLink]="['/orders']">Click here to show orders</button>
     </div>
     <div class="user-info cards">
         <h3>Address and Contact Info</h3>

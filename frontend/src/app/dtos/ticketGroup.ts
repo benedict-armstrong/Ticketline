@@ -4,6 +4,7 @@ export class TicketGroup {
   constructor(
     public id: number,
     public tickets: Ticket[],
-    public old: boolean
+    public old: boolean,
+    public reserved: boolean
   ) {}
 }
