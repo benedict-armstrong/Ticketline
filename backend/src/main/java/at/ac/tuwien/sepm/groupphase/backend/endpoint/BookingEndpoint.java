@@ -2,6 +2,7 @@ package at.ac.tuwien.sepm.groupphase.backend.endpoint;
 
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.BookingDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.BookingMapper;
+import at.ac.tuwien.sepm.groupphase.backend.entity.Booking;
 import at.ac.tuwien.sepm.groupphase.backend.service.BookingService;
 import io.swagger.v3.oas.annotations.Operation;
 import org.slf4j.Logger;
@@ -57,7 +58,11 @@ public class BookingEndpoint {
     @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "Updates bookings and its tickets")
     public BookingDto reserve(@RequestBody BookingDto booking) {
-        LOGGER.info("PUT /api/v1/bookings/change {}", booking);
-        return bookingMapper.bookingToBookingDto(bookingService.update(bookingMapper.bookingDtoToBooking(booking)));
+        LOGGER.info("PUT /api/v1/bookings/change");
+        /*
+        Booking book = bookingMapper.bookingDtoToBooking(booking);
+        LOGGER.info(book.toString());
+        return bookingMapper.bookingToBookingDto(bookingService.update(book));*/
+        return null;
     }
 }

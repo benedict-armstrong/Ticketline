@@ -25,6 +25,7 @@ export class BookingService {
 
   updateBooking(booking): Observable<Booking> {
     console.log(this.bookingBaseUri + '/change');
+    console.log(booking);
     return this.httpClient.put<Booking>(this.bookingBaseUri + '/change', booking);
   }
 

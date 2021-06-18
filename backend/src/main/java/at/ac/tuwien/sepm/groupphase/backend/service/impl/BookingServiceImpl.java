@@ -4,8 +4,10 @@ import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Booking;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Ticket;
 import at.ac.tuwien.sepm.groupphase.backend.repository.BookingRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.TicketRepository;
 import at.ac.tuwien.sepm.groupphase.backend.security.AuthenticationFacade;
 import at.ac.tuwien.sepm.groupphase.backend.service.BookingService;
+import at.ac.tuwien.sepm.groupphase.backend.service.TicketService;
 import at.ac.tuwien.sepm.groupphase.backend.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,15 +26,18 @@ public class BookingServiceImpl implements BookingService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final BookingRepository bookingRepository;
+    private final TicketRepository ticketRepository;
     private final UserService userService;
     private final AuthenticationFacade authenticationFacade;
 
     @Autowired
     public BookingServiceImpl(BookingRepository  bookingRepository,
+                              TicketRepository ticketRepository,
                               UserService userService,
                               AuthenticationFacade authenticationFacade) {
         this.bookingRepository = bookingRepository;
         this.userService = userService;
+        this.ticketRepository = ticketRepository;
         this.authenticationFacade = authenticationFacade;
     }
 
@@ -67,8 +72,13 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     public Booking update(Booking booking) {
+        LOGGER.info("test1");
         ApplicationUser user = userService.findApplicationUserByEmail((String) authenticationFacade.getAuthentication().getPrincipal());
+        LOGGER.info("test2");
         Booking oldBooking = bookingRepository.findByUserAndId(user, booking.getId());
+        LOGGER.info("test");
+        LOGGER.info(oldBooking.toString());
+
 
         //Booking.Status changed
         if (booking.getStatus() != oldBooking.getStatus()) {
@@ -78,7 +88,7 @@ public class BookingServiceImpl implements BookingService {
                 case PAID_FOR:
                     status = Ticket.Status.PAID_FOR;
                     break;
-                case RESERVED: 
+                case RESERVED:
                     status = Ticket.Status.RESERVED;
                     break;
                 case CANCELLED:
@@ -88,10 +98,16 @@ public class BookingServiceImpl implements BookingService {
             }
 
             if (status != Ticket.Status.CANCELLED) {
-                // TODO Change Status of all tickets
+                System.out.println("not canceled");
+                Set<Ticket> tickets = oldBooking.getTickets();
+
+                for (Ticket ticket : tickets) {
+                    ticket.setStatus(status);
+                }
+
+                ticketRepository.saveAll(tickets);
             }
         }
-
 
         oldBooking.setStatus(booking.getStatus());
         return bookingRepository.save(oldBooking);
