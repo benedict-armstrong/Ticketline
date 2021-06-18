@@ -14,6 +14,7 @@ import at.ac.tuwien.sepm.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepm.groupphase.backend.security.AuthenticationFacade;
 import at.ac.tuwien.sepm.groupphase.backend.service.BookingService;
 import at.ac.tuwien.sepm.groupphase.backend.service.TicketService;
+import at.ac.tuwien.sepm.groupphase.backend.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,17 +35,17 @@ public class TicketServiceImpl implements TicketService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final TicketRepository ticketRepository;
-    private final UserRepository userRepository;
+    private final UserService userService;
     private final AuthenticationFacade authenticationFacade;
     private final BookingService bookingService;
 
     @Autowired
     public TicketServiceImpl(TicketRepository ticketRepository,
-                             UserRepository userRepository,
+                             UserService userService,
                              AuthenticationFacade authenticationFacade,
                              BookingService bookingService) {
         this.ticketRepository = ticketRepository;
-        this.userRepository = userRepository;
+        this.userService = userService;
         this.authenticationFacade = authenticationFacade;
         this.bookingService = bookingService;
     }
@@ -53,7 +54,7 @@ public class TicketServiceImpl implements TicketService {
     public List<Ticket> save(Performance performance, TicketType ticketType, Ticket.Status status, int amount) {
         LOGGER.trace("save({}, {},  {}, {})", performance, ticketType, status, amount);
 
-        ApplicationUser user = userRepository.findUserByEmail((String) authenticationFacade.getAuthentication().getPrincipal());
+        ApplicationUser user = userService.findApplicationUserByEmail((String) authenticationFacade.getAuthentication().getPrincipal());
 
         List<Ticket> ticketList = new LinkedList<>();
         Sector sector = ticketType.getSector();
@@ -86,7 +87,7 @@ public class TicketServiceImpl implements TicketService {
     @Override
     public List<Ticket> getTickets(Ticket.Status status) {
         LOGGER.trace("getTickets({})", status);
-        ApplicationUser user = userRepository.findUserByEmail((String) authenticationFacade.getAuthentication().getPrincipal());
+        ApplicationUser user = userService.findApplicationUserByEmail((String) authenticationFacade.getAuthentication().getPrincipal());
         List<Ticket> list = ticketRepository.findByUserAndStatus(user, status);
         List<Ticket> newList = new LinkedList<>();
         for (Ticket ticket : list) {
@@ -116,7 +117,7 @@ public class TicketServiceImpl implements TicketService {
     @Override
     public boolean checkout() {
         LOGGER.trace("checkout()");
-        ApplicationUser user = userRepository.findUserByEmail((String) authenticationFacade.getAuthentication().getPrincipal());
+        ApplicationUser user = userService.findApplicationUserByEmail((String) authenticationFacade.getAuthentication().getPrincipal());
         List<Ticket> tickets = ticketRepository.findByUserAndStatus(user, Ticket.Status.IN_CART);
         if (tickets.size() < 1) {
             return false;

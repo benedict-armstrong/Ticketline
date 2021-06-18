@@ -21,6 +21,14 @@ public interface UserService extends UserDetailsService {
     UserDetails loadUserByUsername(String email) throws UsernameNotFoundException;
 
     /**
+     * Find an application user based on their id.
+     *
+     * @param id the id
+     * @return a application user
+     */
+    ApplicationUser findApplicationUserById(long id);
+
+    /**
      * Find an application user based on the email address.
      *
      * @param email the email address
@@ -60,14 +68,5 @@ public interface UserService extends UserDetailsService {
      * @return updated User
      */
     ApplicationUser resetPassword(ApplicationUser user);
-
-
-    /**
-     * Find a user based on the id.
-     *
-     * @param id the user id
-     * @return a application user
-     */
-    ApplicationUser findUserById(Long id);
 
 }

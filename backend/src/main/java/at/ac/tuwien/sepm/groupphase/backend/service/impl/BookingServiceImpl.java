@@ -7,6 +7,7 @@ import at.ac.tuwien.sepm.groupphase.backend.repository.BookingRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepm.groupphase.backend.security.AuthenticationFacade;
 import at.ac.tuwien.sepm.groupphase.backend.service.BookingService;
+import at.ac.tuwien.sepm.groupphase.backend.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,22 +25,22 @@ public class BookingServiceImpl implements BookingService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final BookingRepository bookingRepository;
-    private final UserRepository userRepository;
+    private final UserService userService;
     private final AuthenticationFacade authenticationFacade;
 
     @Autowired
     public BookingServiceImpl(BookingRepository  bookingRepository,
-                              UserRepository userRepository,
+                              UserService userService,
                               AuthenticationFacade authenticationFacade) {
         this.bookingRepository = bookingRepository;
-        this.userRepository = userRepository;
+        this.userService = userService;
         this.authenticationFacade = authenticationFacade;
     }
 
     @Override
     public Booking save(Set<Ticket> tickets) {
         LOGGER.trace("saveBooking({})", tickets);
-        ApplicationUser user = userRepository.findUserByEmail((String) authenticationFacade.getAuthentication().getPrincipal());
+        ApplicationUser user = userService.findApplicationUserByEmail((String) authenticationFacade.getAuthentication().getPrincipal());
         Booking booking = Booking.builder()
             .user(user)
             .createDate(LocalDateTime.now())
@@ -52,8 +53,11 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     public Booking save(Booking booking) {
+        LOGGER.trace("saveBooking({})", booking);
+        booking.setUser(
+            userService.findApplicationUserByEmail((String) authenticationFacade.getAuthentication().getPrincipal())
+        );
         booking.setCreateDate(LocalDateTime.now());
-        booking.setUser(userRepository.findUserByEmail((String) authenticationFacade.getAuthentication().getPrincipal()));
         booking.setInvoice(null);
         return bookingRepository.save(booking);
     }
@@ -61,7 +65,7 @@ public class BookingServiceImpl implements BookingService {
     @Override
     public List<Booking> getBookings() {
         LOGGER.trace("getBookings()");
-        ApplicationUser user = userRepository.findUserByEmail((String) authenticationFacade.getAuthentication().getPrincipal());
+        ApplicationUser user = userService.findApplicationUserByEmail((String) authenticationFacade.getAuthentication().getPrincipal());
         return bookingRepository.findByUser(user);
     }
 }
