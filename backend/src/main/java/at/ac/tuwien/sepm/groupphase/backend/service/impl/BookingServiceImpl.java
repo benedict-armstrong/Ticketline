@@ -76,7 +76,6 @@ public class BookingServiceImpl implements BookingService {
         Booking.Status newStatus = Booking.Status.valueOf(booking.getStatus());
         ApplicationUser user = userService.findApplicationUserByEmail((String) authenticationFacade.getAuthentication().getPrincipal());
         Booking oldBooking = bookingRepository.findByUserAndId(user, booking.getId());
-        LOGGER.info(oldBooking.toString());
 
 
         //Booking.Status changed
@@ -97,7 +96,6 @@ public class BookingServiceImpl implements BookingService {
             }
 
             if (status != Ticket.Status.CANCELLED) {
-                System.out.println("not canceled");
                 Set<Ticket> tickets = oldBooking.getTickets();
 
                 for (Ticket ticket : tickets) {
