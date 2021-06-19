@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {BookingService} from '../../services/booking.service';
 import {Booking} from '../../dtos/booking';
+import {ChangeBooking} from '../../dtos/changeBooking';
 
 @Component({
   selector: 'app-booking',
@@ -37,9 +38,10 @@ export class BookingComponent implements OnInit {
   }
 
   onBuyClick(booking) {
-    booking.status = 'PAID_FOR';
-    this.bookingService.updateBooking(booking).subscribe(
+    const changeBooking = new ChangeBooking(booking.id, 'PAID_FOR');
+    this.bookingService.updateBooking(changeBooking).subscribe(
       (response) => {
+        booking.status = response.status;
       }, error => {
         console.error(error);
       }

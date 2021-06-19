@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepm.groupphase.backend.service.impl;
 
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.ChangeBookingDto;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Booking;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Ticket;
@@ -71,20 +72,18 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public Booking update(Booking booking) {
-        LOGGER.info("test1");
+    public Booking update(ChangeBookingDto booking) {
+        Booking.Status newStatus = Booking.Status.valueOf(booking.getStatus());
         ApplicationUser user = userService.findApplicationUserByEmail((String) authenticationFacade.getAuthentication().getPrincipal());
-        LOGGER.info("test2");
         Booking oldBooking = bookingRepository.findByUserAndId(user, booking.getId());
-        LOGGER.info("test");
         LOGGER.info(oldBooking.toString());
 
 
         //Booking.Status changed
-        if (booking.getStatus() != oldBooking.getStatus()) {
+        if (booking.getStatus() != oldBooking.getStatus().toString()) {
             Ticket.Status status;
 
-            switch (booking.getStatus()) {
+            switch (newStatus) {
                 case PAID_FOR:
                     status = Ticket.Status.PAID_FOR;
                     break;
@@ -109,7 +108,7 @@ public class BookingServiceImpl implements BookingService {
             }
         }
 
-        oldBooking.setStatus(booking.getStatus());
+        oldBooking.setStatus(newStatus);
         return bookingRepository.save(oldBooking);
     }
 

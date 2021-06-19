@@ -1,6 +1,7 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint;
 
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.BookingDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.ChangeBookingDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.BookingMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Booking;
 import at.ac.tuwien.sepm.groupphase.backend.service.BookingService;
@@ -57,12 +58,8 @@ public class BookingEndpoint {
     @Secured({"ROLE_USER", "ROLE_ORGANIZER", "ROLE_ADMIN"})
     @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "Updates bookings and its tickets")
-    public BookingDto reserve(@RequestBody BookingDto booking) {
-        LOGGER.info("PUT /api/v1/bookings/change");
-        /*
-        Booking book = bookingMapper.bookingDtoToBooking(booking);
-        LOGGER.info(book.toString());
-        return bookingMapper.bookingToBookingDto(bookingService.update(book));*/
-        return null;
+    public BookingDto reserve(@RequestBody ChangeBookingDto booking) {
+        LOGGER.info("PUT /api/v1/bookings/change {}", booking);
+        return bookingMapper.bookingToBookingDto(bookingService.update(booking));
     }
 }
