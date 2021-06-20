@@ -18,6 +18,7 @@ export class ShoppingcartComponent implements OnInit {
   }
 
   close(): void {
+    this.success = false;
     this.ticketService.toggleStatus();
   }
 
