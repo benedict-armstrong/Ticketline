@@ -53,6 +53,7 @@ import { SelectVenueComponent } from './components/event/select-venue/select-ven
 import { SearchVenueListComponent } from './components/search/search-venue-list/search-venue-list.component';
 import { EditUserComponent } from './components/edit-user/edit-user.component';
 import { UserManagementComponent } from './components/user-management/user-management.component';
+import { BannedAlertComponent } from './components/banned-alert/banned-alert.component';
 
 @NgModule({
   declarations: [
@@ -104,7 +105,8 @@ import { UserManagementComponent } from './components/user-management/user-manag
     SelectVenueComponent,
     SearchVenueListComponent,
     EditUserComponent,
-    UserManagementComponent
+    UserManagementComponent,
+    BannedAlertComponent
   ],
   imports: [
     BrowserModule,

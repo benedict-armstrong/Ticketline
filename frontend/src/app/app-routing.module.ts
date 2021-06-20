@@ -20,6 +20,7 @@ import { ArtistDetailComponent } from './components/search/artist-detail/artist-
 import { AddVenueComponent } from './components/venue/add-venue/add-venue.component';
 import {EditUserComponent} from './components/edit-user/edit-user.component';
 import {UserManagementComponent} from './components/user-management/user-management.component';
+import {BannedAlertComponent} from './components/banned-alert/banned-alert.component';
 
 const routes: Routes = [
   { path: '', component: HomePageComponent },
@@ -40,7 +41,8 @@ const routes: Routes = [
   { path: 'add-event', component: AddEventComponent, canActivate: [AuthGuard], data: { roles: ['ADMIN', 'ORGANIZER']} },
   { path: 'orders', component: BookingComponent, canActivate: [AuthGuard], data: { roles: ['ADMIN', 'ORGANIZER', 'USER']} },
   { path: 'edit-user/:id', component: EditUserComponent, canActivate: [AuthGuard], data: { roles: ['ADMIN']} },
-  { path: 'users', component: UserManagementComponent, canActivate: [AuthGuard], data: { roles: ['ADMIN']} }
+  { path: 'users', component: UserManagementComponent, canActivate: [AuthGuard], data: { roles: ['ADMIN']} },
+  { path: 'banned', component: BannedAlertComponent }
 ];
 
 @NgModule({
