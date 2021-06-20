@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import {ActivatedRoute, Router} from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Address } from 'src/app/dtos/address';
 import { User } from '../../dtos/user';
 import { UserService } from '../../services/user.service';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-add-user',
@@ -11,8 +12,11 @@ import { UserService } from '../../services/user.service';
   styleUrls: ['./edit-user.component.scss'],
 })
 export class EditUserComponent implements OnInit {
+
   editUserForm: FormGroup;
+
   oldUser: User;
+  managingUser: User;
   // After first submission attempt, form validation will start
   submitted = false;
   // Error flag
@@ -24,6 +28,7 @@ export class EditUserComponent implements OnInit {
 
   constructor(
     private userService: UserService,
+    private authService: AuthService,
     private formBuilder: FormBuilder,
     private actRoute: ActivatedRoute,
     private router: Router
@@ -98,8 +103,8 @@ export class EditUserComponent implements OnInit {
       telephoneNumber: [this.oldUser.telephoneNumber],
       email: [{value: this.oldUser.email, disabled: true}, [Validators.required]],
       points: [this.oldUser.points, [Validators.min(0)]],
-      status: ['ACTIVE', [Validators.required]],
-      role: ['CLIENT', [Validators.required]],
+      status: [this.oldUser.status, [Validators.required]],
+      role: [this.oldUser.role, [Validators.required]],
       addressName: [this.oldUser.address.name, [Validators.required]],
       lineOne: [this.oldUser.address.lineOne, [Validators.required]],
       lineTwo: [this.oldUser.address.lineTwo],
@@ -115,12 +120,28 @@ export class EditUserComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    // Load managing user
+    const email = this.authService.getUserEmail();
+    this.userService.getUserByEmail(email).subscribe(
+      user => {
+        this.managingUser = user;
+      }, error => {
+        alert(error);
+      }
+    );
+    // Load the user to be edited
     const userId = this.actRoute.snapshot.params.id;
     this.userService.getUserById(userId).subscribe(
       (response) => {
         this.oldUser = response;
+        if (response.role === 'ADMIN') {
+          this.editUserForm.get('status').disable();
+        }
+        if (response.id === this.managingUser.id) {
+          this.editUserForm.get('status').disable();
+          this.editUserForm.get('role').disable();
+        }
         this.setDetails();
-        console.log(this.oldUser);
       },
       error => {
         this.defaultServiceErrorHandling(error);
