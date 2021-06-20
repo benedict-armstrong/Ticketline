@@ -76,6 +76,15 @@ public class TicketEndpoint {
         return ticketService.checkout();
     }
 
+    @PutMapping("/reserve")
+    @Secured({"ROLE_USER", "ROLE_ORGANIZER", "ROLE_ADMIN"})
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(summary = "Reserves tickets in cart")
+    public boolean reserve() {
+        LOGGER.info("PUT /api/v1/tickets/reserve");
+        return ticketService.reserve();
+    }
+
     /*
     @PutMapping(path = "/{id}/cancel")
     @Secured({"ROLE_USER", "ROLE_ORGANIZER", "ROLE_ADMIN"})

@@ -6,6 +6,7 @@ export class Booking {
     public id: number,
     public createDate: Date,
     public tickets: Ticket[],
-    public invoice: CustomFile
+    public invoice: CustomFile,
+    public status: string
   ) {}
 }

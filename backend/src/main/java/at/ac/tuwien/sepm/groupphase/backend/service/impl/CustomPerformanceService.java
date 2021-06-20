@@ -1,20 +1,20 @@
 package at.ac.tuwien.sepm.groupphase.backend.service.impl;
 
-import at.ac.tuwien.sepm.groupphase.backend.entity.Event;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Performance;
 import at.ac.tuwien.sepm.groupphase.backend.entity.PerformanceSearch;
-import at.ac.tuwien.sepm.groupphase.backend.repository.EventRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.PerformanceRepository;
 import at.ac.tuwien.sepm.groupphase.backend.service.PerformanceService;
+import at.ac.tuwien.sepm.groupphase.backend.service.TicketService;
 import at.ac.tuwien.sepm.groupphase.backend.specification.PerformanceSpecificationBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.lang.invoke.MethodHandles;
-import java.util.ArrayList;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -22,10 +22,12 @@ public class CustomPerformanceService implements PerformanceService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final PerformanceRepository performanceRepository;
+    private final TicketService ticketService;
 
     @Autowired
-    public CustomPerformanceService(PerformanceRepository performanceRepository) {
+    public CustomPerformanceService(PerformanceRepository performanceRepository, TicketService ticketService) {
         this.performanceRepository = performanceRepository;
+        this.ticketService = ticketService;
     }
 
     @Override
@@ -65,6 +67,16 @@ public class CustomPerformanceService implements PerformanceService {
         }
 
         return performanceRepository.findAll(builder.build(), pageable).getContent();
+    }
+
+    @Override
+    @Scheduled(cron = "0 * * * * ?")
+    public void prunePerformance() {
+        LOGGER.trace("prunePerformance()");
+        LocalDateTime pruneDateFuture = LocalDateTime.now().plusMinutes(30);
+        LocalDateTime pruneDatePast = LocalDateTime.now().minusMinutes(5);
+        List<Performance> performances = performanceRepository.findAllByDateBetween(pruneDatePast, pruneDateFuture);
+        ticketService.pruneReservations(performances);
     }
 
     @Override
