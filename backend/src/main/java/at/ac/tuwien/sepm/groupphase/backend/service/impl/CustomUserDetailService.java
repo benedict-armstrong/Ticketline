@@ -131,7 +131,7 @@ public class CustomUserDetailService implements UserService {
     @Override
     public ApplicationUser updateUser(ApplicationUser user, Boolean firstAuthentication) {
         LOGGER.debug("Update User");
-        if (!firstAuthentication){
+        if (!firstAuthentication) {
             //Stop non allowed users to change users
             ApplicationUser manager = userRepository.findUserByEmail(authenticationFacade.getAuthentication().getPrincipal().toString());
             if (!authenticationFacade.isAdmin() && !(manager.getEmail() == user.getEmail())) {
