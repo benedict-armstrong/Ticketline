@@ -40,7 +40,7 @@ const routes: Routes = [
   { path: 'add-user', component: AddUserComponent, canActivate: [AuthGuard], data: { roles: ['ADMIN']} },
   { path: 'add-event', component: AddEventComponent, canActivate: [AuthGuard], data: { roles: ['ADMIN', 'ORGANIZER']} },
   { path: 'orders', component: BookingComponent, canActivate: [AuthGuard], data: { roles: ['ADMIN', 'ORGANIZER', 'USER']} },
-  { path: 'edit-user/:id', component: EditUserComponent, canActivate: [AuthGuard], data: { roles: ['ADMIN']} },
+  { path: 'edit-user/:id', component: EditUserComponent, canActivate: [AuthGuard], data: { roles: ['ADMIN', 'ORGANIZER', 'USER']} },
   { path: 'users', component: UserManagementComponent, canActivate: [AuthGuard], data: { roles: ['ADMIN']} },
   { path: 'banned', component: BannedAlertComponent }
 ];
