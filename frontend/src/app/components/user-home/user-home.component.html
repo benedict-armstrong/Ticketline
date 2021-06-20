@@ -36,7 +36,7 @@
               {{this.user.address.postcode}} {{this.user.address.city}} <br>
               {{this.user.address.country}}
             </p>
-            <button class="primary">Edit</button>
+            <button [routerLink]="['/edit-user/' + this.user.id]" class="primary">Edit</button>
           </div>
         </div>
       </div>
@@ -55,24 +55,24 @@
             <div *ngIf="this.user.role === 'ORGANIZER' || this.user.role === 'ADMIN'">
               <strong>Role:</strong> {{this.user.role}} <br>
             </div>
-            <button class="primary">Edit</button>
+            <button [routerLink]="['/edit-user/' + this.user.id]" class="primary">Edit</button>
           </div>
         </div>
       </div>
-      <div class="col">
-        <div class="card h-100">
-          <div class="card-body">
-            <div>
-              <i class="bi bi-mailbox"></i>
-              <h5 class="card-title">Shipping Address</h5>
-            </div>
-            <p class="card-text text-muted">
-              Same as Address
-            </p>
-            <button class="primary">Edit</button>
-          </div>
-        </div>
-      </div>
+<!--      <div class="col">-->
+<!--        <div class="card h-100">-->
+<!--          <div class="card-body">-->
+<!--            <div>-->
+<!--              <i class="bi bi-mailbox"></i>-->
+<!--              <h5 class="card-title">Shipping Address</h5>-->
+<!--            </div>-->
+<!--            <p class="card-text text-muted">-->
+<!--              Same as Address-->
+<!--            </p>-->
+<!--            <button class="primary">Edit</button>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--      </div>-->
     </div>
   </div>
   <div class="user-actions cards" id="userActions">
