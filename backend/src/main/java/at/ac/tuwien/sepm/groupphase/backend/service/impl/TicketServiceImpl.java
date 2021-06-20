@@ -29,6 +29,7 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 @EnableScheduling
@@ -184,5 +185,14 @@ public class TicketServiceImpl implements TicketService {
             LOGGER.info("Deleting {} stale tickets from carts", toBeDeleted.size());
             ticketRepository.deleteAll(toBeDeleted);
         }
+    }
+
+    @Override
+    public void updateStatus(Set<Ticket> tickets, Ticket.Status status) {
+        for (Ticket ticket : tickets) {
+            ticket.setStatus(status);
+        }
+
+        ticketRepository.saveAll(tickets);
     }
 }

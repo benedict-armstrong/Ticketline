@@ -6,6 +6,7 @@ import at.ac.tuwien.sepm.groupphase.backend.entity.Ticket;
 import at.ac.tuwien.sepm.groupphase.backend.entity.TicketType;
 
 import java.util.List;
+import java.util.Set;
 
 public interface TicketService {
 
@@ -62,4 +63,12 @@ public interface TicketService {
      * Deletes all tickets in the cart that are to old.
      */
     void pruneTickets();
+
+    /**
+     * Updates all tickets to new status.
+     *
+     * @param tickets to change.
+     * @param status of the changed tickets.
+     */
+    void updateStatus(Set<Ticket> tickets, Ticket.Status status);
 }

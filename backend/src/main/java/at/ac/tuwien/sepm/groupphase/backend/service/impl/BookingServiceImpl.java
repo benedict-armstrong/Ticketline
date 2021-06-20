@@ -13,6 +13,7 @@ import at.ac.tuwien.sepm.groupphase.backend.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.stereotype.Service;
 
@@ -27,18 +28,18 @@ public class BookingServiceImpl implements BookingService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final BookingRepository bookingRepository;
-    private final TicketRepository ticketRepository;
+    private final TicketService ticketService;
     private final UserService userService;
     private final AuthenticationFacade authenticationFacade;
 
     @Autowired
     public BookingServiceImpl(BookingRepository  bookingRepository,
-                              TicketRepository ticketRepository,
+                              @Lazy TicketService ticketService,
                               UserService userService,
                               AuthenticationFacade authenticationFacade) {
         this.bookingRepository = bookingRepository;
+        this.ticketService = ticketService;
         this.userService = userService;
-        this.ticketRepository = ticketRepository;
         this.authenticationFacade = authenticationFacade;
     }
 
@@ -96,13 +97,7 @@ public class BookingServiceImpl implements BookingService {
             }
 
             if (status != Ticket.Status.CANCELLED) {
-                Set<Ticket> tickets = oldBooking.getTickets();
-
-                for (Ticket ticket : tickets) {
-                    ticket.setStatus(status);
-                }
-
-                ticketRepository.saveAll(tickets);
+                ticketService.updateStatus(oldBooking.getTickets(), status);
             }
         }
 
