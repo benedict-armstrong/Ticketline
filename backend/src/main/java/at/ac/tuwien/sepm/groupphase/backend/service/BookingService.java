@@ -40,4 +40,11 @@ public interface BookingService {
      * @return list of tickets.
      */
     List<Booking> getBookings();
+
+    /**
+     * Deletes ticket from booking to not cause reference problems.
+     *
+     * @param ticket too be deleted
+     */
+    void deleteTicket(Ticket ticket);
 }

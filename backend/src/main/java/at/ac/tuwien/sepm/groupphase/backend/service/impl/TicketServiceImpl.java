@@ -25,6 +25,7 @@ import org.springframework.stereotype.Service;
 
 import java.lang.invoke.MethodHandles;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -188,7 +189,22 @@ public class TicketServiceImpl implements TicketService {
     }
 
     @Override
+    public void pruneReservations(List<Performance> performances) {
+        LOGGER.trace("pruneReservations()");
+        List<Ticket> tickets = new ArrayList();
+        for (Performance performance : performances) {
+            tickets.addAll(ticketRepository.findByPerformanceAndStatus(performance, Ticket.Status.RESERVED));
+        }
+
+        for (Ticket ticket : tickets) {
+            bookingService.deleteTicket(ticket);
+            ticketRepository.delete(ticket);
+        }
+    }
+
+    @Override
     public void updateStatus(Set<Ticket> tickets, Ticket.Status status) {
+        LOGGER.trace("updateStatus()");
         for (Ticket ticket : tickets) {
             ticket.setStatus(status);
         }

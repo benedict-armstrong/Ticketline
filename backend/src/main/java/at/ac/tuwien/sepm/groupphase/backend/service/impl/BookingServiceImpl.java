@@ -5,7 +5,6 @@ import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Booking;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Ticket;
 import at.ac.tuwien.sepm.groupphase.backend.repository.BookingRepository;
-import at.ac.tuwien.sepm.groupphase.backend.repository.TicketRepository;
 import at.ac.tuwien.sepm.groupphase.backend.security.AuthenticationFacade;
 import at.ac.tuwien.sepm.groupphase.backend.service.BookingService;
 import at.ac.tuwien.sepm.groupphase.backend.service.TicketService;
@@ -74,6 +73,7 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     public Booking update(ChangeBookingDto booking) {
+        LOGGER.trace("update({})", booking);
         Booking.Status newStatus = Booking.Status.valueOf(booking.getStatus());
         ApplicationUser user = userService.findApplicationUserByEmail((String) authenticationFacade.getAuthentication().getPrincipal());
         Booking oldBooking = bookingRepository.findByUserAndId(user, booking.getId());
@@ -110,5 +110,20 @@ public class BookingServiceImpl implements BookingService {
         LOGGER.trace("getBookings()");
         ApplicationUser user = userService.findApplicationUserByEmail((String) authenticationFacade.getAuthentication().getPrincipal());
         return bookingRepository.findByUser(user);
+    }
+
+    @Override
+    public void deleteTicket(Ticket ticket) {
+        LOGGER.trace("deleteTicket({})", ticket);
+        Booking booking = bookingRepository.findByTicketsContaining(ticket);
+        Set<Ticket> tickets = booking.getTickets();
+        tickets.remove(ticket);
+        if (tickets.size() != 0) {
+            booking.setTickets(tickets);
+            bookingRepository.save(booking);
+        } else {
+            bookingRepository.delete(booking);
+        }
+
     }
 }

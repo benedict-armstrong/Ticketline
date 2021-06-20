@@ -32,6 +32,11 @@
 			<span class="label">Total: </span> <span class="amount">{{this.ticketService.total / 100 | currency:"EUR"}}</span>
 		</div>
 	</div>
+  <div *ngIf="success" class="col-12 alert alert-success alert-dismissible fade show" role="alert">
+    <strong>Success!</strong> You have to pick up your tickets 30 min before the start of the performance.
+    <button type="button" (click)="vanishAlert()" class="btn-close" data-dismiss="alert" aria-label="Close">
+    </button>
+  </div>
 	<button class="primary" (click)="checkout()">Checkout</button>
   <button class="primary" (click)="reserve()">Reserve</button>
 </div>

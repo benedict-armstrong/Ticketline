@@ -9,6 +9,7 @@ import { TicketService } from 'src/app/services/ticket.service';
 export class ShoppingcartComponent implements OnInit {
 
   public error = false;
+  public success = false;
   public errorMessage = '';
 
   constructor(public ticketService: TicketService) {}
@@ -38,6 +39,7 @@ export class ShoppingcartComponent implements OnInit {
       (response) => {
         if (response) {
           this.ticketService.reload();
+          this.success = true;
         }
       },
       (error) => {
@@ -48,6 +50,7 @@ export class ShoppingcartComponent implements OnInit {
 
   vanishAlert(): void {
     this.error = false;
+    this.success = false;
   }
 
   private defaultServiceErrorHandling(error: any) {

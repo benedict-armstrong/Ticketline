@@ -65,6 +65,13 @@ public interface TicketService {
     void pruneTickets();
 
     /**
+     * Deletes all reservations for to near performances.
+     *
+     * @param performances which start in 30 min or less
+     */
+    void pruneReservations(List<Performance> performances);
+
+    /**
      * Updates all tickets to new status.
      *
      * @param tickets to change.
