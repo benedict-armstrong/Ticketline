@@ -134,7 +134,7 @@ public class CustomUserDetailService implements UserService {
         if (!firstAuthentication) {
             //Stop non allowed users to change users
             ApplicationUser manager = userRepository.findUserByEmail(authenticationFacade.getAuthentication().getPrincipal().toString());
-            if (!authenticationFacade.isAdmin() && !(manager.getEmail() == user.getEmail())) {
+            if (!authenticationFacade.isAdmin() && !(manager.getEmail().equals(user.getEmail()))) {
                 throw new AuthorizationException("You don't have the authorization the change this user");
             }
         }
