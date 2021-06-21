@@ -27,6 +27,7 @@ import at.ac.tuwien.sepm.groupphase.backend.repository.FileRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.NewsRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.VenueRepository;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -114,12 +115,14 @@ public class NewsEndpointTest implements TestDataNews, TestDataFile, TestAuthent
         saveUser(AUTH_USER_ORGANIZER, userRepository, passwordEncoder);
         authToken = authenticate(AUTH_USER_ORGANIZER, mockMvc, objectMapper);
 
+        ArtistDto artistDto = saveArtist(TestDataArtist.getArtistDto());
+
         PerformanceDto[] performanceDtos = new PerformanceDto[1];
         performanceDtos[0] = PerformanceDto.builder()
             .title(TestDataEvent.TEST_EVENT_PERFORMANCE_TITLE)
             .description(TestDataEvent.TEST_EVENT_PERFORMANCE_DESCRIPTION)
             .date(TestDataEvent.TEST_PERFORMANCE_DATE)
-            .artist(TestDataArtist.getArtistDto())
+            .artist(artistDto)
             .ticketTypes(TestDataTicket.getTicketTypeDtos())
             .venue(TestDataVenue.getVenueDto())
             .build();
@@ -154,6 +157,16 @@ public class NewsEndpointTest implements TestDataNews, TestDataFile, TestAuthent
                 .header(securityProperties.getAuthHeader(), authToken)
         ).andReturn();
         return objectMapper.readValue(mvcResult.getResponse().getContentAsString(), EventDto.class);
+    }
+
+    private ArtistDto saveArtist(ArtistDto artistDto) throws Exception {
+        MvcResult mvcResult = this.mockMvc.perform(
+            post(BASE_URI + "/artists")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(artistDto))
+                .header(securityProperties.getAuthHeader(), authToken)
+        ).andReturn();
+        return objectMapper.readValue(mvcResult.getResponse().getContentAsString(), ArtistDto.class);
     }
 
     private VenueDto saveVenue(VenueDto venueDto) throws Exception {
