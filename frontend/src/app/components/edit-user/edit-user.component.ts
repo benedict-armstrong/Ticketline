@@ -26,6 +26,9 @@ export class EditUserComponent implements OnInit {
   // Success Flag
   success = false;
 
+  // Indicates if navigated from user management view
+  management = false;
+
   constructor(
     private userService: UserService,
     private authService: AuthService,
@@ -83,8 +86,12 @@ export class EditUserComponent implements OnInit {
       this.userService.updateUser(user).subscribe(
         () => {
           this.success = true;
+          let destination = '/user';
+          if (this.management) {
+            destination = '/users';
+          }
           setTimeout(() => {
-            this.router.navigate(['/users']);
+            this.router.navigate([destination]);
           }, 3000);
         },
         (error) => {
@@ -120,6 +127,9 @@ export class EditUserComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    if (history.state.management) {
+      this.management = history.state.management;
+    }
     // Load managing user
     const email = this.authService.getUserEmail();
     this.userService.getUserByEmail(email).subscribe(
