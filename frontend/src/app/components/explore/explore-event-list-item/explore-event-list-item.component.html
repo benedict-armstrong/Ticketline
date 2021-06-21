@@ -1,17 +1,15 @@
-<div class="list-item" [routerLink]="['/event-detail', event.id]">
+<div class="list-item" [routerLink]="['/event-detail', topEvent.event.id]">
   <div class="info">
     <img src="{{previewImageUrl}}" alt="">
     <div class="detail">
-      <h5>{{event.name}}</h5>
-      <p class="date-time">{{event.startDate | date:'EEEE, MMM d, y HH:mm'}} - {{event.endDate | date:'EEEE, MMM d, y HH:mm'}}</p>
+      <h5>{{topEvent.event.name}}</h5>
+      <p class="date-time">{{topEvent.event.startDate | date:'EEEE, MMM d, y HH:mm'}} - {{topEvent.event.endDate | date:'EEEE, MMM d, y HH:mm'}}</p>
       <div class="availability-wrapper">
         Tickets sold:
         <div class="availability">
-          <div class="text-center" [style]="{'width': data.soldTickets / data.totalTickets * 100 + '%'}">{{data.soldTickets / data.totalTickets * 100 }}%</div>
+          <div class="text-center" [style]="{'width': topEvent.soldTickets / topEvent.totalTickets * 100 + '%'}">{{topEvent.soldTickets / topEvent.totalTickets * 100 }}%</div>
         </div>
       </div>
-
     </div>
   </div>
 </div>
-

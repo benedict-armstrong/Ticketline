@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { TopEvent } from 'src/app/dtos/topEvent';
 import {Event} from '../../dtos/event';
 import {ApplicationEventService} from '../../services/event.service';
 
@@ -9,7 +10,7 @@ import {ApplicationEventService} from '../../services/event.service';
 })
 export class ExploreComponent implements OnInit {
 
-  events: Event[];
+  topEvents: TopEvent[];
 
   constructor(private eventService: ApplicationEventService) { }
 
@@ -18,8 +19,8 @@ export class ExploreComponent implements OnInit {
   }
 
   getEvents() {
-    this.eventService.getEvents(0, 5).subscribe(
-      (data) => this.events = data
+    this.eventService.getTopEvents(0, 5).subscribe(
+      (data) => this.topEvents = data
     );
   }
 

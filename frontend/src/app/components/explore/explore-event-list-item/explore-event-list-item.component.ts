@@ -1,4 +1,5 @@
 import {Component, Input, OnInit} from '@angular/core';
+import { TopEvent } from 'src/app/dtos/topEvent';
 import {Event} from '../../../dtos/event';
 import {FileService} from '../../../services/file.service';
 
@@ -9,10 +10,8 @@ import {FileService} from '../../../services/file.service';
 })
 export class ExploreEventListItemComponent implements OnInit {
 
-  @Input() event: Event;
+  @Input() topEvent: TopEvent;
   @Input() data: {
-    totalTickets: number;
-    soldTickets: number;
     hot: boolean;
   };
   previewImageUrl: string | ArrayBuffer;
@@ -20,7 +19,7 @@ export class ExploreEventListItemComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
-    const previewImage = this.event.images[0];
+    const previewImage = this.topEvent.event.images[0];
     if (previewImage !== undefined) {
       const file = FileService.asFile(previewImage.data, previewImage.type);
       const reader = new FileReader();

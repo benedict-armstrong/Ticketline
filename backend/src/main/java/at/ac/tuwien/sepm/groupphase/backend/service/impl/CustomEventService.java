@@ -1,7 +1,10 @@
 package at.ac.tuwien.sepm.groupphase.backend.service.impl;
 
 import at.ac.tuwien.sepm.groupphase.backend.entity.Event;
+import at.ac.tuwien.sepm.groupphase.backend.entity.LayoutUnit;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Performance;
+import at.ac.tuwien.sepm.groupphase.backend.entity.Sector;
+import at.ac.tuwien.sepm.groupphase.backend.entity.TopEvent;
 import at.ac.tuwien.sepm.groupphase.backend.repository.EventRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.PerformanceRepository;
 import at.ac.tuwien.sepm.groupphase.backend.service.EventService;
@@ -13,6 +16,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.lang.invoke.MethodHandles;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
@@ -88,5 +92,35 @@ public class CustomEventService implements EventService {
         }
 
         return eventRepository.findAll(builder.build(), pageable).getContent();
+    }
+
+    @Override
+    public List<TopEvent> findTopEvents(Pageable pageable) {
+        LOGGER.trace("findTopEvents({})", pageable);
+
+        List<Event> events = eventRepository.findAllByOrderByStartDateAsc(pageable).getContent();
+
+        List<TopEvent> topEvents = new LinkedList<>();
+
+        List<Long> soldTickets = eventRepository.findSoldTicketsOrderByStartDateAsc(pageable.getOffset(), pageable.getPageSize());
+
+        for (int i = 0; i < events.size(); i++) {
+            Set<Performance> performances = events.get(i).getPerformances();
+
+            Long totalTickets = 0L;
+
+            for (Performance performance : performances) {
+                List<LayoutUnit> layout = performance.getVenue().getLayout();
+                for (LayoutUnit layoutUnit : layout) {
+                    if (!layoutUnit.getSector().getType().equals(Sector.SectorType.STAGE)) {
+                        totalTickets++;
+                    }
+                }
+            }
+
+            topEvents.add(new TopEvent(events.get(i), totalTickets, soldTickets.get(i)));
+        }
+
+        return topEvents;
     }
 }
