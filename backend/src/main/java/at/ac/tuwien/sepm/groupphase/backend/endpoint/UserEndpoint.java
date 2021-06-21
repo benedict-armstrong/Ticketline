@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.Authentication;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -47,6 +48,7 @@ public class UserEndpoint {
         return userMapper.applicationUserToUserDto(userService.addUser(userMapper.userDtoToApplicationUser(userDto)));
     }
 
+    @Transactional
     @GetMapping(value = {"/{email}"})
     @PermitAll
     @Operation(summary = "Find User by Email")
@@ -55,6 +57,7 @@ public class UserEndpoint {
         return userMapper.applicationUserToUserDto(userService.findApplicationUserByEmail(email));
     }
 
+    @Transactional
     @GetMapping(value = {"/id/{id}"})
     @PermitAll
     @Operation(summary = "Find User by Id")

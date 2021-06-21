@@ -1,6 +1,5 @@
 package at.ac.tuwien.sepm.groupphase.backend.service.impl;
 
-import at.ac.tuwien.sepm.groupphase.backend.entity.Event;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Performance;
 import at.ac.tuwien.sepm.groupphase.backend.entity.PerformanceSearch;
 import at.ac.tuwien.sepm.groupphase.backend.repository.EventRepository;
@@ -14,7 +13,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.lang.invoke.MethodHandles;
-import java.util.ArrayList;
 import java.util.List;
 
 @Service

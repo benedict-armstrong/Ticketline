@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.lang.invoke.MethodHandles;
 import java.time.LocalDateTime;
@@ -30,6 +31,7 @@ public class NewsServiceImpl implements NewsService {
         this.eventService = eventService;
     }
 
+    @Transactional
     @Override
     public List<News> getAll(Pageable pageRequest) {
         LOGGER.trace("getAll({})", pageRequest);
@@ -45,6 +47,7 @@ public class NewsServiceImpl implements NewsService {
         return newsRepository.save(news);
     }
 
+    @Transactional
     @Override
     public News getOneById(Long id) throws NotFoundException {
         LOGGER.trace("getOneById({})", id);
