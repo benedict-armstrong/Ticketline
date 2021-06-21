@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.LockedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -70,6 +71,12 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     protected ResponseEntity<Object> handleAuthorizationException(RuntimeException ex, WebRequest request) {
         LOGGER.warn(ex.getMessage());
         return handleExceptionInternal(ex, ex.getMessage(), new HttpHeaders(), HttpStatus.UNAUTHORIZED, request);
+    }
+
+    @ExceptionHandler(value = {LockedException.class})
+    protected ResponseEntity<Object> handleUserBannedException(RuntimeException ex, WebRequest request) {
+        LOGGER.warn(ex.getMessage());
+        return handleExceptionInternal(ex, ex.getMessage(), new HttpHeaders(), HttpStatus.FORBIDDEN, request);
     }
 
     @ExceptionHandler(value = { IllegalArgumentException.class, IllegalStateException.class })
