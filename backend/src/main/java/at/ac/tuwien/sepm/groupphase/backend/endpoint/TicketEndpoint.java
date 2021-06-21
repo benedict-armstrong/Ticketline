@@ -76,6 +76,15 @@ public class TicketEndpoint {
         return ticketService.checkout();
     }
 
+    @PutMapping("/reserve")
+    @Secured({"ROLE_USER", "ROLE_ORGANIZER", "ROLE_ADMIN"})
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(summary = "Reserves tickets in cart")
+    public boolean reserve() {
+        LOGGER.info("PUT /api/v1/tickets/reserve");
+        return ticketService.reserve();
+    }
+
     /*
     @PutMapping(path = "/{id}/cancel")
     @Secured({"ROLE_USER", "ROLE_ORGANIZER", "ROLE_ADMIN"})
@@ -111,5 +120,14 @@ public class TicketEndpoint {
     public List<TicketDto> getPaidTickets() {
         LOGGER.info("GET /api/v1/tickets/paid");
         return ticketMapper.ticketListToTicketDtoList(ticketService.getTickets(Ticket.Status.PAID_FOR));
+    }
+
+    @GetMapping("/reserved")
+    @Secured({"ROLE_USER", "ROLE_ORGANIZER", "ROLE_ADMIN"})
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(summary = "Get tickets from user that have been reserved")
+    public List<TicketDto> getReservedTickets() {
+        LOGGER.info("GET /api/v1/tickets/reserved");
+        return ticketMapper.ticketListToTicketDtoList(ticketService.getTickets(Ticket.Status.RESERVED));
     }
 }
