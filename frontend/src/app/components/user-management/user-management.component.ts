@@ -2,6 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {User} from '../../dtos/user';
 import {UserService} from '../../services/user.service';
 import {AuthService} from '../../services/auth.service';
+import {NavigationStart, Router} from '@angular/router';
 
 @Component({
   selector: 'app-user-management',
@@ -19,7 +20,16 @@ export class UserManagementComponent implements OnInit {
   nothingToLoad = false;
 
   constructor(private userService: UserService,
-              private authService: AuthService) { }
+              private authService: AuthService,
+              private router: Router) {
+    router.events.subscribe((event: NavigationStart) => {
+      if (event.navigationTrigger === 'popstate') {
+        if (event.url === '/users') {
+          this.reload();
+        }
+      }
+    });
+  }
 
   ngOnInit(): void {
     const email = this.authService.getUserEmail();
@@ -55,7 +65,7 @@ export class UserManagementComponent implements OnInit {
   }
 
   toggleStatus(user: User) {
-    if (user.id === this.managingUser.id) {
+    if (user.id === this.managingUser.id || user.role === 'ADMIN') {
       return;
     }
     if (user.status === 'ACTIVE') {

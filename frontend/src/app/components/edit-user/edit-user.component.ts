@@ -125,28 +125,27 @@ export class EditUserComponent implements OnInit {
     this.userService.getUserByEmail(email).subscribe(
       user => {
         this.managingUser = user;
+        // Load the user to be edited
+        const userId = this.actRoute.snapshot.params.id;
+        this.userService.getUserById(userId).subscribe(
+          (response) => {
+            this.oldUser = response;
+            if (response.role === 'ADMIN') {
+              this.editUserForm.get('status').disable();
+            }
+            if (response.id === this.managingUser.id) {
+              this.editUserForm.get('status').disable();
+              this.editUserForm.get('role').disable();
+            }
+            this.setDetails();
+          },
+          error => {
+            this.defaultServiceErrorHandling(error);
+          }
+        );
       }, error => {
-        alert(error);
-      }
-    );
-    // Load the user to be edited
-    const userId = this.actRoute.snapshot.params.id;
-    this.userService.getUserById(userId).subscribe(
-      (response) => {
-        this.oldUser = response;
-        if (response.role === 'ADMIN') {
-          this.editUserForm.get('status').disable();
-        }
-        if (response.id === this.managingUser.id) {
-          this.editUserForm.get('status').disable();
-          this.editUserForm.get('role').disable();
-        }
-        this.setDetails();
-      },
-      error => {
         this.defaultServiceErrorHandling(error);
       }
-
     );
   }
 

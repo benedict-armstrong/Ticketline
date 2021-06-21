@@ -33,7 +33,7 @@
       <td>{{user.status | titlecase}}</td>
       <td class="center-cell">
         <div class="actions-cell">
-          <i [routerLink]="['/edit-user/' + user.id]" class="bi bi-three-dots"></i>
+          <!-- <i [routerLink]="['/edit-user/' + user.id]" class="bi bi-three-dots"></i> (PLACEHOLDER) -->
           <i [routerLink]="['/edit-user/' + user.id]" class="bi bi-pencil" title="Edit"></i>
           <i (click)="toggleStatus(user)" class="bi" [class.deactivated]="user.id === managingUser.id || user.role === 'ADMIN'"
              [class.bi-person-x]="user.status === 'ACTIVE'" [class.bi-person-check]="user.status === 'BANNED'"
