@@ -19,6 +19,11 @@ export class UserManagementComponent implements OnInit {
 
   nothingToLoad = false;
 
+  success = false;
+  successMessage: string;
+
+  error = null;
+
   constructor(private userService: UserService,
               private authService: AuthService,
               private router: Router) {
@@ -36,11 +41,11 @@ export class UserManagementComponent implements OnInit {
     this.userService.getUserByEmail(email).subscribe(
       user => {
         this.managingUser = user;
+        this.loadBatch();
       }, error => {
-        alert(error);
+        this.handleError(error);
       }
     );
-    this.loadBatch();
   }
 
   loadBatch() {
@@ -52,7 +57,7 @@ export class UserManagementComponent implements OnInit {
           this.nothingToLoad = true;
         }
       }, error => {
-        alert(error);
+        this.handleError(error);
       }
     );
   }
@@ -77,9 +82,30 @@ export class UserManagementComponent implements OnInit {
       response => {
         user = response;
       }, error => {
-        alert(error);
+        this.handleError(error);
       }
     );
+  }
+
+  resetPassword(user: User) {
+    this.userService.resetPassword(user.email).subscribe(
+      response => {
+        user = response;
+        this.success = true;
+        this.successMessage = 'The password for ' + user.email + ' has been reset.';
+      }, error => {
+        this.handleError(error);
+      }
+    );
+  }
+
+  handleError(error: Error) {
+    this.error = error;
+  }
+
+  vanishAlert() {
+    this.error = null;
+    this.success = false;
   }
 
 }
