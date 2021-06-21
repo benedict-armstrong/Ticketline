@@ -62,7 +62,7 @@ public class UserEndpoint {
     }
 
     @GetMapping(value = {"/id/{id}"})
-    @PermitAll
+    @Secured({"ROLE_USER", "ROLE_ORGANIZER", "ROLE_ADMIN"})
     @Operation(summary = "Find User by Id")
     public UserDto findById(@Valid @PathVariable("id") long id) {
         LOGGER.info("GET /api/v1/users/{}", id);
@@ -74,7 +74,7 @@ public class UserEndpoint {
     @Operation(summary = "Update User")
     public UserDto update(@Valid @RequestBody UserDto userDto) {
         LOGGER.info("PUT /api/v1/users body:{}", userDto);
-        return userMapper.applicationUserToUserDto(userService.updateUser(userMapper.userDtoToApplicationUser(userDto)));
+        return userMapper.applicationUserToUserDto(userService.updateUser(userMapper.userDtoToApplicationUser(userDto), false));
     }
 
     @PutMapping("/{id}")

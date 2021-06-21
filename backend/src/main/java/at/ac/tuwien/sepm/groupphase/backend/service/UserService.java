@@ -53,7 +53,7 @@ public interface UserService extends UserDetailsService {
      * @param user to update
      * @return updated User
      */
-    ApplicationUser updateUser(ApplicationUser user);
+    ApplicationUser updateUser(ApplicationUser user, Boolean firstAuthentication);
 
     /**
      * Marks that a user read a particular news.

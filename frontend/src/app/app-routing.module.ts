@@ -60,7 +60,7 @@ const routes: Routes = [
   { path: 'orders', component: BookingComponent, canActivate: [MasterGuard],
       data: {guards: [AuthGuard, StatusGuard], roles: ['ADMIN', 'ORGANIZER', 'USER']} },
   { path: 'edit-user/:id', component: EditUserComponent, canActivate: [MasterGuard],
-      data: {guards: [AuthGuard, StatusGuard], roles: ['ADMIN']} },
+      data: {guards: [AuthGuard, StatusGuard], roles: ['ADMIN', 'ORGANIZER', 'USER']} },
   { path: 'users', component: UserManagementComponent, canActivate: [MasterGuard],
       data: {guards: [AuthGuard, StatusGuard], roles: ['ADMIN']} },
   { path: 'banned', component: BannedAlertComponent }
