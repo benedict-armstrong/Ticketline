@@ -8,6 +8,7 @@ import java.time.LocalDateTime;
 public interface TestDataUser extends TestData{
 
     String USER_BASE_URI = BASE_URI + "/users";
+    String LOGIN_BASE_URI = BASE_URI + "/authentication";
 
     String ADMIN_FIRST_NAME = "Max";
     String ADMIN_LAST_NAME = "Mustermann";

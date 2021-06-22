@@ -3,23 +3,25 @@ package at.ac.tuwien.sepm.groupphase.backend.integrationtest;
 import at.ac.tuwien.sepm.groupphase.backend.BackendApplication;
 import at.ac.tuwien.sepm.groupphase.backend.basetest.TestAuthentification;
 import at.ac.tuwien.sepm.groupphase.backend.basetest.TestData;
+import at.ac.tuwien.sepm.groupphase.backend.basetest.TestDataArtist;
 import at.ac.tuwien.sepm.groupphase.backend.basetest.TestDataEvent;
-import at.ac.tuwien.sepm.groupphase.backend.basetest.TestDataFile;
+import at.ac.tuwien.sepm.groupphase.backend.basetest.TestDataTicket;
 import at.ac.tuwien.sepm.groupphase.backend.basetest.TestDataUser;
+import at.ac.tuwien.sepm.groupphase.backend.basetest.TestDataVenue;
 import at.ac.tuwien.sepm.groupphase.backend.config.properties.SecurityProperties;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.ArtistDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.PerformanceDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserLoginDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.VenueDto;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Address;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
-import at.ac.tuwien.sepm.groupphase.backend.entity.Artist;
-import at.ac.tuwien.sepm.groupphase.backend.entity.Event;
-import at.ac.tuwien.sepm.groupphase.backend.entity.File;
-import at.ac.tuwien.sepm.groupphase.backend.entity.Performance;
 import at.ac.tuwien.sepm.groupphase.backend.repository.AddressRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.ArtistRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.EventRepository;
-import at.ac.tuwien.sepm.groupphase.backend.repository.FileRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.PerformanceRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.UserRepository;
-import at.ac.tuwien.sepm.groupphase.backend.security.JwtTokenizer;
+import at.ac.tuwien.sepm.groupphase.backend.repository.VenueRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
@@ -50,9 +52,7 @@ import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
 import java.lang.reflect.Method;
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -67,7 +67,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 @SpringBootTest
 @ActiveProfiles("test")
 @AutoConfigureMockMvc
-public class SecurityTest implements TestData, TestAuthentification, TestDataUser {
+public class SecurityTest implements TestData, TestDataEvent, TestAuthentification, TestDataUser {
 
     private static final List<Class<?>> mappingAnnotations = Lists.list(
         RequestMapping.class,
@@ -94,9 +94,6 @@ public class SecurityTest implements TestData, TestAuthentification, TestDataUse
     private ObjectMapper objectMapper;
 
     @Autowired
-    private JwtTokenizer jwtTokenizer;
-
-    @Autowired
     private SecurityProperties securityProperties;
 
     @Autowired
@@ -104,12 +101,11 @@ public class SecurityTest implements TestData, TestAuthentification, TestDataUse
 
     private String authToken;
 
-    private Event event;
+    private EventDto eventDto;
 
-    private final File file = File.builder()
-        .data(TestDataFile.TEST_FILE_DATA)
-        .type(TestDataFile.TEST_FILE_TYPE)
-        .build();
+    private ArtistDto artistDto;
+
+    private VenueDto venueDto;
 
     @Autowired
     private EventRepository eventRepository;
@@ -118,7 +114,7 @@ public class SecurityTest implements TestData, TestAuthentification, TestDataUse
     private UserRepository userRepository;
 
     @Autowired
-    private FileRepository fileRepository;
+    private VenueRepository venueRepository;
 
     @Autowired
     private ArtistRepository artistRepository;
@@ -134,34 +130,25 @@ public class SecurityTest implements TestData, TestAuthentification, TestDataUse
 
     @BeforeEach
     public void beforeEach() throws Exception {
+        artistDto = TestDataArtist.getArtistDto();
+        venueDto = TestDataVenue.getVenueDto();
 
-        Set<File> images = new HashSet<>();
-        images.add(file);
-
-        Address address = addressRepository.save(TestDataEvent.TEST_EVENT_LOCATION);
-        Artist artist = artistRepository.save(TestDataEvent.TEST_EVENT_ARTIST);
-
-        fileRepository.save(file);
-
-        Set<Performance> performances = new HashSet<>();
-        performances.add(Performance.builder()
+        PerformanceDto[] performanceDtos = new PerformanceDto[1];
+        performanceDtos[0] = PerformanceDto.builder()
             .title(TestDataEvent.TEST_EVENT_PERFORMANCE_TITLE)
             .description(TestDataEvent.TEST_EVENT_PERFORMANCE_DESCRIPTION)
             .date(TestDataEvent.TEST_PERFORMANCE_DATE)
-            .artist(artist)
-            .location(address)
-            .sectorTypes(TestDataEvent.getTestEventSectortypes())
-            .build());
+            .ticketTypes(TestDataTicket.getTicketTypeDtos())
+            .build();
 
-        event = Event.builder()
+        eventDto = EventDto.builder()
             .name(TestDataEvent.TEST_EVENT_TITLE)
             .description(TestDataEvent.TEST_EVENT_DESCRIPTION)
             .startDate(TestDataEvent.TEST_EVENT_DATE_FUTURE)
             .endDate(TestDataEvent.TEST_EVENT_DATE_FUTURE2)
             .duration(TestDataEvent.TEST_EVENT_DURATION)
             .eventType(TestDataEvent.TEST_EVENT_EVENT_TYPE)
-            .images(images)
-            .performances(performances)
+            .performances(performanceDtos)
             .build();
 
         saveUser(AUTH_USER_ADMIN, userRepository, passwordEncoder);
@@ -172,10 +159,41 @@ public class SecurityTest implements TestData, TestAuthentification, TestDataUse
     public void afterEach() {
         eventRepository.deleteAll();
         performanceRepository.deleteAll();
+        venueRepository.deleteAll();
         artistRepository.deleteAll();
         userRepository.deleteAll();
-        addressRepository.deleteAll();
-        fileRepository.deleteAll();
+    }
+
+    private ArtistDto saveArtist(ArtistDto artistDto) throws Exception {
+        MvcResult mvcResult = this.mockMvc.perform(
+            post(ARTIST_BASE_URI)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(artistDto))
+                .header(securityProperties.getAuthHeader(), authToken)
+        ).andReturn();
+
+        MockHttpServletResponse response = mvcResult.getResponse();
+        assertEquals(HttpStatus.CREATED.value(), response.getStatus());
+        assertEquals(MediaType.APPLICATION_JSON_VALUE, response.getContentType());
+
+        return objectMapper.readValue(response.getContentAsString(),
+            ArtistDto.class);
+    }
+
+    private VenueDto saveVenue(VenueDto venueDto) throws Exception {
+        MvcResult mvcResult = this.mockMvc.perform(
+            post(VENUE_BASE_URI)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(venueDto))
+                .header(securityProperties.getAuthHeader(), authToken)
+        ).andReturn();
+
+        MockHttpServletResponse response = mvcResult.getResponse();
+        assertEquals(HttpStatus.CREATED.value(), response.getStatus());
+        assertEquals(MediaType.APPLICATION_JSON_VALUE, response.getContentType());
+
+        return objectMapper.readValue(response.getContentAsString(),
+            VenueDto.class);
     }
 
     /**
@@ -232,10 +250,13 @@ public class SecurityTest implements TestData, TestAuthentification, TestDataUse
 
     @Test
     public void givenAdminLoggedIn_whenPost_then201() throws Exception {
+        eventDto.getPerformances()[0].setArtist(saveArtist(artistDto));
+        eventDto.getPerformances()[0].setVenue(saveVenue(venueDto));
+
         MvcResult mvcResult = this.mockMvc.perform(
             post(TestDataEvent.EVENT_BASE_URI)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(event))
+                .content(objectMapper.writeValueAsString(eventDto))
                 .header(securityProperties.getAuthHeader(), authToken)
         ).andReturn();
 
@@ -245,10 +266,13 @@ public class SecurityTest implements TestData, TestAuthentification, TestDataUse
 
     @Test
     public void givenNoOneLoggedIn_whenPost_then403() throws Exception {
+        eventDto.getPerformances()[0].setArtist(saveArtist(artistDto));
+        eventDto.getPerformances()[0].setVenue(saveVenue(venueDto));
+
         MvcResult mvcResult = this.mockMvc.perform(
             post(TestDataEvent.EVENT_BASE_URI)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(event))
+                .content(objectMapper.writeValueAsString(eventDto))
         ).andReturn();
 
         MockHttpServletResponse response = mvcResult.getResponse();
@@ -260,10 +284,13 @@ public class SecurityTest implements TestData, TestAuthentification, TestDataUse
         saveUser(AUTH_USER_CLIENT, userRepository, passwordEncoder);
         String userAuthToken = authenticate(AUTH_USER_CLIENT, mockMvc, objectMapper);
 
+        eventDto.getPerformances()[0].setArtist(saveArtist(artistDto));
+        eventDto.getPerformances()[0].setVenue(saveVenue(venueDto));
+
         MvcResult mvcResult = this.mockMvc.perform(
             post(TestDataEvent.EVENT_BASE_URI)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(event))
+                .content(objectMapper.writeValueAsString(eventDto))
                 .header(securityProperties.getAuthHeader(), userAuthToken)
         ).andReturn();
 
@@ -322,5 +349,33 @@ public class SecurityTest implements TestData, TestAuthentification, TestDataUse
 
         MockHttpServletResponse response = mvcResult.getResponse();
         assertEquals(HttpStatus.CREATED.value(), response.getStatus());
+    }
+
+    @Test
+    public void logInWithWrongPassword_then401() throws Exception {
+        ApplicationUser user = ApplicationUser.builder()
+            .firstName(DEFAULT_FIRST_NAME)
+            .lastName(DEFAULT_LAST_NAME)
+            .email(DEFAULT_EMAIL + "e")
+            .lastLogin(DEFAULT_LAST_LOGIN)
+            .role(ApplicationUser.UserRole.ADMIN)
+            .status(DEFAULT_STATUS)
+            .password(DEFAULT_PASSWORD)
+            .points(DEFAULT_POINTS)
+            .telephoneNumber(DEFAULT_PHONE_NUMBER)
+            .build();
+
+        saveUser(user, userRepository, passwordEncoder);
+
+        UserLoginDto userLoginDto = UserLoginDto.builder().email(user.getEmail()).password("Wrong").build();
+
+        MvcResult mvcResult = this.mockMvc.perform(
+            post(LOGIN_BASE_URI)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(userLoginDto))
+        ).andReturn();
+
+        MockHttpServletResponse response = mvcResult.getResponse();
+        assertEquals(HttpStatus.UNAUTHORIZED.value(), response.getStatus());
     }
 }
