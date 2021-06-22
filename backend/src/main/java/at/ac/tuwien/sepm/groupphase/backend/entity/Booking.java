@@ -9,6 +9,8 @@ import lombok.ToString;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -34,7 +36,7 @@ public class Booking {
     private Long id;
 
     @Column(nullable = false)
-    private LocalDateTime buyDate;
+    private LocalDateTime createDate;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn
@@ -44,9 +46,18 @@ public class Booking {
 
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
     @NotNull
-    private Set<CartItem> cartItems = new HashSet<>();
+    private Set<Ticket> tickets = new HashSet<>();
 
     @OneToOne(fetch = FetchType.EAGER)
     @EqualsAndHashCode.Exclude
     private File invoice;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private Status status;
+
+    public enum Status {
+        PAID_FOR, RESERVED, CANCELLED
+    }
+
 }

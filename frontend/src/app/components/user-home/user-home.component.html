@@ -1,160 +1,171 @@
 <div class="user-home" *ngIf="this.user">
-    <h3>Welcome Back {{this.user.firstName}}!</h3>
-    <div class="user-booking cards">
-        <h3>Your Tickets</h3>
-        <div *ngIf="loading" class="col">
-          <app-loading-animation></app-loading-animation>
+  <h3>Welcome Back {{this.user.firstName}}!</h3>
+  <div class="user-booking cards">
+    <h3>Your Tickets</h3>
+    <div *ngIf="loading" class="col">
+      <app-loading-animation></app-loading-animation>
+    </div>
+    <div *ngIf="!loading">
+      <div *ngIf="!showAll" class="row row-cols-1 row-cols-md-4 g-4">
+        <div *ngFor="let entry of newOrders" class="col">
+          <app-ticket-order-item [ticketItem]="entry"></app-ticket-order-item>
         </div>
-        <div *ngIf="!loading">
-          <div *ngIf="!showAll" class="row row-cols-1 row-cols-md-4 g-4">
-            <div *ngFor="let entry of newOrders" class="col">
-              <app-ticket-order-item [ticketItem]="entry"></app-ticket-order-item>
-            </div>
-          </div>
-          <div *ngIf="showAll" class="row row-cols-1 row-cols-md-4 g-4">
-            <div *ngFor="let entry of orders" class="col">
-              <app-ticket-order-item [ticketItem]="entry"></app-ticket-order-item>
-            </div>
-          </div>
+      </div>
+      <div *ngIf="showAll" class="row row-cols-1 row-cols-md-4 g-4">
+        <div *ngFor="let entry of orders" class="col">
+          <app-ticket-order-item [ticketItem]="entry"></app-ticket-order-item>
         </div>
+      </div>
+    </div>
 
-        <button class="secondary" *ngIf="!showAll" (click)="showAll = true">Show expired tickets</button>
-    </div>
-    <div class="user-info cards">
-        <h3>Address and Contact Info</h3>
-        <div class="row row-cols-1 row-cols-md-4 g-4">
-            <div class="col">
-                <div class="card h-100">
-                    <div class="card-body">
-                        <div>
-                            <i class="bi bi-house"></i>
-                            <h5 class="card-title">Address</h5>
-                        </div>
-                        <p class="card-text">
-                            {{this.user.address.name}}<br>
-                            {{this.user.address.lineOne}}<br>
-                            {{this.user.address.postcode}} {{this.user.address.city}} <br>
-                            {{this.user.address.country}}
-                        </p>
-                        <button class="primary">Edit</button>
-                    </div>
-                </div>
+    <button class="secondary" *ngIf="!showAll" (click)="showAll = true">Show expired tickets</button>
+  </div>
+  <div class="user-info cards">
+    <h3>Address and Contact Info</h3>
+    <div class="row row-cols-1 row-cols-md-4 g-4">
+      <div class="col">
+        <div class="card h-100">
+          <div class="card-body">
+            <div>
+              <i class="bi bi-house"></i>
+              <h5 class="card-title">Address</h5>
             </div>
-            <div class="col">
-                <div class="card h-100">
-                    <div class="card-body">
-                        <div>
-                            <i class="bi bi-person-lines-fill"></i>
-                            <h5 class="card-title">Contact</h5>
-                        </div>
-                        <p class="card-text">
-                            <strong>Name:</strong> {{this.user.firstName}} {{this.user.lastName}} <br>
-                            <strong>Mail:</strong> {{this.user.email}} <br>
-                            <strong>Telefon:</strong> {{this.user.telephoneNumber}} <br>
-                        </p>
-                        <div *ngIf="this.user.role === 'ORGANIZER' || this.user.role === 'ADMIN'">
-                            <strong>Role:</strong> {{this.user.role}} <br>
-                        </div>
-                        <button class="primary">Edit</button>
-                    </div>
-                </div>
-            </div>
-            <div class="col">
-                <div class="card h-100">
-                    <div class="card-body">
-                        <div>
-                            <i class="bi bi-mailbox"></i>
-                            <h5 class="card-title">Shipping Address</h5>
-                        </div>
-                        <p class="card-text text-muted">
-                            Same as Address
-                        </p>
-                        <button class="primary">Edit</button>
-                    </div>
-                </div>
-            </div>
+            <p class="card-text">
+              {{this.user.address.name}}<br>
+              {{this.user.address.lineOne}}<br>
+              {{this.user.address.postcode}} {{this.user.address.city}} <br>
+              {{this.user.address.country}}
+            </p>
+            <button [routerLink]="['/edit-user/' + this.user.id]" class="primary">Edit</button>
+          </div>
         </div>
+      </div>
+      <div class="col">
+        <div class="card h-100">
+          <div class="card-body">
+            <div>
+              <i class="bi bi-person-lines-fill"></i>
+              <h5 class="card-title">Contact</h5>
+            </div>
+            <p class="card-text">
+              <strong>Name:</strong> {{this.user.firstName}} {{this.user.lastName}} <br>
+              <strong>Mail:</strong> {{this.user.email}} <br>
+              <strong>Telefon:</strong> {{this.user.telephoneNumber}} <br>
+            </p>
+            <div *ngIf="this.user.role === 'ORGANIZER' || this.user.role === 'ADMIN'">
+              <strong>Role:</strong> {{this.user.role}} <br>
+            </div>
+            <button [routerLink]="['/edit-user/' + this.user.id]" class="primary">Edit</button>
+          </div>
+        </div>
+      </div>
+<!--      <div class="col">-->
+<!--        <div class="card h-100">-->
+<!--          <div class="card-body">-->
+<!--            <div>-->
+<!--              <i class="bi bi-mailbox"></i>-->
+<!--              <h5 class="card-title">Shipping Address</h5>-->
+<!--            </div>-->
+<!--            <p class="card-text text-muted">-->
+<!--              Same as Address-->
+<!--            </p>-->
+<!--            <button class="primary">Edit</button>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--      </div>-->
     </div>
-    <div class="user-actions cards" id="userActions">
-        <h3 class="user-action-heading" data-bs-toggle="collapse" data-bs-target="#showActions" aria-expanded="true" aria-controls="showActions"
-            (click)="this.userActions=!this.userActions">Actions <i class="bi bi-arrow-bar-down"
-                *ngIf="!this.userActions"></i><i class="bi bi-arrow-bar-up" *ngIf="this.userActions"></i></h3>
-        <div class="row row-cols-1 row-cols-md-4 g-4 accordion-collapse collapse" id="showActions"
-            aria-labelledby="userActionHeading" data-bs-parent="#userActions">
-            <div class="col">
-                <div class="card h-100">
-                    <div class="card-body">
-                        <div>
-                            <i class="bi bi-exclamation-triangle"></i>
-                            <h5 class="card-title">Change Password</h5>
-                        </div>
-                        <form [formGroup]="this.passwordChangeForm" (ngSubmit)="changePassword()">
-                            <div class="form-group">
-                                <div *ngIf="passwordError"
-                                    class="form-text alert alert-danger alert-dismissible fade show" role="alert">
-                                    <strong>Error!</strong> <br> {{ passwordErrorMessage }}
-                                    <button type="button" (click)="vanishAlert()" class="close" data-dismiss="alert"
-                                        aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                </div>
-                                <div *ngIf="passwordSuccess"
-                                    class="form-text alert alert-success alert-dismissible fade show" role="alert">
-                                    <small> <strong>Success!</strong> <br> The password has been changed.</small>
-                                    <button type="button" (click)="vanishAlert()" class="close" data-dismiss="alert"
-                                        aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label for="password">Password</label>
-                                <input type="password" name="password" formControlName="password"
-                                    class="text-input form-control" id="password" placeholder="Password">
-                                <div *ngIf="passwordSubmitted && this.passwordChangeForm.controls.password.errors"
-                                    class="error">
-                                    <small class="form-text text-warning"
-                                        *ngIf="this.passwordChangeForm.controls.password.errors.required">Your
-                                        password
-                                        is
-                                        required!
-                                    </small>
-                                    <small class="form-text text-warning"
-                                        *ngIf="this.passwordChangeForm.controls.password.errors.minlength">Your
-                                        password
-                                        must be at least 8 characters long!
-                                    </small>
-                                </div>
-                            </div>
+  </div>
+  <div class="user-actions cards" id="userActions">
+    <h3 class="user-action-heading" data-bs-toggle="collapse" data-bs-target="#showActions" aria-expanded="true" aria-controls="showActions"
+        (click)="this.userActions=!this.userActions">Actions <i class="bi bi-arrow-bar-down"
+                                                                *ngIf="!this.userActions"></i><i class="bi bi-arrow-bar-up" *ngIf="this.userActions"></i></h3>
+    <div class="row row-cols-1 row-cols-md-4 g-4 accordion-collapse collapse" id="showActions"
+         aria-labelledby="userActionHeading" data-bs-parent="#userActions">
+      <div class="col">
+        <div class="card h-100">
+          <div class="card-body">
+            <div>
+              <i class="bi bi-exclamation-triangle"></i>
+              <h5 class="card-title">Change Password</h5>
+            </div>
+            <form [formGroup]="this.passwordChangeForm" (ngSubmit)="changePassword()">
+              <div class="form-group">
+                <div *ngIf="passwordError"
+                     class="form-text alert alert-danger alert-dismissible fade show" role="alert">
+                  <strong>Error!</strong> <br> {{ passwordErrorMessage }}
+                  <button type="button" (click)="vanishAlert()" class="close" data-dismiss="alert"
+                          aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div *ngIf="passwordSuccess"
+                     class="form-text alert alert-success alert-dismissible fade show" role="alert">
+                  <small> <strong>Success!</strong> <br> The password has been changed.</small>
+                  <button type="button" (click)="vanishAlert()" class="close" data-dismiss="alert"
+                          aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" name="password" formControlName="password"
+                       class="text-input form-control" id="password" placeholder="Password">
+                <div *ngIf="passwordSubmitted && this.passwordChangeForm.controls.password.errors"
+                     class="error">
+                  <small class="form-text text-warning"
+                         *ngIf="this.passwordChangeForm.controls.password.errors.required">Your
+                    password
+                    is
+                    required!
+                  </small>
+                  <small class="form-text text-warning"
+                         *ngIf="this.passwordChangeForm.controls.password.errors.minlength">Your
+                    password
+                    must be at least 8 characters long!
+                  </small>
+                </div>
+              </div>
 
-                            <div class="form-group">
-                                <label for="passwordRepeat">Repeat Password</label>
-                                <input type="password" name="passwordRepeat" formControlName="passwordRepeat"
-                                    class="text-input form-control" id="passwordRepeat"
-                                    placeholder="Repeat Password">
-                                <div *ngIf="passwordSubmitted" class="error">
-                                    <small class="form-text text-warning"
-                                        *ngIf="this.passwordChangeForm.value.password !== this.passwordChangeForm.value.passwordRepeat">Your
-                                        passwords must match.
-                                    </small>
-                                </div>
-                            </div>
-                            <button class="primary" type="submit">Change</button>
-                        </form>
-                    </div>
+              <div class="form-group">
+                <label for="passwordRepeat">Repeat Password</label>
+                <input type="password" name="passwordRepeat" formControlName="passwordRepeat"
+                       class="text-input form-control" id="passwordRepeat"
+                       placeholder="Repeat Password">
+                <div *ngIf="passwordSubmitted" class="error">
+                  <small class="form-text text-warning"
+                         *ngIf="this.passwordChangeForm.value.password !== this.passwordChangeForm.value.passwordRepeat">Your
+                    passwords must match.
+                  </small>
                 </div>
-            </div>
-            <div class="col">
-                <div class="card h-100">
-                    <div class="card-body">
-                        <div>
-                            <i class="bi bi-receipt-cutoff"></i>
-                            <h5 class="card-title">All Orders</h5>
-                        </div>
-                        <button class="primary" [routerLink]="['/orders']">View Orders</button>
-                    </div>
-                </div>
-            </div>
+              </div>
+              <button class="primary" type="submit">Change</button>
+            </form>
+          </div>
         </div>
+      </div>
+      <div class="col">
+        <div class="card h-100">
+          <div class="card-body">
+            <div>
+              <i class="bi bi-receipt-cutoff"></i>
+              <h5 class="card-title">All Orders</h5>
+            </div>
+            <button class="primary" [routerLink]="['/orders']">View Orders</button>
+          </div>
+        </div>
+      </div>
+      <div *ngIf="this.user.role === 'ADMIN'" class="col">
+        <div class="card h-100">
+          <div class="card-body">
+            <div>
+              <i class="bi bi-person-bounding-box"></i>
+              <h5 class="card-title">User Management</h5>
+            </div>
+            <button class="primary" [routerLink]="['/users']">View Users</button>
+          </div>
+        </div>
+      </div>
     </div>
+  </div>
 </div>

@@ -12,6 +12,7 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
@@ -68,11 +69,17 @@ public class CustomUserDetailService implements UserService {
     @Override
     public ApplicationUser findApplicationUserById(long id) {
         LOGGER.debug("Find application user by id");
-        ApplicationUser applicationUser = userRepository.findUserById(id);
-        if (applicationUser != null) {
-            return applicationUser;
+        ApplicationUser manager = userRepository.findUserByEmail(authenticationFacade.getAuthentication().getPrincipal().toString());
+        if (authenticationFacade.isAdmin() || manager.getId() == id) {
+            ApplicationUser applicationUser = userRepository.findUserById(id);
+            if (applicationUser != null) {
+                return applicationUser;
+            } else {
+                throw new NotFoundException(String.format("Could not find the user with the id %d", id));
+            }
+        } else {
+            throw new AuthorizationException("You don't have the authorization the view this user");
         }
-        throw new NotFoundException(String.format("Could not find the user with the id %d", id));
     }
 
     @Override
@@ -123,8 +130,16 @@ public class CustomUserDetailService implements UserService {
     }
 
     @Override
-    public ApplicationUser updateUser(ApplicationUser user) {
+    public ApplicationUser updateUser(ApplicationUser user, Boolean firstAuthentication) {
         LOGGER.debug("Update User");
+        if (!firstAuthentication) {
+            //Stop non allowed users to change users
+            ApplicationUser manager = userRepository.findUserByEmail(authenticationFacade.getAuthentication().getPrincipal().toString());
+            if (!authenticationFacade.isAdmin() && !(manager.getEmail().equals(user.getEmail()))) {
+                throw new AuthorizationException("You don't have the authorization the change this user");
+            }
+        }
+
         ApplicationUser oldUser = userRepository.findUserByEmail(user.getEmail());
 
         if (oldUser == null) {
@@ -133,6 +148,10 @@ public class CustomUserDetailService implements UserService {
 
         if (!oldUser.getPassword().equals(user.getPassword())) {
             user.setPassword(passwordEncoder.encode(user.getPassword()));
+        }
+
+        if (oldUser.getRole() == ApplicationUser.UserRole.ADMIN) {
+            user.setStatus(ApplicationUser.UserStatus.ACTIVE); // Prevent the admin from banning themself
         }
 
         return userRepository.save(user);
@@ -154,10 +173,12 @@ public class CustomUserDetailService implements UserService {
 
     @Override
     public ApplicationUser resetPassword(ApplicationUser user) {
+        LOGGER.trace("resetPassword({})", user);
+
         String newGeneratedPassword = RandomStringUtils.randomAscii(16);
         user.setPassword(newGeneratedPassword);
 
-        ApplicationUser newUser = updateUser(user);
+        ApplicationUser newUser = updateUser(user, false);
 
         if (newUser != null) {
             simpleMailService.sendMail(user.getEmail(), "[Ticketline] Password reset", String.format("Hello %s %s,\n\nYour password was changed to '%s' (without ')!"
@@ -168,13 +189,9 @@ public class CustomUserDetailService implements UserService {
     }
 
     @Override
-    public ApplicationUser findUserById(Long id) {
-        LOGGER.debug("Find user by id");
-        ApplicationUser applicationUser = userRepository.getOne(id);
-        if (applicationUser != null) {
-            return applicationUser;
-        }
-        throw new NotFoundException(String.format("Could not find the user with the id %d", id));
+    public List<ApplicationUser> getAll(Pageable pageRequest) {
+        LOGGER.trace("getAll({})", pageRequest);
+        return userRepository.findAll(pageRequest).getContent();
     }
 
     @Override

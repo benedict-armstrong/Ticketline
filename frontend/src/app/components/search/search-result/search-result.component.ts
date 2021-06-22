@@ -103,7 +103,7 @@ export class SearchResultComponent implements OnInit {
     this.noAddress = noAddress;
   }
 
-  setSearchPerformances(results: Performance[]){
+  setSearchPerformances(results: Performance[]) {
     this.eventSearched = false;
     this.artistSearched = false;
     this.addressSearched = false;
@@ -111,11 +111,11 @@ export class SearchResultComponent implements OnInit {
     this.performances = Object.assign([], results);
   }
 
-  setNoPerformance(noPerformance: boolean){
+  setNoPerformance(noPerformance: boolean) {
     this.noPerformance = noPerformance;
   }
 
-  triggerSearchBtn(name: string){
+  triggerSearchBtn(name: string) {
     if (document.getElementById(name)) {
       if (document.getElementById(name).classList[1] === 'secondary') {
         document.getElementById(name).classList.remove('secondary');
@@ -127,11 +127,11 @@ export class SearchResultComponent implements OnInit {
     }
   }
 
-  setSearchedEventPerformance(event: Event){
+  setSearchedEventPerformance(event: Event) {
     this.eventPerformance = event;
   }
 
-  setSearchedVenuePerformance(venue: Venue){
+  setSearchedVenuePerformance(venue: Venue) {
     this.venuePerformance = venue;
   }
 }

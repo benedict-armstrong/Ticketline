@@ -12,7 +12,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class NewCartItemDto {
+public class NewTicketDto {
 
     private PerformanceDto performance;
 

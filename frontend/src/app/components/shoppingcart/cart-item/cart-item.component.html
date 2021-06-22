@@ -1,37 +1,33 @@
 <div class="cartItem">
     <div class="row ticketHeader">
         <div class="col-9">
-            <span>{{this.cartItemService.cart[this.i].tickets[0].performance.title}}</span>
+            <span>{{this.ticketService.cart[this.i][0].performance.title}}</span>
         </div>
         <div class="col-3 closeContainer">
-            <button class="close" type="button" [ngClass]="{'locked': this.waiting}" (click)="removeFromCart()">X</button>
+            <button class="close" type="button" [ngClass]="{'locked': this.waiting}" (click)="removeAllTickets()">X</button>
         </div>
     </div>
-    <div class="row ticketBody mainBody">
-        <div class="col-12">
-            <span>Ticket Type: {{this.cartItemService.cart[this.i].tickets[0].ticketType.title}}</span>
-        </div>
-    </div>
-    <div class="row ticketBody" *ngFor="let ticket of cartItemService.cart[this.i].tickets; index as j;">
+    <div class="row ticketBody listing" *ngFor="let ticket of ticketService.cart[i]; index as j;">
+        <span>{{ticket.ticketType.sector.name}}<br></span>
         <div class="col-6">
-            <span>Seat: {{ticket.seat.customLabel}}</span>
+            <span>Seat: {{ticket.seat.customLabel}}<br></span>
+            <span>Type: {{ticket.ticketType.title}}<br></span>
         </div>
-
         <div class="col-6 prices">
-            <span class="price">{{this.cartItemService.cart[this.i].tickets[0].ticketType.price / 100 | currency:'EUR'}}</span>
-            <button class="secondary removeTicket no-shadow no-border" [ngClass]="{'locked': this.waiting}" type="button" (click)="removeTicketFromCart(j)"><i class="bi bi-trash"></i></button>
+            <span class="price">{{ticket.ticketType.price / 100 | currency:'EUR'}}</span>
+            <button class="secondary removeTicket no-shadow no-border" [ngClass]="{'locked': this.waiting}" (click)="removeTicket(j)" type="button"><i class="bi bi-trash"></i></button>
         </div>
     </div>
     <div class="row ticketBody mainBody">
         <div class="col-6 counts">
-            <span>{{this.cartItemService.cart[this.i].tickets.length}} Tickets</span>
+            <span>{{this.ticketService.cart[i].length}} Tickets</span>
         </div>
         <div class="col-6 prices">
-            <span class="price">Total: {{this.cartItemService.cart[this.i].tickets[0].ticketType.price * this.cartItemService.cart[this.i].tickets.length / 100 | currency:'EUR'}}</span>
+            <span class="price">Total: {{this.ticketService.cart[this.i][0].ticketType.price * this.ticketService.cart.length / 100 | currency:'EUR'}}</span>
         </div>
     </div>
     <div class="row ticketBody mainBody">
-        <button class="secondary addButton" [ngClass]="{'locked': this.waiting}" type="button" (click)="addTicketToCart()">Add One More</button>
+        <button class="secondary addButton" [ngClass]="{'locked': this.waiting}" (click)="addTicketToCart()" type="button">Add One More</button>
     </div>
     <div class="row ticketBody">
         <div *ngIf="error" class="col-12 alert alert-danger alert-dismissible fade show" role="alert">

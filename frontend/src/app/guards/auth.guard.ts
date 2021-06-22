@@ -1,6 +1,7 @@
 import {Injectable} from '@angular/core';
 import {CanActivate, Router, ActivatedRouteSnapshot} from '@angular/router';
 import {AuthService} from '../services/auth.service';
+import {UserService} from '../services/user.service';
 
 @Injectable({
   providedIn: 'root'
@@ -8,6 +9,7 @@ import {AuthService} from '../services/auth.service';
 export class AuthGuard implements CanActivate {
 
   constructor(private authService: AuthService,
+              private userService: UserService,
               private router: Router) {}
 
   canActivate(route: ActivatedRouteSnapshot): boolean {
@@ -26,11 +28,9 @@ export class AuthGuard implements CanActivate {
 
   checkPermissions(route: ActivatedRouteSnapshot): boolean {
     const userRole = this.authService.getUserRole();
-
     if (route.data.roles.includes(userRole)) {
       return true;
     }
-
     console.log('Not the necessary permissions');
     return false;
   }

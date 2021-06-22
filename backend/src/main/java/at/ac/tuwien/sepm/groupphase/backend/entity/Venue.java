@@ -36,7 +36,7 @@ public class Venue {
     @Column(nullable = false)
     private int width;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private ApplicationUser owner;
 
     @OneToOne(cascade = {CascadeType.ALL})
