@@ -101,6 +101,10 @@ export class TicketService {
     return this.httpClient.get<Ticket[]>(this.ticketBaseUri + '/paid');
   }
 
+  getReservedItems(): Observable<Ticket[]> {
+    return this.httpClient.get<Ticket[]>(this.ticketBaseUri + '/reserved');
+  }
+
   addTicket(addTicket: NewTicket, amount: number): Observable<Ticket[]> {
     return this.httpClient.post<Ticket[]>(this.ticketBaseUri + '/' + amount, addTicket);
   }
