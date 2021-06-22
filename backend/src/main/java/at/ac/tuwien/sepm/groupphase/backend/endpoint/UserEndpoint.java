@@ -47,6 +47,7 @@ public class UserEndpoint {
 
     @PostMapping
     @PermitAll
+    @ResponseStatus(HttpStatus.CREATED)
     @Operation(summary = "Add User")
     public UserDto add(@Valid @RequestBody UserDto userDto) {
         LOGGER.info("POST /api/v1/users body: {}", userDto);

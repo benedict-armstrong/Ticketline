@@ -28,7 +28,7 @@ public class AuthenticationFailureListener implements ApplicationListener<Authen
             applicationUser.setStatus(ApplicationUser.UserStatus.BANNED);
         }
 
-        userService.updateUser(applicationUser);
+        userService.updateUser(applicationUser, true);
     }
 
 }
