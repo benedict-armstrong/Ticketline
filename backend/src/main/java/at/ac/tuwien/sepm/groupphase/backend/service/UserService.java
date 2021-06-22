@@ -79,7 +79,7 @@ public interface UserService extends UserDetailsService {
     ApplicationUser findUserById(Long id);
 
     /**
-     * Reset the password attempt count of all users
+     * Reset the password attempt count of all users.
      *
      */
     void resetPasswordAttemptCount();
