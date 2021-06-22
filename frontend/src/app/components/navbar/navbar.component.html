@@ -16,13 +16,13 @@
     <div class="navbar-collapse collapse" id="collapsingNavbar">
       <ul class="nav navbar-nav ms-auto">
 
-        <li *ngIf="hasAdminPermission()" class="nav-item dropdown">
+        <li *ngIf="hasOrganizerPermission()" class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button"
             data-bs-toggle="dropdown" aria-expanded="false">
             Add
           </a>
           <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-            <li><a class="dropdown-item" [routerLink]="['add-user']">Add User</a></li>
+            <li *ngIf="hasAdminPermission()"><a class="dropdown-item" [routerLink]="['add-user']">Add User</a></li>
             <li><a class="dropdown-item" [routerLink]="['add-event']">Add Event</a></li>
             <li><a class="dropdown-item" [routerLink]="['add-venue']">Add Venue</a></li>
           </ul>

@@ -54,4 +54,10 @@ public interface PerformanceService {
      * @return list of performances with all possible values
      */
     List<Performance> search(PerformanceSearch performance, Pageable pageable);
+
+    /**
+     * Checks every minute to delete reserved tickets with are not picked up.
+     *
+     */
+    void prunePerformance();
 }

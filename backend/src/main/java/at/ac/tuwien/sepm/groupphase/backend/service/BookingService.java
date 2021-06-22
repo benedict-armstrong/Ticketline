@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepm.groupphase.backend.service;
 
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.ChangeBookingDto;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Booking;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Ticket;
 
@@ -12,9 +13,10 @@ public interface BookingService {
      * Saves a booking in the database.
      *
      * @param tickets of the booking to be saved.
+     * @param status of the booking to be saved.
      * @return the newly added booking.
      */
-    Booking save(Set<Ticket> tickets);
+    Booking save(Set<Ticket> tickets, Booking.Status status);
 
     /**
      * Saves a booking in the database.
@@ -25,9 +27,24 @@ public interface BookingService {
     Booking save(Booking booking);
 
     /**
+     * Updates a booking in the database.
+     *
+     * @param booking to be updated.
+     * @return the updated booking.
+     */
+    Booking update(ChangeBookingDto booking);
+
+    /**
      * Gets all tickets in the cart of a User.
      *
      * @return list of tickets.
      */
     List<Booking> getBookings();
+
+    /**
+     * Deletes ticket from booking to not cause reference problems.
+     *
+     * @param ticket too be deleted
+     */
+    void deleteTicket(Ticket ticket);
 }
