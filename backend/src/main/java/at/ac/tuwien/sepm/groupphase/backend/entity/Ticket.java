@@ -3,11 +3,12 @@ package at.ac.tuwien.sepm.groupphase.backend.entity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
-import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -17,7 +18,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import java.util.List;
+import java.time.LocalDateTime;
 
 @Data
 @NoArgsConstructor
@@ -31,34 +32,32 @@ public class Ticket {
     private Long id;
 
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
-    @JoinColumn(name = "OWNER_ID", nullable = false)
-    private ApplicationUser owner;
-
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
-    @JoinColumn(name = "PERFORMANCE_ID", nullable = false)
-    private Performance performance;
-
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
-    @JoinColumn(name = "SECTOR_ID", nullable = false)
-    private SectorType sectorType;
-
-    @ElementCollection(fetch = FetchType.EAGER) // TODO: map to Venue's seat
-    @Column(nullable = false)
-    private List<Long> seats;
+    @JoinColumn(name = "USER_ID")
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    private ApplicationUser user;
 
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
     @JoinColumn(name = "TYPE_ID", nullable = false)
     private TicketType ticketType;
 
-    @Column(name = "TOTAL_PRICE", nullable = false)
-    private Long totalPrice; // 1 = 100 Cents
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
+    @ToString.Exclude
+    @JoinColumn(name = "PERFORMANCE_ID", nullable = false)
+    private Performance performance;
+
+    @ManyToOne
+    private LayoutUnit seat;
+
+    @Column(nullable = false)
+    private LocalDateTime changeDate;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Status status;
 
     public enum Status {
-        PAID_FOR, RESERVED, CANCELLED
+        PAID_FOR, RESERVED, IN_CART, CANCELLED
     }
 
 }

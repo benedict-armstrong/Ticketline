@@ -7,9 +7,11 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 
 @Data
 @NoArgsConstructor
@@ -25,7 +27,9 @@ public class TicketType {
     @Column(nullable = false)
     private String title;
 
-    @Column(name = "MULTIPLIER", nullable = false)
-    private Double multiplier;
+    @ManyToOne(fetch = FetchType.EAGER)
+    private Sector sector;
 
+    @Column(nullable = false)
+    private Long price;
 }

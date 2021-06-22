@@ -13,10 +13,10 @@
           <p>{{performance.artist.firstName}} {{performance.artist.lastName}}</p>
           <h4>Location</h4>
           <p>
-            {{this.performance.location.name}}<br>
-            {{this.performance.location.lineOne}}<br>
-            {{this.performance.location.postcode}} {{this.performance.location.city}} <br>
-            {{this.performance.location.country}}
+            {{this.performance.venue.name}}<br>
+            {{this.performance.venue.address.lineOne}}<br>
+            {{this.performance.venue.address.postcode}} {{this.performance.venue.address.city}} <br>
+            {{this.performance.venue.address.country}}
           </p>
         </div>
       </div>
@@ -41,33 +41,9 @@
 
       <div class="tickets">
         <p class="text-center">We will try to find seats next to each other</p>
-        <div *ngFor="let sectorType of performance.sectorTypes">
-          <app-ticket-list-item [sectorType]="sectorType"></app-ticket-list-item>
-        </div>
+       <div *ngFor="let ticketType of this.performance.ticketTypes; index as j;">
+         <app-ticket-list-item *ngIf="ticketType.sector.type !== 'STAGE'" [ticketType]="ticketType" [ticketCount]="ticketCounts[j]" [performance]="performance"></app-ticket-list-item>
       </div>
-
-      <div class="selected-items row">
-        <div class="col">
-          <p> 1x Front Frow Ticket for Adults<br>
-            1x Front Frow Ticket for Child</p>
-        </div>
-        <div class="col prices">
-          <p>EUR 53.00<br>
-            EUR 32.00</p>
-        </div>
-
-      </div>
-
-      <div class="checkout">
-        <div>
-          <h4>EUR 85.00</h4>
-        </div>
-        <div class="checkout-buttons">
-          <button class="secondary">Continue Shopping</button>
-          <button class="primary">Checkout</button>
-        </div>
-      </div>
-
     </div>
   </div>
 </div>

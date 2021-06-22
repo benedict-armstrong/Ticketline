@@ -20,7 +20,7 @@ export class AuthService {
    * @param authRequest User data
    */
   loginUser(authRequest: AuthRequest, keepLogin: boolean): Observable<string> {
-    console.log(keepLogin);
+    // console.log(keepLogin);
     return this.httpClient
       .post(this.authBaseUri, authRequest, { responseType: 'text' })
       .pipe(tap((authResponse: string) => this.setToken(authResponse, keepLogin)));
@@ -38,7 +38,7 @@ export class AuthService {
   }
 
   logoutUser(): void {
-    console.log('Logout');
+    // console.log('Logout');
     localStorage.removeItem('authToken');
     sessionStorage.removeItem('authToken');
   }

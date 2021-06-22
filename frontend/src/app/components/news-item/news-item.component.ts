@@ -9,7 +9,7 @@ import {FileService} from '../../services/file.service';
 })
 export class NewsItemComponent implements OnInit, OnChanges {
 
-  @Input() lastRead: News = null;
+  @Input() lastRead: number = null;
 
   item: News;
   imgURL: any;
@@ -31,8 +31,8 @@ export class NewsItemComponent implements OnInit, OnChanges {
   ngOnChanges(changes: SimpleChanges) {
     if (this.lastRead == null) {
       this.read = false;
-    } else if (this.lastRead.id >= this.item.id) {
-      this.read = true;
+    } else {
+      this.read = this.lastRead >= this.item.id;
     }
   }
 

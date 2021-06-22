@@ -10,7 +10,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -19,6 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
@@ -41,10 +41,22 @@ public class MapperTest implements TestDataMapper {
     private PerformanceMapper performanceMapper;
 
     @Autowired
-    private SectorTypeMapper sectorTypeMapper;
+    private TicketTypeMapper ticketTypeMapper;
 
     @Autowired
     private UserMapper userMapper;
+
+    @Autowired
+    private TicketMapper ticketMapper;
+
+    @Autowired
+    private BookingMapper bookingMapper;
+
+    @Autowired
+    private SectorMapper sectorMapper;
+
+    @Autowired
+    private VenueMapper venueMapper;
 
 
     @Test
@@ -115,5 +127,60 @@ public class MapperTest implements TestDataMapper {
     public void userMapper() {
         assertEquals(USER_ENTITY, userMapper.userDtoToApplicationUser(USER_DTO));
         assertEquals(USER_DTO, userMapper.applicationUserToUserDto(USER_ENTITY));
+    }
+
+    @Test
+    @DisplayName("Testing mappers for null values")
+    public void nullMapper() {
+        assertNull(addressMapper.addressToAddressDto(null));
+        assertNull(addressMapper.addressDtoToAddress(null));
+        assertNull(addressMapper.addressListToAddressListDto(null));
+
+        assertNull(artistMapper.artistToArtistDto(null));
+        assertNull(artistMapper.artistDtoToArtist(null));
+        assertNull(artistMapper.artistListToArtistDtoList(null));
+
+        assertNull(eventMapper.eventToEventDto(null));
+        assertNull(eventMapper.eventDtoToEvent(null));
+        assertNull(eventMapper.eventListToEventDtoList(null));
+
+        assertNull(userMapper.applicationUserToUserDto(null));
+        assertNull(userMapper.userDtoToApplicationUser(null));
+
+        assertNull(ticketMapper.ticketToTicketDto(null));
+        assertNull(ticketMapper.ticketDtoToTicket(null));
+        assertNull(ticketMapper.ticketListToTicketDtoList(null));
+        assertNull(ticketMapper.ticketDtoListToTicketList(null));
+        assertNull(ticketMapper.ticketDtoArrayToTicketSet (null));
+        assertNull(ticketMapper.ticketSetToTicketDtoArray(null));
+
+        assertNull(ticketTypeMapper.ticketTypeToTicketTypeDto(null));
+        assertNull(ticketTypeMapper.ticketTypeDtoToTicketType(null));
+        assertNull(ticketTypeMapper.ticketTypeSetToTicketTypeDtoArray(null));
+        assertNull(ticketTypeMapper.ticketTypeDtoArrayToTicketTypeSet(null));
+
+        assertNull(bookingMapper.bookingDtoToBooking(null));
+        assertNull(bookingMapper.bookingToBookingDto(null));
+        assertNull(bookingMapper.bookingListToBookingDtoList(null));
+
+        assertNull(newsMapper.newsDtoToNews(null));
+        assertNull(newsMapper.newsToNewsDto(null));
+        assertNull(newsMapper.newsListToNewsDtoList(null));
+
+        assertNull(performanceMapper.performanceToPerformanceDto(null));
+        assertNull(performanceMapper.performanceDtoToPerformance(null));
+        assertNull(performanceMapper.performanceListToPerformanceDtoList(null));
+        assertNull(performanceMapper.performanceDtoArrayToPerformanceSet(null));
+        assertNull(performanceMapper.performanceSetToPerformanceDtoArray(null));
+        assertNull(performanceMapper.performanceSearchDtoToPerformanceSearch(null));
+
+        assertNull(sectorMapper.sectorToSectorDto(null));
+        assertNull(sectorMapper.sectorDtoToSector(null));
+        assertNull(sectorMapper.sectorListToSectorDtoList(null));
+        assertNull(sectorMapper.sectorDtoListToSectorList(null));
+
+        assertNull(venueMapper.venueToVenueDto((Venue) null));
+        assertNull(venueMapper.venueToVenueDto((List<Venue>) null));
+        assertNull(venueMapper.venueDtoToVenue(null));
     }
 }

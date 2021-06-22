@@ -31,13 +31,13 @@ public interface PerformanceService {
     Performance addPerformance(Performance performance);
 
     /**
-     * find all performances for one artist or location.
+     * find all performances for one location.
      *
-     * @param addressId if of the location
+     * @param addressId id of the location
      * @param pageable pagination
      * @return all performances of this artist or location
      */
-    List<Performance> findAllPerformancesByLocation(Long addressId, Pageable pageable);
+    List<Performance> findAllPerformancesByVenueAddress(Long addressId, Pageable pageable);
 
     /**
      * find all performances for one artist.
@@ -54,4 +54,10 @@ public interface PerformanceService {
      * @return list of performances with all possible values
      */
     List<Performance> search(PerformanceSearch performance, Pageable pageable);
+
+    /**
+     * Checks every minute to delete reserved tickets with are not picked up.
+     *
+     */
+    void prunePerformance();
 }

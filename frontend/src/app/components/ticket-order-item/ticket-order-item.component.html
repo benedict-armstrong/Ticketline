@@ -1,0 +1,39 @@
+<div class="card h-100" [ngClass]="old == true ? 'expired':''">
+  <div class="card-body">
+    <div>
+      <img src="assets/tickets.svg" alt="">
+      <h5 class="card-title">{{eventType}} Tickets</h5>
+    </div>
+    <div class="card-text">
+      <p>
+        {{performance.date  | date:'EEEE, MMM d, y HH:mm'}}<br>
+        {{performance.venue.name}}
+      </p>
+      <div *ngIf="!tooLong">
+        <div *ngFor="let entry of tickets">
+          <div class="row">
+            <div class="col">
+              {{entry.ticketType.title}}
+            </div>
+            <div class="col price">
+              Seat {{entry.seat.customLabel}}
+            </div>
+          </div>
+        </div>
+      </div>
+      <div *ngIf="tooLong">
+        <div *ngFor="let entry of altTickets">
+          <div class="row">
+            <div class="col">
+              {{entry.id}}x {{entry.ticketType.title}}
+            </div>
+            <div class="col price">
+              {{entry.ticketType.sector.name}}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <button [routerLink]="['/ticket']">View</button>
+  </div>
+</div>

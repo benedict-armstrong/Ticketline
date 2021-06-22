@@ -8,11 +8,14 @@ import at.ac.tuwien.sepm.groupphase.backend.entity.Artist;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Performance;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.factory.Mappers;
 
 import java.util.List;
 
 @Mapper
 public interface AddressMapper {
+
+    AddressMapper INSTANCE = Mappers.getMapper(AddressMapper.class);
 
     Address addressDtoToAddress(AddressDto addressDto);
 

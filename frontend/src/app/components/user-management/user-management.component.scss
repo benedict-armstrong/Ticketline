@@ -1,0 +1,38 @@
+.managing-row {
+  background-color: lightcyan;
+  font-weight: bold;
+}
+
+div.actions-cell {
+  display: flex;
+  justify-content: space-around;
+}
+
+div.actions-cell i.bi:not(.deactivated):hover {
+  transform: scale(1.25);
+  transition: 0.1s;
+}
+
+.deactivated {
+  color: lightgray;
+}
+
+.center-cell {
+  text-align: center;
+}
+
+.top-wrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.right-wrapper {
+  display: flex;
+  align-items: center;
+  height: 30px;
+}
+
+.right-wrapper select {
+  margin-left: 10px;
+}

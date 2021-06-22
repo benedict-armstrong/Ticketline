@@ -1,0 +1,40 @@
+<div class="cartItem">
+    <div class="row ticketHeader">
+        <div class="col-9">
+            <span>{{this.ticketService.cart[this.i][0].performance.title}}</span>
+        </div>
+        <div class="col-3 closeContainer">
+            <button class="close" type="button" [ngClass]="{'locked': this.waiting}" (click)="removeAllTickets()">X</button>
+        </div>
+    </div>
+    <div class="row ticketBody listing" *ngFor="let ticket of ticketService.cart[i]; index as j;">
+        <span>{{ticket.ticketType.sector.name}}<br></span>
+        <div class="col-6">
+            <span>Seat: {{ticket.seat.customLabel}}<br></span>
+            <span>Type: {{ticket.ticketType.title}}<br></span>
+        </div>
+        <div class="col-6 prices">
+            <span class="price">{{ticket.ticketType.price / 100 | currency:'EUR'}}</span>
+            <button class="secondary removeTicket no-shadow no-border" [ngClass]="{'locked': this.waiting}" (click)="removeTicket(j)" type="button"><i class="bi bi-trash"></i></button>
+        </div>
+    </div>
+    <div class="row ticketBody mainBody">
+        <div class="col-6 counts">
+            <span>{{this.ticketService.cart[i].length}} Tickets</span>
+        </div>
+        <div class="col-6 prices">
+            <span class="price">Total: {{this.ticketService.cart[this.i][0].ticketType.price * this.ticketService.cart.length / 100 | currency:'EUR'}}</span>
+        </div>
+    </div>
+    <div class="row ticketBody mainBody">
+        <button class="secondary addButton" [ngClass]="{'locked': this.waiting}" (click)="addTicketToCart()" type="button">Add One More</button>
+    </div>
+    <div class="row ticketBody">
+        <div *ngIf="error" class="col-12 alert alert-danger alert-dismissible fade show" role="alert">
+            <strong>Error! </strong> {{ errorMessage }}
+            <button type="button" (click)="vanishAlert()" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    </div>
+</div>

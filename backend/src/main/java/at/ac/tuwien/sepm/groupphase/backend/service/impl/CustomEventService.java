@@ -3,6 +3,7 @@ package at.ac.tuwien.sepm.groupphase.backend.service.impl;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Event;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Performance;
 import at.ac.tuwien.sepm.groupphase.backend.repository.EventRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.PerformanceRepository;
 import at.ac.tuwien.sepm.groupphase.backend.service.EventService;
 import at.ac.tuwien.sepm.groupphase.backend.specification.EventSpecificationBuilder;
 import org.slf4j.Logger;
@@ -11,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.lang.invoke.MethodHandles;
 import java.util.List;
 import java.util.Set;
@@ -39,6 +41,7 @@ public class CustomEventService implements EventService {
     }
 
     @Override
+    @Transactional
     public Event addEvent(Event event) {
         LOGGER.trace("addEvent({})", event);
 
@@ -55,6 +58,14 @@ public class CustomEventService implements EventService {
                 throw new IllegalArgumentException("Date of performances must be in period of event");
             }
         }
+
+        Event eventCreated = eventRepository.save(event);
+
+        for (Performance performance : performanceSet) {
+            performance.setEvent(eventCreated);
+        }
+
+        eventCreated.setPerformances(performanceSet);
 
         return eventRepository.save(event);
     }

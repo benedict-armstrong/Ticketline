@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepm.groupphase.backend.basetest;
 
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.FileDto;
 import at.ac.tuwien.sepm.groupphase.backend.entity.File;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
@@ -14,6 +15,11 @@ public interface TestDataFile extends TestData {
     File IMAGE_FILE = File.builder()
         .data(TEST_FILE_DATA)
         .type(File.Type.IMAGE_JPEG)
+        .build();
+
+    FileDto IMAGE_FILE_DTO = FileDto.builder()
+        .data(TEST_FILE_DATA)
+        .type("image/jpeg")
         .build();
 
     MockMultipartFile MOCK_FILE = new MockMultipartFile(

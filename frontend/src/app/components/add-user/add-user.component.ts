@@ -71,7 +71,6 @@ export class AddUserComponent implements OnInit {
           this.addUserForm.value.city,
           this.addUserForm.value.postcode,
           this.addUserForm.value.country,
-          null,
           false
         )
       );

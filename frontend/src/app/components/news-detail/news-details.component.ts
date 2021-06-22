@@ -5,8 +5,9 @@ import { FileService } from 'src/app/services/file.service';
 import { ApplicationNewsService } from 'src/app/services/news.service';
 import {AuthService} from '../../services/auth.service';
 import {UserService} from '../../services/user.service';
-import {Performance} from '../../dtos/performance';
 import {Event} from '../../dtos/event';
+import {User} from '../../dtos/user';
+import {ApplicationEventService} from '../../services/event.service';
 
 @Component({
   selector: 'app-news-detail',
@@ -28,7 +29,8 @@ export class NewsDetailComponent implements OnInit {
               private route: Router,
               private actRoute: ActivatedRoute,
               private authService: AuthService,
-              private userService: UserService) {
+              private userService: UserService,
+              private eventService: ApplicationEventService) {
   }
 
   ngOnInit(): void {
@@ -36,7 +38,14 @@ export class NewsDetailComponent implements OnInit {
     this.newsService.getNewsById(this.newsId).subscribe(
       (response) => {
         this.newsItem = response;
-        this.correspondingEvent = this.newsItem.event;
+        // this.correspondingEvent = this.newsItem.event;
+        this.eventService.getEventById(this.newsItem.event).subscribe(
+          (event) => {
+            this.correspondingEvent = event;
+          }, (error) => {
+            this.defaultServiceErrorHandling(error);
+          }
+        );
         this.date = new Date(response.publishedAt);
         if (this.newsItem.images.length > 0) {
           for (let i = 0; i < this.newsItem.images.length; i++) {
@@ -44,7 +53,7 @@ export class NewsDetailComponent implements OnInit {
             this.setURL(img, i);
           }
 
-          console.log(this.imgURL);
+          // console.log(this.imgURL);
         }
         this.markOlderAsRead();
       },
@@ -62,16 +71,16 @@ export class NewsDetailComponent implements OnInit {
 
   markOlderAsRead() {
     const email = this.authService.getUserEmail();
-    let userToChange;
+    let userToChange: User;
 
     if (email != null) {
       this.userService.getUserByEmail(email).subscribe(
         user => {
           userToChange = user;
-          if (userToChange.lastReadNews == null || userToChange.lastReadNews.id < this.newsItem.id) {
-            userToChange.lastReadNews = this.newsItem;
+          if (userToChange.lastReadNewsId == null || userToChange.lastReadNewsId < this.newsItem.id) {
+            userToChange.lastReadNewsId = this.newsItem.id;
           }
-          this.userService.updateUser(userToChange).subscribe(
+          this.userService.updateLastRead(userToChange, userToChange.lastReadNewsId).subscribe(
             () => {
             }, error => {
               this.defaultServiceErrorHandling(error);

@@ -3,6 +3,7 @@ package at.ac.tuwien.sepm.groupphase.backend.entity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
@@ -18,6 +19,7 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -37,9 +39,6 @@ public class Event {
     @Column(nullable = false)
     private String description;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private Set<Performance> performances;
-
     @Column(nullable = false)
     private int duration;
 
@@ -56,6 +55,11 @@ public class Event {
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
     @ToString.Exclude
     private Set<File> images = new HashSet<>();
+
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    @OneToMany(mappedBy = "event", cascade = CascadeType.MERGE, orphanRemoval = true, fetch = FetchType.EAGER)
+    private Set<Performance> performances;
 
     public enum EventType {
         CINEMA, THEATRE, OPERA, CONCERT

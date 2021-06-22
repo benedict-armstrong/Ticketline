@@ -1,0 +1,46 @@
+@import "../../../colors.scss";
+
+.booking {
+  display: flex;
+  margin-top: 20px;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+}
+
+.booking:hover {
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
+}
+
+.ticket {
+  display: flex;
+  flex-direction: row;
+  margin-top: 5px;
+  align-items: center;
+  cursor: pointer;
+  background-color: $gray-242;
+}
+
+.ticket:hover {
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
+}
+
+.info {
+  display: flex;
+  width: 100%;
+}
+
+.price {
+  color: #c14953;
+  margin-left: 25px;
+}
+
+.detail {
+  margin-left: 10px;
+  width: 100%;
+}
+
+.detail button {
+  width: 25%;
+  margin: 0px 10px;
+}

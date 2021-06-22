@@ -1,0 +1,37 @@
+<h3>All Orders</h3>
+
+<app-loading-animation *ngIf="loading"></app-loading-animation>
+
+<div>
+  <div *ngFor="let booking of bookings">
+    <div class="booking list-item">
+      <div class="info">
+        <div class="detail">
+          <h5>{{booking.createDate | date:'EEEE, MMM d, y HH:mm'}}</h5>
+            <!-- <button *ngIf="booking.status === 'PAID_FOR'" class="secondary" type="button" [routerLink]="['/downloadInvoice']">Click for invoice download</button> -->
+            <button *ngIf="booking.status === 'RESERVED'" class="secondary" type="button" (click)="onBuyClick(booking)">Buy</button>
+            <!-- <button class="secondary" type="button" (click)="onStornoClick(booking.id)">Storno</button> -->
+        </div>
+      </div>
+    </div>
+    <div *ngFor="let ticket of booking.tickets">
+      <div class="ticket list-item offset-1" [routerLink]="['/performance-detail', ticket.performance.id]">
+        <div class="info">
+          <div class="detail">
+            <h5>{{ticket.performance.title}}</h5>
+            <span> {{ticket.ticketType.title}} / {{ticket.ticketType.sector.name}}: 1x</span>
+            <span class="price"> à {{ticket.ticketType.price / 100 | currency:'EUR'}}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <hr/>
+  </div>
+</div>
+
+<div>
+  <h5 *ngIf="empty">Nothing here yet</h5>
+  <h5 *ngIf="!empty">That's all</h5>
+</div>
+
+

@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint.dto;
 
+import at.ac.tuwien.sepm.groupphase.backend.entity.Sector;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -20,8 +21,10 @@ public class TicketTypeDto {
     @NotBlank(message = "Title can't be empty")
     private String title;
 
-    @NotNull(message = "Price multiplier is missing")
-    @PositiveOrZero(message = "Price multiplier has to be at least zero")
-    private Double multiplier;
+    @NotNull(message = "Price is required")
+    @PositiveOrZero(message = "Price can't be less than 0")
+    private long price; // Cents
+
+    private Sector sector;
 
 }

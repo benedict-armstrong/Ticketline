@@ -1,0 +1,33 @@
+img {
+  width: 30pt;
+}
+
+.card {
+  min-height: 400px;
+}
+
+.card .price {
+  text-align: right;
+}
+
+.card-body {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.expired {
+  opacity: 0.5;
+}
+
+i {
+  font-size: 20pt;
+}
+
+.card-title {
+  margin-top: 20px;
+}
+
+button {
+  height: 50px;
+}

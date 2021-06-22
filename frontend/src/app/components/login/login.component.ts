@@ -14,14 +14,17 @@ export class LoginComponent implements OnInit {
 
   loginForm: FormGroup;
   success = false;
+  badCredentials = false;
   // Error flag
   error = false;
   errorMessage = '';
 
-
-  constructor(private authService: AuthService,
-              private userService: UserService,
-              private formBuilder: FormBuilder, private router: Router) {
+  constructor(
+    private authService: AuthService,
+    private userService: UserService,
+    private formBuilder: FormBuilder,
+    private router: Router
+  ) {
     this.loginForm = this.formBuilder.group({
       email: ['', [Validators.required]],
       password: ['', [Validators.required]],
@@ -49,12 +52,31 @@ export class LoginComponent implements OnInit {
         },
         error => {
           this.defaultServiceErrorHandling(error);
+          if (error.status === 401) {
+            this.badCredentials = true;
+          }
         }
       );
     } else {
       this.errorMessage = 'Invalid input';
       this.error = true;
     }
+  }
+
+  /**
+   * Send reset email
+   */
+  reset() {
+    const email = this.loginForm.value.email;
+    this.error = false;
+    this.userService.resetPassword(email).subscribe(
+      response => {
+        this.success = true;
+        this.badCredentials = false;
+      }, error => {
+        console.error(error);
+      }
+    );
   }
 
   vanishAlert(): void {

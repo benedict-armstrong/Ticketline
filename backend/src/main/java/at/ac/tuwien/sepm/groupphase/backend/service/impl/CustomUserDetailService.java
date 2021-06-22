@@ -8,9 +8,11 @@ import at.ac.tuwien.sepm.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepm.groupphase.backend.security.AuthenticationFacade;
 import at.ac.tuwien.sepm.groupphase.backend.service.SimpleMailService;
 import at.ac.tuwien.sepm.groupphase.backend.service.UserService;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.User;
@@ -64,6 +66,22 @@ public class CustomUserDetailService implements UserService {
     }
 
     @Override
+    public ApplicationUser findApplicationUserById(long id) {
+        LOGGER.debug("Find application user by id");
+        ApplicationUser manager = userRepository.findUserByEmail(authenticationFacade.getAuthentication().getPrincipal().toString());
+        if (authenticationFacade.isAdmin() || manager.getId() == id) {
+            ApplicationUser applicationUser = userRepository.findUserById(id);
+            if (applicationUser != null) {
+                return applicationUser;
+            } else {
+                throw new NotFoundException(String.format("Could not find the user with the id %d", id));
+            }
+        } else {
+            throw new AuthorizationException("You don't have the authorization the view this user");
+        }
+    }
+
+    @Override
     public ApplicationUser findApplicationUserByEmail(String email) {
         LOGGER.debug("Find application user by email");
         ApplicationUser applicationUser = userRepository.findUserByEmail(email);
@@ -111,18 +129,68 @@ public class CustomUserDetailService implements UserService {
     }
 
     @Override
-    public ApplicationUser updateUser(ApplicationUser user) {
+    public ApplicationUser updateUser(ApplicationUser user, Boolean firstAuthentication) {
         LOGGER.debug("Update User");
-        ApplicationUser oldUser = userRepository.findUserByEmail(user.getEmail());
-
-        if (oldUser != null) {
-            if (!oldUser.getPassword().equals(user.getPassword())) {
-                user.setPassword(passwordEncoder.encode(user.getPassword()));
+        if (!firstAuthentication) {
+            //Stop non allowed users to change users
+            ApplicationUser manager = userRepository.findUserByEmail(authenticationFacade.getAuthentication().getPrincipal().toString());
+            if (!authenticationFacade.isAdmin() && !(manager.getEmail().equals(user.getEmail()))) {
+                throw new AuthorizationException("You don't have the authorization the change this user");
             }
-
-            return userRepository.save(user);
         }
 
-        throw new NotFoundException(String.format("Could not find the user with the email address %s", user.getEmail()));
+        ApplicationUser oldUser = userRepository.findUserByEmail(user.getEmail());
+
+        if (oldUser == null) {
+            throw new NotFoundException(String.format("Could not find the user with the email address %s", user.getEmail()));
+        }
+
+        if (!oldUser.getPassword().equals(user.getPassword())) {
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
+        }
+
+        if (oldUser.getRole() == ApplicationUser.UserRole.ADMIN) {
+            user.setStatus(ApplicationUser.UserStatus.ACTIVE); // Prevent the admin from banning themself
+        }
+
+        return userRepository.save(user);
     }
+
+    @Override
+    public ApplicationUser updateLastRead(Long userId, Long lastReadNewsId) {
+        LOGGER.trace("updateLastRead({}, {})", userId, lastReadNewsId);
+
+        String email = (String) authenticationFacade.getAuthentication().getPrincipal();
+        ApplicationUser user = userRepository.findUserByEmail(email);
+        if (!user.getId().equals(userId)) {
+            throw new IllegalArgumentException("Attempted to update another user's lastReadNews");
+        }
+
+        user.setLastReadNewsId(lastReadNewsId);
+        return userRepository.save(user);
+    }
+
+    @Override
+    public ApplicationUser resetPassword(ApplicationUser user) {
+        LOGGER.trace("resetPassword({})", user);
+
+        String newGeneratedPassword = RandomStringUtils.randomAscii(16);
+        user.setPassword(newGeneratedPassword);
+
+        ApplicationUser newUser = updateUser(user, false);
+
+        if (newUser != null) {
+            simpleMailService.sendMail(user.getEmail(), "[Ticketline] Password reset", String.format("Hello %s %s,\n\nYour password was changed to '%s' (without ')!"
+                + " It can be changed in the 'My Account' Tab, after you logged in.", user.getFirstName(), user.getLastName(), newGeneratedPassword));
+        }
+
+        return newUser;
+    }
+
+    @Override
+    public List<ApplicationUser> getAll(Pageable pageRequest) {
+        LOGGER.trace("getAll({})", pageRequest);
+        return userRepository.findAll(pageRequest).getContent();
+    }
+
 }

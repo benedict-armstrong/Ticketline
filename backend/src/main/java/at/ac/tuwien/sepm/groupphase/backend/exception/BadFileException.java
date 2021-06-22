@@ -10,8 +10,4 @@ public class BadFileException extends RuntimeException {
         super(message, cause);
     }
 
-    public BadFileException(Exception e) {
-        super(e);
-    }
-
 }
