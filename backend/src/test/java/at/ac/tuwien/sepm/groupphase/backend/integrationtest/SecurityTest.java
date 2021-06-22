@@ -162,6 +162,7 @@ public class SecurityTest implements TestData, TestDataEvent, TestAuthentificati
         venueRepository.deleteAll();
         artistRepository.deleteAll();
         userRepository.deleteAll();
+        addressRepository.deleteAll();
     }
 
     private ArtistDto saveArtist(ArtistDto artistDto) throws Exception {

@@ -3,6 +3,7 @@ package at.ac.tuwien.sepm.groupphase.backend.integrationtest;
 import at.ac.tuwien.sepm.groupphase.backend.basetest.TestDataUser;
 import at.ac.tuwien.sepm.groupphase.backend.config.properties.SecurityProperties;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserLoginDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.UserMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepm.groupphase.backend.repository.AddressRepository;
@@ -289,14 +290,59 @@ public class UserEndpointTest implements TestDataUser {
         UserDto userDto = userMapper.applicationUserToUserDto(defaultUser);
         String body = objectMapper.writeValueAsString(userDto);
 
-        MvcResult mvcResult = this.mockMvc.perform(post(USER_BASE_URI)
+        MvcResult mvcResult1 = this.mockMvc.perform(post(USER_BASE_URI)
             .contentType(MediaType.APPLICATION_JSON)
+            .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(ADMIN_USER, ADMIN_ROLES))
             .content(body))
             .andDo(print())
             .andReturn();
-        MockHttpServletResponse response = mvcResult.getResponse();
+        MockHttpServletResponse response1 = mvcResult1.getResponse();
 
-        assertEquals(HttpStatus.FORBIDDEN.value(), response.getStatus());
+        assertEquals(HttpStatus.CREATED.value(), response1.getStatus());
+
+        UserLoginDto userLoginDto = UserLoginDto.builder().email(userDto.getEmail()).password(userDto.getPassword()).build();
+
+        MvcResult mvcResult2 = this.mockMvc.perform(post(LOGIN_BASE_URI)
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(objectMapper.writeValueAsString(userLoginDto)))
+            .andDo(print())
+            .andReturn();
+        MockHttpServletResponse response2 = mvcResult2.getResponse();
+
+        assertEquals(HttpStatus.FORBIDDEN.value(), response2.getStatus());
+    }
+
+    @Test
+    public void whenPasswordWrong3Times_thenUserBanned() throws Exception {
+        UserDto userDto = userMapper.applicationUserToUserDto(defaultUser);
+        String body = objectMapper.writeValueAsString(userDto);
+
+        MvcResult mvcResultCreate = this.mockMvc.perform(post(USER_BASE_URI)
+            .contentType(MediaType.APPLICATION_JSON)
+            .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(ADMIN_USER, ADMIN_ROLES))
+            .content(body))
+            .andDo(print())
+            .andReturn();
+        MockHttpServletResponse responseCreate = mvcResultCreate.getResponse();
+
+        assertEquals(HttpStatus.CREATED.value(), responseCreate.getStatus());
+
+        UserLoginDto userLoginDto = UserLoginDto.builder().email(userDto.getEmail()).password("Wrong").build();
+
+        for (int i = 0; i < 3; i++) {
+            MvcResult mvcResultLogin = this.mockMvc.perform(post(LOGIN_BASE_URI)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(userLoginDto)))
+                .andDo(print())
+                .andReturn();
+            MockHttpServletResponse responseLogin = mvcResultLogin.getResponse();
+
+            assertEquals(HttpStatus.UNAUTHORIZED.value(), responseLogin.getStatus());
+        }
+
+        ApplicationUser user = userRepository.findUserByEmail(userDto.getEmail());
+
+        assertEquals(user.getStatus(), ApplicationUser.UserStatus.BANNED);
     }
 
 }

@@ -26,6 +26,6 @@ public class AuthenticationSuccessListener implements ApplicationListener<Authen
         ApplicationUser applicationUser = userService.findApplicationUserByEmail(user.getUsername());
         applicationUser.setLastLogin(LocalDateTime.now());
         applicationUser.setPoints(0);
-        userService.updateUser(applicationUser);
+        userService.updateUser(applicationUser, true);
     }
 }

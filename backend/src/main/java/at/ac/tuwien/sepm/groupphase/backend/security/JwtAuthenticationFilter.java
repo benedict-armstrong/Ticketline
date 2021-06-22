@@ -64,7 +64,12 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     protected void unsuccessfulAuthentication(HttpServletRequest request,
                                               HttpServletResponse response,
                                               AuthenticationException failed) throws IOException {
-        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        if (failed instanceof LockedException) {
+            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+        } else {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        }
+
         response.getWriter().write(failed.getMessage());
         LOGGER.debug("Invalid authentication attempt: {}", failed.getMessage());
     }
