@@ -121,8 +121,12 @@ public class CustomEventService implements EventService {
         LOGGER.trace("searchEvent({})", text);
 
         FullTextEntityManager fullTextEntityManager = Search.getFullTextEntityManager(entityManager);
-        // Only first time indexing to sync with db
-        // fullTextEntityManager.createIndexer().startAndWait();
+        // Only on first start to index everything, after that ORM will synchronize
+        try {
+            fullTextEntityManager.createIndexer().startAndWait();
+        } catch (InterruptedException e) {
+            throw new IllegalStateException(e.getMessage());
+        }
 
         QueryBuilder qb = fullTextEntityManager.getSearchFactory()
                             .buildQueryBuilder().forEntity(Event.class).get();

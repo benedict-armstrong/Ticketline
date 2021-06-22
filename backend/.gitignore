@@ -52,3 +52,9 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### Hibernate Search ###
+at.ac.tuwien.sepm.groupphase.backend.entity.Artist/
+at.ac.tuwien.sepm.groupphase.backend.entity.Event/
+at.ac.tuwien.sepm.groupphase.backend.entity.Performance/
+
