@@ -1,10 +1,12 @@
 package at.ac.tuwien.sepm.groupphase.backend.integrationtest;
 
+import at.ac.tuwien.sepm.groupphase.backend.basetest.TestDataAddress;
 import at.ac.tuwien.sepm.groupphase.backend.basetest.TestDataUser;
 import at.ac.tuwien.sepm.groupphase.backend.config.properties.SecurityProperties;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserLoginDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.UserMapper;
+import at.ac.tuwien.sepm.groupphase.backend.entity.Address;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepm.groupphase.backend.repository.AddressRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.UserRepository;
@@ -33,7 +35,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 @SpringBootTest
 @ActiveProfiles("test")
 @AutoConfigureMockMvc
-public class UserEndpointTest implements TestDataUser {
+public class UserEndpointTest implements TestDataUser, TestDataAddress {
 
     @Autowired
     private MockMvc mockMvc;
@@ -84,8 +86,6 @@ public class UserEndpointTest implements TestDataUser {
 
     @BeforeEach
     public void beforeEach() {
-        //userRepository.deleteAll();
-        addressRepository.deleteAll();
         defaultUser = ApplicationUser.builder()
             .firstName(DEFAULT_FIRST_NAME)
             .lastName(DEFAULT_LAST_NAME)
@@ -95,7 +95,7 @@ public class UserEndpointTest implements TestDataUser {
             .status(DEFAULT_STATUS)
             .password(DEFAULT_PASSWORD)
             .points(DEFAULT_POINTS)
-            .address(DEFAULT_ADDRESS)
+            .address(TestDataAddress.getAddress())
             .telephoneNumber(DEFAULT_PHONE_NUMBER)
             .build();
 
@@ -116,6 +116,7 @@ public class UserEndpointTest implements TestDataUser {
     @AfterEach
     public void afterEach() {
         userRepository.deleteAll();
+        addressRepository.deleteAll();
     }
 
     @Test
