@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.LockedException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -44,6 +45,12 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         throws AuthenticationException {
         try {
             UserLoginDto user = new ObjectMapper().readValue(request.getInputStream(), UserLoginDto.class);
+            ApplicationUser applicationUser = userService.findApplicationUserByEmail(user.getEmail());
+
+            if (applicationUser.getStatus() == ApplicationUser.UserStatus.BANNED) {
+                throw new LockedException("User account is blocked");
+            }
+
             //Compares the user with CustomUserDetailService#loadUserByUsername and check if the credentials are correct
             return authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
                 user.getEmail(),
@@ -73,10 +80,6 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
             .stream()
             .map(GrantedAuthority::getAuthority)
             .collect(Collectors.toList());
-
-        ApplicationUser applicationUser = userService.findApplicationUserByEmail(user.getUsername());
-        applicationUser.setLastLogin(LocalDateTime.now());
-        userService.updateUser(applicationUser, true);
 
         response.getWriter().write(jwtTokenizer.getAuthToken(user.getUsername(), roles));
         LOGGER.info("Successfully authenticated user {}", user.getUsername());

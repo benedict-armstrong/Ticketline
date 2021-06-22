@@ -282,4 +282,21 @@ public class UserEndpointTest implements TestDataUser {
 
     }
 
+    @Test
+    public void whenBannedUserLogin_then403() throws Exception {
+        defaultUser.setStatus(ApplicationUser.UserStatus.BANNED);
+
+        UserDto userDto = userMapper.applicationUserToUserDto(defaultUser);
+        String body = objectMapper.writeValueAsString(userDto);
+
+        MvcResult mvcResult = this.mockMvc.perform(post(USER_BASE_URI)
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(body))
+            .andDo(print())
+            .andReturn();
+        MockHttpServletResponse response = mvcResult.getResponse();
+
+        assertEquals(HttpStatus.FORBIDDEN.value(), response.getStatus());
+    }
+
 }
