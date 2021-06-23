@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { User } from 'src/app/dtos/user';
 import { AuthService } from 'src/app/services/auth.service';
 import { UserService } from 'src/app/services/user.service';
-import {CartItemService} from '../../services/cartItem.service';
+import {TicketService} from '../../services/ticket.service';
 import {Ticket} from '../../dtos/ticket';
 import {TicketGroup} from '../../dtos/ticketGroup';
 
@@ -26,6 +26,7 @@ export class UserHomeComponent implements OnInit {
   userActions = false;
   loading = false;
   showAll = false;
+  notPaid = false;
 
   // If password change is submitted
   passwordSubmitted = false;
@@ -40,7 +41,7 @@ export class UserHomeComponent implements OnInit {
   constructor(
     private userService: UserService,
     private authService: AuthService,
-    private cartItemService: CartItemService,
+    private ticketService: TicketService,
     private router: Router,
     private formBuilder: FormBuilder
   ) { }
@@ -78,19 +79,38 @@ export class UserHomeComponent implements OnInit {
    * Gets all paid tickets from Backend and sorts by performance.
    */
   loadOrders() {
-    console.log('loading orders');
-    this.cartItemService.getPaidItems().subscribe(
+    this.ticketService.getPaidItems().subscribe(
       (response) => {
         // Get all tickets
-        for (const item of response) {
-          item.tickets.forEach(value => {
-            this.createTicketGroups(value);
-          });
-        }
+        response.forEach(value => {
+          this.createTicketGroups(value, false);
+        });
 
-        this.orders.sort((x, y) => Date.parse(x.tickets[0].performance.date) - Date.parse(y.tickets[0].performance.date)).reverse();
+        this.loadReserved();
+      },
+      (error) => {
+        this.defaultServiceErrorHandling(error);
+      }
+    );
+  }
+
+  loadReserved() {
+    console.log('loading reserved orders');
+    this.ticketService.getReservedItems().subscribe(
+      (response) => {
+        // Get all reserved tickets
+        if (response.length > 0) {
+          this.notPaid = true;
+        }
+        response.forEach(value => {
+          this.createTicketGroups(value, true);
+        });
+
+        this.orders.sort((x, y) =>
+          Date.parse(x.tickets[0].performance.date) - Date.parse(y.tickets[0].performance.date)).reverse();
         this.newOrders = this.orders.filter(item => item.old === false);
         this.loading = false;
+        console.log(this.orders);
       },
       (error) => {
         this.defaultServiceErrorHandling(error);
@@ -101,12 +121,12 @@ export class UserHomeComponent implements OnInit {
   /**
    * Sorting ticket into right TicketGroup
    */
-  createTicketGroups(ticket) {
-    const ticketGroup = this.orders.find(i => i.id === ticket.performance.id);
+  createTicketGroups(ticket, reserved) {
+    const ticketGroup = this.orders.find(i => i.id === ticket.performance.id && i.reserved === reserved);
     if (ticketGroup == null) {
       const date = Date.parse(ticket.performance.date);
       const old = date < Date.now();
-      const newGroup = new TicketGroup(ticket.performance.id, [ticket], old);
+      const newGroup = new TicketGroup(ticket.performance.id, [ticket], old, reserved);
       this.orders.push(newGroup);
     } else {
       ticketGroup.tickets.push(ticket);

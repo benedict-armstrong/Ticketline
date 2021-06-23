@@ -13,8 +13,9 @@ import java.time.LocalDateTime;
 @Builder
 public class BookingDto {
     private Long id;
-    private LocalDateTime buyDate;
+    private LocalDateTime createDate;
     private UserDto user;
-    private CartItemDto[] cartItems;
+    private TicketDto[] tickets;
     private FileDto invoice;
+    private String status;
 }

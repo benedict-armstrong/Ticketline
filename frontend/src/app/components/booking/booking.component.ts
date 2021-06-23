@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {BookingService} from '../../services/booking.service';
 import {Booking} from '../../dtos/booking';
-import {Ticket} from '../../dtos/ticket';
+import {ChangeBooking} from '../../dtos/changeBooking';
 
 @Component({
   selector: 'app-booking',
@@ -24,13 +24,24 @@ export class BookingComponent implements OnInit {
 
   loadBookings() {
     this.bookingService.getBookings().subscribe(
-      response => {
+      (response) => {
         this.bookings.push(...response);
         this.bookings.reverse();
         if (this.bookings.length > 0 ) {
           this.empty = false;
         }
         this.loading = false;
+      }, error => {
+        console.error(error);
+      }
+    );
+  }
+
+  onBuyClick(booking) {
+    const changeBooking = new ChangeBooking(booking.id, 'PAID_FOR');
+    this.bookingService.updateBooking(changeBooking).subscribe(
+      (response) => {
+        booking.status = response.status;
       }, error => {
         console.error(error);
       }

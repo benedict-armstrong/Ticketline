@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { CartItemService } from 'src/app/services/cartItem.service';
+import { TicketService } from 'src/app/services/ticket.service';
 
 @Component({
   selector: 'app-shoppingcart',
@@ -9,22 +9,38 @@ import { CartItemService } from 'src/app/services/cartItem.service';
 export class ShoppingcartComponent implements OnInit {
 
   public error = false;
+  public success = false;
   public errorMessage = '';
 
-  constructor(public cartItemService: CartItemService) {}
+  constructor(public ticketService: TicketService) {}
 
   ngOnInit(): void {
   }
 
   close(): void {
-    this.cartItemService.toggleStatus();
+    this.success = false;
+    this.ticketService.toggleStatus();
   }
 
   checkout(): void {
-    this.cartItemService.checkout().subscribe(
+    this.ticketService.checkout().subscribe(
       (response) => {
         if (response) {
-          this.cartItemService.reload();
+          this.ticketService.reload();
+        }
+      },
+      (error) => {
+        this.defaultServiceErrorHandling(error);
+      }
+    );
+  }
+
+  reserve(): void {
+    this.ticketService.reserve().subscribe(
+      (response) => {
+        if (response) {
+          this.ticketService.reload();
+          this.success = true;
         }
       },
       (error) => {
@@ -35,6 +51,7 @@ export class ShoppingcartComponent implements OnInit {
 
   vanishAlert(): void {
     this.error = false;
+    this.success = false;
   }
 
   private defaultServiceErrorHandling(error: any) {

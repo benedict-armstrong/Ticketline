@@ -32,7 +32,4 @@ public class LayoutUnit {
 
     @Column(nullable = false)
     private int localId;
-
-    @Column
-    private Boolean taken;
 }
