@@ -1,8 +1,9 @@
-<div class="card h-100" [ngClass]="{'expired': old, 'reserved': reserved}">
+<div class="card h-100" [ngClass]="{'expired': old, 'reserved': reserved, 'cancelled': cancelled}">
   <div class="card-body">
     <div>
       <img src="assets/tickets.svg" alt="">
       <h5 class="card-title">{{eventType}} Tickets</h5>
+      <button *ngIf="!cancelled" class="secondary" type="button" (click)="onStornoClick(item)">Storno</button>
     </div>
     <div class="card-text">
       <p>

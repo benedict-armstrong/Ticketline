@@ -48,7 +48,14 @@ export class BookingComponent implements OnInit {
     );
   }
 
-  onStornoClick(id) {
-    alert('Storno: ' + id);
-  }
+  onStornoClick(booking) {
+    const changeBooking = new ChangeBooking(booking.id, 'CANCELLED');
+    this.bookingService.updateBooking(changeBooking).subscribe(
+      (response) => {
+        booking.status = response.status;
+      }, error => {
+        console.error(error);
+      }
+    );
+}
 }

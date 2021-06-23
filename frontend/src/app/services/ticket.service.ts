@@ -105,6 +105,10 @@ export class TicketService {
     return this.httpClient.get<Ticket[]>(this.ticketBaseUri + '/reserved');
   }
 
+  getCancelledItems(): Observable<Ticket[]> {
+    return this.httpClient.get<Ticket[]>(this.ticketBaseUri + '/cancelled');
+  }
+
   addTicket(addTicket: NewTicket, amount: number): Observable<Ticket[]> {
     return this.httpClient.post<Ticket[]>(this.ticketBaseUri + '/' + amount, addTicket);
   }
@@ -127,6 +131,15 @@ export class TicketService {
 
   reserve(): Observable<boolean> {
     return this.httpClient.put<boolean>(this.ticketBaseUri + '/reserve', null);
+  }
+
+  cancel(tickets: Ticket[]): Observable<void> {
+    const ids: number[] = [];
+    tickets.forEach(ticket => {
+      ids.push(ticket.id);
+    });
+
+    return this.httpClient.put<void>(this.ticketBaseUri + '/cancel', ids);
   }
 
   private defaultServiceErrorHandling(error: any) {

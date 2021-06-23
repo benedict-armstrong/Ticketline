@@ -206,11 +206,27 @@ public class TicketServiceImpl implements TicketService {
 
     @Override
     public void updateStatus(Set<Ticket> tickets, Ticket.Status status) {
-        LOGGER.trace("updateStatus()");
+        LOGGER.trace("updateStatus({}, {})", tickets, status);
         for (Ticket ticket : tickets) {
             ticket.setStatus(status);
         }
 
         ticketRepository.saveAll(tickets);
+    }
+
+    @Override
+    @Transactional
+    public void cancel(List<Long> ids) {
+        LOGGER.trace("updateStatus({})", ids);
+        List<Ticket> tickets = ticketRepository.findByIdList(ids);
+
+        for (Ticket ticket : tickets) {
+            ticket.setStatus(Ticket.Status.CANCELLED);
+            ticketRepository.save(ticket);
+        }
+
+        if (tickets.size() != 0) {
+            bookingService.checkIfAllTicketsCancelled(tickets.get(0));
+        }
     }
 }

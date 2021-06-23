@@ -85,15 +85,14 @@ public class TicketEndpoint {
         return ticketService.reserve();
     }
 
-    /*
-    @PutMapping(path = "/{id}/cancel")
+    @PutMapping(path = "/cancel")
     @Secured({"ROLE_USER", "ROLE_ORGANIZER", "ROLE_ADMIN"})
     @ResponseStatus(HttpStatus.OK)
-    @Operation(summary = "Cancel a ticket")
-    public OrderDto cancelOrder(@PathVariable Long id) {
-        LOGGER.info("POST /api/v1/tickets/{}/cancel", id);
-        return orderMapper.orderToOrderDto(orderService.cancel(id));
-    }*/
+    @Operation(summary = "Cancel tickets")
+    public void cancel(@RequestBody List<Long> ids) {
+        LOGGER.info("PUT /api/v1/tickets/cancel {}", ids);
+        ticketService.cancel(ids);
+    }
 
     @DeleteMapping(path = "/{id}")
     @Secured({"ROLE_USER", "ROLE_ORGANIZER", "ROLE_ADMIN"})
@@ -129,5 +128,14 @@ public class TicketEndpoint {
     public List<TicketDto> getReservedTickets() {
         LOGGER.info("GET /api/v1/tickets/reserved");
         return ticketMapper.ticketListToTicketDtoList(ticketService.getTickets(Ticket.Status.RESERVED));
+    }
+
+    @GetMapping("/cancelled")
+    @Secured({"ROLE_USER", "ROLE_ORGANIZER", "ROLE_ADMIN"})
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(summary = "Get tickets from user that have been cancelled")
+    public List<TicketDto> getCancelledTickets() {
+        LOGGER.info("GET /api/v1/tickets/cancelled");
+        return ticketMapper.ticketListToTicketDtoList(ticketService.getTickets(Ticket.Status.CANCELLED));
     }
 }
