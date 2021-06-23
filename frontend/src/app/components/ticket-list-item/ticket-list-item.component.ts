@@ -19,6 +19,8 @@ export class TicketListItemComponent implements OnInit {
   ticketCount: number;
   @Input()
   ticketType: TicketType;
+  @Input()
+  selectSeat: boolean;
 
   ticketForm: FormGroup;
 

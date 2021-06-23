@@ -6,7 +6,7 @@
 
 .grid-unit-wrapper.standing,
 .grid-unit-wrapper.stage {
-  padding: 0px;
+  padding: 0;
 }
 
 .grid-unit-wrapper.standing > .grid-unit,
@@ -20,19 +20,30 @@
   min-width: 12px;
 }
 
-.grid-unit:hover {
-  background-color: rgb(221, 255, 210);
-}
-
-.grid-unit.unavailable {
-  background-color: transparent !important;
-}
-
-.grid-unit-wrapper.seated .grid-unit:hover {
-  transform: scale(2);
+.grid-unit-wrapper.seated .grid-unit:not(.booked):hover {
+  transform: scale(1.5);
   border: 1px solid white;
 }
 
-.hide {
-  opacity: 0;
+.booked {
+  opacity: 0.2;
+  background-color: $gray-131 !important;
+}
+
+.selected {
+  padding: 0;
+  height: 15px;
+  width: 15px;
+}
+
+.selected::before {
+  content: '';
+  font-size: 15px;
+  line-height: 15px;
+  position: absolute;
+  color: red;
+  z-index: 100;
+  height: 15px;
+  width: 15px;
+  background-color: aqua;
 }

@@ -38,20 +38,21 @@
           </div>
         </div>
       </div>
-      <div class="tickets" *ngIf="!selectSeats">
+      <div class="tickets">
         <p class="text-center">We will try to find seats next to each other</p>
         <div *ngFor="let ticketType of this.performance.ticketTypes; index as j;">
-          <app-ticket-list-item *ngIf="ticketType.sector.type !== 'STAGE'" [ticketType]="ticketType" [ticketCount]="ticketCounts[j]" [performance]="performance"></app-ticket-list-item>
+          <app-ticket-list-item *ngIf="ticketType.sector.type !== 'STAGE'"
+                                [ticketType]="ticketType"
+                                [ticketCount]="ticketCounts[j]"
+                                [performance]="performance"
+                                [selectSeat]="selectSeats"
+          ></app-ticket-list-item>
         </div>
       </div>
       <div class="seatSelect" *ngIf="selectSeats">
-
-        <app-venue-sector-list *ngFor="let sector of this.performance.venue.sectors" [sector]="sector">
-        </app-venue-sector-list>
-
-          <div class="seat-select">
-            <app-select-seat [venue]="performance.venue"></app-select-seat>
-          </div>
+        <div class="seat-select">
+          <app-select-seat [venue]="performance.venue"></app-select-seat>
+        </div>
       </div>
     </div>
   </div>

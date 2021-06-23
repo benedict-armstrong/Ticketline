@@ -1,5 +1,6 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {Venue} from '../../../dtos/venue';
+import {LayoutUnitSelect} from '../models/layoutUnitSelect';
 
 @Component({
   selector: 'app-select-seat',
@@ -10,7 +11,12 @@ export class SelectSeatComponent implements OnInit {
 
   @Input() venue: Venue;
 
-  constructor() { }
+  layout: LayoutUnitSelect[][];
+
+  selectedSeats: LayoutUnitSelect[] = [];
+
+  constructor() {
+  }
 
   ngOnInit(): void {
     for (const row of this.venue.layout) {
@@ -20,6 +26,18 @@ export class SelectSeatComponent implements OnInit {
         }
       }
     }
+
+    this.layout = this.venue.layout;
   }
 
+  addSeat(seat: LayoutUnitSelect): void {
+    this.selectedSeats.push(seat);
+  }
+
+  removeSeat(seat: LayoutUnitSelect): void {
+    const index = this.selectedSeats.indexOf(seat);
+    if (index > -1) {
+      this.selectedSeats.splice(index, 1);
+    }
+  }
 }

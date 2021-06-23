@@ -1,5 +1,28 @@
-<div class="venue-layout-grid">
-  <div *ngFor="let row of venue.layout">
-    <app-select-seat-unit class="unit" *ngFor="let unit of row" [layoutUnit]="unit"></app-select-seat-unit>
+<div class="select-seats">
+  <div class="">
+    <h5>{{venue.name}}</h5>
+    <p>Click on a seat to select it. Hover to get more information.</p>
   </div>
+
+  <div class="venue-layout-grid-wrapper">
+    <div class="venue-layout-grid">
+      <div *ngFor="let row of layout">
+        <app-select-seat-unit (selectSeat)="addSeat($event)" (unSelectSeat)="removeSeat($event)" *ngFor="let unit of row"
+                              [layoutUnit]="unit"
+                              class="unit"
+        ></app-select-seat-unit>
+      </div>
+    </div>
+  </div>
+
+  <div class="selected-seats" *ngIf="selectedSeats.length > 0">
+    <h5>Selected Seats</h5>
+    <p>Scroll to see all seats (Maximum 10)</p>
+    <div class="selected-seat-list">
+      <div *ngFor="let seat of selectedSeats" class="list-item">
+        <p>Ticket: {{seat.customLabel}} | {{seat.sector.name}} | {{seat.sector.type | titlecase}}</p>
+      </div>
+    </div>
+  </div>
+
 </div>
