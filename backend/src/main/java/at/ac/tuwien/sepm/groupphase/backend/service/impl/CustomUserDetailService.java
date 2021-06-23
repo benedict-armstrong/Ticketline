@@ -13,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.User;
@@ -177,7 +178,7 @@ public class CustomUserDetailService implements UserService {
         String newGeneratedPassword = RandomStringUtils.randomAscii(16);
         user.setPassword(newGeneratedPassword);
 
-        ApplicationUser newUser = updateUser(user, false);
+        ApplicationUser newUser = updateUser(user, true);
 
         if (newUser != null) {
             simpleMailService.sendMail(user.getEmail(), "[Ticketline] Password reset", String.format("Hello %s %s,\n\nYour password was changed to '%s' (without ')!"
@@ -193,4 +194,15 @@ public class CustomUserDetailService implements UserService {
         return userRepository.findAll(pageRequest).getContent();
     }
 
+    @Override
+    @Scheduled(fixedDelay = 18000)
+    public void resetPasswordAttemptCount() {
+        LOGGER.trace("resetPasswordAttemptCount()");
+        List<ApplicationUser> users = userRepository.findAllByPointsGreaterThan(0);
+
+        for (ApplicationUser user : users) {
+            user.setPoints(0);
+            userRepository.save(user);
+        }
+    }
 }

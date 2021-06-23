@@ -72,7 +72,7 @@ export class AddPerformanceComponent implements OnInit {
   }
 
   changeTickets(ticketTypes: TicketType[]) {
-    this.performance.ticketTypes = ticketTypes;
+    this.ticketTypes = ticketTypes;
   }
 
   /**
