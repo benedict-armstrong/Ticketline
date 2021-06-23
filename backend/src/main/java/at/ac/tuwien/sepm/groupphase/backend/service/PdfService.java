@@ -35,7 +35,7 @@ public class PdfService {
             this.user = user;
             globalDocument = new Document();
             PdfWriter.getInstance(globalDocument, stream);
-            PdfWriter.getInstance(globalDocument, new FileOutputStream("C:/temp/test.pdf"));
+            // PdfWriter.getInstance(globalDocument, new FileOutputStream("C:/temp/test.pdf"));
             globalDocument.open();
             addHeaderData();
         } catch (Exception e) {
@@ -157,7 +157,7 @@ public class PdfService {
         }
     }
 
-    public void createStorno(int previous) {
+    public void createStorno(Set<Ticket> tickets, int previous) {
         //INVOICE NUMBER
         Paragraph number = new Paragraph("Storno No " + (previous + 1), bigFont);
         number.setAlignment(Element.ALIGN_LEFT);
@@ -167,9 +167,20 @@ public class PdfService {
         date.setAlignment(Element.ALIGN_RIGHT);
         addEmptyLine(date, 1);
 
+        //Text
+        Long totalGrossPrice = 0L;
+
+        for (Ticket ticket : tickets) {
+            totalGrossPrice += ticket.getTicketType().getPrice();
+        }
+
+        String textString = "Your order has been cancelled. " + totalGrossPrice / 100 + " € will be send back to your account";
+        Paragraph text = new Paragraph(textString, normalFont);
+
         try {
             globalDocument.add(number);
             globalDocument.add(date);
+            globalDocument.add(text);
         } catch (Exception e) {
             e.printStackTrace();
         }
