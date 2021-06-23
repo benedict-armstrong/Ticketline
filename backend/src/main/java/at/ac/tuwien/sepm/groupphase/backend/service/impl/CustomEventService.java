@@ -183,9 +183,7 @@ public class CustomEventService implements EventService {
         jpaQuery.setFirstResult(pageable.getPageNumber() * pageable.getPageSize());
 
         // execute search
-        List<Event> result = jpaQuery.getResultList();
-
-        return result;
+        return (List<Event>) jpaQuery.getResultList();
 
     }
 }
