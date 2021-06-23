@@ -14,6 +14,8 @@ import at.ac.tuwien.sepm.groupphase.backend.repository.TicketRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepm.groupphase.backend.security.AuthenticationFacade;
 import at.ac.tuwien.sepm.groupphase.backend.service.BookingService;
+import at.ac.tuwien.sepm.groupphase.backend.service.LayoutUnitService;
+import at.ac.tuwien.sepm.groupphase.backend.service.PerformanceService;
 import at.ac.tuwien.sepm.groupphase.backend.service.TicketService;
 import at.ac.tuwien.sepm.groupphase.backend.service.UserService;
 import org.slf4j.Logger;
@@ -42,23 +44,30 @@ public class TicketServiceImpl implements TicketService {
     private final UserService userService;
     private final AuthenticationFacade authenticationFacade;
     private final BookingService bookingService;
+    private final PerformanceService performanceService;
+    private final LayoutUnitService layoutUnitService;
 
     @Autowired
     public TicketServiceImpl(TicketRepository ticketRepository,
                              UserService userService,
                              AuthenticationFacade authenticationFacade,
-                             BookingService bookingService) {
+                             BookingService bookingService,
+                             PerformanceService performanceService,
+                             LayoutUnitService layoutUnitService) {
         this.ticketRepository = ticketRepository;
         this.userService = userService;
         this.authenticationFacade = authenticationFacade;
         this.bookingService = bookingService;
+        this.performanceService = performanceService;
+        this.layoutUnitService = layoutUnitService;
     }
 
     @Override
-    public List<Ticket> save(Performance performance, TicketType ticketType, Ticket.Status status, int amount) {
-        LOGGER.trace("save({}, {},  {}, {})", performance, ticketType, status, amount);
+    public List<Ticket> createTicketsByAmount(Long performanceId, TicketType ticketType, Ticket.Status status, int amount) {
+        LOGGER.trace("createTicketsByAmount({}, {},  {}, {})", performanceId, ticketType, status, amount);
 
         ApplicationUser user = userService.findApplicationUserByEmail((String) authenticationFacade.getAuthentication().getPrincipal());
+        Performance performance = performanceService.findById(performanceId);
 
         List<Ticket> ticketList = new LinkedList<>();
         Sector sector = ticketType.getSector();
@@ -84,6 +93,39 @@ public class TicketServiceImpl implements TicketService {
                     .build()
             );
         }
+
+        return ticketRepository.saveAll(ticketList);
+    }
+
+    @Override
+    public List<Ticket> createTicketBySeat(Long performanceId, TicketType ticketType, Ticket.Status status, Long seatId) {
+        LOGGER.trace("createTicketBySeat({}, {},  {}, {})", performanceId, ticketType, status, seatId);
+
+        ApplicationUser user = userService.findApplicationUserByEmail((String) authenticationFacade.getAuthentication().getPrincipal());
+        Performance performance = performanceService.findById(performanceId);
+
+        LayoutUnit seat = layoutUnitService.findById(seatId);
+
+        if (seat == null) {
+            throw new NotFoundException("This seat was not found");
+        }
+
+        List<Ticket> ticketList = new LinkedList<>();
+
+        if (!ticketRepository.checkIfSeatIsFreeByPerformance(performance, seat)) {
+            throw new NoTicketLeftException("This seat is not free anymore.");
+        }
+
+        ticketList.add(
+            Ticket.builder()
+                .ticketType(ticketType)
+                .performance(performance)
+                .status(status)
+                .user(user)
+                .changeDate(LocalDateTime.now())
+                .seat(seat)
+                .build()
+        );
 
         return ticketRepository.saveAll(ticketList);
     }

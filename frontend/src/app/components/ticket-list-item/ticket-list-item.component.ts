@@ -65,11 +65,13 @@ export class TicketListItemComponent implements OnInit {
       if (this.ticketForm.valid) {
         this.validationError = false;
         const addTicket: NewTicket = {
-          performance: this.performance,
+          performanceId: this.performance.id,
           ticketType: this.ticketType,
+          amount: this.ticketForm.value.amount,
+          seatId: null
         };
         this.waiting = true;
-        this.ticketService.addTicket(addTicket, this.ticketForm.value.amount).subscribe(
+        this.ticketService.addTicket(addTicket).subscribe(
           (responseTickets: Ticket[]) => {
             this.waiting = false;
             this.success = true;

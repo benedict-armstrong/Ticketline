@@ -9,6 +9,7 @@ import {Venue} from '../../../dtos/venue';
 export class SelectSeatComponent implements OnInit {
 
   @Input() venue: Venue;
+  @Input() performanceId: number;
 
   constructor() { }
 

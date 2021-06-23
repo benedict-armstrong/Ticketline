@@ -54,16 +54,23 @@ public class TicketEndpoint {
         return ticketMapper.ticketListToTicketDtoList(ticketService.getTickets(Ticket.Status.IN_CART));
     }
 
-    @PostMapping(path = "/{amount}")
+    @PostMapping
     @Secured({"ROLE_USER", "ROLE_ORGANIZER", "ROLE_ADMIN"})
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(summary = "Create a ticket in cart of user")
-    public List<TicketDto> createTicket(@RequestBody NewTicketDto addTicketDto, @PathVariable int amount) {
-        LOGGER.info("POST /api/v1/tickets/{} {}", amount, addTicketDto);
-        return ticketMapper.ticketListToTicketDtoList(ticketService.save(
-            performanceMapper.performanceDtoToPerformance(addTicketDto.getPerformance()),
+    public List<TicketDto> createTicket(@RequestBody NewTicketDto addTicketDto) {
+        LOGGER.info("POST /api/v1/tickets {}", addTicketDto);
+        if (addTicketDto.getSeatId() == null) {
+            return ticketMapper.ticketListToTicketDtoList(ticketService.createTicketsByAmount(
+                addTicketDto.getPerformanceId(),
+                ticketTypeMapper.ticketTypeDtoToTicketType(addTicketDto.getTicketType()),
+                Ticket.Status.IN_CART, addTicketDto.getAmount()
+            ));
+        }
+        return ticketMapper.ticketListToTicketDtoList(ticketService.createTicketBySeat(
+            addTicketDto.getPerformanceId(),
             ticketTypeMapper.ticketTypeDtoToTicketType(addTicketDto.getTicketType()),
-            Ticket.Status.IN_CART, amount
+            Ticket.Status.IN_CART, addTicketDto.getSeatId()
         ));
     }
 

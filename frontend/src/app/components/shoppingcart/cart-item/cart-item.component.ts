@@ -82,10 +82,12 @@ export class CartItemComponent implements OnInit {
       this.waiting = true;
       this.vanishAlert();
       const addTicket: NewTicket = {
-        performance: this.ticketService.cart[this.i][0].performance,
+        performanceId: this.ticketService.cart[this.i][0].performance.id,
         ticketType: this.ticketService.cart[this.i][0].ticketType,
+        amount: 1,
+        seatId: null
       };
-      this.ticketService.addTicket(addTicket, 1).subscribe(
+      this.ticketService.addTicket(addTicket).subscribe(
         (responseTickets: Ticket[]) => {
           this.waiting = false;
           this.success = true;

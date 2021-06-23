@@ -5,6 +5,7 @@
       'stage': $any(this.layoutUnit!.sector).type == 'STAGE',
       'seated': $any(this.layoutUnit!.sector).type == 'SEATED'
       }: {}"
+     (click)="onClick()"
 >
   <div class="grid-unit" [ngClass]="{'available': this.layoutUnit}"
        [ngStyle]="{
