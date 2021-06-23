@@ -3,10 +3,13 @@ package at.ac.tuwien.sepm.groupphase.backend.service.impl;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.ChangeBookingDto;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Booking;
+import at.ac.tuwien.sepm.groupphase.backend.entity.File;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Ticket;
 import at.ac.tuwien.sepm.groupphase.backend.repository.BookingRepository;
 import at.ac.tuwien.sepm.groupphase.backend.security.AuthenticationFacade;
 import at.ac.tuwien.sepm.groupphase.backend.service.BookingService;
+import at.ac.tuwien.sepm.groupphase.backend.service.FileService;
+import at.ac.tuwien.sepm.groupphase.backend.service.PdfService;
 import at.ac.tuwien.sepm.groupphase.backend.service.TicketService;
 import at.ac.tuwien.sepm.groupphase.backend.service.UserService;
 import org.slf4j.Logger;
@@ -29,28 +32,36 @@ public class BookingServiceImpl implements BookingService {
     private final BookingRepository bookingRepository;
     private final TicketService ticketService;
     private final UserService userService;
+    private final FileService fileService;
     private final AuthenticationFacade authenticationFacade;
 
     @Autowired
     public BookingServiceImpl(BookingRepository  bookingRepository,
                               @Lazy TicketService ticketService,
                               UserService userService,
+                              FileService fileService,
                               AuthenticationFacade authenticationFacade) {
         this.bookingRepository = bookingRepository;
         this.ticketService = ticketService;
         this.userService = userService;
+        this.fileService = fileService;
         this.authenticationFacade = authenticationFacade;
     }
 
     @Override
     public Booking save(Set<Ticket> tickets, Booking.Status status) {
-        LOGGER.trace("saveBooking({})", tickets);
+        LOGGER.info("saveBooking({})", tickets);
         ApplicationUser user = userService.findApplicationUserByEmail((String) authenticationFacade.getAuthentication().getPrincipal());
+
+        PdfService pdf = new PdfService(user);
+        pdf.createInvoice(tickets, fileService.getPdfCount());
+        File invoice = fileService.addFile(pdf.getFile());
+
         Booking booking = Booking.builder()
             .user(user)
             .createDate(LocalDateTime.now())
             .tickets(tickets)
-            .invoice(null)
+            .invoice(invoice)
             .status(status)
             .build();
 
@@ -60,9 +71,8 @@ public class BookingServiceImpl implements BookingService {
     @Override
     public Booking save(Booking booking) {
         LOGGER.trace("saveBooking({})", booking);
-        booking.setUser(
-            userService.findApplicationUserByEmail((String) authenticationFacade.getAuthentication().getPrincipal())
-        );
+        ApplicationUser user = userService.findApplicationUserByEmail(authenticationFacade.getAuthentication().getPrincipal().toString());
+        booking.setUser(user);
         booking.setCreateDate(LocalDateTime.now());
         booking.setInvoice(null);
         if (booking.getStatus() == null) {
@@ -78,7 +88,6 @@ public class BookingServiceImpl implements BookingService {
         ApplicationUser user = userService.findApplicationUserByEmail((String) authenticationFacade.getAuthentication().getPrincipal());
         Booking oldBooking = bookingRepository.findByUserAndId(user, booking.getId());
 
-
         //Booking.Status changed
         if (booking.getStatus() != oldBooking.getStatus().toString()) {
             Ticket.Status status;
@@ -86,6 +95,11 @@ public class BookingServiceImpl implements BookingService {
             switch (newStatus) {
                 case PAID_FOR:
                     status = Ticket.Status.PAID_FOR;
+                    PdfService pdf = new PdfService(user);
+                    pdf.createInvoice(oldBooking.getTickets(), fileService.getPdfCount());
+                    File invoice = fileService.addFile(pdf.getFile());
+                    oldBooking.setInvoice(invoice);
+
                     break;
                 case RESERVED:
                     status = Ticket.Status.RESERVED;

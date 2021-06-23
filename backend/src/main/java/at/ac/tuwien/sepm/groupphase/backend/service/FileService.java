@@ -12,4 +12,11 @@ public interface FileService {
      */
     File addFile(File file);
 
+    /**
+     * Gives back count of saved pdf files
+     *
+     * @return count of pdfs
+     */
+    int getPdfCount();
+
 }
