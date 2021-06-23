@@ -54,6 +54,9 @@ import { SearchVenueListComponent } from './components/search/search-venue-list/
 import { ExploreComponent } from './components/explore/explore.component';
 import { BarComponent } from './components/graphs/bar/bar.component';
 import { ExploreEventListItemComponent } from './components/explore/explore-event-list-item/explore-event-list-item.component';
+import { EditUserComponent } from './components/edit-user/edit-user.component';
+import { UserManagementComponent } from './components/user-management/user-management.component';
+import { BannedAlertComponent } from './components/banned-alert/banned-alert.component';
 
 @NgModule({
   declarations: [
@@ -107,6 +110,9 @@ import { ExploreEventListItemComponent } from './components/explore/explore-even
     ExploreComponent,
     BarComponent,
     ExploreEventListItemComponent,
+    EditUserComponent,
+    UserManagementComponent,
+    BannedAlertComponent
   ],
   imports: [
     BrowserModule,

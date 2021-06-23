@@ -7,6 +7,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
+import java.util.List;
+
 @Repository
 public interface PerformanceRepository extends JpaRepository<Performance, Long>, JpaSpecificationExecutor<Performance> {
 
@@ -17,6 +20,14 @@ public interface PerformanceRepository extends JpaRepository<Performance, Long>,
      * @return performance with the id.
      */
     Performance findOneById(Long id);
+
+    /**
+     * Finds all performances to be pruned.
+     *
+     * @param pruneDate Date to cut
+     * @return list of pruned performances
+     */
+    List<Performance> findAllByDateBetween(LocalDateTime pruneDate, LocalDateTime pruneDate1);
 
     /**
      * find all performances for one artist.

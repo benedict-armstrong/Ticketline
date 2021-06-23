@@ -9,6 +9,8 @@ import lombok.ToString;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -49,4 +51,13 @@ public class Booking {
     @OneToOne(fetch = FetchType.EAGER)
     @EqualsAndHashCode.Exclude
     private File invoice;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private Status status;
+
+    public enum Status {
+        PAID_FOR, RESERVED, CANCELLED
+    }
+
 }

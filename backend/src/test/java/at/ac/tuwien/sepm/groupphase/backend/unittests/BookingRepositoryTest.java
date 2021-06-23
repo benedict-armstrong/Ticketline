@@ -171,6 +171,7 @@ public class BookingRepositoryTest implements TestDataTicket, TestDataEvent, Tes
             .user(savedUser)
             .tickets(ticketSet)
             .invoice(null)
+            .status(Booking.Status.PAID_FOR)
             .build();
     }
 
@@ -196,7 +197,8 @@ public class BookingRepositoryTest implements TestDataTicket, TestDataEvent, Tes
             () -> assertEquals(newBooking.getCreateDate(), booking.getCreateDate()),
             () -> assertEquals(newBooking.getUser(), booking.getUser()),
             () -> assertEquals(newBooking.getTickets(), booking.getTickets()),
-            () -> assertEquals(newBooking.getInvoice(), booking.getInvoice())
+            () -> assertEquals(newBooking.getInvoice(), booking.getInvoice()),
+            () -> assertEquals(newBooking.getStatus(), booking.getStatus())
         );
     }
 }

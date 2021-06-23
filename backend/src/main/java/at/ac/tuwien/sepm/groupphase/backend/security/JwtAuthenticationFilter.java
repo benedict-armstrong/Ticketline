@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.LockedException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -44,6 +45,12 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         throws AuthenticationException {
         try {
             UserLoginDto user = new ObjectMapper().readValue(request.getInputStream(), UserLoginDto.class);
+            ApplicationUser applicationUser = userService.findApplicationUserByEmail(user.getEmail());
+
+            if (applicationUser.getStatus() == ApplicationUser.UserStatus.BANNED) {
+                throw new LockedException("User account is blocked");
+            }
+
             //Compares the user with CustomUserDetailService#loadUserByUsername and check if the credentials are correct
             return authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
                 user.getEmail(),
@@ -57,7 +64,12 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     protected void unsuccessfulAuthentication(HttpServletRequest request,
                                               HttpServletResponse response,
                                               AuthenticationException failed) throws IOException {
-        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        if (failed instanceof LockedException) {
+            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+        } else {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        }
+
         response.getWriter().write(failed.getMessage());
         LOGGER.debug("Invalid authentication attempt: {}", failed.getMessage());
     }
@@ -73,10 +85,6 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
             .stream()
             .map(GrantedAuthority::getAuthority)
             .collect(Collectors.toList());
-
-        ApplicationUser applicationUser = userService.findApplicationUserByEmail(user.getUsername());
-        applicationUser.setLastLogin(LocalDateTime.now());
-        userService.updateUser(applicationUser);
 
         response.getWriter().write(jwtTokenizer.getAuthToken(user.getUsername(), roles));
         LOGGER.info("Successfully authenticated user {}", user.getUsername());

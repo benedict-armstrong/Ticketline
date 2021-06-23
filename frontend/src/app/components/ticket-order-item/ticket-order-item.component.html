@@ -1,4 +1,4 @@
-<div class="card h-100" [ngClass]="old == true ? 'expired':''">
+<div class="card h-100" [ngClass]="{'expired': old, 'reserved': reserved}">
   <div class="card-body">
     <div>
       <img src="assets/tickets.svg" alt="">
@@ -35,6 +35,7 @@
         </div>
       </div>
     </div>
-    <button [routerLink]="['/ticket']" class="primary">View</button>
+    <button class="primary" [routerLink]="['/ticket']" *ngIf="reserved" disabled>Buy in orders</button>
+    <button class="primary" [routerLink]="['/ticket']" *ngIf="!reserved">View</button>
   </div>
 </div>

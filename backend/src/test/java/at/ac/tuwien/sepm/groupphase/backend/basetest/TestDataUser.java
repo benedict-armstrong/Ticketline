@@ -8,6 +8,7 @@ import java.time.LocalDateTime;
 public interface TestDataUser extends TestData{
 
     String USER_BASE_URI = BASE_URI + "/users";
+    String LOGIN_BASE_URI = BASE_URI + "/authentication";
 
     String ADMIN_FIRST_NAME = "Max";
     String ADMIN_LAST_NAME = "Mustermann";
@@ -23,7 +24,7 @@ public interface TestDataUser extends TestData{
     String DEFAULT_FIRST_NAME = "Max";
     String DEFAULT_LAST_NAME = "Mustermann";
     String DEFAULT_PHONE_NUMBER = "+43 660 123456789";
-    String DEFAULT_EMAIL = "admin@email.com";
+    String DEFAULT_EMAIL = "user@email.com";
     String DEFAULT_PASSWORD = "password";
     LocalDateTime DEFAULT_LAST_LOGIN = LocalDateTime.now();
     int DEFAULT_POINTS = 0;

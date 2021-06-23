@@ -37,7 +37,7 @@ public class UserDataGenerator {
     @PostConstruct
     private void generateUser() {
 
-        if (userRepository.findAll().size() > 0) {
+        if (userRepository.findAll().size() > 2) {
             LOGGER.debug("user already generated");
         } else {
             LOGGER.debug("generating {} user entries", NUMBER_OF_USER_TO_GENERATE);

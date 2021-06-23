@@ -17,4 +17,5 @@ public class BookingDto {
     private UserDto user;
     private TicketDto[] tickets;
     private FileDto invoice;
+    private String status;
 }
