@@ -2,7 +2,6 @@ import {Component, Input, OnInit} from '@angular/core';
 import { NewTicket } from 'src/app/dtos/newTicket';
 import { Sector } from 'src/app/dtos/sector';
 import { Ticket } from 'src/app/dtos/ticket';
-import { ApplicationPerformanceService } from 'src/app/services/performance.service';
 import { TicketService } from 'src/app/services/ticket.service';
 import {LayoutUnit} from '../../../dtos/layoutUnit';
 

@@ -11,7 +11,7 @@
                     <input type="number" formControlName="amount" [ngClass]="{'error': validationError}">
                     <button class="secondary no-shadow no-border" (click)="incAmount()" type="button"><i class="bi bi-plus-circle"></i></button>
                 </div>
-                <button class="add primary" [ngClass]="{'locked': this.waiting}" type="submit">Add to Cart</button>
+                <button class="add primary" [ngClass]="{'locked': this.waiting || !this.loggedIn}" type="submit">Add to Cart</button>
             </form>
         </div>
     </div>

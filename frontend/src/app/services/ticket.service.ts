@@ -17,6 +17,7 @@ export class TicketService {
   public loading = false;
   public errorMessage = '';
   public total = 0;
+  public prices: number[];
 
   private ticketBaseUri: string = this.globals.backendUri + '/tickets';
 
@@ -86,10 +87,14 @@ export class TicketService {
 
   updatePrice(): void {
     this.total = 0;
+    this.prices = [];
     this.cart.forEach(inner => {
+      let change = 0;
       inner.forEach(ticket => {
-        this.total += ticket.ticketType.price;
+        change += ticket.ticketType.price;
       });
+      this.prices.push(change);
+      this.total += change;
     });
   }
 
