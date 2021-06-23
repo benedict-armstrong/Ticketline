@@ -76,7 +76,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
         ApplicationUser applicationUser = userService.findApplicationUserByEmail(user.getUsername());
         applicationUser.setLastLogin(LocalDateTime.now());
-        userService.updateUser(applicationUser);
+        userService.updateUser(applicationUser, true);
 
         response.getWriter().write(jwtTokenizer.getAuthToken(user.getUsername(), roles));
         LOGGER.info("Successfully authenticated user {}", user.getUsername());

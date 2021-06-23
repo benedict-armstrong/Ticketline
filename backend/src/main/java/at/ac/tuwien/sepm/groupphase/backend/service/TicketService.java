@@ -1,11 +1,13 @@
 package at.ac.tuwien.sepm.groupphase.backend.service;
 
 import at.ac.tuwien.sepm.groupphase.backend.entity.LayoutUnit;
+import at.ac.tuwien.sepm.groupphase.backend.entity.Booking;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Performance;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Ticket;
 import at.ac.tuwien.sepm.groupphase.backend.entity.TicketType;
 
 import java.util.List;
+import java.util.Set;
 
 public interface TicketService {
 
@@ -44,6 +46,13 @@ public interface TicketService {
     boolean checkout();
 
     /**
+     * Adds all the tickets in the users cart to a booking entity and changes their status to RESERVED.
+     *
+     * @return true if successfully
+     */
+    boolean reserve();
+
+    /**
      * Deletes a ticket.
      *
      * @param id of the ticket
@@ -63,4 +72,19 @@ public interface TicketService {
      * Deletes all tickets in the cart that are to old.
      */
     void pruneTickets();
+
+    /**
+     * Deletes all reservations for to near performances.
+     *
+     * @param performances which start in 30 min or less
+     */
+    void pruneReservations(List<Performance> performances);
+
+    /**
+     * Updates all tickets to new status.
+     *
+     * @param tickets to change.
+     * @param status of the changed tickets.
+     */
+    void updateStatus(Set<Ticket> tickets, Ticket.Status status);
 }
