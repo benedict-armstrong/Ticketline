@@ -1,6 +1,9 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {Venue} from '../../../dtos/venue';
 import {LayoutUnitSelect} from '../models/layoutUnitSelect';
+import {Sector} from '../../../dtos/sector';
+import {NewTicket} from '../../../dtos/newTicket';
+import {Ticket} from '../../../dtos/ticket';
 
 @Component({
   selector: 'app-select-seat',
@@ -41,4 +44,52 @@ export class SelectSeatComponent implements OnInit {
       this.selectedSeats.splice(index, 1);
     }
   }
+
+  // onClick(): void {
+  //   if (this.layoutUnit === null) {
+  //     return;
+  //   }
+  //   const sector: Sector = this.layoutUnit.sector as Sector;
+  //   if (sector.type === 'STAGE') {
+  //     return;
+  //   }
+  //   if (!this.layoutUnit.free) {
+  //     return;
+  //   }
+  //
+  //   const addTicket: NewTicket = {
+  //     performanceId: this.performanceId,
+  //     ticketType: null,
+  //     amount: null,
+  //     seatId: this.layoutUnit.id
+  //   };
+  //   this.ticketService.addTicket(addTicket).subscribe(
+  //     (responseTickets: Ticket[]) => {
+  //
+  //       let done = false;
+  //       for (let i = 0; i < this.ticketService.cart.length; i++) {
+  //         if (this.ticketService.cart[i].length === 0) {
+  //           this.ticketService.cart[i] = responseTickets;
+  //           done = true;
+  //           break;
+  //         } else {
+  //           if (this.ticketService.cart[i][0].performance.id === responseTickets[0].performance.id) {
+  //             responseTickets.forEach(ticket => {
+  //               this.ticketService.cart[i].push(ticket);
+  //             });
+  //             done = true;
+  //             break;
+  //           }
+  //         }
+  //       }
+  //
+  //       if (!done) {
+  //         this.ticketService.cart.push(responseTickets);
+  //       }
+  //       this.ticketService.updatePrice();
+  //     },
+  //     (error) => {
+  //     }
+  //   );
+  // }
 }
