@@ -63,7 +63,7 @@ public class TicketServiceImpl implements TicketService {
         List<Ticket> ticketList = new LinkedList<>();
         Sector sector = ticketType.getSector();
 
-        List<LayoutUnit> freeSeats = ticketRepository.getFreeSeatsInPerfromanceAndSector(performance, sector);
+        List<LayoutUnit> freeSeats = ticketRepository.getFreeSeatsInPerformanceAndSector(performance, sector);
 
         if (freeSeats.size() < amount) {
             if (amount > 1) {
@@ -116,6 +116,11 @@ public class TicketServiceImpl implements TicketService {
             newList.add(ticket);
         }
         return newList;
+    }
+
+    public List<LayoutUnit> getTakenSeatsInPerformance(Performance performance) {
+        LOGGER.trace("getTakenSeatsInPerformance({})", performance);
+        return ticketRepository.getTakenSeatsInPerformance(performance);
     }
 
     @Override

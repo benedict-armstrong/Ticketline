@@ -17,11 +17,13 @@ export class PerformanceDetailComponent implements OnInit {
   error = false;
   errorMessage = '';
   ticketCounts: number[] = [];
+  selectSeats: boolean;
 
   constructor(private performanceService: ApplicationPerformanceService,
               private activeRoute: ActivatedRoute) { }
 
   ngOnInit(): void {
+    this.selectSeats = false;
     const performanceId = this.activeRoute.snapshot.params.id;
     this.performanceService.getPerformanceById(performanceId).subscribe(
       (response) => {
@@ -52,6 +54,10 @@ export class PerformanceDetailComponent implements OnInit {
 
   vanishAlert(): void {
     this.error = false;
+  }
+
+  selectSeatsFunc(value: boolean) {
+    this.selectSeats = value;
   }
 
   private defaultServiceErrorHandling(error: any) {

@@ -1,0 +1,38 @@
+@import "src/colors";
+
+.grid-unit-wrapper {
+  padding: 1.5px;
+}
+
+.grid-unit-wrapper.standing,
+.grid-unit-wrapper.stage {
+  padding: 0px;
+}
+
+.grid-unit-wrapper.standing > .grid-unit,
+.grid-unit-wrapper.stage > .grid-unit {
+  min-height: 15px;
+  min-width: 15px;
+}
+
+.grid-unit {
+  min-height: 12px;
+  min-width: 12px;
+}
+
+.grid-unit:hover {
+  background-color: rgb(221, 255, 210);
+}
+
+.grid-unit.unavailable {
+  background-color: transparent !important;
+}
+
+.grid-unit-wrapper.seated .grid-unit:hover {
+  transform: scale(2);
+  border: 1px solid white;
+}
+
+.hide {
+  opacity: 0;
+}

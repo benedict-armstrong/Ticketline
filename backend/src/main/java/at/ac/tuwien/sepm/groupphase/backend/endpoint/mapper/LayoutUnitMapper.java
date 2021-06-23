@@ -68,6 +68,7 @@ public interface LayoutUnitMapper {
             .id(layoutUnit.getId())
             .sector(SectorMapper.INSTANCE.sectorToSectorDto(layoutUnit.getSector()))
             .customLabel(layoutUnit.getCustomLabel())
+            .free(layoutUnit.isFree())
             .build();
     }
 

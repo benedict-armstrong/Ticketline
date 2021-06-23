@@ -51,6 +51,8 @@ import { AddressDetailComponent } from './components/search/address-detail/addre
 import { SearchEventListComponent } from './components/search/search-event-list/search-event-list.component';
 import { SelectVenueComponent } from './components/event/select-venue/select-venue.component';
 import { SearchVenueListComponent } from './components/search/search-venue-list/search-venue-list.component';
+import { SelectSeatComponent } from './components/performance-detail/select-seat/select-seat.component';
+import { SelectSeatUnitComponent } from './components/performance-detail/select-seat-unit/select-seat-unit.component';
 import { EditUserComponent } from './components/edit-user/edit-user.component';
 import { UserManagementComponent } from './components/user-management/user-management.component';
 import { BannedAlertComponent } from './components/banned-alert/banned-alert.component';
@@ -106,7 +108,9 @@ import { BannedAlertComponent } from './components/banned-alert/banned-alert.com
     SearchVenueListComponent,
     EditUserComponent,
     UserManagementComponent,
-    BannedAlertComponent
+    BannedAlertComponent,
+    SelectSeatComponent,
+    SelectSeatUnitComponent,
   ],
   imports: [
     BrowserModule,

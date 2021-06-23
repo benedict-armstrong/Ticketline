@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepm.groupphase.backend.service;
 
+import at.ac.tuwien.sepm.groupphase.backend.entity.LayoutUnit;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Performance;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Ticket;
 import at.ac.tuwien.sepm.groupphase.backend.entity.TicketType;
@@ -27,6 +28,14 @@ public interface TicketService {
      * @return list of tickets.
      */
     List<Ticket> getTickets(Ticket.Status status);
+
+    /**
+     * Find all layoutUnit entries that are referenced in a ticket of the given performance.
+     *
+     * @param performance of the tickets
+     * @return list of all taken seats
+     */
+    List<LayoutUnit> getTakenSeatsInPerformance(Performance performance);
 
     /**
      * Adds all the tickets in the users cart to a booking entity and changes their status to PAID_FOR.

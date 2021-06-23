@@ -1,0 +1,5 @@
+<div class="venue-layout-grid">
+  <div *ngFor="let row of venue.layout">
+    <app-select-seat-unit class="unit" *ngFor="let unit of row" [layoutUnit]="unit"></app-select-seat-unit>
+  </div>
+</div>

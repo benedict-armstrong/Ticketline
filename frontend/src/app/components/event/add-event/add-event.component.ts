@@ -48,7 +48,6 @@ export class AddEventComponent implements OnInit {
 
   addEvent(): void {
     this.submitted = true;
-
     if (this.addEventForm.valid
       && this.performances.length !== 0
       && this.files.length !== 0

@@ -123,6 +123,7 @@ export class VenueCreatorComponent implements OnInit {
           return new LayoutUnit(
             null,
             su.customLabel,
+            null,
             su.sector ? su.sector.id : null
           );
         } else {

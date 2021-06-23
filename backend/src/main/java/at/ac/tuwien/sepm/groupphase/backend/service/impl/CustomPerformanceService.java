@@ -1,7 +1,12 @@
 package at.ac.tuwien.sepm.groupphase.backend.service.impl;
 
+import at.ac.tuwien.sepm.groupphase.backend.entity.Event;
+import at.ac.tuwien.sepm.groupphase.backend.entity.LayoutUnit;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Performance;
 import at.ac.tuwien.sepm.groupphase.backend.entity.PerformanceSearch;
+import at.ac.tuwien.sepm.groupphase.backend.entity.Venue;
+import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
+import at.ac.tuwien.sepm.groupphase.backend.repository.EventRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.PerformanceRepository;
 import at.ac.tuwien.sepm.groupphase.backend.service.PerformanceService;
 import at.ac.tuwien.sepm.groupphase.backend.service.TicketService;
@@ -25,15 +30,49 @@ public class CustomPerformanceService implements PerformanceService {
     private final TicketService ticketService;
 
     @Autowired
-    public CustomPerformanceService(PerformanceRepository performanceRepository, TicketService ticketService) {
+    public CustomPerformanceService(PerformanceRepository performanceRepository,  TicketService ticketService) {
         this.performanceRepository = performanceRepository;
         this.ticketService = ticketService;
     }
 
     @Override
     public Performance findById(long id) {
-        LOGGER.debug("Get event by id {}", id);
-        return performanceRepository.findOneById(id);
+        LOGGER.trace("findById({})", id);
+
+        Performance performance = performanceRepository.findOneById(id);
+
+        if (performance == null) {
+            throw new NotFoundException("The performance with this id was not found.");
+        }
+
+        Venue venue = performance.getVenue();
+        List<LayoutUnit> newSeats = venue.getLayout();
+        LOGGER.info("New Seats : {}", newSeats.size());
+
+        List<LayoutUnit> takenSeats = ticketService.getTakenSeatsInPerformance(performance);
+        LOGGER.info("Taken Seats : {}", takenSeats.size());
+
+        for (LayoutUnit seat : newSeats) {
+            seat.setFree(true);
+            for (LayoutUnit takenSeat : takenSeats) {
+                if (takenSeat.getId().equals(seat.getId())) {
+                    LOGGER.info("Current Seat: {}", seat);
+                    seat.setFree(false);
+                    break;
+                }
+            }
+        }
+
+        LOGGER.info("New Seats : {}", newSeats);
+
+
+        venue.setLayout(newSeats);
+        performance.setVenue(venue);
+
+
+        LOGGER.info("Performance Seats : {}", performance.getVenue().getLayout());
+
+        return performance;
     }
 
     @Override

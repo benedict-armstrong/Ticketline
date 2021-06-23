@@ -40,6 +40,9 @@ export class AddPerformanceComponent implements OnInit {
 
   addPerformance() {
     this.submitted = true;
+
+    console.log(this.ticketTypes);
+
     if (this.addPerformanceForm.valid && this.artist && this.venue) {
       this.performance = new Performance(
         null,
@@ -72,7 +75,7 @@ export class AddPerformanceComponent implements OnInit {
   }
 
   changeTickets(ticketTypes: TicketType[]) {
-    this.performance.ticketTypes = ticketTypes;
+    this.ticketTypes = ticketTypes;
   }
 
   /**
