@@ -1,10 +1,14 @@
 package at.ac.tuwien.sepm.groupphase.backend.integrationtest;
 
+import at.ac.tuwien.sepm.groupphase.backend.basetest.TestDataAddress;
 import at.ac.tuwien.sepm.groupphase.backend.basetest.TestDataUser;
 import at.ac.tuwien.sepm.groupphase.backend.config.properties.SecurityProperties;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserLoginDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.UserMapper;
+import at.ac.tuwien.sepm.groupphase.backend.entity.Address;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
+import at.ac.tuwien.sepm.groupphase.backend.repository.AddressRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepm.groupphase.backend.security.JwtTokenizer;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -31,13 +35,16 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 @SpringBootTest
 @ActiveProfiles("test")
 @AutoConfigureMockMvc
-public class UserEndpointTest implements TestDataUser {
+public class UserEndpointTest implements TestDataUser, TestDataAddress {
 
     @Autowired
     private MockMvc mockMvc;
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private AddressRepository addressRepository;
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -79,7 +86,6 @@ public class UserEndpointTest implements TestDataUser {
 
     @BeforeEach
     public void beforeEach() {
-        //userRepository.deleteAll();
         defaultUser = ApplicationUser.builder()
             .firstName(DEFAULT_FIRST_NAME)
             .lastName(DEFAULT_LAST_NAME)
@@ -89,7 +95,7 @@ public class UserEndpointTest implements TestDataUser {
             .status(DEFAULT_STATUS)
             .password(DEFAULT_PASSWORD)
             .points(DEFAULT_POINTS)
-            .address(DEFAULT_ADDRESS)
+            .address(TestDataAddress.getAddress())
             .telephoneNumber(DEFAULT_PHONE_NUMBER)
             .build();
 
@@ -110,6 +116,7 @@ public class UserEndpointTest implements TestDataUser {
     @AfterEach
     public void afterEach() {
         userRepository.deleteAll();
+        addressRepository.deleteAll();
     }
 
     @Test
@@ -125,7 +132,7 @@ public class UserEndpointTest implements TestDataUser {
             .andReturn();
         MockHttpServletResponse response = mvcResult.getResponse();
 
-        assertEquals(HttpStatus.OK.value(), response.getStatus());
+        assertEquals(HttpStatus.CREATED.value(), response.getStatus());
         assertEquals(MediaType.APPLICATION_JSON_VALUE, response.getContentType());
 
         UserDto userResponse = objectMapper.readValue(response.getContentAsString(),
@@ -149,7 +156,7 @@ public class UserEndpointTest implements TestDataUser {
             .andReturn();
         MockHttpServletResponse response = mvcResult.getResponse();
 
-        assertEquals(HttpStatus.OK.value(), response.getStatus());
+        assertEquals(HttpStatus.CREATED.value(), response.getStatus());
         assertEquals(MediaType.APPLICATION_JSON_VALUE, response.getContentType());
 
         UserDto userResponse = objectMapper.readValue(response.getContentAsString(),
@@ -206,7 +213,7 @@ public class UserEndpointTest implements TestDataUser {
     }
 
     @Test
-    public void whenPostUserAsAdminSetUserRoleAdmin_then200_UserIsAdmin() throws Exception {
+    public void whenPostUserAsAdminSetUserRoleAdmin_then201_UserIsAdmin() throws Exception {
 
         defaultUser.setRole(ApplicationUser.UserRole.ADMIN);
 
@@ -221,7 +228,7 @@ public class UserEndpointTest implements TestDataUser {
             .andReturn();
         MockHttpServletResponse response = mvcResult.getResponse();
 
-        assertEquals(HttpStatus.OK.value(), response.getStatus());
+        assertEquals(HttpStatus.CREATED.value(), response.getStatus());
 
         UserDto userResponse = objectMapper.readValue(response.getContentAsString(),
             UserDto.class);
@@ -267,7 +274,7 @@ public class UserEndpointTest implements TestDataUser {
             .andReturn();
         MockHttpServletResponse response = mvcResult.getResponse();
 
-        assertEquals(HttpStatus.OK.value(), response.getStatus());
+        assertEquals(HttpStatus.CREATED.value(), response.getStatus());
 
         UserDto userResponse = objectMapper.readValue(response.getContentAsString(),
             UserDto.class);
@@ -275,6 +282,68 @@ public class UserEndpointTest implements TestDataUser {
         assertNotNull(userResponse.getId());
         assertEquals(userResponse.getRole(), ApplicationUser.UserRole.CLIENT);
 
+    }
+
+    @Test
+    public void whenBannedUserLogin_then403() throws Exception {
+        defaultUser.setStatus(ApplicationUser.UserStatus.BANNED);
+
+        UserDto userDto = userMapper.applicationUserToUserDto(defaultUser);
+        String body = objectMapper.writeValueAsString(userDto);
+
+        MvcResult mvcResult1 = this.mockMvc.perform(post(USER_BASE_URI)
+            .contentType(MediaType.APPLICATION_JSON)
+            .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(ADMIN_USER, ADMIN_ROLES))
+            .content(body))
+            .andDo(print())
+            .andReturn();
+        MockHttpServletResponse response1 = mvcResult1.getResponse();
+
+        assertEquals(HttpStatus.CREATED.value(), response1.getStatus());
+
+        UserLoginDto userLoginDto = UserLoginDto.builder().email(userDto.getEmail()).password(userDto.getPassword()).build();
+
+        MvcResult mvcResult2 = this.mockMvc.perform(post(LOGIN_BASE_URI)
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(objectMapper.writeValueAsString(userLoginDto)))
+            .andDo(print())
+            .andReturn();
+        MockHttpServletResponse response2 = mvcResult2.getResponse();
+
+        assertEquals(HttpStatus.FORBIDDEN.value(), response2.getStatus());
+    }
+
+    @Test
+    public void whenPasswordWrong3Times_thenUserBanned() throws Exception {
+        UserDto userDto = userMapper.applicationUserToUserDto(defaultUser);
+        String body = objectMapper.writeValueAsString(userDto);
+
+        MvcResult mvcResultCreate = this.mockMvc.perform(post(USER_BASE_URI)
+            .contentType(MediaType.APPLICATION_JSON)
+            .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(ADMIN_USER, ADMIN_ROLES))
+            .content(body))
+            .andDo(print())
+            .andReturn();
+        MockHttpServletResponse responseCreate = mvcResultCreate.getResponse();
+
+        assertEquals(HttpStatus.CREATED.value(), responseCreate.getStatus());
+
+        UserLoginDto userLoginDto = UserLoginDto.builder().email(userDto.getEmail()).password("Wrong").build();
+
+        for (int i = 0; i < 3; i++) {
+            MvcResult mvcResultLogin = this.mockMvc.perform(post(LOGIN_BASE_URI)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(userLoginDto)))
+                .andDo(print())
+                .andReturn();
+            MockHttpServletResponse responseLogin = mvcResultLogin.getResponse();
+
+            assertEquals(HttpStatus.UNAUTHORIZED.value(), responseLogin.getStatus());
+        }
+
+        ApplicationUser user = userRepository.findUserByEmail(userDto.getEmail());
+
+        assertEquals(user.getStatus(), ApplicationUser.UserStatus.BANNED);
     }
 
 }

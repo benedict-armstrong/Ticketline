@@ -5,6 +5,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.List;
+
 public interface UserRepository extends JpaRepository<ApplicationUser, Long> {
 
     ApplicationUser findUserById(long id);
@@ -13,4 +15,6 @@ public interface UserRepository extends JpaRepository<ApplicationUser, Long> {
 
     Page<ApplicationUser> findAll(Pageable pageable);
 
+
+    List<ApplicationUser> findAllByPointsGreaterThan(int number);
 }

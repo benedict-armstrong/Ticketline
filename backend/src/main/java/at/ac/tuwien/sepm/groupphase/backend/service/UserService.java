@@ -80,4 +80,10 @@ public interface UserService extends UserDetailsService {
      */
     List<ApplicationUser> getAll(Pageable pageRequest);
 
+    /**
+     * Reset the password attempt count of all users.
+     *
+     */
+    void resetPasswordAttemptCount();
+
 }
