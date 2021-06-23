@@ -178,7 +178,7 @@ public class CustomUserDetailService implements UserService {
         String newGeneratedPassword = RandomStringUtils.randomAscii(16);
         user.setPassword(newGeneratedPassword);
 
-        ApplicationUser newUser = updateUser(user, false);
+        ApplicationUser newUser = updateUser(user, true);
 
         if (newUser != null) {
             simpleMailService.sendMail(user.getEmail(), "[Ticketline] Password reset", String.format("Hello %s %s,\n\nYour password was changed to '%s' (without ')!"
