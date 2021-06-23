@@ -5,17 +5,11 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
-
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class BookingDto {
+public class ChangeBookingDto {
     private Long id;
-    private LocalDateTime createDate;
-    private UserDto user;
-    private TicketDto[] tickets;
-    private FileDto invoice;
     private String status;
 }

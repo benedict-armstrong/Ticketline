@@ -9,6 +9,7 @@ import { TicketService } from 'src/app/services/ticket.service';
 export class ShoppingcartComponent implements OnInit {
 
   public error = false;
+  public success = false;
   public errorMessage = '';
 
   constructor(public ticketService: TicketService) {}
@@ -17,6 +18,7 @@ export class ShoppingcartComponent implements OnInit {
   }
 
   close(): void {
+    this.success = false;
     this.ticketService.toggleStatus();
   }
 
@@ -33,8 +35,23 @@ export class ShoppingcartComponent implements OnInit {
     );
   }
 
+  reserve(): void {
+    this.ticketService.reserve().subscribe(
+      (response) => {
+        if (response) {
+          this.ticketService.reload();
+          this.success = true;
+        }
+      },
+      (error) => {
+        this.defaultServiceErrorHandling(error);
+      }
+    );
+  }
+
   vanishAlert(): void {
     this.error = false;
+    this.success = false;
   }
 
   private defaultServiceErrorHandling(error: any) {

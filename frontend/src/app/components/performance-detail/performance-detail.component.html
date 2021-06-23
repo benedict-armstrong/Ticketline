@@ -53,6 +53,13 @@
         <div class="seat-select">
           <app-select-seat [venue]="performance.venue"></app-select-seat>
         </div>
+
+        <app-venue-sector-list *ngFor="let sector of this.performance.venue.sectors" [sector]="sector">
+        </app-venue-sector-list>
+
+          <div class="seat-select">
+            <app-select-seat [performanceId]="performance.id" [venue]="performance.venue"></app-select-seat>
+          </div>
       </div>
     </div>
   </div>

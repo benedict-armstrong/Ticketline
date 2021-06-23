@@ -17,6 +17,7 @@ export class TicketService {
   public loading = false;
   public errorMessage = '';
   public total = 0;
+  public prices: number[];
 
   private ticketBaseUri: string = this.globals.backendUri + '/tickets';
 
@@ -86,10 +87,14 @@ export class TicketService {
 
   updatePrice(): void {
     this.total = 0;
+    this.prices = [];
     this.cart.forEach(inner => {
+      let change = 0;
       inner.forEach(ticket => {
-        this.total += ticket.ticketType.price;
+        change += ticket.ticketType.price;
       });
+      this.prices.push(change);
+      this.total += change;
     });
   }
 
@@ -101,8 +106,12 @@ export class TicketService {
     return this.httpClient.get<Ticket[]>(this.ticketBaseUri + '/paid');
   }
 
-  addTicket(addTicket: NewTicket, amount: number): Observable<Ticket[]> {
-    return this.httpClient.post<Ticket[]>(this.ticketBaseUri + '/' + amount, addTicket);
+  getReservedItems(): Observable<Ticket[]> {
+    return this.httpClient.get<Ticket[]>(this.ticketBaseUri + '/reserved');
+  }
+
+  addTicket(addTicket: NewTicket): Observable<Ticket[]> {
+    return this.httpClient.post<Ticket[]>(this.ticketBaseUri, addTicket);
   }
 
   removeTicket(ticket: Ticket): Observable<boolean> {
@@ -119,6 +128,10 @@ export class TicketService {
 
   checkout(): Observable<boolean> {
     return this.httpClient.put<boolean>(this.ticketBaseUri + '/checkout', null);
+  }
+
+  reserve(): Observable<boolean> {
+    return this.httpClient.put<boolean>(this.ticketBaseUri + '/reserve', null);
   }
 
   private defaultServiceErrorHandling(error: any) {

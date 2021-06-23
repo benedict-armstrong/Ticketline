@@ -128,7 +128,11 @@ public class TicketEndpointTest implements TestDataTicket, TestDataUser, TestDat
 
     private NewTicketDto newTicketDto;
 
+    private NewTicketDto newTicketDtoLarge;
+
     private final int ticketAmount = 1;
+
+    private final int ticketAmountLarge = 10000;
 
     @BeforeEach
     public void beforeEach() throws Exception {
@@ -197,8 +201,17 @@ public class TicketEndpointTest implements TestDataTicket, TestDataUser, TestDat
         );
 
         newTicketDto = NewTicketDto.builder()
-            .performance(performanceMapper.performanceToPerformanceDto(savedPerformance))
+            .performanceId(performanceMapper.performanceToPerformanceDto(savedPerformance).getId())
             .ticketType(ticketTypeMapper.ticketTypeToTicketTypeDto(ticketType))
+            .amount(ticketAmount)
+            .seatId(null)
+            .build();
+
+        newTicketDtoLarge = NewTicketDto.builder()
+            .performanceId(performanceMapper.performanceToPerformanceDto(savedPerformance).getId())
+            .ticketType(ticketTypeMapper.ticketTypeToTicketTypeDto(ticketType))
+            .amount(ticketAmountLarge)
+            .seatId(null)
             .build();
     }
 
@@ -218,10 +231,8 @@ public class TicketEndpointTest implements TestDataTicket, TestDataUser, TestDat
     @DisplayName("Should save correct ticket when creating one")
     public void whenCreateTicket_thenGetBackCorrectTicket() throws Exception {
 
-        System.out.println(objectMapper.writeValueAsString(newTicketDto));
-
         MvcResult mvcResult = this.mockMvc.perform(
-            post(TICKET_BASE_URI + "/" + ticketAmount)
+            post(TICKET_BASE_URI)
                 .content(
                     objectMapper.writeValueAsString(newTicketDto)
                 )
@@ -246,12 +257,10 @@ public class TicketEndpointTest implements TestDataTicket, TestDataUser, TestDat
     @DisplayName("Should return NoTicketLeftException")
     public void whenCreateTicket_butTooManyTickets_thenNoTicketLeftException() throws Exception {
 
-        System.out.println(objectMapper.writeValueAsString(newTicketDto));
-
         MvcResult mvcResult = this.mockMvc.perform(
-            post(TICKET_BASE_URI + "/" + 10000)
+            post(TICKET_BASE_URI)
                 .content(
-                    objectMapper.writeValueAsString(newTicketDto)
+                    objectMapper.writeValueAsString(newTicketDtoLarge)
                 )
                 .contentType(MediaType.APPLICATION_JSON)
                 .header(securityProperties.getAuthHeader(), authToken)
@@ -265,7 +274,7 @@ public class TicketEndpointTest implements TestDataTicket, TestDataUser, TestDat
     public void whenCreateTicket_thenGetAllTickets_GetCreatedTicket() throws Exception {
 
         MvcResult mvcResult = this.mockMvc.perform(
-            post(TICKET_BASE_URI  + "/" + ticketAmount)
+            post(TICKET_BASE_URI)
                 .content(
                     objectMapper.writeValueAsString(newTicketDto)
                 )
@@ -296,7 +305,7 @@ public class TicketEndpointTest implements TestDataTicket, TestDataUser, TestDat
     @DisplayName("Should return empty list after deleting ticket")
     public void whenGettingAllTickets_afterInsertingTicketAndDeletingTicket_thenShouldGetEmptyList() throws Exception {
         MvcResult mvcResult = this.mockMvc.perform(
-            post(TICKET_BASE_URI  + "/" + ticketAmount)
+            post(TICKET_BASE_URI)
                 .content(
                     objectMapper.writeValueAsString(newTicketDto)
                 )
@@ -341,7 +350,7 @@ public class TicketEndpointTest implements TestDataTicket, TestDataUser, TestDat
     @DisplayName("Should return 200 (true) when checkout")
     public void whenCreateTicket_thenCheckout_thenTicketShouldBePaidFor() throws Exception {
         MvcResult mvcResult = this.mockMvc.perform(
-            post(TICKET_BASE_URI  + "/" + ticketAmount)
+            post(TICKET_BASE_URI)
                 .content(
                     objectMapper.writeValueAsString(newTicketDto)
                 )

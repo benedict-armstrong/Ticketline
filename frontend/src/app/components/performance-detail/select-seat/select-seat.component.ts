@@ -10,6 +10,7 @@ import {LayoutUnitSelect} from '../models/layoutUnitSelect';
 export class SelectSeatComponent implements OnInit {
 
   @Input() venue: Venue;
+  @Input() performanceId: number;
 
   layout: LayoutUnitSelect[][];
 

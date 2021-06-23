@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
+import {HttpClient, HttpParams} from '@angular/common/http';
 import {User} from '../dtos/user';
 import {Observable} from 'rxjs';
 import {Globals} from '../global/globals';
@@ -52,7 +52,6 @@ export class UserService {
     return this.httpClient.post<User>(this.userBaseUri, user);
   }
 
-
   /**
    * Update user in the backend
    *
@@ -77,4 +76,18 @@ export class UserService {
     // console.log('Reset password for user with email ' + email);
     return this.httpClient.put<User>(this.userBaseUri + '/reset', email);
   }
+
+  /**
+   * Loads all users on a specific page.
+   *
+   * @param page the page number (offset).
+   * @param size amount of users to load (limit).
+   */
+  getAll(page: number, size: number): Observable<User[]> {
+    let params = new HttpParams();
+    params = params.set('page', String(page));
+    params = params.set('size', String(size));
+    return this.httpClient.get<User[]>(this.userBaseUri, {params});
+  }
+
 }

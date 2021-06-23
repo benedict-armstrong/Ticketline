@@ -1,6 +1,7 @@
 package at.ac.tuwien.sepm.groupphase.backend.service.impl;
 
 import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
+import at.ac.tuwien.sepm.groupphase.backend.entity.Booking;
 import at.ac.tuwien.sepm.groupphase.backend.entity.LayoutUnit;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Performance;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Sector;
@@ -13,6 +14,8 @@ import at.ac.tuwien.sepm.groupphase.backend.repository.TicketRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepm.groupphase.backend.security.AuthenticationFacade;
 import at.ac.tuwien.sepm.groupphase.backend.service.BookingService;
+import at.ac.tuwien.sepm.groupphase.backend.service.LayoutUnitService;
+import at.ac.tuwien.sepm.groupphase.backend.service.PerformanceService;
 import at.ac.tuwien.sepm.groupphase.backend.service.TicketService;
 import at.ac.tuwien.sepm.groupphase.backend.service.UserService;
 import org.slf4j.Logger;
@@ -22,12 +25,15 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.lang.invoke.MethodHandles;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 @EnableScheduling
@@ -38,23 +44,30 @@ public class TicketServiceImpl implements TicketService {
     private final UserService userService;
     private final AuthenticationFacade authenticationFacade;
     private final BookingService bookingService;
+    private final PerformanceService performanceService;
+    private final LayoutUnitService layoutUnitService;
 
     @Autowired
     public TicketServiceImpl(TicketRepository ticketRepository,
                              UserService userService,
                              AuthenticationFacade authenticationFacade,
-                             BookingService bookingService) {
+                             BookingService bookingService,
+                             PerformanceService performanceService,
+                             LayoutUnitService layoutUnitService) {
         this.ticketRepository = ticketRepository;
         this.userService = userService;
         this.authenticationFacade = authenticationFacade;
         this.bookingService = bookingService;
+        this.performanceService = performanceService;
+        this.layoutUnitService = layoutUnitService;
     }
 
     @Override
-    public List<Ticket> save(Performance performance, TicketType ticketType, Ticket.Status status, int amount) {
-        LOGGER.trace("save({}, {},  {}, {})", performance, ticketType, status, amount);
+    public List<Ticket> createTicketsByAmount(Long performanceId, TicketType ticketType, Ticket.Status status, int amount) {
+        LOGGER.trace("createTicketsByAmount({}, {},  {}, {})", performanceId, ticketType, status, amount);
 
         ApplicationUser user = userService.findApplicationUserByEmail((String) authenticationFacade.getAuthentication().getPrincipal());
+        Performance performance = performanceService.findById(performanceId);
 
         List<Ticket> ticketList = new LinkedList<>();
         Sector sector = ticketType.getSector();
@@ -80,6 +93,39 @@ public class TicketServiceImpl implements TicketService {
                     .build()
             );
         }
+
+        return ticketRepository.saveAll(ticketList);
+    }
+
+    @Override
+    public List<Ticket> createTicketBySeat(Long performanceId, TicketType ticketType, Ticket.Status status, Long seatId) {
+        LOGGER.trace("createTicketBySeat({}, {},  {}, {})", performanceId, ticketType, status, seatId);
+
+        ApplicationUser user = userService.findApplicationUserByEmail((String) authenticationFacade.getAuthentication().getPrincipal());
+        Performance performance = performanceService.findById(performanceId);
+
+        LayoutUnit seat = layoutUnitService.findById(seatId);
+
+        if (seat == null) {
+            throw new NotFoundException("This seat was not found");
+        }
+
+        List<Ticket> ticketList = new LinkedList<>();
+
+        if (!ticketRepository.checkIfSeatIsFreeByPerformance(performance, seat)) {
+            throw new NoTicketLeftException("This seat is not free anymore.");
+        }
+
+        ticketList.add(
+            Ticket.builder()
+                .ticketType(ticketType)
+                .performance(performance)
+                .status(status)
+                .user(user)
+                .changeDate(LocalDateTime.now())
+                .seat(seat)
+                .build()
+        );
 
         return ticketRepository.saveAll(ticketList);
     }
@@ -132,7 +178,24 @@ public class TicketServiceImpl implements TicketService {
             ticket.setStatus(Ticket.Status.PAID_FOR);
         }
         ticketRepository.saveAll(tickets);
-        bookingService.save(new HashSet<>(tickets));
+        bookingService.save(new HashSet<>(tickets), Booking.Status.PAID_FOR);
+        return true;
+    }
+
+    @Override
+    public boolean reserve() {
+        LOGGER.trace("reserve()");
+        ApplicationUser user = userService.findApplicationUserByEmail((String) authenticationFacade.getAuthentication().getPrincipal());
+        List<Ticket> tickets = ticketRepository.findByUserAndStatus(user, Ticket.Status.IN_CART);
+        if (tickets.size() < 1) {
+            return false;
+        }
+
+        for (Ticket ticket : tickets) {
+            ticket.setStatus(Ticket.Status.RESERVED);
+        }
+        ticketRepository.saveAll(tickets);
+        bookingService.save(new HashSet<>(tickets), Booking.Status.RESERVED);
         return true;
     }
 
@@ -150,6 +213,7 @@ public class TicketServiceImpl implements TicketService {
     }
 
     @Override
+    @Transactional
     public boolean delete(List<Long> ids) {
         LOGGER.trace("delete({})", ids);
         List<Ticket> tickets = ticketRepository.findByIdList(ids);
@@ -171,5 +235,29 @@ public class TicketServiceImpl implements TicketService {
             LOGGER.info("Deleting {} stale tickets from carts", toBeDeleted.size());
             ticketRepository.deleteAll(toBeDeleted);
         }
+    }
+
+    @Override
+    public void pruneReservations(List<Performance> performances) {
+        LOGGER.trace("pruneReservations()");
+        List<Ticket> tickets = new ArrayList();
+        for (Performance performance : performances) {
+            tickets.addAll(ticketRepository.findByPerformanceAndStatus(performance, Ticket.Status.RESERVED));
+        }
+
+        for (Ticket ticket : tickets) {
+            bookingService.deleteTicket(ticket);
+            ticketRepository.delete(ticket);
+        }
+    }
+
+    @Override
+    public void updateStatus(Set<Ticket> tickets, Ticket.Status status) {
+        LOGGER.trace("updateStatus()");
+        for (Ticket ticket : tickets) {
+            ticket.setStatus(status);
+        }
+
+        ticketRepository.saveAll(tickets);
     }
 }

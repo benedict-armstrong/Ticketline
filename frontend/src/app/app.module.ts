@@ -54,6 +54,8 @@ import { SearchVenueListComponent } from './components/search/search-venue-list/
 import { SelectSeatComponent } from './components/performance-detail/select-seat/select-seat.component';
 import { SelectSeatUnitComponent } from './components/performance-detail/select-seat-unit/select-seat-unit.component';
 import { EditUserComponent } from './components/edit-user/edit-user.component';
+import { UserManagementComponent } from './components/user-management/user-management.component';
+import { BannedAlertComponent } from './components/banned-alert/banned-alert.component';
 
 @NgModule({
   declarations: [
@@ -106,7 +108,9 @@ import { EditUserComponent } from './components/edit-user/edit-user.component';
     SearchVenueListComponent,
     SelectSeatComponent,
     SelectSeatUnitComponent,
-    EditUserComponent
+    EditUserComponent,
+    UserManagementComponent,
+    BannedAlertComponent
   ],
   imports: [
     BrowserModule,

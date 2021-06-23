@@ -23,4 +23,12 @@ public interface LayoutUnitService {
      * @return the created layoutUnits
      */
     List<LayoutUnit> saveAll(Set<LayoutUnit> layoutUnits);
+
+    /**
+     * Returns the layoutUnit with the given id.
+     *
+     * @param id to find
+     * @return the layoutUnit
+     */
+    LayoutUnit findById(Long id);
 }

@@ -6,6 +6,7 @@ import { Performance } from '../../dtos/performance';
 import { Ticket } from 'src/app/dtos/ticket';
 import { Sector } from 'src/app/dtos/sector';
 import { NewTicket } from 'src/app/dtos/newTicket';
+import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'app-ticket-list-item',
@@ -31,10 +32,12 @@ export class TicketListItemComponent implements OnInit {
   public errorMessage = '';
   public success = false;
   public waiting = false;
+  public loggedIn = false;
 
   constructor(
     private formBuilder: FormBuilder,
-    private ticketService: TicketService
+    private ticketService: TicketService,
+    private authService: AuthService
   ) {
     this.ticketForm = this.formBuilder.group({
       amount: [0, [Validators.min(1)]]
@@ -43,6 +46,7 @@ export class TicketListItemComponent implements OnInit {
 
   ngOnInit(): void {
     this.sector = this.ticketType.sector;
+    this.loggedIn = this.authService.isLoggedIn();
   }
 
   incAmount(): void {
@@ -63,15 +67,26 @@ export class TicketListItemComponent implements OnInit {
 
   addToCart(): void {
     this.vanishAlert();
+    if (!this.loggedIn) {
+      this.error = true;
+      const error = {
+        error: {
+          error: 'You are not logged in.'
+        }
+      };
+      this.defaultServiceErrorHandling(error);
+    }
     if (!this.waiting) {
       if (this.ticketForm.valid) {
         this.validationError = false;
         const addTicket: NewTicket = {
-          performance: this.performance,
+          performanceId: this.performance.id,
           ticketType: this.ticketType,
+          amount: this.ticketForm.value.amount,
+          seatId: null
         };
         this.waiting = true;
-        this.ticketService.addTicket(addTicket, this.ticketForm.value.amount).subscribe(
+        this.ticketService.addTicket(addTicket).subscribe(
           (responseTickets: Ticket[]) => {
             this.waiting = false;
             this.success = true;
