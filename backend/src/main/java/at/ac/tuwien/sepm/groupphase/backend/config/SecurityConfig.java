@@ -3,6 +3,7 @@ package at.ac.tuwien.sepm.groupphase.backend.config;
 import at.ac.tuwien.sepm.groupphase.backend.config.properties.SecurityProperties;
 import at.ac.tuwien.sepm.groupphase.backend.security.JwtAuthenticationFilter;
 import at.ac.tuwien.sepm.groupphase.backend.security.JwtAuthorizationFilter;
+import at.ac.tuwien.sepm.groupphase.backend.security.JwtExceptionFilter;
 import at.ac.tuwien.sepm.groupphase.backend.security.JwtTokenizer;
 import at.ac.tuwien.sepm.groupphase.backend.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,6 +46,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.headers().frameOptions().disable();
         http.cors().and()
             .csrf().disable()
+            .addFilterBefore(new JwtExceptionFilter(), JwtAuthenticationFilter.class)
             .addFilter(new JwtAuthenticationFilter(authenticationManager(), securityProperties, jwtTokenizer, userService))
             .addFilter(new JwtAuthorizationFilter(authenticationManager(), securityProperties));
     }

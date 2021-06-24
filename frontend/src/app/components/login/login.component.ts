@@ -54,6 +54,8 @@ export class LoginComponent implements OnInit {
           this.defaultServiceErrorHandling(error);
           if (error.status === 401) {
             this.badCredentials = true;
+          } else if (error.status === 403) {
+            this.router.navigate(['/banned']);
           }
         }
       );
