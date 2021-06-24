@@ -29,10 +29,10 @@
                             </div>
                         </div>
                         <div class="row">
-                            <app-search-venue-list (selectedVenue)="setSelectedVenue($event)"></app-search-venue-list>
+                            <app-search-venue-list [reset]="resetVenue" (selectedVenue)="setSelectedVenue($event)"></app-search-venue-list>
                         </div>
                         <div class="row">
-                            <app-search-event-list (selectedEvent)="setSelectedEvent($event)"></app-search-event-list>
+                            <app-search-event-list [reset]="resetEvent" (selectedEvent)="setSelectedEvent($event)"></app-search-event-list>
                         </div>
                     </div>
                     <div class="card-footer">

@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, SimpleChanges } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { VenueService } from 'src/app/services/venue.service';
 
@@ -10,6 +10,8 @@ import { VenueService } from 'src/app/services/venue.service';
 export class SearchVenueListComponent implements OnInit {
 
   @Output() selectedVenue = new EventEmitter<any>();
+
+  @Input() reset = false;
 
   venueSearchForm: FormGroup;
   venues = [];
@@ -23,7 +25,21 @@ export class SearchVenueListComponent implements OnInit {
       selectedVenue: ['', []],
     });
 
+    this.venues = [];
+    this.filteredVenues = [];
     this.getVenues();
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (this.reset) {
+      this.venueSearchForm = this.formBuilder.group({
+        venueName: ['', []],
+        selectedVenue: ['', []],
+      });
+
+      this.getVenues();
+      this.reset = false;
+    }
   }
 
   filterVenues() {

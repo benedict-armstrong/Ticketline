@@ -31,6 +31,8 @@ export class PerformanceSearchComponent implements OnInit {
   selectedEvent = null;
   selectedVenue = null;
   doDateSearch = true;
+  resetVenue = false;
+  resetEvent = false;
 
   constructor(private formBuilder: FormBuilder, private performanceService: ApplicationPerformanceService,
     private eventService: ApplicationEventService) { }
@@ -75,7 +77,6 @@ export class PerformanceSearchComponent implements OnInit {
         if (this.performanceSearchForm.value.time !== '' && this.performanceSearchForm.value.time !== null) {
           date = new Date(this.performanceSearchForm.value.date + 'T' + this.performanceSearchForm.value.time);
         } else {
-          console.log('aaaa')
           date = new Date(this.performanceSearchForm.value.date);
         }
       } else {
@@ -83,8 +84,7 @@ export class PerformanceSearchComponent implements OnInit {
           this.doDateSearch = false;
         }
       }
-      console.log(date)
-      console.log(this.performanceSearchForm.value.date)
+
       let eventId;
 
       if (this.selectedEvent) {
@@ -155,6 +155,8 @@ export class PerformanceSearchComponent implements OnInit {
     this.performanceSearchForm.value.time = '';
     this.selectedEvent = null;
     this.selectedVenue = null;
+    this.resetVenue = true;
+    this.resetEvent = true;
     this.searchPerformances();
   }
 }

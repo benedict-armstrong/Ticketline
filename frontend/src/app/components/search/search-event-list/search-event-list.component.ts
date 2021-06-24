@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, SimpleChanges } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { ApplicationEventService } from 'src/app/services/event.service';
 import {Event} from '../../../dtos/event';
@@ -11,6 +11,8 @@ import {Event} from '../../../dtos/event';
 export class SearchEventListComponent implements OnInit {
 
   @Output() selectedEvent = new EventEmitter<any>();
+
+  @Input() reset = false;
 
   eventSearchForm: FormGroup;
   events = [];
@@ -29,6 +31,19 @@ export class SearchEventListComponent implements OnInit {
 
     this.getEvents();
 
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (this.reset) {
+      this.eventSearchForm = this.formBuilder.group({
+        eventName: ['', []],
+        selectedEvent: ['', []],
+      });
+      
+      this.resetValues();
+      this.getEvents();
+      this.reset = false;
+    }
   }
 
   filterEvents(){
