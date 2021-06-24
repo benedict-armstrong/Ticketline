@@ -38,7 +38,6 @@ export class PerformanceSearchComponent implements OnInit {
   ngOnInit(): void {
     this.performanceSearchForm = this.formBuilder.group({
       date: ['', []],
-      price: ['', []],
       time: ['', []],
     });
 
@@ -46,7 +45,7 @@ export class PerformanceSearchComponent implements OnInit {
 
   searchPerformances() {
 
-    if (this.performanceSearchForm.value.date === '' && this.performanceSearchForm.value.price === ''
+    if (this.performanceSearchForm.value.date === ''
       && this.performanceSearchForm.value.time === '' && this.performanceSearchForm.value.event === ''
       && this.performanceSearchForm.value.venue === '') {
 
@@ -72,9 +71,11 @@ export class PerformanceSearchComponent implements OnInit {
 
       let date = null;
       if (this.performanceSearchForm.value.date !== '' && this.performanceSearchForm.value.date !== null) {
-        if (this.performanceSearchForm.value.time !== '') {
+       
+        if (this.performanceSearchForm.value.time !== '' && this.performanceSearchForm.value.time !== null) {
           date = new Date(this.performanceSearchForm.value.date + 'T' + this.performanceSearchForm.value.time);
         } else {
+          console.log('aaaa')
           date = new Date(this.performanceSearchForm.value.date);
         }
       } else {
@@ -82,7 +83,8 @@ export class PerformanceSearchComponent implements OnInit {
           this.doDateSearch = false;
         }
       }
-
+      console.log(date)
+      console.log(this.performanceSearchForm.value.date)
       let eventId;
 
       if (this.selectedEvent) {
@@ -100,8 +102,7 @@ export class PerformanceSearchComponent implements OnInit {
       }
 
       if (this.doDateSearch) {
-        this.performanceService.searchPerformances(this.page, this.size, date, eventId,
-          this.performanceSearchForm.value.price, venueId).subscribe(
+        this.performanceService.searchPerformances(this.page, this.size, date, eventId, venueId).subscribe(
             response => {
               console.log(response);
               this.performances.push(...response);
@@ -151,9 +152,9 @@ export class PerformanceSearchComponent implements OnInit {
   resetSearchFields() {
     this.performanceSearchForm.reset();
     this.performanceSearchForm.value.date = '';
-    this.performanceSearchForm.value.price = '';
     this.performanceSearchForm.value.time = '';
     this.selectedEvent = null;
     this.selectedVenue = null;
+    this.searchPerformances();
   }
 }
