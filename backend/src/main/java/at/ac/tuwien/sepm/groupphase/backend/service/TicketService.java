@@ -1,6 +1,6 @@
 package at.ac.tuwien.sepm.groupphase.backend.service;
 
-import at.ac.tuwien.sepm.groupphase.backend.entity.Booking;
+import at.ac.tuwien.sepm.groupphase.backend.entity.File;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Performance;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Ticket;
 import at.ac.tuwien.sepm.groupphase.backend.entity.TicketType;
@@ -78,4 +78,22 @@ public interface TicketService {
      * @param status of the changed tickets.
      */
     void updateStatus(Set<Ticket> tickets, Ticket.Status status);
+
+
+    /**
+     * Returns all tickets from user for this performance.
+     *
+     * @param performanceId id of performance
+     * @param userId id of user
+     * @return list of tickets.
+     */
+    List<Ticket> getTicketsForPerformance(long performanceId, long userId);
+
+    /**
+     * Returns pdf file with tickets.
+     *
+     * @param performanceId chooses with performance is asked.
+     * @return pdf file.
+     */
+    File getPdf(long performanceId);
 }

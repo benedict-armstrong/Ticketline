@@ -37,6 +37,10 @@ export class BookingComponent implements OnInit {
     );
   }
 
+  downloadClick(booking) {
+    const pdf = booking.invoice;
+  }
+
   onBuyClick(booking) {
     const changeBooking = new ChangeBooking(booking.id, 'PAID_FOR');
     this.bookingService.updateBooking(changeBooking).subscribe(

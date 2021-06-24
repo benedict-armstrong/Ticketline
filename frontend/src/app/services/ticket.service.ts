@@ -4,6 +4,8 @@ import { Globals } from '../global/globals';
 import { Observable } from 'rxjs';
 import { NewTicket } from '../dtos/newTicket';
 import { Ticket } from '../dtos/ticket';
+import { CustomFile } from '../dtos/customFile';
+import { TicketGroup } from '../dtos/ticketGroup';
 
 @Injectable({
   providedIn: 'root'
@@ -127,6 +129,10 @@ export class TicketService {
 
   reserve(): Observable<boolean> {
     return this.httpClient.put<boolean>(this.ticketBaseUri + '/reserve', null);
+  }
+
+  getTicketPdf(id: number): Observable<CustomFile> {
+    return this.httpClient.get<CustomFile>(this.ticketBaseUri + '/ticketPdf/' + id);
   }
 
   private defaultServiceErrorHandling(error: any) {

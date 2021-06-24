@@ -2,6 +2,7 @@ package at.ac.tuwien.sepm.groupphase.backend.service.impl;
 
 import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Booking;
+import at.ac.tuwien.sepm.groupphase.backend.entity.File;
 import at.ac.tuwien.sepm.groupphase.backend.entity.LayoutUnit;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Performance;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Sector;
@@ -9,11 +10,10 @@ import at.ac.tuwien.sepm.groupphase.backend.entity.Ticket;
 import at.ac.tuwien.sepm.groupphase.backend.entity.TicketType;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Venue;
 import at.ac.tuwien.sepm.groupphase.backend.exception.NoTicketLeftException;
-import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepm.groupphase.backend.repository.TicketRepository;
-import at.ac.tuwien.sepm.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepm.groupphase.backend.security.AuthenticationFacade;
 import at.ac.tuwien.sepm.groupphase.backend.service.BookingService;
+import at.ac.tuwien.sepm.groupphase.backend.service.PdfService;
 import at.ac.tuwien.sepm.groupphase.backend.service.TicketService;
 import at.ac.tuwien.sepm.groupphase.backend.service.UserService;
 import org.slf4j.Logger;
@@ -212,5 +212,21 @@ public class TicketServiceImpl implements TicketService {
         }
 
         ticketRepository.saveAll(tickets);
+    }
+
+    @Override
+    public List<Ticket> getTicketsForPerformance(long performanceId, long userId) {
+        LOGGER.trace("getTicketsForPerformance()");
+        return ticketRepository.findByPerformanceIdAndUserIdAndStatus(performanceId, userId, Ticket.Status.PAID_FOR);
+    }
+
+    @Override
+    public File getPdf(long performanceId) {
+        LOGGER.trace("getPdf() {}", performanceId);
+        ApplicationUser user = userService.findApplicationUserByEmail(authenticationFacade.getAuthentication().getPrincipal().toString());
+        List<Ticket> tickets = getTicketsForPerformance(performanceId, user.getId());
+        PdfService pdf = new PdfService(user);
+        pdf.createTicket(tickets);
+        return pdf.getFile();
     }
 }

@@ -1,7 +1,9 @@
 package at.ac.tuwien.sepm.groupphase.backend.service;
 
+import at.ac.tuwien.sepm.groupphase.backend.entity.Address;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepm.groupphase.backend.entity.File;
+import at.ac.tuwien.sepm.groupphase.backend.entity.Performance;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Ticket;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
@@ -17,6 +19,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.FileOutputStream;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.Set;
 
 public class PdfService {
@@ -35,7 +38,7 @@ public class PdfService {
             this.user = user;
             globalDocument = new Document();
             PdfWriter.getInstance(globalDocument, stream);
-            // PdfWriter.getInstance(globalDocument, new FileOutputStream("C:/temp/test.pdf"));
+            PdfWriter.getInstance(globalDocument, new FileOutputStream("C:/temp/test.pdf"));
             globalDocument.open();
             addHeaderData();
         } catch (Exception e) {
@@ -186,8 +189,38 @@ public class PdfService {
         }
     }
 
-    public void createTicket() {
+    public void createTicket(List<Ticket> tickets) {
+        //PERFORMANCE
+        Performance perf = tickets.get(0).getPerformance();
+        Address address = perf.getVenue().getAddress();
+        String perfString = "\n\n\n" + perf.getTitle() + "\n";
+        perfString += perf.getVenue().getName() + "\n";
+        perfString += address.getLineOne() + " " + address.getCity() + "\n";
+        perfString += "Start: " + perf.getDate().format(DateTimeFormatter.ofPattern("dd.MM.YYYY hh:mm")) + "\n";
 
+        Paragraph performance = new Paragraph(perfString, normalFont);
+        addEmptyLine(performance, 2);
+
+        //TICKETS
+        PdfPTable table = new PdfPTable(2);
+
+        for (Ticket ticket : tickets) {
+            PdfPCell sectorCell = new PdfPCell(new Phrase(ticket.getTicketType().getSector().getName() + " " + ticket.getTicketType().getTitle()));
+            sectorCell.setHorizontalAlignment(Element.ALIGN_LEFT);
+
+            PdfPCell seatCell = new PdfPCell(new Phrase("Seat " + ticket.getSeat().getCustomLabel()));
+            seatCell.setHorizontalAlignment(Element.ALIGN_RIGHT);
+
+            table.addCell(sectorCell);
+            table.addCell(seatCell);
+        }
+
+        try {
+            globalDocument.add(performance);
+            globalDocument.add(table);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void addEmptyLine(Paragraph paragraph, int number) {

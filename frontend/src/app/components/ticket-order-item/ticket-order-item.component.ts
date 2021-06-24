@@ -2,6 +2,7 @@ import {Component, Input, OnInit} from '@angular/core';
 import {TicketGroup} from '../../dtos/ticketGroup';
 import {Ticket} from '../../dtos/ticket';
 import {Performance} from '../../dtos/performance';
+import {TicketService} from '../../services/ticket.service';
 
 @Component({
   selector: 'app-ticket-order-item',
@@ -35,7 +36,7 @@ export class TicketOrderItemComponent implements OnInit {
     // this.eventType = item.event.eventType.charAt(0) + item.event.eventType.slice(1).toLowerCase();
   }
 
-  constructor() { }
+  constructor(private ticketService: TicketService) { }
 
   ngOnInit(): void {
   }
@@ -48,5 +49,26 @@ export class TicketOrderItemComponent implements OnInit {
     } else {
       ticketGroup.id += 1;
     }
+  }
+
+  downloadTicket() {
+    this.item.tickets.forEach(
+      ticket => ticket.ticketType.sector = null
+    );
+
+    this.item.tickets.forEach(
+      ticket => ticket.seat.sector = null
+    );
+
+    console.log(this.item);
+
+    this.ticketService.getTicketPdf(this.performance.id).subscribe(
+      (response) => {
+        const pdf = response;
+        console.log(pdf);
+      }, error => {
+        console.error(error);
+      }
+    );
   }
 }

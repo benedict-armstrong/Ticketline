@@ -5,6 +5,7 @@ import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.TicketDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.PerformanceMapper;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.TicketMapper;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.TicketTypeMapper;
+import at.ac.tuwien.sepm.groupphase.backend.entity.File;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Ticket;
 import at.ac.tuwien.sepm.groupphase.backend.service.TicketService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -129,5 +130,14 @@ public class TicketEndpoint {
     public List<TicketDto> getReservedTickets() {
         LOGGER.info("GET /api/v1/tickets/reserved");
         return ticketMapper.ticketListToTicketDtoList(ticketService.getTickets(Ticket.Status.RESERVED));
+    }
+
+    @GetMapping("/ticketPdf/{id}")
+    @Secured({"ROLE_USER", "ROLE_ORGANIZER", "ROLE_ADMIN"})
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(summary = "Get ticket pdf for performance")
+    public File getTicketPdf(@PathVariable Long id) {
+        LOGGER.info("GET /api/v1/tickets/ticketPdf/{}", id);
+        return ticketService.getPdf(id);
     }
 }
