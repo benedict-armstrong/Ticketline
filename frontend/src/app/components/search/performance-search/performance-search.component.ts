@@ -73,7 +73,7 @@ export class PerformanceSearchComponent implements OnInit {
 
       let date = null;
       if (this.performanceSearchForm.value.date !== '' && this.performanceSearchForm.value.date !== null) {
-       
+
         if (this.performanceSearchForm.value.time !== '' && this.performanceSearchForm.value.time !== null) {
           date = new Date(this.performanceSearchForm.value.date + 'T' + this.performanceSearchForm.value.time);
         } else {
