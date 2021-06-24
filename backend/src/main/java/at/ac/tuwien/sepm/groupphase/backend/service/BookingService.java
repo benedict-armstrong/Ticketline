@@ -47,11 +47,4 @@ public interface BookingService {
      * @param ticket too be deleted
      */
     void deleteTicket(Ticket ticket);
-
-    /**
-     * check if all tickets in booking cancel, if so cancel booking.
-     *
-     * @param ticket of the booking
-     */
-    void checkIfAllTicketsCancelled(Ticket ticket);
 }

@@ -218,20 +218,4 @@ public class TicketServiceImpl implements TicketService {
 
         ticketRepository.saveAll(tickets);
     }
-
-    @Override
-    @Transactional
-    public void cancel(List<Long> ids) {
-        LOGGER.trace("updateStatus({})", ids);
-        List<Ticket> tickets = ticketRepository.findByIdList(ids);
-
-        for (Ticket ticket : tickets) {
-            ticket.setStatus(Ticket.Status.CANCELLED);
-            ticketRepository.save(ticket);
-        }
-
-        if (tickets.size() != 0) {
-            bookingService.checkIfAllTicketsCancelled(tickets.get(0));
-        }
-    }
 }

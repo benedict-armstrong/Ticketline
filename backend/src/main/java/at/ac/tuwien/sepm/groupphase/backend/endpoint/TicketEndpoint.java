@@ -85,15 +85,6 @@ public class TicketEndpoint {
         return ticketService.reserve();
     }
 
-    @PutMapping(path = "/cancel")
-    @Secured({"ROLE_USER", "ROLE_ORGANIZER", "ROLE_ADMIN"})
-    @ResponseStatus(HttpStatus.OK)
-    @Operation(summary = "Cancel tickets")
-    public void cancel(@RequestBody List<Long> ids) {
-        LOGGER.info("PUT /api/v1/tickets/cancel {}", ids);
-        ticketService.cancel(ids);
-    }
-
     @DeleteMapping(path = "/{id}")
     @Secured({"ROLE_USER", "ROLE_ORGANIZER", "ROLE_ADMIN"})
     @ResponseStatus(HttpStatus.OK)

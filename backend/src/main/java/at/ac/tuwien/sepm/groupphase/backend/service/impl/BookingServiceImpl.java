@@ -122,22 +122,4 @@ public class BookingServiceImpl implements BookingService {
             bookingRepository.delete(booking);
         }
     }
-
-    @Override
-    public void checkIfAllTicketsCancelled(Ticket ticket) {
-        Booking booking = bookingRepository.findByTicketsContaining(ticket);
-
-        boolean allTicketsCancelled = true;
-        for (Ticket bookingTicket : booking.getTickets()) {
-            if (bookingTicket.getStatus() != Ticket.Status.CANCELLED) {
-                allTicketsCancelled = false;
-                break;
-            }
-        }
-
-        if (allTicketsCancelled) {
-            booking.setStatus(Booking.Status.CANCELLED);
-            bookingRepository.save(booking);
-        }
-    }
 }

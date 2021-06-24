@@ -86,11 +86,4 @@ public interface TicketService {
      * @param status of the changed tickets.
      */
     void updateStatus(Set<Ticket> tickets, Ticket.Status status);
-
-    /**
-     * cancel tickets by id and cancel booking if all tickets cancelled.
-     *
-     * @param ids of the tickets to be cancelled
-     */
-    void cancel(List<Long> ids);
 }
