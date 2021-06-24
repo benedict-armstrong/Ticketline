@@ -1,7 +1,10 @@
 <div class="list-item" [routerLink]="['/event-detail', topEvent.event.id]">
-  <div class="info">
-    <img src="{{previewImageUrl}}" alt="">
-    <div class="detail">
+  <div class="info row">
+
+    <div class="col-2">
+      <img src="{{previewImageUrl}}" alt="">
+    </div>
+    <div class="col-10 detail">
       <h5>{{topEvent.event.name}}</h5>
       <p class="date-time">{{topEvent.event.startDate | date:'EEEE, MMM d, y HH:mm'}} - {{topEvent.event.endDate | date:'EEEE, MMM d, y HH:mm'}}</p>
       <div class="availability-wrapper">

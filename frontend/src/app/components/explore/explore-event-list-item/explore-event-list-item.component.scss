@@ -1,14 +1,11 @@
 @import "src/colors";
 
 .info {
-  display: flex;
+  //display: flex;
 }
 
 .info img {
-  display: block;
-  max-height: 120px;
-  width: auto;
-  height: auto;
+  max-height: 130px;
 }
 
 .date-time {
@@ -16,7 +13,7 @@
 }
 
 .detail {
-  margin-left: 10px;
+  margin-left: 20pt;
   width: clamp(400px, 600px, 600px);
 }
 

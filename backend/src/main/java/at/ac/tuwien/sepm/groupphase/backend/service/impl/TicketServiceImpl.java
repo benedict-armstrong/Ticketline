@@ -25,7 +25,13 @@ import javax.transaction.Transactional;
 import java.lang.invoke.MethodHandles;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
 @Service
 @EnableScheduling
@@ -222,8 +228,14 @@ public class TicketServiceImpl implements TicketService {
 
         Long max = Collections.max(list);
 
-        for (Long count : list) {
-            out.add((double) count / max);
+        if (max == 0L) {
+            for (Long ignored : list) {
+                out.add(0.0d);
+            }
+        } else {
+            for (Long count : list) {
+                out.add((double) count / max);
+            }
         }
 
         return out;
