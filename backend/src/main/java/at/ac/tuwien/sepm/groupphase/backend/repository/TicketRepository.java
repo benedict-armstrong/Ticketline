@@ -44,12 +44,12 @@ public interface TicketRepository extends JpaRepository<Ticket, Long> {
     /**
      * Find all ticket entries by status and in performance.
      *
-     * @param performanceId id of performance
-     * @param userId id of user
+     * @param performance performance
+     * @param user user
      * @param status status of ticket
      * @return list of all found tickets
      */
-    List<Ticket> findByPerformanceIdAndUserIdAndStatus(long performanceId, long userId, Ticket.Status status);
+    List<Ticket> findByPerformanceAndUserAndStatus(Performance performance, ApplicationUser user, Ticket.Status status);
 
     /**
      * Find all layoutUnit entries that are not referenced in any ticket of the given performance.

@@ -14,11 +14,13 @@ import at.ac.tuwien.sepm.groupphase.backend.repository.TicketRepository;
 import at.ac.tuwien.sepm.groupphase.backend.security.AuthenticationFacade;
 import at.ac.tuwien.sepm.groupphase.backend.service.BookingService;
 import at.ac.tuwien.sepm.groupphase.backend.service.PdfService;
+import at.ac.tuwien.sepm.groupphase.backend.service.PerformanceService;
 import at.ac.tuwien.sepm.groupphase.backend.service.TicketService;
 import at.ac.tuwien.sepm.groupphase.backend.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -40,16 +42,19 @@ public class TicketServiceImpl implements TicketService {
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final TicketRepository ticketRepository;
     private final UserService userService;
+    private final PerformanceService performanceService;
     private final AuthenticationFacade authenticationFacade;
     private final BookingService bookingService;
 
     @Autowired
     public TicketServiceImpl(TicketRepository ticketRepository,
                              UserService userService,
+                             @Lazy PerformanceService performanceService,
                              AuthenticationFacade authenticationFacade,
                              BookingService bookingService) {
         this.ticketRepository = ticketRepository;
         this.userService = userService;
+        this.performanceService = performanceService;
         this.authenticationFacade = authenticationFacade;
         this.bookingService = bookingService;
     }
@@ -217,7 +222,12 @@ public class TicketServiceImpl implements TicketService {
     @Override
     public List<Ticket> getTicketsForPerformance(long performanceId, long userId) {
         LOGGER.trace("getTicketsForPerformance()");
-        return ticketRepository.findByPerformanceIdAndUserIdAndStatus(performanceId, userId, Ticket.Status.PAID_FOR);
+        Performance performance = performanceService.findById(performanceId);
+        LOGGER.info(performance.getTitle());
+        ApplicationUser user = userService.findApplicationUserById(userId);
+        LOGGER.info(user.toString());
+
+        return ticketRepository.findByPerformanceAndUserAndStatus(performance, user, Ticket.Status.PAID_FOR);
     }
 
     @Override

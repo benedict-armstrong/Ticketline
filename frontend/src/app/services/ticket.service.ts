@@ -135,6 +135,10 @@ export class TicketService {
     return this.httpClient.get<CustomFile>(this.ticketBaseUri + '/ticketPdf/' + id);
   }
 
+  confirmation(userId: number, performanceId: number): Observable<Ticket[]> {
+    return this.httpClient.get<Ticket[]>(this.ticketBaseUri + '/confirmation/' + userId + '/' + performanceId);
+  }
+
   private defaultServiceErrorHandling(error: any) {
     console.log(error);
     this.error = true;

@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.PathVariable;
 
+import javax.annotation.security.PermitAll;
 import java.lang.invoke.MethodHandles;
 import java.util.List;
 
@@ -139,5 +140,14 @@ public class TicketEndpoint {
     public File getTicketPdf(@PathVariable Long id) {
         LOGGER.info("GET /api/v1/tickets/ticketPdf/{}", id);
         return ticketService.getPdf(id);
+    }
+
+    @GetMapping("/confirmation/{user}/{perf}")
+    @PermitAll
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(summary = "Get ticket pdf for performance")
+    public List<TicketDto> getTicketPdf(@PathVariable Long user, @PathVariable Long perf) {
+        LOGGER.info("GET /api/v1/tickets/confirmation/{}/{}", user, perf);
+        return ticketMapper.ticketListToTicketDtoList(ticketService.getTicketsForPerformance(perf, user));
     }
 }

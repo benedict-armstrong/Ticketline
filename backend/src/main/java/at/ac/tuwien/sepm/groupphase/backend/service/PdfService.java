@@ -38,7 +38,7 @@ public class PdfService {
             this.user = user;
             globalDocument = new Document();
             PdfWriter.getInstance(globalDocument, stream);
-            PdfWriter.getInstance(globalDocument, new FileOutputStream("C:/temp/test.pdf"));
+            // PdfWriter.getInstance(globalDocument, new FileOutputStream("C:/temp/test.pdf"));
             globalDocument.open();
             addHeaderData();
         } catch (Exception e) {
@@ -215,9 +215,13 @@ public class PdfService {
             table.addCell(seatCell);
         }
 
+        //QR CODE
+        Paragraph qr = new Paragraph("\n\n\nLink to Confirmation: http://localhost:4200/confirmation/" + user.getId() + "/" + perf.getId());
+
         try {
             globalDocument.add(performance);
             globalDocument.add(table);
+            globalDocument.add(qr);
         } catch (Exception e) {
             e.printStackTrace();
         }
