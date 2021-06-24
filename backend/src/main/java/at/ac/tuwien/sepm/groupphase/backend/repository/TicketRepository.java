@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -74,4 +75,12 @@ public interface TicketRepository extends JpaRepository<Ticket, Long> {
      */
     @Query("select t from Ticket t where t.id in :ids")
     List<Ticket> findByIdList(@Param("ids") List<Long> ids);
+
+    /**
+     * Get number of Tickets with given Date.
+     *
+     * @param changeDate Date
+     * @return number of Tickets last changed on given Date
+     */
+    long countTicketByChangeDateBetweenAndStatus(LocalDateTime changeDate, LocalDateTime changeDate2, Ticket.Status status);
 }

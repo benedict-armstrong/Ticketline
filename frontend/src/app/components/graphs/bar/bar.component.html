@@ -1,7 +1,7 @@
 <div class="bar-chart">
   <div class="chart">
     <div class="chart-item chart-data">
-      <div class="chart-data-point"  *ngFor="let item of heights">
+      <div class="chart-data-point"  *ngFor="let item of data.values">
         <div class="bar grow-in-y" [style]="{'height': item * 100 + '%'}">
         </div>
       </div>

@@ -9,9 +9,7 @@ import at.ac.tuwien.sepm.groupphase.backend.entity.Ticket;
 import at.ac.tuwien.sepm.groupphase.backend.entity.TicketType;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Venue;
 import at.ac.tuwien.sepm.groupphase.backend.exception.NoTicketLeftException;
-import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepm.groupphase.backend.repository.TicketRepository;
-import at.ac.tuwien.sepm.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepm.groupphase.backend.security.AuthenticationFacade;
 import at.ac.tuwien.sepm.groupphase.backend.service.BookingService;
 import at.ac.tuwien.sepm.groupphase.backend.service.TicketService;
@@ -25,13 +23,9 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.lang.invoke.MethodHandles;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 @Service
 @EnableScheduling
@@ -193,7 +187,7 @@ public class TicketServiceImpl implements TicketService {
     @Override
     public void pruneReservations(List<Performance> performances) {
         LOGGER.trace("pruneReservations()");
-        List<Ticket> tickets = new ArrayList();
+        List<Ticket> tickets = new ArrayList<>();
         for (Performance performance : performances) {
             tickets.addAll(ticketRepository.findByPerformanceAndStatus(performance, Ticket.Status.RESERVED));
         }
@@ -212,5 +206,26 @@ public class TicketServiceImpl implements TicketService {
         }
 
         ticketRepository.saveAll(tickets);
+    }
+
+    @Override
+    public List<Double> getRelativeTicketSalesPastSevenDays() {
+        LOGGER.trace("getTicketSalesPastSevenDays()");
+        List<Long> list = new ArrayList<>();
+        List<Double> out = new ArrayList<>();
+        LocalDate today = LocalDate.now();
+
+        for (int i = 6; i >= 0; i--) {
+            LocalDate day = today.minusDays(i);
+            list.add(ticketRepository.countTicketByChangeDateBetweenAndStatus(day.atStartOfDay(), day.plusDays(1).atStartOfDay(), Ticket.Status.PAID_FOR));
+        }
+
+        Long max = Collections.max(list);
+
+        for (Long count : list) {
+            out.add((double) count / max);
+        }
+
+        return out;
     }
 }

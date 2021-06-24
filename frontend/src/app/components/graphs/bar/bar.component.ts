@@ -10,17 +10,7 @@ export class BarComponent implements OnInit {
   @Input()
   data: GraphData;
 
-  heights: number[];
-
   constructor() { }
 
-  ngOnInit(): void {
-    this.calculateHeights();
-  }
-
-  calculateHeights() {
-    const max = this.data.values.reduce((a, b) => Math.max(a, b));
-    this.heights = this.data.values.map((a: number) => a / max);
-  }
-
+  ngOnInit(): void {}
 }

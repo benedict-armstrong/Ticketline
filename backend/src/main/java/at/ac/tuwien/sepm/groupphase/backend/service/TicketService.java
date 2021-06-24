@@ -1,6 +1,5 @@
 package at.ac.tuwien.sepm.groupphase.backend.service;
 
-import at.ac.tuwien.sepm.groupphase.backend.entity.Booking;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Performance;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Ticket;
 import at.ac.tuwien.sepm.groupphase.backend.entity.TicketType;
@@ -78,4 +77,12 @@ public interface TicketService {
      * @param status of the changed tickets.
      */
     void updateStatus(Set<Ticket> tickets, Ticket.Status status);
+
+    /**
+     * Get ticket sales of last seven days.
+     *
+     * @return List of ticket sales on each day
+     */
+    List<Double> getRelativeTicketSalesPastSevenDays();
+
 }

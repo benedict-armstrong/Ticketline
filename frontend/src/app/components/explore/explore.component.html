@@ -1,10 +1,7 @@
 <div class="explore">
   <h1 class="text-center header">Explore popular events</h1>
   <div  class="sales-chart">
-    <app-bar [data]="{
-    name: 'Ticket sales past 7 days',
-    values: [10,20,50,30,69,32,73],
-    xLabels: ['M','T','W','T','F','S','S']}"></app-bar>
+    <app-bar [data]="this.data"></app-bar>
   </div>
 
   <h2>This weeks most popular events:</h2>
