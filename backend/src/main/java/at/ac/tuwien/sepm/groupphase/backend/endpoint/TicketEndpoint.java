@@ -137,7 +137,7 @@ public class TicketEndpoint {
     @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "Get ticket sales for past 7 days")
     public List<Double> getSales() {
-        LOGGER.info("GET /api/v1/tickets/reserved");
+        LOGGER.info("GET /api/v1/tickets/sales");
         return ticketService.getRelativeTicketSalesPastSevenDays();
     }
 }

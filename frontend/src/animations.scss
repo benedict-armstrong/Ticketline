@@ -3,6 +3,7 @@
 // underline text in secondary color on hover
 
 .underline-header {
+  cursor: pointer;
   span {
     background-image: linear-gradient(
         transparent calc(75% - 15%),
