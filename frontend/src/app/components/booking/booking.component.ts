@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import {BookingService} from '../../services/booking.service';
 import {Booking} from '../../dtos/booking';
 import {ChangeBooking} from '../../dtos/changeBooking';
+import {FileService} from '../../services/file.service';
 
 @Component({
   selector: 'app-booking',
@@ -37,8 +38,18 @@ export class BookingComponent implements OnInit {
     );
   }
 
-  downloadClick(booking) {
+  downloadClick(booking: Booking) {
     const pdf = booking.invoice;
+    const newDate = new Date(booking.createDate);
+    const filename = newDate.getDate() + '-' + newDate.getMonth() + '-' + newDate.getFullYear();
+
+    const a = document.createElement('a');
+    document.body.appendChild(a);
+    const url = window.URL.createObjectURL(FileService.asFile(pdf.data, pdf.type));
+    a.href = url;
+    a.download = filename + '.pdf';
+    a.click();
+    window.URL.revokeObjectURL(url);
   }
 
   onBuyClick(booking) {

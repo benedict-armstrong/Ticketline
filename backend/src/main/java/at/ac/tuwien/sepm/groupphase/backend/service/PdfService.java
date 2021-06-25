@@ -38,7 +38,6 @@ public class PdfService {
             this.user = user;
             globalDocument = new Document();
             PdfWriter.getInstance(globalDocument, stream);
-            // PdfWriter.getInstance(globalDocument, new FileOutputStream("C:/temp/test.pdf"));
             globalDocument.open();
             addHeaderData();
         } catch (Exception e) {
@@ -190,41 +189,45 @@ public class PdfService {
     }
 
     public void createTicket(List<Ticket> tickets) {
-        //PERFORMANCE
-        Performance perf = tickets.get(0).getPerformance();
-        Address address = perf.getVenue().getAddress();
-        String perfString = "\n\n\n" + perf.getTitle() + "\n";
-        perfString += perf.getVenue().getName() + "\n";
-        perfString += address.getLineOne() + " " + address.getCity() + "\n";
-        perfString += "Start: " + perf.getDate().format(DateTimeFormatter.ofPattern("dd.MM.YYYY hh:mm")) + "\n";
+        if (tickets.size() != 0) {
+            //PERFORMANCE
+            Performance perf = tickets.get(0).getPerformance();
+            Address address = perf.getVenue().getAddress();
+            String perfString = "\n\n\n" + perf.getTitle() + "\n";
+            perfString += perf.getVenue().getName() + "\n";
+            perfString += address.getLineOne() + " " + address.getCity() + "\n";
+            perfString += "Start: " + perf.getDate().format(DateTimeFormatter.ofPattern("dd.MM.YYYY hh:mm")) + "\n";
 
-        Paragraph performance = new Paragraph(perfString, normalFont);
-        addEmptyLine(performance, 2);
+            Paragraph performance = new Paragraph(perfString, normalFont);
+            addEmptyLine(performance, 2);
 
-        //TICKETS
-        PdfPTable table = new PdfPTable(2);
 
-        for (Ticket ticket : tickets) {
-            PdfPCell sectorCell = new PdfPCell(new Phrase(ticket.getTicketType().getSector().getName() + " " + ticket.getTicketType().getTitle()));
-            sectorCell.setHorizontalAlignment(Element.ALIGN_LEFT);
+            //TICKETS
+            PdfPTable table = new PdfPTable(2);
 
-            PdfPCell seatCell = new PdfPCell(new Phrase("Seat " + ticket.getSeat().getCustomLabel()));
-            seatCell.setHorizontalAlignment(Element.ALIGN_RIGHT);
+            for (Ticket ticket : tickets) {
+                PdfPCell sectorCell = new PdfPCell(new Phrase(ticket.getTicketType().getSector().getName() + " " + ticket.getTicketType().getTitle()));
+                sectorCell.setHorizontalAlignment(Element.ALIGN_LEFT);
 
-            table.addCell(sectorCell);
-            table.addCell(seatCell);
+                PdfPCell seatCell = new PdfPCell(new Phrase("Seat " + ticket.getSeat().getCustomLabel()));
+                seatCell.setHorizontalAlignment(Element.ALIGN_RIGHT);
+
+                table.addCell(sectorCell);
+                table.addCell(seatCell);
+            }
+
+            //QR CODE
+            Paragraph qr = new Paragraph("\n\n\nLink to Confirmation: http://localhost:4200/confirmation/" + user.getId() + "/" + perf.getId());
+
+            try {
+                globalDocument.add(performance);
+                globalDocument.add(table);
+                globalDocument.add(qr);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
 
-        //QR CODE
-        Paragraph qr = new Paragraph("\n\n\nLink to Confirmation: http://localhost:4200/confirmation/" + user.getId() + "/" + perf.getId());
-
-        try {
-            globalDocument.add(performance);
-            globalDocument.add(table);
-            globalDocument.add(qr);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
     private void addEmptyLine(Paragraph paragraph, int number) {

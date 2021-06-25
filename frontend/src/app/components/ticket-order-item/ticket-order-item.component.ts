@@ -3,6 +3,7 @@ import {TicketGroup} from '../../dtos/ticketGroup';
 import {Ticket} from '../../dtos/ticket';
 import {Performance} from '../../dtos/performance';
 import {TicketService} from '../../services/ticket.service';
+import {FileService} from '../../services/file.service';
 
 @Component({
   selector: 'app-ticket-order-item',
@@ -31,12 +32,9 @@ export class TicketOrderItemComponent implements OnInit {
       this.tooLong = true;
       this.tickets.forEach(ticket => this.createAltTickets(ticket));
     }
-
-    // Formatting Eventtype
-    // this.eventType = item.event.eventType.charAt(0) + item.event.eventType.slice(1).toLowerCase();
   }
 
-  constructor(private ticketService: TicketService) { }
+  constructor(private ticketService: TicketService, private fileService: FileService) { }
 
   ngOnInit(): void {
   }
@@ -51,21 +49,21 @@ export class TicketOrderItemComponent implements OnInit {
     }
   }
 
-  downloadTicket() {
-    this.item.tickets.forEach(
-      ticket => ticket.ticketType.sector = null
-    );
+  download(pdf) {
+    const a = document.createElement('a');
+    document.body.appendChild(a);
+    const url = window.URL.createObjectURL(pdf);
+    a.href = url;
+    a.download = this.item.tickets[0].performance.title + '.pdf';
+    a.click();
+    window.URL.revokeObjectURL(url);
+  }
 
-    this.item.tickets.forEach(
-      ticket => ticket.seat.sector = null
-    );
-
-    console.log(this.item);
-
+  clickDownloadTicket() {
     this.ticketService.getTicketPdf(this.performance.id).subscribe(
       (response) => {
         const pdf = response;
-        console.log(pdf);
+        this.download(FileService.asFile(pdf.data, pdf.type));
       }, error => {
         console.error(error);
       }
