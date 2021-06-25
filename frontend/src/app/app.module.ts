@@ -54,6 +54,7 @@ import { SearchVenueListComponent } from './components/search/search-venue-list/
 import { EditUserComponent } from './components/edit-user/edit-user.component';
 import { UserManagementComponent } from './components/user-management/user-management.component';
 import { BannedAlertComponent } from './components/banned-alert/banned-alert.component';
+import { DeletedAlertComponent } from './components/deleted-alert/deleted-alert.component';
 
 @NgModule({
   declarations: [
@@ -106,7 +107,8 @@ import { BannedAlertComponent } from './components/banned-alert/banned-alert.com
     SearchVenueListComponent,
     EditUserComponent,
     UserManagementComponent,
-    BannedAlertComponent
+    BannedAlertComponent,
+    DeletedAlertComponent
   ],
   imports: [
     BrowserModule,
