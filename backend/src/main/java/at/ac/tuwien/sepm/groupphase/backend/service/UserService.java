@@ -86,4 +86,11 @@ public interface UserService extends UserDetailsService {
      */
     void resetPasswordAttemptCount();
 
+    /**
+     * Deletes a user from the application.
+     *
+     * @param id the ID of the user to be deleted
+     */
+    void delete(Long id);
+
 }

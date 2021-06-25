@@ -198,11 +198,40 @@ public class CustomUserDetailService implements UserService {
     @Scheduled(fixedDelay = 18000)
     public void resetPasswordAttemptCount() {
         LOGGER.trace("resetPasswordAttemptCount()");
-        List<ApplicationUser> users = userRepository.findAllByPointsGreaterThan(0);
+        List<ApplicationUser> users = userRepository.findAllByPointsGreaterThan(0L);
 
         for (ApplicationUser user : users) {
-            user.setPoints(0);
+            user.setPoints(0L);
             userRepository.save(user);
         }
+    }
+
+    @Override
+    public void delete(Long id) {
+        LOGGER.trace("delete({})", id);
+
+        ApplicationUser requester = userRepository.findUserByEmail((String) authenticationFacade.getAuthentication().getPrincipal());
+        if (requester == null) {
+            throw new NotFoundException("Couldn't find user with id " + id);
+        }
+
+        if (!requester.getId().equals(id)) {
+            throw new IllegalArgumentException("Attempted to delete another user");
+        } else if (requester.getRole() != ApplicationUser.UserRole.CLIENT) {
+            throw new IllegalArgumentException("Attempted to delete a non-client user");
+        } else if (requester.getStatus() == ApplicationUser.UserStatus.DELETED) {
+            throw new NotFoundException("Couldn't find user with id " + id);
+        }
+        requester.setFirstName(null);
+        requester.setLastName(null);
+        requester.setTelephoneNumber(null);
+        requester.setEmail(null);
+        requester.setPassword(null);
+        requester.setLastLogin(null);
+        requester.setLastReadNewsId(null);
+        requester.setPoints(null);
+        requester.setStatus(ApplicationUser.UserStatus.DELETED);
+        requester.setAddress(null);
+        userRepository.save(requester);
     }
 }

@@ -16,5 +16,5 @@ public interface UserRepository extends JpaRepository<ApplicationUser, Long> {
     Page<ApplicationUser> findAll(Pageable pageable);
 
 
-    List<ApplicationUser> findAllByPointsGreaterThan(int number);
+    List<ApplicationUser> findAllByPointsGreaterThan(Long number);
 }
