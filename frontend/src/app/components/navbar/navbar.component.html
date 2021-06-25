@@ -3,10 +3,10 @@
     <a href="/" class="navbar-brand underline-header">
       <span>ticketline</span>
     </a>
-
-    <!--<form>
-      <input class="form-control search text-input" type="search" placeholder="Search" aria-label="Search">
-    </form>-->
+    
+    <form [formGroup]="this.fulltextSearchForm" (ngSubmit)="fullTextSearch()">
+      <input class="form-control search text-input" type="search" placeholder="Search" aria-label="Search" formControlName="text">
+    </form>
 
     <button class="navbar-toggler custom-toggler custom" type="button" data-bs-toggle="collapse"
       data-bs-target="#collapsingNavbar">

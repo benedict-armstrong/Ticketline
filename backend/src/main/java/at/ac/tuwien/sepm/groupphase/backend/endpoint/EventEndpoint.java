@@ -14,6 +14,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -54,6 +56,7 @@ public class EventEndpoint {
         return eventMapper.eventToEventDto(eventService.addEvent(eventMapper.eventDtoToEvent(eventDto)));
     }
 
+    @Transactional
     @PermitAll
     @GetMapping
     @Operation(summary = "Get all events")
@@ -67,6 +70,7 @@ public class EventEndpoint {
         return eventMapper.eventListToEventDtoList(eventService.findAllOrderedByStartDate(paginationMapper.paginationDtoToPageable(paginationDto)));
     }
 
+    @Transactional
     @PermitAll
     @GetMapping(value = "/top")
     @Operation(summary = "Get all events")
@@ -83,4 +87,15 @@ public class EventEndpoint {
         LOGGER.info("GET /api/v1/events/{}", id);
         return eventMapper.eventToEventDto(eventService.findById(id));
     }
+
+    @PermitAll
+    @GetMapping(value = "/search")
+    @Operation(summary = "Get events by full text search")
+    @Transactional
+    public List<EventDto> search(@RequestParam String text, PaginationDto paginationDto) {
+        LOGGER.info("GET /api/v1/events/search");
+
+        return eventMapper.eventListToEventDtoList(eventService.search(text, paginationMapper.paginationDtoToPageable(paginationDto)));
+    }
+
 }

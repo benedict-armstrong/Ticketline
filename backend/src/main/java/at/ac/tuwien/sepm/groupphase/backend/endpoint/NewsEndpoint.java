@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -49,6 +50,7 @@ public class NewsEndpoint {
         return newsMapper.newsToNewsDto(newsService.addNews(newsMapper.newsDtoToNews(newsDto)));
     }
 
+    @Transactional
     @GetMapping
     @PermitAll
     @Operation(summary = "Get all news")
@@ -59,6 +61,7 @@ public class NewsEndpoint {
         );
     }
 
+    @Transactional
     @GetMapping(value = {"/{id}"})
     @PermitAll
     @Operation(summary = "Get a news article by id")

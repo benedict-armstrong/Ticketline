@@ -6,6 +6,18 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import org.apache.lucene.analysis.core.LowerCaseFilterFactory;
+import org.apache.lucene.analysis.ngram.EdgeNGramFilterFactory;
+import org.apache.lucene.analysis.snowball.SnowballPorterFilterFactory;
+import org.apache.lucene.analysis.standard.StandardTokenizerFactory;
+import org.hibernate.search.annotations.Analyzer;
+import org.hibernate.search.annotations.AnalyzerDef;
+import org.hibernate.search.annotations.ContainedIn;
+import org.hibernate.search.annotations.Field;
+import org.hibernate.search.annotations.Indexed;
+import org.hibernate.search.annotations.IndexedEmbedded;
+import org.hibernate.search.annotations.TokenFilterDef;
+import org.hibernate.search.annotations.TokenizerDef;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -26,21 +38,25 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@Indexed
 @Entity
 public class Performance {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Field(analyzer = @Analyzer(definition = "texteventanalyzer"))
     @Column(nullable = false)
     private String title;
 
+    @Field
     @Column(nullable = false)
     private String description;
 
     @Column(nullable = false)
     private LocalDateTime date;
 
+    @IndexedEmbedded(depth = 1)
     @ManyToOne(cascade = {CascadeType.MERGE}, optional = false)
     private Artist artist;
 
@@ -52,10 +68,10 @@ public class Performance {
     @NotNull
     private Set<TicketType> ticketTypes = new HashSet<>();
 
-    @ToString.Exclude
-    @EqualsAndHashCode.Exclude
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "event_id")
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     private Event event;
 
 }

@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepm.groupphase.backend.service;
 
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.PaginationDto;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Event;
 import at.ac.tuwien.sepm.groupphase.backend.entity.News;
 import at.ac.tuwien.sepm.groupphase.backend.entity.TopEvent;
@@ -49,4 +50,12 @@ public interface EventService {
      * @return list of all events
      */
     List<TopEvent> findTopEvents(Pageable pageable);
+
+    /**
+     * Returns a list of events which match the full text search.
+     *
+     * @param text to search with
+     * @return list of events with all possible values
+     */
+    List<Event> search(String text, Pageable pageable);
 }

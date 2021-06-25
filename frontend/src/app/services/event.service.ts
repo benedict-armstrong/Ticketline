@@ -71,4 +71,16 @@ export class ApplicationEventService {
   addEvent(event: Event): Observable<Event> {
     return this.httpClient.post<Event>(this.eventBaseUri, event);
   }
+
+  /**
+   * Searches for a text
+   */
+   fulltextSearchEvents(text: string, page: number, size: number): Observable<Event[]> {
+    let params = new HttpParams();
+    params = params.set('text', text);
+    params = params.set('page', String(page));
+    params = params.set('size', String(size));
+
+    return this.httpClient.get<Event[]>(this.eventBaseUri + '/search', { params });
+  }
 }
