@@ -42,7 +42,7 @@ export class ApplicationPerformanceService {
   /**
    * Search all Performances
    */
-  searchPerformances(page: number, size: number, date: Date, event: number, price: number, venue: number): Observable<Performance[]> {
+  searchPerformances(page: number, size: number, date: Date, event: number, venue: number): Observable<Performance[]> {
     let params = new HttpParams();
     params = params.set('page', String(page));
     params = params.set('size', String(size));
@@ -51,10 +51,6 @@ export class ApplicationPerformanceService {
     }
     if(event !== null){
       params = params.set('eventId', event.toString());
-    }
-
-    if(price !== null){
-      params = params.set('price', price.toString());
     }
 
     if(venue !== null){
