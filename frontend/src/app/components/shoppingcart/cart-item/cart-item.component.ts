@@ -1,7 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NewTicket } from 'src/app/dtos/newTicket';
-import { Ticket } from 'src/app/dtos/ticket';
 import { TicketService } from 'src/app/services/ticket.service';
 
 @Component({
@@ -37,11 +36,12 @@ export class CartItemComponent implements OnInit {
     if (!this.waiting) {
       this.waiting = true;
       this.ticketService.removeMultipleTickets(this.i).subscribe(
-        (response: boolean) => {
+        () => {
           this.waiting = false;
           this.success = true;
         },
         (error) => {
+          console.error(error);
           this.waiting = false;
         }
       );
@@ -52,11 +52,12 @@ export class CartItemComponent implements OnInit {
     if (!this.waiting) {
       this.waiting = true;
       this.ticketService.removeTicket(this.i, j).subscribe(
-        (response: boolean) => {
+        () => {
           this.waiting = false;
           this.success = true;
         },
         (error) => {
+          console.error(error);
           this.waiting = false;
         }
       );

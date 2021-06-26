@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Globals } from '../global/globals';
-import { Observable, Subscriber } from 'rxjs';
+import { Observable } from 'rxjs';
 import { NewTicket } from '../dtos/newTicket';
 import { Ticket } from '../dtos/ticket';
 import { SeatCount } from '../dtos/seatCount';
+import {LayoutUnit} from '../dtos/layoutUnit';
 
 @Injectable({
   providedIn: 'root'
@@ -122,8 +123,8 @@ export class TicketService {
     return this.httpClient.get<Ticket[]>(this.ticketBaseUri + '/reserved');
   }
 
-  addTicket(addTicket: NewTicket): Observable<boolean> {
-    return new Observable<boolean>(subscriber => {
+  addTicket(addTicket: NewTicket): Observable<Ticket[][]> {
+    return new Observable<Ticket[][]>(subscriber => {
       this.httpClient.post<Ticket[]>(this.ticketBaseUri, addTicket).subscribe(
         (tickets: Ticket[]) => {
           let done = false;
@@ -148,7 +149,7 @@ export class TicketService {
             this.cart.push(tickets);
           }
           this.updatePrice();
-          subscriber.next();
+          subscriber.next(this.cart);
         },
         (error) => {
           subscriber.error(error);
@@ -157,9 +158,36 @@ export class TicketService {
     });
   }
 
-  removeTicket(cartIndex: number, ticketIndex: number): Observable<boolean> {
+  removeTicketBySeat(seat: LayoutUnit): Observable<Ticket[][]> {
+    const ticket: Ticket = [].concat(...this.cart).find((t: Ticket) => t.seat.id === seat.id );
+    return new Observable<Ticket[][]>(subscriber => {
+      this.httpClient.delete<boolean>(this.ticketBaseUri + '/' + ticket.id).subscribe(
+        (response: boolean) => {
+          if (response) {
+            this.cart.forEach((tickets) => {
+              if (tickets.find((t) => t === ticket)) {
+                if (tickets.length === 1) {
+                  this.cart.splice( this.cart.indexOf(tickets), 1);
+                } else {
+                  tickets.splice(tickets.indexOf(ticket), 1);
+                }
+              }
+            });
+            this.updatePrice();
+            subscriber.next(this.cart);
+          }
+        },
+        (error) => {
+          this.reload();
+          subscriber.error(error);
+        }
+      );
+    });
+  }
+
+  removeTicket(cartIndex: number, ticketIndex: number): Observable<Ticket[][]> {
     const ticket: Ticket = this.cart[cartIndex][ticketIndex];
-    return new Observable<boolean>(subscriber => {
+    return new Observable<Ticket[][]>(subscriber => {
       this.httpClient.delete<boolean>(this.ticketBaseUri + '/' + ticket.id).subscribe(
         (response: boolean) => {
           if (response) {
@@ -169,7 +197,7 @@ export class TicketService {
               this.cart[cartIndex].splice(ticketIndex, 1);
             }
             this.updatePrice();
-            subscriber.next();
+            subscriber.next(this.cart);
           }
         },
         (error) => {

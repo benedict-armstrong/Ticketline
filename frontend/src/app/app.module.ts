@@ -57,6 +57,7 @@ import { EditUserComponent } from './components/edit-user/edit-user.component';
 import { UserManagementComponent } from './components/user-management/user-management.component';
 import { BannedAlertComponent } from './components/banned-alert/banned-alert.component';
 import { FilterPipe } from './components/performance-detail/pipes/filter.pipe';
+import { CartListComponent } from './components/performance-detail/cart-list/cart-list.component';
 
 @NgModule({
   declarations: [
@@ -112,7 +113,8 @@ import { FilterPipe } from './components/performance-detail/pipes/filter.pipe';
     EditUserComponent,
     UserManagementComponent,
     BannedAlertComponent,
-    FilterPipe
+    FilterPipe,
+    CartListComponent
   ],
   imports: [
     BrowserModule,

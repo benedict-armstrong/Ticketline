@@ -4,7 +4,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: 20pt 0pt;
+  margin: 20pt 0;
   width: 100%;
 }
 
@@ -57,7 +57,7 @@
 }
 
 .selected-seat-list {
-  height: 300px;
+  height: 500px;
   overflow: scroll;
   width: 100%;
   counter-reset: seat-counter;

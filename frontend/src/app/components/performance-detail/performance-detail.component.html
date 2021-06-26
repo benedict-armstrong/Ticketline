@@ -41,7 +41,7 @@
       <div class="tickets">
         <p class="text-center">We will try to find seats next to each other</p>
         <div *ngFor="let ticketType of this.performance.ticketTypes; index as j;">
-          <app-ticket-list-item *ngIf="ticketType.sector.type !== 'STAGE'"
+          <app-ticket-list-item *ngIf="ticketType.sector.type !== 'STAGE' && ticketCounts[j]"
                                 [ticketType]="ticketType"
                                 [ticketCount]="ticketCounts[j]"
                                 [performance]="performance"
