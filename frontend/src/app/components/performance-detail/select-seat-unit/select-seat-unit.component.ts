@@ -26,7 +26,7 @@ export class SelectSeatUnitComponent implements OnInit {
 
   title: string;
 
-  inCart: boolean = false;
+  inCart = false;
 
   constructor(private ticketService: TicketService) { }
 
@@ -53,15 +53,15 @@ export class SelectSeatUnitComponent implements OnInit {
             break;
           default:
             this.title = 'Not available';
-        }      
+        }
 
         if (!this.layoutUnit.free) {
-          for (let i = 0; i < this.ticketService.cart.length; i++) {
+          for (const cartItem of this.ticketService.cart) {
             if (this.inCart) {
               break;
             }
-            for (let j = 0; j < this.ticketService.cart[i].length; j++) {
-              if (this.ticketService.cart[i][j].seat.id === this.layoutUnit.id) {
+            for (const ticket of cartItem) {
+              if (ticket.seat.id === this.layoutUnit.id) {
                 this.inCart = true;
                 this.title = 'Already in your cart';
                 break;

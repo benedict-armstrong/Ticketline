@@ -254,8 +254,8 @@ public class TicketEndpointTest implements TestDataTicket, TestDataUser, TestDat
     }
 
     @Test
-    @DisplayName("Should return NoTicketLeftException")
-    public void whenCreateTicket_butTooManyTickets_thenNoTicketLeftException() throws Exception {
+    @DisplayName("Should return 400 from FullCartException")
+    public void whenCreateTicket_butTooManyTickets_thenFullCartException() throws Exception {
 
         MvcResult mvcResult = this.mockMvc.perform(
             post(TICKET_BASE_URI)
@@ -266,7 +266,7 @@ public class TicketEndpointTest implements TestDataTicket, TestDataUser, TestDat
                 .header(securityProperties.getAuthHeader(), authToken)
         ).andReturn();
         MockHttpServletResponse response = mvcResult.getResponse();
-        assertEquals(HttpStatus.NOT_FOUND.value(), response.getStatus());
+        assertEquals(HttpStatus.BAD_REQUEST.value(), response.getStatus());
     }
 
     @Test

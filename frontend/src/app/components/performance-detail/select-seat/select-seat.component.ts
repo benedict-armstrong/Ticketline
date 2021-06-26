@@ -32,13 +32,10 @@ export class SelectSeatComponent implements OnInit {
           }
         }
       }
-  
       this.layout = this.venue.layout;
     },
     (error) => {
-      
     });
-    
   }
 
   addSeat(seat: LayoutUnitSelect): void {

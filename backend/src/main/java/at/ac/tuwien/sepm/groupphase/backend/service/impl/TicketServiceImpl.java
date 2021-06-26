@@ -115,7 +115,7 @@ public class TicketServiceImpl implements TicketService {
 
         List<Ticket> currentTickets = ticketRepository.findByUserAndStatus(user, Ticket.Status.IN_CART);
         if (currentTickets.size() + 1 > maxCartSize) {
-            throw new FullCartException("Tickets were not added to cart, this request would exceed the cart size limit of " + maxCartSize);
+            throw new FullCartException("Tickets were not added to cart, this request would exceed the cart size limit of " + maxCartSize + ".");
         }
 
         LayoutUnit seat = layoutUnitService.findById(seatId);

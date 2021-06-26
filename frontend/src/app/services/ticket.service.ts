@@ -53,7 +53,7 @@ export class TicketService {
           console.log(responseList);
           this.loading = false;
           this.success = true;
-  
+
           const newCart: Ticket[][] = [];
           responseList.forEach(ticket => {
             if (newCart.length === 0) {
@@ -78,7 +78,7 @@ export class TicketService {
               }
             }
           });
-  
+
           this.cart = newCart;
           console.log(this.cart);
           this.updatePrice();
@@ -91,7 +91,6 @@ export class TicketService {
         }
       );
     });
-    
   }
 
   updatePrice(): void {
