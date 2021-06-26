@@ -1,9 +1,7 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {Venue} from '../../../dtos/venue';
 import {LayoutUnitSelect} from '../models/layoutUnitSelect';
-import {Sector} from '../../../dtos/sector';
-import {NewTicket} from '../../../dtos/newTicket';
 import {Ticket} from '../../../dtos/ticket';
+import {Performance} from '../../../dtos/performance';
 
 @Component({
   selector: 'app-select-seat',
@@ -12,36 +10,44 @@ import {Ticket} from '../../../dtos/ticket';
 })
 export class SelectSeatComponent implements OnInit {
 
-  @Input() venue: Venue;
-  @Input() performanceId: number;
+  @Input() performance: Performance;
 
   layout: LayoutUnitSelect[][];
 
-  selectedSeats: LayoutUnitSelect[] = [];
+  selectedTickets: Ticket[] = [];
 
   constructor() {
   }
 
   ngOnInit(): void {
-    for (const row of this.venue.layout) {
+    for (const row of this.performance.venue.layout) {
       for (const unit of row) {
         if (unit) {
-          unit.sector = this.venue.sectors.find(s => s.id === unit.sector);
+          unit.sector = this.performance.venue.sectors.find(s => s.id === unit.sector);
         }
       }
     }
 
-    this.layout = this.venue.layout;
+    this.layout = this.performance.venue.layout;
   }
 
   addSeat(seat: LayoutUnitSelect): void {
-    this.selectedSeats.push(seat);
+    this.selectedTickets.push(
+      new Ticket(
+        null,
+        null,
+        this.performance,
+        seat
+      )
+    );
   }
 
   removeSeat(seat: LayoutUnitSelect): void {
-    const index = this.selectedSeats.indexOf(seat);
+    const index = this.selectedTickets.findIndex(
+      (ticket) =>  ticket.seat === seat
+    );
     if (index > -1) {
-      this.selectedSeats.splice(index, 1);
+      this.selectedTickets.splice(index, 1);
     }
   }
 

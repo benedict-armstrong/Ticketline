@@ -118,7 +118,7 @@ label {
 
 .inline {
   display: flex;
-  
+
   input {
     display: block;
     height: 38px;
@@ -130,7 +130,7 @@ label {
     background-color: white;
     border: 1px solid #ced4da;
     border-radius: 0.25rem;
-    text-align: center; 
+    text-align: center;
   }
 
   input::-webkit-inner-spin-button {
@@ -185,5 +185,5 @@ div.carousel-item {
 }
 
 .list-item:hover {
-  box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
+  box-shadow: rgba(0, 0, 0, 0.1) 0 4px 12px;
 }
