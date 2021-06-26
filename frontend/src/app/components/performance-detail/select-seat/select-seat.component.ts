@@ -24,7 +24,7 @@ export class SelectSeatComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.ticketService.reload().subscribe(() => {
+    this.ticketService.updateShoppingCart().subscribe(() => {
       for (const row of this.venue.layout) {
         for (const unit of row) {
           if (unit) {

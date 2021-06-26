@@ -36,18 +36,13 @@ export class CartItemComponent implements OnInit {
   removeAllTickets(): void {
     if (!this.waiting) {
       this.waiting = true;
-      this.ticketService.removeMultipleTickets(this.ticketService.cart[this.i]).subscribe(
+      this.ticketService.removeMultipleTickets(this.i).subscribe(
         (response: boolean) => {
           this.waiting = false;
           this.success = true;
-          if (response) {
-            this.ticketService.cart.splice(this.i, 1);
-            this.ticketService.updatePrice();
-          }
         },
         (error) => {
           this.waiting = false;
-          this.ticketService.reload();
         }
       );
     }
@@ -56,22 +51,13 @@ export class CartItemComponent implements OnInit {
   removeTicket(j: number): void {
     if (!this.waiting) {
       this.waiting = true;
-      this.ticketService.removeTicket(this.ticketService.cart[this.i][j]).subscribe(
+      this.ticketService.removeTicket(this.i, j).subscribe(
         (response: boolean) => {
           this.waiting = false;
           this.success = true;
-          if (response) {
-            if (this.ticketService.cart[this.i].length === 1) {
-              this.ticketService.cart.splice(this.i, 1);
-            } else {
-              this.ticketService.cart[this.i].splice(j, 1);
-            }
-            this.ticketService.updatePrice();
-          }
         },
         (error) => {
           this.waiting = false;
-          this.ticketService.reload();
         }
       );
     }
@@ -88,13 +74,9 @@ export class CartItemComponent implements OnInit {
         seatId: null
       };
       this.ticketService.addTicket(addTicket).subscribe(
-        (responseTickets: Ticket[]) => {
+        () => {
           this.waiting = false;
           this.success = true;
-          if (responseTickets.length === 1) {
-            this.ticketService.cart[this.i].push(responseTickets[0]);
-          }
-          this.ticketService.updatePrice();
         },
         (error) => {
           this.waiting = false;
