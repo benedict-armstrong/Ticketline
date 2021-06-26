@@ -4,6 +4,7 @@ import {LayoutUnitSelect} from '../models/layoutUnitSelect';
 import {Sector} from '../../../dtos/sector';
 import {NewTicket} from '../../../dtos/newTicket';
 import {Ticket} from '../../../dtos/ticket';
+import { TicketService } from 'src/app/services/ticket.service';
 
 @Component({
   selector: 'app-select-seat',
@@ -19,19 +20,25 @@ export class SelectSeatComponent implements OnInit {
 
   selectedSeats: LayoutUnitSelect[] = [];
 
-  constructor() {
+  constructor(private ticketService: TicketService) {
   }
 
   ngOnInit(): void {
-    for (const row of this.venue.layout) {
-      for (const unit of row) {
-        if (unit) {
-          unit.sector = this.venue.sectors.find(s => s.id === unit.sector);
+    this.ticketService.reload().subscribe(() => {
+      for (const row of this.venue.layout) {
+        for (const unit of row) {
+          if (unit) {
+            unit.sector = this.venue.sectors.find(s => s.id === unit.sector);
+          }
         }
       }
-    }
-
-    this.layout = this.venue.layout;
+  
+      this.layout = this.venue.layout;
+    },
+    (error) => {
+      
+    });
+    
   }
 
   addSeat(seat: LayoutUnitSelect): void {

@@ -36,53 +36,62 @@ export class TicketService {
   }
 
   openCart(): void {
-    this.reload();
     this.showCart = true;
+    this.reload().subscribe(() => {
+      },
+      (error) => {
+        this.defaultServiceErrorHandling(error);
+    });
   }
 
-  reload(): void {
-    this.error = false;
-    this.loading = true;
-    this.getShoppingCart().subscribe(
-      (responseList: Ticket[]) => {
-        console.log(responseList);
-        this.loading = false;
-        this.success = true;
-
-        const newCart: Ticket[][] = [];
-        responseList.forEach(ticket => {
-          if (newCart.length === 0) {
-            newCart.push([ticket]);
-          } else {
-            let done = false;
-            for (const newCartInner of newCart) {
-              if (newCartInner.length === 0) {
-                newCartInner.push(ticket);
-                done = true;
-                break;
-              } else {
-                if (newCartInner[0].performance.id === ticket.performance.id) {
+  reload(): Observable<boolean> {
+    return new Observable<boolean>(subscriber => {
+      this.error = false;
+      this.loading = true;
+      this.getShoppingCart().subscribe(
+        (responseList: Ticket[]) => {
+          console.log(responseList);
+          this.loading = false;
+          this.success = true;
+  
+          const newCart: Ticket[][] = [];
+          responseList.forEach(ticket => {
+            if (newCart.length === 0) {
+              newCart.push([ticket]);
+            } else {
+              let done = false;
+              for (const newCartInner of newCart) {
+                if (newCartInner.length === 0) {
                   newCartInner.push(ticket);
                   done = true;
                   break;
+                } else {
+                  if (newCartInner[0].performance.id === ticket.performance.id) {
+                    newCartInner.push(ticket);
+                    done = true;
+                    break;
+                  }
                 }
               }
+              if (!done) {
+                newCart.push([ticket]);
+              }
             }
-            if (!done) {
-              newCart.push([ticket]);
-            }
-          }
-        });
+          });
+  
+          this.cart = newCart;
+          console.log(this.cart);
+          this.updatePrice();
 
-        this.cart = newCart;
-        console.log(this.cart);
-        this.updatePrice();
-      },
-      (error) => {
-        this.loading = false;
-        this.defaultServiceErrorHandling(error);
-      }
-    );
+          subscriber.next(true);
+        },
+        (error) => {
+          this.loading = false;
+          subscriber.error(error);
+        }
+      );
+    });
+    
   }
 
   updatePrice(): void {
