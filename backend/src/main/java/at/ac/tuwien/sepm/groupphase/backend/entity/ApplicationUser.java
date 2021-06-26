@@ -29,28 +29,27 @@ public class ApplicationUser {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, length = 200)
+    @Column(length = 200)
     private String firstName;
 
-    @Column(nullable = false, length = 200)
+    @Column(length = 200)
     private String lastName;
 
-    @Column(nullable = false, length = 50, name = "tel_number")
+    @Column(length = 50, name = "tel_number")
     private String telephoneNumber;
 
-    @Column(nullable = false, length = 200, unique = true)
+    @Column(length = 200, unique = true)
     private String email;
 
-    @Column(nullable = false, length = 500)
+    @Column(length = 500)
     private String password;
 
-    @Column(nullable = false, name = "last_login")
+    @Column(name = "last_login")
     private LocalDateTime lastLogin;
 
     private Long lastReadNewsId;
 
-    @Column()
-    private int points;
+    private Long points;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -64,7 +63,7 @@ public class ApplicationUser {
     private Address address;
 
     public enum UserStatus {
-        ACTIVE, BANNED
+        ACTIVE, BANNED, DELETED
     }
 
     public enum UserRole {

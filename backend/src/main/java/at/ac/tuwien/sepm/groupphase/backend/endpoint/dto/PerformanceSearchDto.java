@@ -21,8 +21,6 @@ public class PerformanceSearchDto {
     @Future
     private LocalDateTime date;
 
-    private Double price;
-
     private Long eventId;
 
 }

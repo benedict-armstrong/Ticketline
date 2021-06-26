@@ -28,6 +28,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
@@ -344,6 +345,59 @@ public class UserEndpointTest implements TestDataUser, TestDataAddress {
         ApplicationUser user = userRepository.findUserByEmail(userDto.getEmail());
 
         assertEquals(user.getStatus(), ApplicationUser.UserStatus.BANNED);
+    }
+
+    @Test
+    public void whenDeleteSelf_thenRemoveInfoAndReturn204() throws Exception {
+        defaultUser.setRole(ApplicationUser.UserRole.CLIENT);
+        ApplicationUser savedUser = userRepository.save(defaultUser);
+
+        MvcResult mvcResult = this.mockMvc.perform(
+            delete(USER_BASE_URI + "/" + savedUser.getId())
+                .contentType(MediaType.APPLICATION_JSON)
+                .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(savedUser.getEmail(), USER_ROLES))
+        ).andReturn();
+        MockHttpServletResponse response = mvcResult.getResponse();
+
+        assertEquals(HttpStatus.NO_CONTENT.value(), response.getStatus());
+    }
+
+    @Test
+    public void whenNonClientDeleteSelf_then409() throws Exception {
+        defaultUser.setRole(ApplicationUser.UserRole.ADMIN);
+        ApplicationUser savedUser = userRepository.save(defaultUser);
+
+        MvcResult mvcResult = this.mockMvc.perform(
+            delete(USER_BASE_URI + "/" + savedUser.getId())
+                .contentType(MediaType.APPLICATION_JSON)
+                .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(savedUser.getEmail(), USER_ROLES))
+        ).andReturn();
+        MockHttpServletResponse response = mvcResult.getResponse();
+
+        assertEquals(HttpStatus.CONFLICT.value(), response.getStatus());
+    }
+
+    @Test
+    public void whenAttemptToDeleteDeletedUser_then404() throws Exception {
+        defaultUser.setRole(ApplicationUser.UserRole.CLIENT);
+        ApplicationUser savedUser = userRepository.save(defaultUser);
+        String token = jwtTokenizer.getAuthToken(savedUser.getEmail(), USER_ROLES);
+
+        MvcResult mvcResult1 = this.mockMvc.perform(
+            delete(USER_BASE_URI + "/" + savedUser.getId())
+                .contentType(MediaType.APPLICATION_JSON)
+                .header(securityProperties.getAuthHeader(), token)
+        ).andReturn();
+        MockHttpServletResponse response1 = mvcResult1.getResponse();
+        assertEquals(HttpStatus.NO_CONTENT.value(), response1.getStatus());
+
+        MvcResult mvcResult2 = this.mockMvc.perform(
+            delete(USER_BASE_URI + "/" + savedUser.getId())
+                .contentType(MediaType.APPLICATION_JSON)
+                .header(securityProperties.getAuthHeader(), token)
+        ).andReturn();
+        MockHttpServletResponse response2 = mvcResult2.getResponse();
+        assertEquals(HttpStatus.NOT_FOUND.value(), response2.getStatus());
     }
 
 }

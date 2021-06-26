@@ -48,7 +48,7 @@ public class UserDto  {
     private Long lastReadNewsId;
 
     @PositiveOrZero(message = "Negative points values are not allowed")
-    private int points;
+    private Long points;
 
     private ApplicationUser.UserStatus status;
 

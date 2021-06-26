@@ -56,6 +56,7 @@ import { SelectSeatUnitComponent } from './components/performance-detail/select-
 import { EditUserComponent } from './components/edit-user/edit-user.component';
 import { UserManagementComponent } from './components/user-management/user-management.component';
 import { BannedAlertComponent } from './components/banned-alert/banned-alert.component';
+import { DeletedAlertComponent } from './components/deleted-alert/deleted-alert.component';
 
 @NgModule({
   declarations: [
@@ -111,6 +112,7 @@ import { BannedAlertComponent } from './components/banned-alert/banned-alert.com
     BannedAlertComponent,
     SelectSeatComponent,
     SelectSeatUnitComponent,
+    DeletedAlertComponent
   ],
   imports: [
     BrowserModule,

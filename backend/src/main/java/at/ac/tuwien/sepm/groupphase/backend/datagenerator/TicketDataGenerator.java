@@ -14,9 +14,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.context.annotation.Profile;
+import org.springframework.context.event.ContextRefreshedEvent;
+import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
+import javax.transaction.Transactional;
 import java.lang.invoke.MethodHandles;
 import java.time.LocalDateTime;
 import java.util.HashSet;
@@ -35,6 +37,11 @@ public class TicketDataGenerator {
     private final UserRepository userRepository;
     private final LayoutUnitRepository layoutUnitRepository;
 
+    @EventListener(ContextRefreshedEvent.class)
+    public void onApplicationEvent(ContextRefreshedEvent event) {
+        event.getApplicationContext().getBean(TicketDataGenerator.class).generateTickets();
+    }
+
     public TicketDataGenerator(TicketRepository ticketRepository, EventRepository eventRepository,
                                UserRepository userRepository, LayoutUnitRepository layoutUnitRepository) {
         this.ticketRepository = ticketRepository;
@@ -43,8 +50,8 @@ public class TicketDataGenerator {
         this.layoutUnitRepository = layoutUnitRepository;
     }
 
-    @PostConstruct
-    public void generateTickets() throws Exception {
+    @Transactional
+    public void generateTickets() {
         if (ticketRepository.findAll().size() > 0) {
             LOGGER.debug("Tickets have already been generated");
         } else {
