@@ -7,6 +7,7 @@ import { Ticket } from 'src/app/dtos/ticket';
 import { Sector } from 'src/app/dtos/sector';
 import { NewTicket } from 'src/app/dtos/newTicket';
 import { AuthService } from 'src/app/services/auth.service';
+import { SeatCount } from 'src/app/dtos/seatCount';
 
 @Component({
   selector: 'app-ticket-list-item',
@@ -17,7 +18,7 @@ export class TicketListItemComponent implements OnInit {
   @Input()
   performance: Performance;
   @Input()
-  ticketCount: number;
+  ticketCount: SeatCount;
   @Input()
   ticketType: TicketType;
   @Input()
@@ -87,31 +88,9 @@ export class TicketListItemComponent implements OnInit {
         };
         this.waiting = true;
         this.ticketService.addTicket(addTicket).subscribe(
-          (responseTickets: Ticket[]) => {
+          () => {
             this.waiting = false;
             this.success = true;
-
-            let done = false;
-            for (let i = 0; i < this.ticketService.cart.length; i++) {
-              if (this.ticketService.cart[i].length === 0) {
-                this.ticketService.cart[i] = responseTickets;
-                done = true;
-                break;
-              } else {
-                if (this.ticketService.cart[i][0].performance.id === responseTickets[0].performance.id) {
-                  responseTickets.forEach(ticket => {
-                    this.ticketService.cart[i].push(ticket);
-                  });
-                  done = true;
-                  break;
-                }
-              }
-            }
-
-            if (!done) {
-              this.ticketService.cart.push(responseTickets);
-            }
-            this.ticketService.updatePrice();
           },
           (error) => {
             this.waiting = false;

@@ -53,19 +53,14 @@ public class CustomPerformanceService implements PerformanceService {
             seat.setFree(true);
             for (LayoutUnit takenSeat : takenSeats) {
                 if (takenSeat.getId().equals(seat.getId())) {
-                    LOGGER.info("Current Seat: {}", seat);
                     seat.setFree(false);
                     break;
                 }
             }
         }
 
-
         venue.setLayout(newSeats);
         performance.setVenue(venue);
-
-
-        LOGGER.info("Performance Seats : {}", performance.getVenue().getLayout());
 
         return performance;
     }

@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepm.groupphase.backend.service.impl;
 
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.SeatCountDto;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Booking;
 import at.ac.tuwien.sepm.groupphase.backend.entity.LayoutUnit;
@@ -8,8 +9,10 @@ import at.ac.tuwien.sepm.groupphase.backend.entity.Sector;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Ticket;
 import at.ac.tuwien.sepm.groupphase.backend.entity.TicketType;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Venue;
+import at.ac.tuwien.sepm.groupphase.backend.exception.FullCartException;
 import at.ac.tuwien.sepm.groupphase.backend.exception.NoTicketLeftException;
 import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
+import at.ac.tuwien.sepm.groupphase.backend.repository.SectorRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.TicketRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepm.groupphase.backend.security.AuthenticationFacade;
@@ -47,6 +50,8 @@ public class TicketServiceImpl implements TicketService {
     private final PerformanceService performanceService;
     private final LayoutUnitService layoutUnitService;
 
+    private final Long maxCartSize = 10L;
+
     @Autowired
     public TicketServiceImpl(TicketRepository ticketRepository,
                              UserService userService,
@@ -68,6 +73,12 @@ public class TicketServiceImpl implements TicketService {
 
         ApplicationUser user = userService.findApplicationUserByEmail((String) authenticationFacade.getAuthentication().getPrincipal());
         Performance performance = performanceService.findById(performanceId);
+
+
+        List<Ticket> currentTickets = ticketRepository.findByUserAndStatus(user, Ticket.Status.IN_CART);
+        if (currentTickets.size() + amount > maxCartSize) {
+            throw new FullCartException("Tickets were not added to cart, this request would exceed the cart size limit of " + maxCartSize + ".");
+        }
 
         List<Ticket> ticketList = new LinkedList<>();
         Sector sector = ticketType.getSector();
@@ -103,6 +114,11 @@ public class TicketServiceImpl implements TicketService {
 
         ApplicationUser user = userService.findApplicationUserByEmail((String) authenticationFacade.getAuthentication().getPrincipal());
         Performance performance = performanceService.findById(performanceId);
+
+        List<Ticket> currentTickets = ticketRepository.findByUserAndStatus(user, Ticket.Status.IN_CART);
+        if (currentTickets.size() + 1 > maxCartSize) {
+            throw new FullCartException("Tickets were not added to cart, this request would exceed the cart size limit of " + maxCartSize + ".");
+        }
 
         LayoutUnit seat = layoutUnitService.findById(seatId);
 
@@ -166,6 +182,30 @@ public class TicketServiceImpl implements TicketService {
     }
 
     @Override
+    public List<SeatCountDto> getSeatCountsInPerformance(Long performanceId) {
+        LOGGER.trace("getSeatCountsInPerformanceBySector({})", performanceId);
+
+        Performance performance = performanceService.findById(performanceId);
+
+        List<SeatCountDto> seatCounts = new LinkedList<SeatCountDto>();
+
+        for (Sector sector : performance.getVenue().getSectors()) {
+            List<LayoutUnit> freeSeats = ticketRepository.getFreeSeatsInPerformanceAndSector(performance, sector);
+
+            List<LayoutUnit> totalSeats = layoutUnitService.findBySector(sector);
+
+            seatCounts.add(SeatCountDto.builder()
+                .sectorId(sector.getId())
+                .freeSeats(freeSeats.size())
+                .totalSeats(totalSeats.size())
+                .build());
+        }
+
+        return seatCounts;
+    }
+
+    @Override
+    @Transactional
     public boolean checkout() {
         LOGGER.trace("checkout()");
         ApplicationUser user = userService.findApplicationUserByEmail((String) authenticationFacade.getAuthentication().getPrincipal());
@@ -183,6 +223,7 @@ public class TicketServiceImpl implements TicketService {
     }
 
     @Override
+    @Transactional
     public boolean reserve() {
         LOGGER.trace("reserve()");
         ApplicationUser user = userService.findApplicationUserByEmail((String) authenticationFacade.getAuthentication().getPrincipal());
@@ -213,7 +254,6 @@ public class TicketServiceImpl implements TicketService {
     }
 
     @Override
-    @Transactional
     public boolean delete(List<Long> ids) {
         LOGGER.trace("delete({})", ids);
         List<Ticket> tickets = ticketRepository.findByIdList(ids);
@@ -238,6 +278,7 @@ public class TicketServiceImpl implements TicketService {
     }
 
     @Override
+    @Transactional
     public void pruneReservations(List<Performance> performances) {
         LOGGER.trace("pruneReservations()");
         List<Ticket> tickets = new ArrayList();

@@ -1,6 +1,7 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {LayoutUnitSelect} from '../models/layoutUnitSelect';
 import {Ticket} from '../../../dtos/ticket';
+import { TicketService } from 'src/app/services/ticket.service';
 import {Performance} from '../../../dtos/performance';
 
 @Component({
@@ -16,10 +17,22 @@ export class SelectSeatComponent implements OnInit {
 
   selectedTickets: Ticket[] = [];
 
-  constructor() {
+  constructor(private ticketService: TicketService) {
   }
 
   ngOnInit(): void {
+    this.ticketService.updateShoppingCart().subscribe(() => {
+      for (const row of this.venue.layout) {
+        for (const unit of row) {
+          if (unit) {
+            unit.sector = this.venue.sectors.find(s => s.id === unit.sector);
+          }
+        }
+      }
+      this.layout = this.venue.layout;
+    },
+    (error) => {
+    });
     for (const row of this.performance.venue.layout) {
       for (const unit of row) {
         if (unit) {

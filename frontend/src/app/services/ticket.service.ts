@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Globals } from '../global/globals';
-import { Observable } from 'rxjs';
+import { Observable, Subscriber } from 'rxjs';
 import { NewTicket } from '../dtos/newTicket';
 import { Ticket } from '../dtos/ticket';
+import { SeatCount } from '../dtos/seatCount';
 
 @Injectable({
   providedIn: 'root'
@@ -36,53 +37,16 @@ export class TicketService {
   }
 
   openCart(): void {
-    this.reload();
     this.showCart = true;
+    this.reload();
   }
 
   reload(): void {
-    this.error = false;
-    this.loading = true;
-    this.getShoppingCart().subscribe(
-      (responseList: Ticket[]) => {
-        console.log(responseList);
-        this.loading = false;
-        this.success = true;
-
-        const newCart: Ticket[][] = [];
-        responseList.forEach(ticket => {
-          if (newCart.length === 0) {
-            newCart.push([ticket]);
-          } else {
-            let done = false;
-            for (const newCartInner of newCart) {
-              if (newCartInner.length === 0) {
-                newCartInner.push(ticket);
-                done = true;
-                break;
-              } else {
-                if (newCartInner[0].performance.id === ticket.performance.id) {
-                  newCartInner.push(ticket);
-                  done = true;
-                  break;
-                }
-              }
-            }
-            if (!done) {
-              newCart.push([ticket]);
-            }
-          }
-        });
-
-        this.cart = newCart;
-        console.log(this.cart);
-        this.updatePrice();
-      },
-      (error) => {
-        this.loading = false;
-        this.defaultServiceErrorHandling(error);
-      }
-    );
+    this.updateShoppingCart().subscribe(() => {
+    },
+    (error) => {
+      this.defaultServiceErrorHandling(error);
+  });
   }
 
   updatePrice(): void {
@@ -98,8 +62,56 @@ export class TicketService {
     });
   }
 
-  getShoppingCart(): Observable<Ticket[]> {
-    return this.httpClient.get<Ticket[]>(this.ticketBaseUri);
+  updateShoppingCart(): Observable<boolean> {
+    return new Observable<boolean>(subscriber => {
+      this.error = false;
+      this.loading = true;
+
+      this.httpClient.get<Ticket[]>(this.ticketBaseUri).subscribe(
+        (responseList: Ticket[]) => {
+          const newCart: Ticket[][] = [];
+          responseList.forEach(ticket => {
+            if (newCart.length === 0) {
+              newCart.push([ticket]);
+            } else {
+              let done = false;
+              for (const newCartInner of newCart) {
+                if (newCartInner.length === 0) {
+                  newCartInner.push(ticket);
+                  done = true;
+                  break;
+                } else {
+                  if (newCartInner[0].performance.id === ticket.performance.id) {
+                    newCartInner.push(ticket);
+                    done = true;
+                    break;
+                  }
+                }
+              }
+              if (!done) {
+                newCart.push([ticket]);
+              }
+            }
+          });
+
+          this.cart = newCart;
+          this.updatePrice();
+
+          this.loading = false;
+          this.success = true;
+
+          subscriber.next();
+        },
+        (error) => {
+          this.loading = false;
+          subscriber.error(error);
+        }
+        );
+    });
+  }
+
+  getSeatCounts(performanceId: number): Observable<SeatCount[]> {
+    return this.httpClient.get<SeatCount[]>(this.ticketBaseUri + '/' + performanceId + '/seatCounts');
   }
 
   getPaidItems(): Observable<Ticket[]> {
@@ -110,20 +122,85 @@ export class TicketService {
     return this.httpClient.get<Ticket[]>(this.ticketBaseUri + '/reserved');
   }
 
-  addTicket(addTicket: NewTicket): Observable<Ticket[]> {
-    return this.httpClient.post<Ticket[]>(this.ticketBaseUri, addTicket);
-  }
+  addTicket(addTicket: NewTicket): Observable<boolean> {
+    return new Observable<boolean>(subscriber => {
+      this.httpClient.post<Ticket[]>(this.ticketBaseUri, addTicket).subscribe(
+        (tickets: Ticket[]) => {
+          let done = false;
 
-  removeTicket(ticket: Ticket): Observable<boolean> {
-    return this.httpClient.delete<boolean>(this.ticketBaseUri + '/' + ticket.id);
-  }
+          for (let i = 0; i < this.cart.length; i++) {
+            if (this.cart[i].length === 0) {
+              this.cart[i] = tickets;
+              done = true;
+              break;
+            } else {
+              if (this.cart[i][0].performance.id === tickets[0].performance.id) {
+                tickets.forEach(ticket => {
+                  this.cart[i].push(ticket);
+                });
+                done = true;
+                break;
+              }
+            }
+          }
 
-  removeMultipleTickets(tickets: Ticket[]): Observable<boolean> {
-    const ids: number[] = [];
-    tickets.forEach(ticket => {
-      ids.push(ticket.id);
+          if (!done) {
+            this.cart.push(tickets);
+          }
+          this.updatePrice();
+          subscriber.next();
+        },
+        (error) => {
+          subscriber.error(error);
+        }
+      );
     });
-    return this.httpClient.request<boolean>('DELETE', this.ticketBaseUri, { body: ids });
+  }
+
+  removeTicket(cartIndex: number, ticketIndex: number): Observable<boolean> {
+    const ticket: Ticket = this.cart[cartIndex][ticketIndex];
+    return new Observable<boolean>(subscriber => {
+      this.httpClient.delete<boolean>(this.ticketBaseUri + '/' + ticket.id).subscribe(
+        (response: boolean) => {
+          if (response) {
+            if (this.cart[cartIndex].length === 1) {
+              this.cart.splice(cartIndex, 1);
+            } else {
+              this.cart[cartIndex].splice(ticketIndex, 1);
+            }
+            this.updatePrice();
+            subscriber.next();
+          }
+        },
+        (error) => {
+          this.reload();
+          subscriber.error(error);
+        }
+      );
+    });
+  }
+
+  removeMultipleTickets(cartIndex: number): Observable<boolean> {
+    return new Observable<boolean>(subscriber => {
+      const ids: number[] = [];
+      this.cart[cartIndex].forEach(ticket => {
+        ids.push(ticket.id);
+      });
+
+      this.httpClient.request<boolean>('DELETE', this.ticketBaseUri, { body: ids }).subscribe(
+        (response: boolean) => {
+          if (response) {
+            this.cart.splice(cartIndex, 1);
+            this.updatePrice();
+            subscriber.next();
+          }
+        },
+        (error) => {
+          this.reload();
+          subscriber.error(error);
+        }
+      );
+    });
   }
 
   checkout(): Observable<boolean> {

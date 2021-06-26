@@ -1,7 +1,7 @@
 <div class="list-item">
     <div class="row">
         <div class="col-6">
-            <h4>{{ticketType.sector.name}} | {{ticketType.title}} ({{ticketCount}} Tickets)</h4>
+            <h4>{{ticketType.sector.name}} | {{ticketType.title}} ({{ticketCount.freeSeats}}/{{ticketCount.totalSeats}} Tickets)</h4>
             <div class="additional-info">
               <span>{{ticketType.sector.description}} | {{ticketType.price / 100 | currency:'EUR'}}</span>
               <div *ngIf="selectSeat" [style]="{'background': this.ticketType.sector.color}" class="color"></div>

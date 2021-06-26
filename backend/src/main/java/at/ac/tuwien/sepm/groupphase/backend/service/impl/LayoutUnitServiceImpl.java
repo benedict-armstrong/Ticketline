@@ -1,6 +1,7 @@
 package at.ac.tuwien.sepm.groupphase.backend.service.impl;
 
 import at.ac.tuwien.sepm.groupphase.backend.entity.LayoutUnit;
+import at.ac.tuwien.sepm.groupphase.backend.entity.Sector;
 import at.ac.tuwien.sepm.groupphase.backend.repository.LayoutUnitRepository;
 import at.ac.tuwien.sepm.groupphase.backend.service.LayoutUnitService;
 import org.slf4j.Logger;
@@ -39,5 +40,12 @@ public class LayoutUnitServiceImpl implements LayoutUnitService {
         LOGGER.trace("findById({})", id);
         Optional<LayoutUnit> layoutUnit = layoutUnitRepository.findById(id);
         return layoutUnit.orElse(null);
+    }
+
+    @Override
+    public List<LayoutUnit> findBySector(Sector sector) {
+        LOGGER.trace("findBySector({})", sector);
+        List<LayoutUnit> layoutUnit = layoutUnitRepository.findLayoutUnitBySector(sector);
+        return layoutUnit;
     }
 }

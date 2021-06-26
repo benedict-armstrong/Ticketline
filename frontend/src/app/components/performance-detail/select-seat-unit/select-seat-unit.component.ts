@@ -26,6 +26,8 @@ export class SelectSeatUnitComponent implements OnInit {
 
   title: string;
 
+  inCart = false;
+
   constructor(private ticketService: TicketService) { }
 
   ngOnInit(): void {
@@ -51,6 +53,21 @@ export class SelectSeatUnitComponent implements OnInit {
             break;
           default:
             this.title = 'Not available';
+        }
+
+        if (!this.layoutUnit.free) {
+          for (const cartItem of this.ticketService.cart) {
+            if (this.inCart) {
+              break;
+            }
+            for (const ticket of cartItem) {
+              if (ticket.seat.id === this.layoutUnit.id) {
+                this.inCart = true;
+                this.title = 'Already in your cart';
+                break;
+              }
+            }
+          }
         }
       }
     }
