@@ -14,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.Authentication;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -106,6 +107,15 @@ public class UserEndpoint {
         return userMapper.applicationUserListToUserDtoList(
             userService.getAll(paginationMapper.paginationDtoToPageable(paginationDto))
         );
+    }
+
+    @DeleteMapping("/{id}")
+    @Secured("ROLE_USER")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @Operation(summary = "Delete user")
+    public void delete(@PathVariable("id") Long id) {
+        LOGGER.info("DELETE /api/v1/users/{}", id);
+        userService.delete(id);
     }
 
 }

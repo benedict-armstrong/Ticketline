@@ -90,4 +90,13 @@ export class UserService {
     return this.httpClient.get<User[]>(this.userBaseUri, {params});
   }
 
+  /**
+   * Deletes a user from the application.
+   *
+   * @param id the id of the user to be removed.
+   */
+  delete(id: number): Observable<any> {
+    return this.httpClient.delete(this.userBaseUri + '/' + id);
+  }
+
 }
