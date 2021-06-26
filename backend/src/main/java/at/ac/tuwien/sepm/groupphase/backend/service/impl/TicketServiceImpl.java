@@ -8,6 +8,7 @@ import at.ac.tuwien.sepm.groupphase.backend.entity.Sector;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Ticket;
 import at.ac.tuwien.sepm.groupphase.backend.entity.TicketType;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Venue;
+import at.ac.tuwien.sepm.groupphase.backend.exception.FullCartException;
 import at.ac.tuwien.sepm.groupphase.backend.exception.NoTicketLeftException;
 import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepm.groupphase.backend.repository.TicketRepository;
@@ -47,6 +48,8 @@ public class TicketServiceImpl implements TicketService {
     private final PerformanceService performanceService;
     private final LayoutUnitService layoutUnitService;
 
+    private final Long maxCartSize = 10L;
+
     @Autowired
     public TicketServiceImpl(TicketRepository ticketRepository,
                              UserService userService,
@@ -68,6 +71,12 @@ public class TicketServiceImpl implements TicketService {
 
         ApplicationUser user = userService.findApplicationUserByEmail((String) authenticationFacade.getAuthentication().getPrincipal());
         Performance performance = performanceService.findById(performanceId);
+
+
+        List<Ticket> currentTickets = ticketRepository.findByUserAndStatus(user, Ticket.Status.IN_CART);
+        if (currentTickets.size() + amount > maxCartSize) {
+            throw new FullCartException("Tickets were not added to cart, this request would exceed the cart size limit of " + maxCartSize + ".");
+        }
 
         List<Ticket> ticketList = new LinkedList<>();
         Sector sector = ticketType.getSector();
@@ -103,6 +112,11 @@ public class TicketServiceImpl implements TicketService {
 
         ApplicationUser user = userService.findApplicationUserByEmail((String) authenticationFacade.getAuthentication().getPrincipal());
         Performance performance = performanceService.findById(performanceId);
+
+        List<Ticket> currentTickets = ticketRepository.findByUserAndStatus(user, Ticket.Status.IN_CART);
+        if (currentTickets.size() + 1 > maxCartSize) {
+            throw new FullCartException("Tickets were not added to cart, this request would exceed the cart size limit of " + maxCartSize);
+        }
 
         LayoutUnit seat = layoutUnitService.findById(seatId);
 
