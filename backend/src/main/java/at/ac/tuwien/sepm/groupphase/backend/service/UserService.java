@@ -73,7 +73,7 @@ public interface UserService extends UserDetailsService {
     ApplicationUser resetPassword(ApplicationUser user);
 
     /**
-     * Retrieves a list of all users.
+     * Retrieves a list of all non-deleted users.
      *
      * @param pageRequest the page and size to be retrieved.
      * @return the list of users on this page.
@@ -85,5 +85,12 @@ public interface UserService extends UserDetailsService {
      *
      */
     void resetPasswordAttemptCount();
+
+    /**
+     * Deletes a user from the application.
+     *
+     * @param id the ID of the user to be deleted
+     */
+    void delete(Long id);
 
 }

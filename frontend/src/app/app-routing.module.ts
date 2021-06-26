@@ -24,6 +24,7 @@ import {BannedAlertComponent} from './components/banned-alert/banned-alert.compo
 import {StatusGuard} from './guards/status.guard';
 import {MasterGuard} from './guards/master.guard';
 import {ConfirmationComponent} from './components/confirmation/confirmation.component';
+import {DeletedAlertComponent} from './components/deleted-alert/deleted-alert.component';
 
 const routes: Routes = [
   { path: '', component: HomePageComponent, canActivate: [MasterGuard],
@@ -66,7 +67,8 @@ const routes: Routes = [
       data: {guards: [AuthGuard, StatusGuard], roles: ['ADMIN']} },
   { path: 'banned', component: BannedAlertComponent },
   { path: 'confirmation/:userId/:perfId', component: ConfirmationComponent, canActivate: [MasterGuard],
-    data: {guards: [StatusGuard]} }
+    data: {guards: [StatusGuard]} },
+  { path: 'deleted', component: DeletedAlertComponent }
 ];
 
 @NgModule({

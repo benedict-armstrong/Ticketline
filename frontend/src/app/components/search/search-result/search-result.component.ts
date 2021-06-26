@@ -5,6 +5,8 @@ import {Artist} from '../../../dtos/artist';
 import {Address} from '../../../dtos/address';
 import {Performance} from '../../../dtos/performance';
 import { Venue } from 'src/app/dtos/venue';
+import { FormBuilder, FormGroup } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-search-result',
@@ -28,14 +30,33 @@ export class SearchResultComponent implements OnInit {
   artistSearched = false;
   addressSearched = false;
   performanceSearched = false;
+  fullTextSearched = false;
+  loadingFullTextSearch = false;
   eventPerformance = null;
   venuePerformance = null;
   search = false;
+  searchFromHeader;
 
-  constructor(private eventService: ApplicationEventService) { }
+  fulltextSearchForm: FormGroup;
+
+  constructor(private eventService: ApplicationEventService, private formBuilder: FormBuilder, private route: ActivatedRoute) { }
 
   ngOnInit(): void {
-    this.loadBatch();
+    this.fulltextSearchForm = this.formBuilder.group({
+      text: ['', []],
+    });
+
+    this.route.queryParams.subscribe(params => {
+     this.searchFromHeader = params['search'];
+    });
+
+    if(this.searchFromHeader) {
+      this.fulltextSearchForm.value.text = this.searchFromHeader;
+      this.resetFullTextSearch();
+      this.fullTextSearch();
+    }else{
+      this.loadBatch();
+    }
   }
 
   /**
@@ -63,6 +84,7 @@ export class SearchResultComponent implements OnInit {
     this.eventSearched = true;
     this.artistSearched = false;
     this.addressSearched = false;
+    this.fullTextSearched = false;
     this.performanceSearched = false;
     this.events = Object.assign([], results);
   }
@@ -83,6 +105,7 @@ export class SearchResultComponent implements OnInit {
     this.eventSearched = false;
     this.addressSearched = false;
     this.performanceSearched = false;
+    this.fullTextSearched = false;
     this.artistSearched = true;
     this.artists = Object.assign([], results);
   }
@@ -95,6 +118,7 @@ export class SearchResultComponent implements OnInit {
     this.eventSearched = false;
     this.artistSearched = false;
     this.performanceSearched = false;
+    this.fullTextSearched = false;
     this.addressSearched = true;
     this.addresses = Object.assign([], results);
   }
@@ -107,6 +131,7 @@ export class SearchResultComponent implements OnInit {
     this.eventSearched = false;
     this.artistSearched = false;
     this.addressSearched = false;
+    this.fullTextSearched = false;
     this.performanceSearched = true;
     this.performances = Object.assign([], results);
   }
@@ -133,5 +158,51 @@ export class SearchResultComponent implements OnInit {
 
   setSearchedVenuePerformance(venue: Venue) {
     this.venuePerformance = venue;
+  }
+
+  /**
+   * Perfrom full text search with input text
+   */
+  fullTextSearch() {
+
+    if (this.fulltextSearchForm.value.text === '') {
+      this.eventSearched = true;
+      this.fullTextSearched = false;
+      this.loadBatch();
+    } else {
+
+      this.loadingFullTextSearch = true;
+
+      this.eventSearched = false;
+      this.artistSearched = false;
+      this.addressSearched = false;
+      this.performanceSearched = false;
+
+      this.eventService.fulltextSearchEvents(this.fulltextSearchForm.value.text, this.page, this.size).subscribe(
+        response => {
+          this.events.push(...response);
+
+          if (response.length < this.size) {
+            this.noEvent = true;
+          } else {
+            this.page++;
+            this.noEvent = false;
+          }
+          console.log(response);
+
+          this.fullTextSearched = true;
+          this.loadingFullTextSearch = false;
+        }, error => {
+          console.error(error);
+        }
+      );
+    }
+  }
+
+  resetFullTextSearch() {
+    this.events = [];
+    this.page = 0;
+    this.size = 8;
+    this.noEvent = true;
   }
 }

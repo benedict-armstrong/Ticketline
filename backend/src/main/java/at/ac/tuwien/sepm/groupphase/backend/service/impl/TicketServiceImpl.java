@@ -223,9 +223,7 @@ public class TicketServiceImpl implements TicketService {
     public List<Ticket> getTicketsForPerformance(long performanceId, long userId) {
         LOGGER.trace("getTicketsForPerformance()");
         Performance performance = performanceService.findById(performanceId);
-        LOGGER.info(performance.getTitle());
         ApplicationUser user = userService.findApplicationUserById(userId);
-        LOGGER.info(user.toString());
 
         return ticketRepository.findByPerformanceAndUserAndStatus(performance, user, Ticket.Status.PAID_FOR);
     }
