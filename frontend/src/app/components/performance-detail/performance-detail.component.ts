@@ -36,7 +36,7 @@ export class PerformanceDetailComponent implements OnInit {
           (seatCounts: SeatCount[]) => {
             for (const seatCount of seatCounts) {
               for (const ticketType of response.ticketTypes) {
-                if (seatCount.sectorId == ticketType.sector.id) {
+                if (seatCount.sectorId === ticketType.sector.id) {
                   this.ticketCounts.push(seatCount);
                 }
               }
@@ -45,18 +45,7 @@ export class PerformanceDetailComponent implements OnInit {
           (error) => {
             this.defaultServiceErrorHandling(error);
           }
-        )
-        // for (const row of response.venue.layout) {
-        //   for (const cell of row) {
-        //     for (let i = 0; i < response.ticketTypes.length; i++) {
-        //       if (cell !== null) {
-        //         if (cell.sector === response.ticketTypes[i].sector.id) {
-        //           this.ticketCounts[i] += 1;
-        //         }
-        //       }
-        //     }
-        //   }
-        //  }
+        );
       },
       error => {
         this.defaultServiceErrorHandling(error);
