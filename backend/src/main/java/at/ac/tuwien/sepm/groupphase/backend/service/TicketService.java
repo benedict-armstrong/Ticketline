@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepm.groupphase.backend.service;
 
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.SeatCountDto;
 import at.ac.tuwien.sepm.groupphase.backend.entity.LayoutUnit;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Booking;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Performance;
@@ -48,6 +49,14 @@ public interface TicketService {
      * @return list of all taken seats
      */
     List<LayoutUnit> getTakenSeatsInPerformance(Performance performance);
+
+    /**
+     * Calculates the total amount of seats for each sector and how many of those are free for all sectors in the performance.
+     *
+     * @param performanceId of the tickets
+     * @return list of the amounts
+     */
+    List<SeatCountDto> getSeatCountsInPerformance(Long performanceId);
 
     /**
      * Adds all the tickets in the users cart to a booking entity and changes their status to PAID_FOR.

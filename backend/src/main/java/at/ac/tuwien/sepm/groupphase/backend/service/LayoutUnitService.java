@@ -1,6 +1,7 @@
 package at.ac.tuwien.sepm.groupphase.backend.service;
 
 import at.ac.tuwien.sepm.groupphase.backend.entity.LayoutUnit;
+import at.ac.tuwien.sepm.groupphase.backend.entity.Sector;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -31,4 +32,12 @@ public interface LayoutUnitService {
      * @return the layoutUnit
      */
     LayoutUnit findById(Long id);
+
+    /**
+     * Find all layoutUnits in given Sector.
+     *
+     * @param sector of the layoutUnits to find
+     * @return list of all found layoutUnits
+     */
+    List<LayoutUnit> findBySector(Sector sector);
 }

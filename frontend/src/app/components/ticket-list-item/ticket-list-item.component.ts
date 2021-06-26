@@ -7,6 +7,7 @@ import { Ticket } from 'src/app/dtos/ticket';
 import { Sector } from 'src/app/dtos/sector';
 import { NewTicket } from 'src/app/dtos/newTicket';
 import { AuthService } from 'src/app/services/auth.service';
+import { SeatCount } from 'src/app/dtos/seatCount';
 
 @Component({
   selector: 'app-ticket-list-item',
@@ -17,7 +18,7 @@ export class TicketListItemComponent implements OnInit {
   @Input()
   performance: Performance;
   @Input()
-  ticketCount: number;
+  ticketCount: SeatCount;
   @Input()
   ticketType: TicketType;
   @Input()

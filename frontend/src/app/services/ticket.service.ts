@@ -4,6 +4,7 @@ import { Globals } from '../global/globals';
 import { Observable } from 'rxjs';
 import { NewTicket } from '../dtos/newTicket';
 import { Ticket } from '../dtos/ticket';
+import { SeatCount } from '../dtos/seatCount';
 
 @Injectable({
   providedIn: 'root'
@@ -108,6 +109,10 @@ export class TicketService {
 
   getShoppingCart(): Observable<Ticket[]> {
     return this.httpClient.get<Ticket[]>(this.ticketBaseUri);
+  }
+
+  getSeatCounts(performanceId: number): Observable<SeatCount[]> {
+    return this.httpClient.get<SeatCount[]>(this.ticketBaseUri + '/' + performanceId + '/seatCounts');
   }
 
   getPaidItems(): Observable<Ticket[]> {

@@ -9,6 +9,7 @@ import at.ac.tuwien.sepm.groupphase.backend.basetest.TestDataUser;
 import at.ac.tuwien.sepm.groupphase.backend.basetest.TestDataVenue;
 import at.ac.tuwien.sepm.groupphase.backend.config.properties.SecurityProperties;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.NewTicketDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.SeatCountDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.TicketDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.PerformanceMapper;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.TicketMapper;
@@ -140,6 +141,8 @@ public class TicketEndpointTest implements TestDataTicket, TestDataUser, TestDat
 
     private final int ticketAmountLarger = 10000;
 
+    private Performance savedPerformance;
+
     @BeforeEach
     public void beforeEach() throws Exception {
         ApplicationUser user = TestDataUser.getUser();
@@ -196,7 +199,7 @@ public class TicketEndpointTest implements TestDataTicket, TestDataUser, TestDat
             .build()
         );
 
-        Performance savedPerformance = performanceRepository.save(Performance.builder()
+        savedPerformance = performanceRepository.save(Performance.builder()
             .ticketTypes(ticketTypeSet)
             .date(LocalDateTime.now())
             .artist(savedArtist)
@@ -587,5 +590,45 @@ public class TicketEndpointTest implements TestDataTicket, TestDataUser, TestDat
 
         boolean succeeded = objectMapper.readValue(response.getContentAsString(), boolean.class);
         assertFalse(succeeded);
+    }
+
+    @Test
+    @DisplayName("Should return list of seatCounts")
+    public void whenCreateTicket_thenRequestSeatCounts_shouldReturnSeatCounts() throws Exception {
+        MvcResult mvcResult = this.mockMvc.perform(
+            post(TICKET_BASE_URI)
+                .content(
+                    objectMapper.writeValueAsString(newTicketDto)
+                )
+                .contentType(MediaType.APPLICATION_JSON)
+                .header(securityProperties.getAuthHeader(), authToken)
+        ).andReturn();
+        MockHttpServletResponse response = mvcResult.getResponse();
+
+        List<TicketDto> ticketDtos = Arrays.asList(
+            objectMapper.readValue(response.getContentAsString(), TicketDto[].class)
+        );
+
+        Long performanceId = ticketDtos.get(0).getPerformance().getId();
+
+        mvcResult = this.mockMvc.perform(
+            get(TICKET_BASE_URI + "/" + performanceId + "/seatCounts")
+                .header(securityProperties.getAuthHeader(), authToken)
+        ).andReturn();
+        response = mvcResult.getResponse();
+        assertEquals(HttpStatus.OK.value(), response.getStatus());
+        assertEquals(MediaType.APPLICATION_JSON_VALUE, response.getContentType());
+
+        List<SeatCountDto> seatCountDtos = Arrays.asList(
+            objectMapper.readValue(response.getContentAsString(), SeatCountDto[].class)
+        );
+
+        assertAll(
+            () -> assertNotNull(seatCountDtos),
+            () -> assertNotNull(seatCountDtos.get(0)),
+            () -> assertEquals(savedPerformance.getVenue().getSectors().get(0).getId(), seatCountDtos.get(0).getSectorId()),
+            () -> assertEquals(4, seatCountDtos.get(0).getTotalSeats()),
+            () -> assertEquals(4 - ticketAmount, seatCountDtos.get(0).getFreeSeats())
+        );
     }
 }

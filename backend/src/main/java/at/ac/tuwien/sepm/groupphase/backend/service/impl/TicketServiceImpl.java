@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepm.groupphase.backend.service.impl;
 
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.SeatCountDto;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Booking;
 import at.ac.tuwien.sepm.groupphase.backend.entity.LayoutUnit;
@@ -11,6 +12,7 @@ import at.ac.tuwien.sepm.groupphase.backend.entity.Venue;
 import at.ac.tuwien.sepm.groupphase.backend.exception.FullCartException;
 import at.ac.tuwien.sepm.groupphase.backend.exception.NoTicketLeftException;
 import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
+import at.ac.tuwien.sepm.groupphase.backend.repository.SectorRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.TicketRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepm.groupphase.backend.security.AuthenticationFacade;
@@ -177,6 +179,29 @@ public class TicketServiceImpl implements TicketService {
     public List<LayoutUnit> getTakenSeatsInPerformance(Performance performance) {
         LOGGER.trace("getTakenSeatsInPerformance({})", performance);
         return ticketRepository.getTakenSeatsInPerformance(performance);
+    }
+
+    @Override
+    public List<SeatCountDto> getSeatCountsInPerformance(Long performanceId) {
+        LOGGER.trace("getSeatCountsInPerformanceBySector({})", performanceId);
+
+        Performance performance = performanceService.findById(performanceId);
+
+        List<SeatCountDto> seatCounts = new LinkedList<SeatCountDto>();
+
+        for (Sector sector : performance.getVenue().getSectors()) {
+            List<LayoutUnit> freeSeats = ticketRepository.getFreeSeatsInPerformanceAndSector(performance, sector);
+
+            List<LayoutUnit> totalSeats = layoutUnitService.findBySector(sector);
+
+            seatCounts.add(SeatCountDto.builder()
+                .sectorId(sector.getId())
+                .freeSeats(freeSeats.size())
+                .totalSeats(totalSeats.size())
+                .build());
+        }
+
+        return seatCounts;
     }
 
     @Override
