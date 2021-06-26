@@ -29,7 +29,7 @@ public class VenueDataGenerator {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-    private final Sector sectorStage = Sector.builder().localId(0L).name("SectorDto stage").color("#FFFCCC").type(Sector.SectorType.STAGE).build();
+    private final Sector sectorStage = Sector.builder().localId(0L).name("SectorDto stage").color("#CCCCCC").type(Sector.SectorType.STAGE).build();
     private final Sector sectorSeated = Sector.builder().localId(1L).name("SectorDto seated").color("#867FD2").type(Sector.SectorType.SEATED).build();
     private final Sector sectorStanding = Sector.builder().localId(2L).name("SectorDto standing").color("#837F22").type(Sector.SectorType.STANDING).build();
 

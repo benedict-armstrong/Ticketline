@@ -1,6 +1,15 @@
+@import "src/colors";
+
+.venue-layout-grid-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 20pt 0;
+  width: 100%;
+}
+
 .venue-layout-grid {
   padding: 10px;
-  width: 100%;
   max-width: 900px;
   counter-reset: row-counter;
 }
@@ -45,4 +54,21 @@
   display: flex;
   justify-content: center;
   width: 15px;
+}
+
+.selected-seat-list {
+  height: 500px;
+  overflow: scroll;
+  width: 100%;
+  counter-reset: seat-counter;
+}
+
+.selected-seat-list > div {
+  counter-increment: seat-counter;
+}
+
+.selected-seat-list > div > p::before {
+  content: counter(seat-counter) ".";
+  margin-right: 5px;
+  color: $primary;
 }

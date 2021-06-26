@@ -1,6 +1,8 @@
 package at.ac.tuwien.sepm.groupphase.backend.service;
 
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.SeatCountDto;
 import at.ac.tuwien.sepm.groupphase.backend.entity.LayoutUnit;
+import at.ac.tuwien.sepm.groupphase.backend.entity.Booking;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Performance;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Ticket;
 import at.ac.tuwien.sepm.groupphase.backend.entity.TicketType;
@@ -13,13 +15,24 @@ public interface TicketService {
     /**
      * Saves a amount of tickets in the database.
      *
-     * @param performance of the tickets to be saved
+     * @param performanceId of the tickets to be saved
      * @param ticketType of the tickets to be saved
      * @param status the status should be saved in
      * @param amount of tickets that should be created
      * @return the newly added tickets.
      */
-    List<Ticket> save(Performance performance, TicketType ticketType, Ticket.Status status, int amount);
+    List<Ticket> createTicketsByAmount(Long performanceId, TicketType ticketType, Ticket.Status status, int amount);
+
+    /**
+     * Saves a amount ticket in the database by the given seatId.
+     *
+     * @param performance of the ticket to be saved
+     * @param ticketType of the ticket to be saved
+     * @param status the status should be saved in
+     * @param seatId of ticket that should be created
+     * @return the newly added ticket.
+     */
+    List<Ticket> createTicketBySeat(Long performance, TicketType ticketType, Ticket.Status status, Long seatId);
 
     /**
      * Gets all tickets of a user with the given status.
@@ -36,6 +49,14 @@ public interface TicketService {
      * @return list of all taken seats
      */
     List<LayoutUnit> getTakenSeatsInPerformance(Performance performance);
+
+    /**
+     * Calculates the total amount of seats for each sector and how many of those are free for all sectors in the performance.
+     *
+     * @param performanceId of the tickets
+     * @return list of the amounts
+     */
+    List<SeatCountDto> getSeatCountsInPerformance(Long performanceId);
 
     /**
      * Adds all the tickets in the users cart to a booking entity and changes their status to PAID_FOR.

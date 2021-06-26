@@ -1,0 +1,19 @@
+<div class="selected-seats" *ngIf="tickets.length > 0">
+  <h5>Selected Seats</h5>
+  <p>Scroll to see all seats (Maximum 10)</p>
+  <div class="selected-seat-list">
+    <div *ngFor="let ticket of tickets" class="list-item">
+      <p>Ticket: {{ticket.seat.customLabel}} | {{ticket.ticketType.sector.name}} | {{ ticket.ticketType.sector.type | titlecase}}
+      </p>
+      <div class="form-group">
+        <label for="selectedTicketType">Ticket:</label>
+        <select class="select-input form-select" name="selectedTicketType" id="selectedTicketType" [(ngModel)]="ticket.ticketType">
+          <option *ngFor="let ticketType of performance.ticketTypes | filter:ticket.seat.sector" [value]="ticketType">{{ticketType.title}} | {{ticketType.price / 100 | currency: 'EUR'}}</option>
+        </select>
+        <div *ngIf="!ticket.ticketType" class="error">
+          <small class="form-text text-warning">Please select ticket type</small>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

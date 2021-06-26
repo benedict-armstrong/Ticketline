@@ -1,6 +1,7 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint;
 
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.NewTicketDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.SeatCountDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.TicketDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.PerformanceMapper;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.TicketMapper;
@@ -23,6 +24,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.PathVariable;
 
+import javax.annotation.security.PermitAll;
 import java.lang.invoke.MethodHandles;
 import java.util.List;
 
@@ -54,16 +56,23 @@ public class TicketEndpoint {
         return ticketMapper.ticketListToTicketDtoList(ticketService.getTickets(Ticket.Status.IN_CART));
     }
 
-    @PostMapping(path = "/{amount}")
+    @PostMapping
     @Secured({"ROLE_USER", "ROLE_ORGANIZER", "ROLE_ADMIN"})
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(summary = "Create a ticket in cart of user")
-    public List<TicketDto> createTicket(@RequestBody NewTicketDto addTicketDto, @PathVariable int amount) {
-        LOGGER.info("POST /api/v1/tickets/{} {}", amount, addTicketDto);
-        return ticketMapper.ticketListToTicketDtoList(ticketService.save(
-            performanceMapper.performanceDtoToPerformance(addTicketDto.getPerformance()),
+    public List<TicketDto> createTicket(@RequestBody NewTicketDto addTicketDto) {
+        LOGGER.info("POST /api/v1/tickets {}", addTicketDto);
+        if (addTicketDto.getSeatId() == null) {
+            return ticketMapper.ticketListToTicketDtoList(ticketService.createTicketsByAmount(
+                addTicketDto.getPerformanceId(),
+                ticketTypeMapper.ticketTypeDtoToTicketType(addTicketDto.getTicketType()),
+                Ticket.Status.IN_CART, addTicketDto.getAmount()
+            ));
+        }
+        return ticketMapper.ticketListToTicketDtoList(ticketService.createTicketBySeat(
+            addTicketDto.getPerformanceId(),
             ticketTypeMapper.ticketTypeDtoToTicketType(addTicketDto.getTicketType()),
-            Ticket.Status.IN_CART, amount
+            Ticket.Status.IN_CART, addTicketDto.getSeatId()
         ));
     }
 
@@ -128,5 +137,15 @@ public class TicketEndpoint {
     public List<TicketDto> getCancelledTickets() {
         LOGGER.info("GET /api/v1/tickets/cancelled");
         return ticketMapper.ticketListToTicketDtoList(ticketService.getTickets(Ticket.Status.CANCELLED));
+    }
+
+    @GetMapping("/{performanceId}/seatCounts")
+    //@Secured({"ROLE_USER", "ROLE_ORGANIZER", "ROLE_ADMIN"})
+    @PermitAll
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(summary = "Get tickets from user that have been reserved")
+    public List<SeatCountDto> getSeatCountsByPerformance(@PathVariable Long performanceId) {
+        LOGGER.info("GET /api/v1/{}/seatCounts", performanceId);
+        return ticketService.getSeatCountsInPerformance(performanceId);
     }
 }

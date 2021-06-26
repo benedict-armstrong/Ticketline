@@ -23,7 +23,7 @@
             <span>{{this.ticketService.cart[i].length}} Tickets</span>
         </div>
         <div class="col-6 prices">
-            <span class="price">Total: {{this.ticketService.cart[this.i][0].ticketType.price * this.ticketService.cart.length / 100 | currency:'EUR'}}</span>
+            <span class="price">Total: {{this.ticketService.prices[this.i] / 100 | currency:'EUR'}}</span>
         </div>
     </div>
     <div class="row ticketBody mainBody">
