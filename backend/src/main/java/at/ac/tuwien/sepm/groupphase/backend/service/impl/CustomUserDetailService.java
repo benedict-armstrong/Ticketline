@@ -191,7 +191,7 @@ public class CustomUserDetailService implements UserService {
     @Override
     public List<ApplicationUser> getAll(Pageable pageRequest) {
         LOGGER.trace("getAll({})", pageRequest);
-        return userRepository.findAll(pageRequest).getContent();
+        return userRepository.findAllByStatusNot(ApplicationUser.UserStatus.DELETED, pageRequest).getContent();
     }
 
     @Override

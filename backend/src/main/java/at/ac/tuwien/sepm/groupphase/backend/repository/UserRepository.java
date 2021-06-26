@@ -13,8 +13,8 @@ public interface UserRepository extends JpaRepository<ApplicationUser, Long> {
 
     ApplicationUser findUserByEmail(String email);
 
-    Page<ApplicationUser> findAll(Pageable pageable);
-
+    Page<ApplicationUser> findAllByStatusNot(ApplicationUser.UserStatus status, Pageable pageable);
 
     List<ApplicationUser> findAllByPointsGreaterThan(Long number);
+
 }

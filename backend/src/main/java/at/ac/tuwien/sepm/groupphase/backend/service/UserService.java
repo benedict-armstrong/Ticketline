@@ -73,7 +73,7 @@ public interface UserService extends UserDetailsService {
     ApplicationUser resetPassword(ApplicationUser user);
 
     /**
-     * Retrieves a list of all users.
+     * Retrieves a list of all non-deleted users.
      *
      * @param pageRequest the page and size to be retrieved.
      * @return the list of users on this page.
