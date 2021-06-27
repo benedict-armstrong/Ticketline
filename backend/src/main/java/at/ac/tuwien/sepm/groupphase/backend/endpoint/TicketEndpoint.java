@@ -69,7 +69,7 @@ public class TicketEndpoint {
                 Ticket.Status.IN_CART, addTicketDto.getAmount()
             ));
         }
-        return ticketMapper.ticketListToTicketDtoList(ticketService.createTicketBySeat(
+       return ticketMapper.ticketListToTicketDtoList(ticketService.createTicketBySeat(
             addTicketDto.getPerformanceId(),
             ticketTypeMapper.ticketTypeDtoToTicketType(addTicketDto.getTicketType()),
             Ticket.Status.IN_CART, addTicketDto.getSeatId()

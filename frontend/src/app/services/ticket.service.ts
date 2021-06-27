@@ -1,16 +1,21 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Globals } from '../global/globals';
-import { Observable } from 'rxjs';
+import {Observable, Subject} from 'rxjs';
 import { NewTicket } from '../dtos/newTicket';
 import { Ticket } from '../dtos/ticket';
 import { SeatCount } from '../dtos/seatCount';
 import {LayoutUnit} from '../dtos/layoutUnit';
+import {Performance} from '../dtos/performance';
 
 @Injectable({
   providedIn: 'root'
 })
 export class TicketService {
+
+  public cartSubject = new Subject<Ticket[][]>();
+  cartState$ = this.cartSubject.asObservable();
+
   public cart: Ticket[][] = [];
   public showCart = false;
   public waiting = false;
@@ -24,6 +29,10 @@ export class TicketService {
   private ticketBaseUri: string = this.globals.backendUri + '/tickets';
 
   constructor(private httpClient: HttpClient, private globals: Globals) { }
+
+  updateCartState(): void {
+    this.cartSubject.next( this.cart );
+  }
 
   toggleStatus(): void {
     if (this.showCart) {
@@ -44,6 +53,7 @@ export class TicketService {
 
   reload(): void {
     this.updateShoppingCart().subscribe(() => {
+        this.updateCartState();
     },
     (error) => {
       this.defaultServiceErrorHandling(error);
@@ -97,6 +107,7 @@ export class TicketService {
 
           this.cart = newCart;
           this.updatePrice();
+          this.updateCartState();
 
           this.loading = false;
           this.success = true;
@@ -149,6 +160,7 @@ export class TicketService {
             this.cart.push(tickets);
           }
           this.updatePrice();
+          this.updateCartState();
           subscriber.next(this.cart);
         },
         (error) => {
@@ -158,22 +170,25 @@ export class TicketService {
     });
   }
 
-  removeTicketBySeat(seat: LayoutUnit): Observable<Ticket[][]> {
-    const ticket: Ticket = [].concat(...this.cart).find((t: Ticket) => t.seat.id === seat.id );
+  removeTicketBySeatAndPerformance(seat: LayoutUnit, performance: Performance): Observable<Ticket[][]> {
+    const ticketToRemove = [].concat(...this.cart).filter(
+      (t: Ticket) => t.performance.id === performance.id && t.seat.id === seat.id)[0] as Ticket;
+    console.log(ticketToRemove);
     return new Observable<Ticket[][]>(subscriber => {
-      this.httpClient.delete<boolean>(this.ticketBaseUri + '/' + ticket.id).subscribe(
+      this.httpClient.delete<boolean>(this.ticketBaseUri + '/' + ticketToRemove.id).subscribe(
         (response: boolean) => {
           if (response) {
             this.cart.forEach((tickets) => {
-              if (tickets.find((t) => t === ticket)) {
+              if (tickets.find((t) => t === ticketToRemove)) {
                 if (tickets.length === 1) {
                   this.cart.splice( this.cart.indexOf(tickets), 1);
                 } else {
-                  tickets.splice(tickets.indexOf(ticket), 1);
+                  tickets.splice(tickets.indexOf(ticketToRemove), 1);
                 }
               }
             });
             this.updatePrice();
+            this.updateCartState();
             subscriber.next(this.cart);
           }
         },
@@ -197,6 +212,7 @@ export class TicketService {
               this.cart[cartIndex].splice(ticketIndex, 1);
             }
             this.updatePrice();
+            this.updateCartState();
             subscriber.next(this.cart);
           }
         },
@@ -220,6 +236,7 @@ export class TicketService {
           if (response) {
             this.cart.splice(cartIndex, 1);
             this.updatePrice();
+            this.updateCartState();
             subscriber.next();
           }
         },
@@ -232,10 +249,12 @@ export class TicketService {
   }
 
   checkout(): Observable<boolean> {
+    this.updateCartState();
     return this.httpClient.put<boolean>(this.ticketBaseUri + '/checkout', null);
   }
 
   reserve(): Observable<boolean> {
+    this.updateCartState();
     return this.httpClient.put<boolean>(this.ticketBaseUri + '/reserve', null);
   }
 

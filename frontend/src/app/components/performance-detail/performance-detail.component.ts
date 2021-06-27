@@ -2,8 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import {Performance} from '../../dtos/performance';
 import {ApplicationPerformanceService} from '../../services/performance.service';
 import {ActivatedRoute} from '@angular/router';
-import { Sector } from 'src/app/dtos/sector';
-import { TicketType } from 'src/app/dtos/ticketType';
 import { TicketService } from 'src/app/services/ticket.service';
 import { SeatCount } from 'src/app/dtos/seatCount';
 
@@ -28,6 +26,23 @@ export class PerformanceDetailComponent implements OnInit {
   ngOnInit(): void {
     this.selectSeats = false;
     const performanceId = this.activeRoute.snapshot.params.id;
+    this.getPerformance(performanceId);
+    this.ticketService.cartState$.subscribe(
+      () => {
+        this.getPerformance(performanceId);
+      }
+    );
+  }
+
+  vanishAlert(): void {
+    this.error = false;
+  }
+
+  selectSeatsFunc(value: boolean) {
+    this.selectSeats = value;
+  }
+
+  private getPerformance(performanceId) {
     this.performanceService.getPerformanceById(performanceId).subscribe(
       (response) => {
         this.performance = response;
@@ -50,16 +65,7 @@ export class PerformanceDetailComponent implements OnInit {
       error => {
         this.defaultServiceErrorHandling(error);
       }
-
     );
-  }
-
-  vanishAlert(): void {
-    this.error = false;
-  }
-
-  selectSeatsFunc(value: boolean) {
-    this.selectSeats = value;
   }
 
   private defaultServiceErrorHandling(error: any) {
