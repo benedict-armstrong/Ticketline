@@ -322,7 +322,7 @@ public class TicketServiceImpl implements TicketService {
     @Override
     public File getPdf(long performanceId) {
         LOGGER.trace("getPdf() {}", performanceId);
-        ApplicationUser user = userService.findApplicationUserByEmail(authenticationFacade.getAuthentication().getPrincipal().toString());
+        ApplicationUser user = userService.findApplicationUserByEmail(authenticationFacade.getAuthentication().getPrincipal().toString(), false);
         List<Ticket> tickets = getTicketsForPerformance(performanceId, user.getId());
         PdfService pdf = new PdfService(user);
         pdf.createTicket(tickets);
