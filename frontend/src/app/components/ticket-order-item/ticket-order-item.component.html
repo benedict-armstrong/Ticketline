@@ -1,8 +1,8 @@
-<div class="card h-100" [ngClass]="{'expired': old, 'reserved': reserved, 'cancelled': cancelled}">
+<div class="card h-100" [ngClass]="{'expired': old, 'reserved': reserved}">
   <div class="card-body">
     <div>
       <img src="assets/tickets.svg" alt="">
-      <h5 class="card-title">{{performance.title}}</h5>
+      <h5 class="card-title">{{performance.title}} Tickets</h5>
     </div>
     <div class="card-text">
       <p>
@@ -35,7 +35,7 @@
         </div>
       </div>
     </div>
-    <button class="primary" [routerLink]="['/ticket']" *ngIf="reserved" disabled>Buy in orders</button>
-    <button class="primary" [routerLink]="['/ticket']" *ngIf="!reserved">View</button>
+    <div class="secondary" *ngIf="reserved">Buy under All Orders</div>
+    <button class="primary" (click)="clickDownloadTicket()" *ngIf="!reserved">Download Tickets</button>
   </div>
 </div>

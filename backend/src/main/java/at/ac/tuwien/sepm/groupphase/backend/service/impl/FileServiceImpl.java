@@ -27,4 +27,9 @@ public class FileServiceImpl implements FileService {
         return fileRepository.save(file);
     }
 
+    @Override
+    public int getPdfCount() {
+        return fileRepository.findAllByType(File.Type.APPLICATION_PDF).size();
+    }
+
 }

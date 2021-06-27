@@ -6,6 +6,7 @@ import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.TicketDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.SeatCountMapper;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.TicketMapper;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.TicketTypeMapper;
+import at.ac.tuwien.sepm.groupphase.backend.entity.File;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Ticket;
 import at.ac.tuwien.sepm.groupphase.backend.service.TicketService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -149,13 +151,22 @@ public class TicketEndpoint {
         return ticketService.getRelativeTicketSalesPastSevenDays();
     }
 
-    @GetMapping("/cancelled")
+    @GetMapping("/pdf/{id}")
     @Secured({"ROLE_USER", "ROLE_ORGANIZER", "ROLE_ADMIN"})
     @ResponseStatus(HttpStatus.OK)
-    @Operation(summary = "Get tickets from user that have been cancelled")
-    public List<TicketDto> getCancelledTickets() {
-        LOGGER.info("GET /api/v1/tickets/cancelled");
-        return ticketMapper.ticketListToTicketDtoList(ticketService.getTickets(Ticket.Status.CANCELLED));
+    @Operation(summary = "Get ticket pdf for performance")
+    public File getTicketPdf(@PathVariable Long id) {
+        LOGGER.info("GET /api/v1/tickets/pdf/{}", id);
+        return ticketService.getPdf(id);
+    }
+
+    @GetMapping("/confirmation")
+    @PermitAll
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(summary = "Get ticket dtos for performance")
+    public List<TicketDto> getTicketDto(@RequestParam Long user, @RequestParam Long performance) {
+        LOGGER.info("GET /api/v1/tickets/confirmation/{}/{}", user, performance);
+        return ticketMapper.ticketListToTicketDtoList(ticketService.getTicketsForPerformance(performance, user));
     }
 
     @GetMapping("/{performanceId}/seatCounts")

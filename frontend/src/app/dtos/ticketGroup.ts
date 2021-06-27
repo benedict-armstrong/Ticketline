@@ -5,7 +5,6 @@ export class TicketGroup {
     public id: number,
     public tickets: Ticket[],
     public old: boolean,
-    public reserved: boolean,
-    public cancelled: boolean
+    public reserved: boolean
   ) {}
 }

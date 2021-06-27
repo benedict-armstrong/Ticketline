@@ -32,6 +32,15 @@ public interface UserService extends UserDetailsService {
     ApplicationUser findApplicationUserById(long id);
 
     /**
+     * Find an application user based on their id.
+     *
+     * @param id the id
+     * @param tickerQuery boolean if is asked for tickets (true) or name (false)
+     * @return a application user
+     */
+    ApplicationUser findApplicationUserByIdConfirmation(long id, boolean tickerQuery);
+
+    /**
      * Find an application user based on the email address.
      *
      * @param email the email address

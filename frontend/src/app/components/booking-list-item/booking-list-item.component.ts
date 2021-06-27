@@ -10,6 +10,7 @@ export class BookingListItemComponent implements OnInit {
   @Input() booking: Booking;
   @Output() cancelBooking = new EventEmitter<Booking>();
   @Output() buyBooking = new EventEmitter<Booking>();
+  @Output() downloadBooking = new EventEmitter<Booking>();
 
   constructor() { }
 
@@ -17,11 +18,16 @@ export class BookingListItemComponent implements OnInit {
   }
 
   onStornoClick(booking) {
+    booking.status = 'CANCELLED';
     this.cancelBooking.emit(booking);
   }
 
   onBuyClick(booking) {
     this.buyBooking.emit(booking);
+  }
+
+  onDownloadClick(booking) {
+    this.downloadBooking.emit(booking);
   }
 
 }

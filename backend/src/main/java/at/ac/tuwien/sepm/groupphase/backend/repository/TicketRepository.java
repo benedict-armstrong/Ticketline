@@ -43,6 +43,16 @@ public interface TicketRepository extends JpaRepository<Ticket, Long> {
     List<Ticket> findByPerformanceAndStatus(Performance performance, Ticket.Status status);
 
     /**
+     * Find all ticket entries by status and in performance.
+     *
+     * @param performance performance
+     * @param user user
+     * @param status status of ticket
+     * @return list of all found tickets
+     */
+    List<Ticket> findByPerformanceAndUserAndStatus(Performance performance, ApplicationUser user, Ticket.Status status);
+
+    /**
      * Finds Ticket by User, Status and Id.
      *
      * @param user Owner of Ticket
