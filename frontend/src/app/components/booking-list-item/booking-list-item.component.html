@@ -4,7 +4,7 @@
       <h5>{{booking.createDate | date:'EEEE, MMM d, y HH:mm'}} <span *ngIf="booking.status === 'CANCELLED'">(cancelled)</span></h5>
       <!-- <button *ngIf="booking.status === 'PAID_FOR'" class="secondary" type="button" [routerLink]="['/downloadInvoice']">Click for invoice download</button> -->
       <button *ngIf="booking.status === 'RESERVED'" class="secondary" type="button" (click)="onBuyClick(booking)">Buy</button>
-      <button *ngIf="booking.status !== 'CANCELLED'" class="secondary" type="button" (click)="onStornoClick(booking)">Storno</button>
+      <button *ngIf="booking.status !== 'CANCELLED'" class="secondary" type="button" (click)="onStornoClick(booking)">Cancel</button>
     </div>
   </div>
 </div>
