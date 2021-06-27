@@ -15,6 +15,7 @@ import org.apache.lucene.search.BooleanQuery;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.Sort;
 import org.apache.lucene.search.SortField;
+import org.hibernate.Hibernate;
 import org.hibernate.search.FullTextSession;
 import org.hibernate.search.engine.ProjectionConstants;
 import org.hibernate.search.jpa.FullTextEntityManager;
@@ -62,9 +63,12 @@ public class CustomEventService implements EventService {
     }
 
     @Override
+    @Transactional
     public Event findById(long id) {
         LOGGER.trace("Get event by id {}", id);
-        return eventRepository.findOneById(id);
+        Event event = eventRepository.findOneById(id);
+        Hibernate.initialize(event.getPerformances());
+        return event;
     }
 
     @Override
