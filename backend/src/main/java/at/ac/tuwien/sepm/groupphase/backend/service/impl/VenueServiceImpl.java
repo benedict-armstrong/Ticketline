@@ -56,7 +56,7 @@ public class VenueServiceImpl implements VenueService {
             );
         }
 
-        ApplicationUser user = userService.findApplicationUserByEmail(authenticationFacade.getMail());
+        ApplicationUser user = userService.findApplicationUserByEmail(authenticationFacade.getMail(), false);
 
         venue.setOwner(user);
 

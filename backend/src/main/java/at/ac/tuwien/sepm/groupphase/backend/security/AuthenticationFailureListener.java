@@ -21,7 +21,7 @@ public class AuthenticationFailureListener implements ApplicationListener<Authen
     public void onApplicationEvent(AuthenticationFailureBadCredentialsEvent event) {
         String userName = (String) event.getAuthentication().getPrincipal();
 
-        ApplicationUser applicationUser = userService.findApplicationUserByEmail(userName);
+        ApplicationUser applicationUser = userService.findApplicationUserByEmail(userName, false);
         applicationUser.setPoints(applicationUser.getPoints() + 1);
 
         if (applicationUser.getPoints() >= 3) {

@@ -78,7 +78,7 @@ public class TicketServiceImpl implements TicketService {
     public List<Ticket> createTicketsByAmount(Long performanceId, TicketType ticketType, Ticket.Status status, int amount) {
         LOGGER.trace("createTicketsByAmount({}, {},  {}, {})", performanceId, ticketType, status, amount);
 
-        ApplicationUser user = userService.findApplicationUserByEmail((String) authenticationFacade.getAuthentication().getPrincipal());
+        ApplicationUser user = userService.findApplicationUserByEmail((String) authenticationFacade.getAuthentication().getPrincipal(), false);
         Performance performance = performanceService.findById(performanceId);
 
 
@@ -119,7 +119,7 @@ public class TicketServiceImpl implements TicketService {
     public List<Ticket> createTicketBySeat(Long performanceId, TicketType ticketType, Ticket.Status status, Long seatId) {
         LOGGER.trace("createTicketBySeat({}, {},  {}, {})", performanceId, ticketType, status, seatId);
 
-        ApplicationUser user = userService.findApplicationUserByEmail((String) authenticationFacade.getAuthentication().getPrincipal());
+        ApplicationUser user = userService.findApplicationUserByEmail((String) authenticationFacade.getAuthentication().getPrincipal(), false);
         Performance performance = performanceService.findById(performanceId);
 
         List<Ticket> currentTickets = ticketRepository.findByUserAndStatus(user, Ticket.Status.IN_CART);
@@ -156,7 +156,7 @@ public class TicketServiceImpl implements TicketService {
     @Override
     public List<Ticket> getTickets(Ticket.Status status) {
         LOGGER.trace("getTickets({})", status);
-        ApplicationUser user = userService.findApplicationUserByEmail((String) authenticationFacade.getAuthentication().getPrincipal());
+        ApplicationUser user = userService.findApplicationUserByEmail((String) authenticationFacade.getAuthentication().getPrincipal(), false);
         List<Ticket> list = ticketRepository.findByUserAndStatus(user, status);
         List<Ticket> newList = new LinkedList<>();
         for (Ticket ticket : list) {
@@ -215,7 +215,7 @@ public class TicketServiceImpl implements TicketService {
     @Transactional
     public boolean checkout() {
         LOGGER.trace("checkout()");
-        ApplicationUser user = userService.findApplicationUserByEmail((String) authenticationFacade.getAuthentication().getPrincipal());
+        ApplicationUser user = userService.findApplicationUserByEmail((String) authenticationFacade.getAuthentication().getPrincipal(), false);
         List<Ticket> tickets = ticketRepository.findByUserAndStatus(user, Ticket.Status.IN_CART);
         if (tickets.size() < 1) {
             return false;
@@ -233,7 +233,7 @@ public class TicketServiceImpl implements TicketService {
     @Transactional
     public boolean reserve() {
         LOGGER.trace("reserve()");
-        ApplicationUser user = userService.findApplicationUserByEmail((String) authenticationFacade.getAuthentication().getPrincipal());
+        ApplicationUser user = userService.findApplicationUserByEmail((String) authenticationFacade.getAuthentication().getPrincipal(), false);
         List<Ticket> tickets = ticketRepository.findByUserAndStatus(user, Ticket.Status.IN_CART);
         if (tickets.size() < 1) {
             return false;
@@ -322,7 +322,7 @@ public class TicketServiceImpl implements TicketService {
     @Override
     public File getPdf(long performanceId) {
         LOGGER.trace("getPdf() {}", performanceId);
-        ApplicationUser user = userService.findApplicationUserByEmail(authenticationFacade.getAuthentication().getPrincipal().toString());
+        ApplicationUser user = userService.findApplicationUserByEmail(authenticationFacade.getAuthentication().getPrincipal().toString(), false);
         List<Ticket> tickets = getTicketsForPerformance(performanceId, user.getId());
         PdfService pdf = new PdfService(user);
         pdf.createTicket(tickets);
@@ -331,7 +331,7 @@ public class TicketServiceImpl implements TicketService {
 
     public Ticket updateTicket(Ticket ticket) {
         LOGGER.trace("updateTicket()");
-        ApplicationUser user = userService.findApplicationUserByEmail(authenticationFacade.getMail());
+        ApplicationUser user = userService.findApplicationUserByEmail(authenticationFacade.getMail(), false);
         Ticket oldTicket = ticketRepository.findTicketByUserAndStatusAndId(user, Ticket.Status.IN_CART, ticket.getId());
 
         if (oldTicket == null) {

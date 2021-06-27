@@ -23,7 +23,7 @@ public class AuthenticationSuccessListener implements ApplicationListener<Authen
     @Override
     public void onApplicationEvent(AuthenticationSuccessEvent authenticationSuccessEvent) {
         User user = ((User) authenticationSuccessEvent.getAuthentication().getPrincipal());
-        ApplicationUser applicationUser = userService.findApplicationUserByEmail(user.getUsername());
+        ApplicationUser applicationUser = userService.findApplicationUserByEmail(user.getUsername(), false);
         applicationUser.setLastLogin(LocalDateTime.now());
         applicationUser.setPoints(0L);
         userService.updateUser(applicationUser, true);
