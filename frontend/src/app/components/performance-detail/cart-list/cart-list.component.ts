@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {Ticket} from '../../../dtos/ticket';
 import {Performance} from '../../../dtos/performance';
 
@@ -9,12 +9,17 @@ import {Performance} from '../../../dtos/performance';
 })
 export class CartListComponent implements OnInit {
 
-  @Input() tickets: Ticket[];
+  @Input() ticket: Ticket;
   @Input() performance: Performance;
+
+  @Output() updatedTicketType = new EventEmitter<Ticket>();
 
   constructor() { }
 
   ngOnInit(): void {
   }
 
+  updateTicketType() {
+    this.updatedTicketType.emit(this.ticket);
+  }
 }

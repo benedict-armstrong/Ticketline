@@ -12,14 +12,13 @@ import at.ac.tuwien.sepm.groupphase.backend.entity.Venue;
 import at.ac.tuwien.sepm.groupphase.backend.exception.FullCartException;
 import at.ac.tuwien.sepm.groupphase.backend.exception.NoTicketLeftException;
 import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
-import at.ac.tuwien.sepm.groupphase.backend.repository.SectorRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.TicketRepository;
-import at.ac.tuwien.sepm.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepm.groupphase.backend.security.AuthenticationFacade;
 import at.ac.tuwien.sepm.groupphase.backend.service.BookingService;
 import at.ac.tuwien.sepm.groupphase.backend.service.LayoutUnitService;
 import at.ac.tuwien.sepm.groupphase.backend.service.PerformanceService;
 import at.ac.tuwien.sepm.groupphase.backend.service.TicketService;
+import at.ac.tuwien.sepm.groupphase.backend.service.TicketTypeService;
 import at.ac.tuwien.sepm.groupphase.backend.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,6 +48,7 @@ public class TicketServiceImpl implements TicketService {
     private final BookingService bookingService;
     private final PerformanceService performanceService;
     private final LayoutUnitService layoutUnitService;
+    private final TicketTypeService ticketTypeService;
 
     private final Long maxCartSize = 10L;
 
@@ -58,13 +58,16 @@ public class TicketServiceImpl implements TicketService {
                              AuthenticationFacade authenticationFacade,
                              BookingService bookingService,
                              PerformanceService performanceService,
-                             LayoutUnitService layoutUnitService) {
+                             LayoutUnitService layoutUnitService,
+                             TicketTypeService ticketTypeService) {
         this.ticketRepository = ticketRepository;
         this.userService = userService;
         this.authenticationFacade = authenticationFacade;
         this.bookingService = bookingService;
         this.performanceService = performanceService;
         this.layoutUnitService = layoutUnitService;
+        this.ticketTypeService = ticketTypeService;
+
     }
 
     @Override
@@ -187,7 +190,7 @@ public class TicketServiceImpl implements TicketService {
 
         Performance performance = performanceService.findById(performanceId);
 
-        List<SeatCountDto> seatCounts = new LinkedList<SeatCountDto>();
+        List<SeatCountDto> seatCounts = new LinkedList<>();
 
         for (Sector sector : performance.getVenue().getSectors()) {
             List<LayoutUnit> freeSeats = ticketRepository.getFreeSeatsInPerformanceAndSector(performance, sector);
@@ -281,7 +284,7 @@ public class TicketServiceImpl implements TicketService {
     @Transactional
     public void pruneReservations(List<Performance> performances) {
         LOGGER.trace("pruneReservations()");
-        List<Ticket> tickets = new ArrayList();
+        List<Ticket> tickets = new ArrayList<>();
         for (Performance performance : performances) {
             tickets.addAll(ticketRepository.findByPerformanceAndStatus(performance, Ticket.Status.RESERVED));
         }
@@ -300,5 +303,24 @@ public class TicketServiceImpl implements TicketService {
         }
 
         ticketRepository.saveAll(tickets);
+    }
+
+    @Override
+    public Ticket updateTicket(Ticket ticket) {
+        LOGGER.trace("updateTicket()");
+        ApplicationUser user = userService.findApplicationUserByEmail(authenticationFacade.getMail());
+        Ticket oldTicket = ticketRepository.findTicketByUserAndStatusAndId(user, Ticket.Status.IN_CART, ticket.getId());
+
+        if (oldTicket == null) {
+            throw new NotFoundException("Ticket doesn't exist");
+        } else {
+
+            if (!ticket.getTicketType().getSector().equals(oldTicket.getTicketType().getSector())) {
+                throw new IllegalArgumentException("Type must be for same Sector");
+            }
+            TicketType ticketType = ticketTypeService.getTicketTypeById(ticket.getTicketType().getId());
+            oldTicket.setTicketType(ticketType);
+            return ticketRepository.save(oldTicket);
+        }
     }
 }

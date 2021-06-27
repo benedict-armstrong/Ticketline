@@ -170,10 +170,33 @@ export class TicketService {
     });
   }
 
+  updateTicketType(ticket: Ticket): Observable<Ticket> {
+    return new Observable<Ticket>(subscriber => {
+      this.httpClient.put<Ticket>(this.ticketBaseUri + '/update', ticket).subscribe(
+        (response: Ticket) => {
+          if (response) {
+
+            const oldTicket = this.cart.find(
+              (tickets) => tickets[0].performance.id === ticket.performance.id)
+              .find((t) => t.id === ticket.id);
+            oldTicket.ticketType = ticket.ticketType;
+
+            this.updatePrice();
+            this.updateCartState();
+            subscriber.next(ticket);
+          }
+        },
+        (error) => {
+          this.reload();
+          subscriber.error(error);
+        }
+      );
+    });
+  }
+
   removeTicketBySeatAndPerformance(seat: LayoutUnit, performance: Performance): Observable<Ticket[][]> {
     const ticketToRemove = [].concat(...this.cart).filter(
       (t: Ticket) => t.performance.id === performance.id && t.seat.id === seat.id)[0] as Ticket;
-    console.log(ticketToRemove);
     return new Observable<Ticket[][]>(subscriber => {
       this.httpClient.delete<boolean>(this.ticketBaseUri + '/' + ticketToRemove.id).subscribe(
         (response: boolean) => {

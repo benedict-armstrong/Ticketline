@@ -107,4 +107,12 @@ public interface TicketService {
      * @param status of the changed tickets.
      */
     void updateStatus(Set<Ticket> tickets, Ticket.Status status);
+
+    /**
+     * Update Ticket in cart.
+     *
+     * @param ticket Ticket with new information
+     * @return updated Ticket
+     */
+    Ticket updateTicket(Ticket ticket);
 }

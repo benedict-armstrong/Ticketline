@@ -82,4 +82,17 @@ export class SelectSeatComponent implements OnInit {
       }
     );
   }
+
+  updateTicketType(ticket: Ticket) {
+    this.updatingCart = true;
+    this.ticketService.updateTicketType(ticket).subscribe(
+      () => {
+        this.updatingCart = false;
+      },
+      (error) => {
+        console.error(error);
+        this.updatingCart = false;
+      }
+    );
+  }
 }

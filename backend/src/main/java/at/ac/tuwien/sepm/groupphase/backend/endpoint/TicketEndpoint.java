@@ -3,6 +3,7 @@ package at.ac.tuwien.sepm.groupphase.backend.endpoint;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.NewTicketDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.SeatCountDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.TicketDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.PerformanceMapper;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.TicketMapper;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.TicketTypeMapper;
@@ -14,17 +15,18 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.annotation.Secured;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.security.PermitAll;
+import javax.validation.Valid;
 import java.lang.invoke.MethodHandles;
 import java.util.List;
 
@@ -69,7 +71,7 @@ public class TicketEndpoint {
                 Ticket.Status.IN_CART, addTicketDto.getAmount()
             ));
         }
-       return ticketMapper.ticketListToTicketDtoList(ticketService.createTicketBySeat(
+        return ticketMapper.ticketListToTicketDtoList(ticketService.createTicketBySeat(
             addTicketDto.getPerformanceId(),
             ticketTypeMapper.ticketTypeDtoToTicketType(addTicketDto.getTicketType()),
             Ticket.Status.IN_CART, addTicketDto.getSeatId()
@@ -79,7 +81,7 @@ public class TicketEndpoint {
     @PutMapping("/checkout")
     @Secured({"ROLE_USER", "ROLE_ORGANIZER", "ROLE_ADMIN"})
     @ResponseStatus(HttpStatus.OK)
-    @Operation(summary = "Buys tickets in cart")
+    @Operation(summary = "Buy tickets in cart")
     public boolean checkout() {
         LOGGER.info("PUT /api/v1/tickets/checkout");
         return ticketService.checkout();
@@ -92,6 +94,15 @@ public class TicketEndpoint {
     public boolean reserve() {
         LOGGER.info("PUT /api/v1/tickets/reserve");
         return ticketService.reserve();
+    }
+
+    @PutMapping(path = "/update")
+    @Secured({"ROLE_USER", "ROLE_ORGANIZER", "ROLE_ADMIN"})
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(summary = "update ticket in cart")
+    public TicketDto update(@Valid @RequestBody TicketDto ticketDto) {
+        LOGGER.info("PUT /api/v1/tickets/update, {}", ticketDto);
+        return ticketMapper.ticketToTicketDto(ticketService.updateTicket(ticketMapper.ticketDtoToTicket(ticketDto)));
     }
 
     /*

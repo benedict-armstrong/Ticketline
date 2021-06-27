@@ -17,6 +17,12 @@
   </div>
 
   <app-loading-animation *ngIf="updatingCart"></app-loading-animation>
-  <app-cart-list [tickets]="selectedTickets" [performance]="performance"  *ngIf="!updatingCart && selectedTickets.length > 0"></app-cart-list>
+  <div class="selected-seats" *ngIf="!updatingCart && selectedTickets.length > 0">
+    <h5>Selected Seats</h5>
+    <p>Scroll to see all seats (Maximum 10)</p>
+    <div class="selected-seat-list">
+      <app-cart-list *ngFor="let ticket of selectedTickets" [ticket]="ticket" [performance]="performance" (updatedTicketType)="updateTicketType($event)"></app-cart-list>
+    </div>
+  </div>
 
 </div>
