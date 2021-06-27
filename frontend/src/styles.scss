@@ -53,6 +53,10 @@ button.secondary {
   color: $primary-darker;
 }
 
+button.deactivated {
+  background: linear-gradient(261deg, lightgray 19%, lighten(gray, 25%) 80%);
+}
+
 button.primary.locked {
   background: $gray-darker;
 }

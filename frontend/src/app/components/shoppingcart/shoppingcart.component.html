@@ -37,6 +37,14 @@
     <button type="button" (click)="vanishAlert()" class="btn-close" data-dismiss="alert" aria-label="Close">
     </button>
   </div>
-	<button class="primary" (click)="checkout()">Checkout</button>
-  <button class="primary" (click)="reserve()">Reserve</button>
+	<button class="primary" (click)="checkout()"
+          [class.deactivated]="ticketService.cart.length === 0"
+          [disabled]="ticketService.cart.length === 0">
+    Checkout
+  </button>
+  <button class="primary" (click)="reserve()"
+          [class.deactivated]="ticketService.cart.length === 0"
+          [disabled]="ticketService.cart.length === 0">
+    Reserve
+  </button>
 </div>
