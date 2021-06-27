@@ -12,6 +12,7 @@ import javax.persistence.Id;
 import javax.persistence.Column;
 import javax.persistence.ManyToOne;
 import javax.persistence.FetchType;
+import javax.persistence.Transient;
 
 @Data
 @NoArgsConstructor
@@ -32,4 +33,7 @@ public class LayoutUnit {
 
     @Column(nullable = false)
     private int localId;
+
+    @Transient
+    private boolean free;
 }

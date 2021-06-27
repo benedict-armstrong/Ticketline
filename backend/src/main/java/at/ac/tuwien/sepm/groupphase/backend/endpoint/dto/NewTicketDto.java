@@ -14,7 +14,11 @@ import java.util.List;
 @Builder
 public class NewTicketDto {
 
-    private PerformanceDto performance;
+    private Long performanceId;
 
     private TicketTypeDto ticketType;
+
+    private Long seatId;
+
+    private int amount;
 }

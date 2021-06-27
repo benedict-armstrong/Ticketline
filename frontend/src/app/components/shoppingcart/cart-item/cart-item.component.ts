@@ -1,7 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NewTicket } from 'src/app/dtos/newTicket';
-import { Ticket } from 'src/app/dtos/ticket';
 import { TicketService } from 'src/app/services/ticket.service';
 
 @Component({
@@ -36,18 +35,14 @@ export class CartItemComponent implements OnInit {
   removeAllTickets(): void {
     if (!this.waiting) {
       this.waiting = true;
-      this.ticketService.removeMultipleTickets(this.ticketService.cart[this.i]).subscribe(
-        (response: boolean) => {
+      this.ticketService.removeMultipleTickets(this.i).subscribe(
+        () => {
           this.waiting = false;
           this.success = true;
-          if (response) {
-            this.ticketService.cart.splice(this.i, 1);
-            this.ticketService.updatePrice();
-          }
         },
         (error) => {
+          console.error(error);
           this.waiting = false;
-          this.ticketService.reload();
         }
       );
     }
@@ -56,22 +51,14 @@ export class CartItemComponent implements OnInit {
   removeTicket(j: number): void {
     if (!this.waiting) {
       this.waiting = true;
-      this.ticketService.removeTicket(this.ticketService.cart[this.i][j]).subscribe(
-        (response: boolean) => {
+      this.ticketService.removeTicket(this.i, j).subscribe(
+        () => {
           this.waiting = false;
           this.success = true;
-          if (response) {
-            if (this.ticketService.cart[this.i].length === 1) {
-              this.ticketService.cart.splice(this.i, 1);
-            } else {
-              this.ticketService.cart[this.i].splice(j, 1);
-            }
-            this.ticketService.updatePrice();
-          }
         },
         (error) => {
+          console.error(error);
           this.waiting = false;
-          this.ticketService.reload();
         }
       );
     }
@@ -82,17 +69,15 @@ export class CartItemComponent implements OnInit {
       this.waiting = true;
       this.vanishAlert();
       const addTicket: NewTicket = {
-        performance: this.ticketService.cart[this.i][0].performance,
+        performanceId: this.ticketService.cart[this.i][0].performance.id,
         ticketType: this.ticketService.cart[this.i][0].ticketType,
+        amount: 1,
+        seatId: null
       };
-      this.ticketService.addTicket(addTicket, 1).subscribe(
-        (responseTickets: Ticket[]) => {
+      this.ticketService.addTicket(addTicket).subscribe(
+        () => {
           this.waiting = false;
           this.success = true;
-          if (responseTickets.length === 1) {
-            this.ticketService.cart[this.i].push(responseTickets[0]);
-          }
-          this.ticketService.updatePrice();
         },
         (error) => {
           this.waiting = false;

@@ -29,7 +29,7 @@ export class BookingService {
    */
   updateBooking(changedBooking): Observable<Booking> {
     // console.log(this.bookingBaseUri + '/change');
-    return this.httpClient.put<Booking>(this.bookingBaseUri + '/change', changedBooking);
+    return this.httpClient.put<Booking>(this.bookingBaseUri, changedBooking);
   }
 
 }

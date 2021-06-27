@@ -38,6 +38,7 @@ public class PdfService {
 
 
     public PdfService(ApplicationUser user) {
+        LOGGER.trace("PdfService({})", user);
         try {
             this.user = user;
             globalDocument = new Document();

@@ -52,10 +52,15 @@ public class BookingServiceImpl implements BookingService {
     public Booking save(Set<Ticket> tickets, Booking.Status status) {
         LOGGER.info("saveBooking({})", tickets);
         ApplicationUser user = userService.findApplicationUserByEmail((String) authenticationFacade.getAuthentication().getPrincipal());
+        File invoice;
 
-        PdfService pdf = new PdfService(user);
-        pdf.createInvoice(tickets, fileService.getPdfCount());
-        File invoice = fileService.addFile(pdf.getFile());
+        if (status == Booking.Status.RESERVED) {
+            invoice = null;
+        } else {
+            PdfService pdf = new PdfService(user);
+            pdf.createInvoice(tickets, fileService.getPdfCount());
+            invoice = fileService.addFile(pdf.getFile());
+        }
 
         Booking booking = Booking.builder()
             .user(user)
@@ -64,6 +69,7 @@ public class BookingServiceImpl implements BookingService {
             .invoice(invoice)
             .status(status)
             .build();
+        LOGGER.info(booking.toString());
 
         return bookingRepository.save(booking);
     }
@@ -87,9 +93,10 @@ public class BookingServiceImpl implements BookingService {
         Booking.Status newStatus = Booking.Status.valueOf(booking.getStatus());
         ApplicationUser user = userService.findApplicationUserByEmail((String) authenticationFacade.getAuthentication().getPrincipal());
         Booking oldBooking = bookingRepository.findByUserAndId(user, booking.getId());
+        Booking.Status oldStatus = oldBooking.getStatus();
 
         //Booking.Status changed
-        if (booking.getStatus() != oldBooking.getStatus().toString()) {
+        if (booking.getStatus() != oldStatus.toString()) {
             Ticket.Status status;
 
             switch (newStatus) {
@@ -106,17 +113,26 @@ public class BookingServiceImpl implements BookingService {
                     break;
                 case CANCELLED:
                     status = Ticket.Status.CANCELLED;
+                    if (oldStatus != Booking.Status.RESERVED) {
+                        PdfService stornoPdf = new PdfService(user);
+                        stornoPdf.createStorno(oldBooking.getTickets(), fileService.getPdfCount());
+                        File storno = fileService.addFile(stornoPdf.getFile());
+                        oldBooking.setInvoice(storno);
+                    }
                     break;
                 default: status = Ticket.Status.RESERVED;
             }
 
-            if (status != Ticket.Status.CANCELLED) {
-                ticketService.updateStatus(oldBooking.getTickets(), status);
-            }
+            ticketService.updateStatus(oldBooking.getTickets(), status);
         }
 
-        oldBooking.setStatus(newStatus);
-        return bookingRepository.save(oldBooking);
+        if (oldStatus == Booking.Status.RESERVED && newStatus == Booking.Status.CANCELLED) {
+            bookingRepository.delete(oldBooking);
+            return null;
+        } else {
+            oldBooking.setStatus(newStatus);
+            return bookingRepository.save(oldBooking);
+        }
     }
 
     @Override
@@ -138,6 +154,5 @@ public class BookingServiceImpl implements BookingService {
         } else {
             bookingRepository.delete(booking);
         }
-
     }
 }

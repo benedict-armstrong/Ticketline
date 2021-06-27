@@ -7,6 +7,7 @@ export class Ticket {
     public id: number,
     public ticketType: TicketType,
     public performance: Performance,
-    public seat: LayoutUnit
+    public seat: LayoutUnit,
+    public status: string
   ) {}
 }

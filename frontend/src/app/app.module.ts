@@ -51,11 +51,16 @@ import { AddressDetailComponent } from './components/search/address-detail/addre
 import { SearchEventListComponent } from './components/search/search-event-list/search-event-list.component';
 import { SelectVenueComponent } from './components/event/select-venue/select-venue.component';
 import { SearchVenueListComponent } from './components/search/search-venue-list/search-venue-list.component';
+import { SelectSeatComponent } from './components/performance-detail/select-seat/select-seat.component';
+import { SelectSeatUnitComponent } from './components/performance-detail/select-seat-unit/select-seat-unit.component';
 import { EditUserComponent } from './components/edit-user/edit-user.component';
 import { UserManagementComponent } from './components/user-management/user-management.component';
 import { BannedAlertComponent } from './components/banned-alert/banned-alert.component';
 import { ConfirmationComponent } from './components/confirmation/confirmation.component';
+import { FilterPipe } from './components/performance-detail/pipes/filter.pipe';
+import { CartListComponent } from './components/performance-detail/cart-list/cart-list.component';
 import { DeletedAlertComponent } from './components/deleted-alert/deleted-alert.component';
+import { BookingListItemComponent } from './components/booking-list-item/booking-list-item.component';
 
 @NgModule({
   declarations: [
@@ -110,7 +115,14 @@ import { DeletedAlertComponent } from './components/deleted-alert/deleted-alert.
     UserManagementComponent,
     BannedAlertComponent,
     ConfirmationComponent,
-    DeletedAlertComponent
+    DeletedAlertComponent,
+    FilterPipe,
+    CartListComponent,
+    BannedAlertComponent,
+    SelectSeatComponent,
+    SelectSeatUnitComponent,
+    DeletedAlertComponent,
+    BookingListItemComponent
   ],
   imports: [
     BrowserModule,

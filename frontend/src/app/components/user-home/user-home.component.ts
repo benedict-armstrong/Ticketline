@@ -90,6 +90,7 @@ export class UserHomeComponent implements OnInit {
         });
 
         this.loadReserved();
+        // this.loadCancelled();
       },
       (error) => {
         this.defaultServiceErrorHandling(error);
@@ -98,7 +99,6 @@ export class UserHomeComponent implements OnInit {
   }
 
   loadReserved() {
-    console.log('loading reserved orders');
     this.ticketService.getReservedItems().subscribe(
       (response) => {
         // Get all reserved tickets
@@ -113,7 +113,6 @@ export class UserHomeComponent implements OnInit {
           Date.parse(x.tickets[0].performance.date) - Date.parse(y.tickets[0].performance.date)).reverse();
         this.newOrders = this.orders.filter(item => item.old === false);
         this.loading = false;
-        console.log(this.orders);
       },
       (error) => {
         this.defaultServiceErrorHandling(error);

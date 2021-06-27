@@ -19,6 +19,7 @@ export class TicketOrderItemComponent implements OnInit {
 
   old = false;
   reserved = false;
+  cancelled = false;
   tooLong = false;
 
   @Input() set ticketItem(item: TicketGroup) {
@@ -42,7 +43,7 @@ export class TicketOrderItemComponent implements OnInit {
   createAltTickets(ticket) {
     const ticketGroup = this.altTickets.find(i => i.ticketType.id === ticket.ticketType.id);
     if (ticketGroup == null) {
-      const newGroup = new Ticket(1, ticket.ticketType, this.performance, ticket.seat);
+      const newGroup = new Ticket(1, ticket.ticketType, this.performance, ticket.seat, ticket.status);
       this.altTickets.push(newGroup);
     } else {
       ticketGroup.id += 1;
