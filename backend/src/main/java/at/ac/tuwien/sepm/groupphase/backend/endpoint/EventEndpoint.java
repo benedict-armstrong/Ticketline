@@ -73,7 +73,7 @@ public class EventEndpoint {
     @Transactional
     @PermitAll
     @GetMapping(value = "/top")
-    @Operation(summary = "Get all events")
+    @Operation(summary = "Get top events")
     public List<TopEventDto> findTopEvents(PaginationDto paginationDto) {
         LOGGER.info("GET /api/v1/events/top");
 
