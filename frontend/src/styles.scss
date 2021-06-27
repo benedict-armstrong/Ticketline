@@ -57,6 +57,19 @@ button.deactivated {
   background: linear-gradient(261deg, lightgray 19%, lighten(gray, 25%) 80%);
 }
 
+button.primary:not(.deactivated):hover {
+  background: $primary-darker;
+}
+
+button.secondary:not(.deactivated):hover {
+  background: lighten(lightgray, 15%);
+}
+
+button.primary:not(.deactivated):active, button.secondary:not(.deactivated):active {
+  transform: scale(0.95);
+  transition: 0.05s;
+}
+
 button.primary.locked {
   background: $gray-darker;
 }
