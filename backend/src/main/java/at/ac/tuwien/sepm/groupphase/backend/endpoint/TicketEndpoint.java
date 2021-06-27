@@ -27,6 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.security.PermitAll;
 import javax.validation.Valid;
+import javax.annotation.security.PermitAll;
 import java.lang.invoke.MethodHandles;
 import java.util.List;
 
@@ -149,6 +150,15 @@ public class TicketEndpoint {
     public List<TicketDto> getReservedTickets() {
         LOGGER.info("GET /api/v1/tickets/reserved");
         return ticketMapper.ticketListToTicketDtoList(ticketService.getTickets(Ticket.Status.RESERVED));
+    }
+
+    @GetMapping("/sales")
+    @PermitAll
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(summary = "Get ticket sales for past 7 days")
+    public List<Double> getSales() {
+        LOGGER.info("GET /api/v1/tickets/sales");
+        return ticketService.getRelativeTicketSalesPastSevenDays();
     }
 
     @GetMapping("/{performanceId}/seatCounts")

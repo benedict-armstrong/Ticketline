@@ -9,6 +9,7 @@ import at.ac.tuwien.sepm.groupphase.backend.config.properties.SecurityProperties
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.ArtistDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.PerformanceDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.TopEventDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.VenueDto;
 import at.ac.tuwien.sepm.groupphase.backend.repository.AddressRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.ArtistRepository;
@@ -576,5 +577,108 @@ public class EventEndpointTest implements TestDataEvent, TestAuthentification {
         );
 
         assertEquals(0, eventDtos.size());
+    }
+
+    @Test
+    @DisplayName("Should return a list of topEvents")
+    public void whenTopEvents_ShouldReturnWithList() throws Exception {
+        eventDto.getPerformances()[0].setArtist(saveArtist(artistDto));
+        eventDto.getPerformances()[0].setVenue(saveVenue(venueDto));
+        saveEvent(eventDto);
+
+        MvcResult mvcResult = this.mockMvc.perform(
+            get(TestDataEvent.EVENT_BASE_URI + "/top")
+                .param("page", "0")
+                .param("size", "5")
+                .header(securityProperties.getAuthHeader(), authToken)
+        ).andReturn();
+        MockHttpServletResponse response = mvcResult.getResponse();
+        assertEquals(HttpStatus.OK.value(), response.getStatus());
+        assertEquals(MediaType.APPLICATION_JSON_VALUE, response.getContentType());
+
+        List<TopEventDto> topEventDtos = Arrays.asList(
+            objectMapper.readValue(response.getContentAsString(), TopEventDto[].class)
+        );
+
+        assertEquals(1, topEventDtos.size());
+        assertEquals(0, topEventDtos.get(0).getSoldTickets());
+    }
+
+    @Test
+    @DisplayName("Should return 200 and event with name from search")
+    public void whenEventsGiven_SearchFullTextWithName_ShouldReturn200AndEvent() throws Exception {
+        eventDto.getPerformances()[0].setArtist(saveArtist(artistDto));
+        eventDto.getPerformances()[0].setVenue(saveVenue(venueDto));
+        saveEvent(eventDto);
+
+        MvcResult mvcResult = this.mockMvc.perform(
+            get(TestDataEvent.EVENT_BASE_URI + "/search")
+                .param("page", "0")
+                .param("size", "10")
+                .param("text", TestDataEvent.TEST_EVENT_TITLE)
+                .header(securityProperties.getAuthHeader(), authToken)
+        ).andReturn();
+        MockHttpServletResponse response = mvcResult.getResponse();
+        assertEquals(HttpStatus.OK.value(), response.getStatus());
+        assertEquals(MediaType.APPLICATION_JSON_VALUE, response.getContentType());
+
+        List<EventDto> eventDtos = Arrays.asList(
+            objectMapper.readValue(response.getContentAsString(), EventDto[].class)
+        );
+        assertEquals(HttpStatus.OK.value(), response.getStatus());
+        assertEquals(eventDto.getName(), eventDtos.get(0).getName());
+        assertEquals(1, eventDtos.size());
+    }
+
+    @Test
+    @DisplayName("Should return 200 and event with name from search")
+    public void whenEventsGiven_SearchFullTextWithDescriptoin_ShouldReturn200AndEvent() throws Exception {
+        eventDto.getPerformances()[0].setArtist(saveArtist(artistDto));
+        eventDto.getPerformances()[0].setVenue(saveVenue(venueDto));
+        saveEvent(eventDto);
+
+        MvcResult mvcResult = this.mockMvc.perform(
+            get(TestDataEvent.EVENT_BASE_URI + "/search")
+                .param("page", "0")
+                .param("size", "10")
+                .param("text", TestDataEvent.TEST_EVENT_DESCRIPTION)
+                .header(securityProperties.getAuthHeader(), authToken)
+        ).andReturn();
+        MockHttpServletResponse response = mvcResult.getResponse();
+        assertEquals(HttpStatus.OK.value(), response.getStatus());
+        assertEquals(MediaType.APPLICATION_JSON_VALUE, response.getContentType());
+
+        List<EventDto> eventDtos = Arrays.asList(
+            objectMapper.readValue(response.getContentAsString(), EventDto[].class)
+        );
+        assertEquals(HttpStatus.OK.value(), response.getStatus());
+        assertEquals(eventDto.getDescription(), eventDtos.get(0).getDescription());
+        assertEquals(1, eventDtos.size());
+    }
+
+    @Test
+    @DisplayName("Should return 200 and event with name from search")
+    public void whenEventsGiven_SearchFullTextWithArtist_ShouldReturn200AndEvent() throws Exception {
+        eventDto.getPerformances()[0].setArtist(saveArtist(artistDto));
+        eventDto.getPerformances()[0].setVenue(saveVenue(venueDto));
+        saveEvent(eventDto);
+
+        MvcResult mvcResult = this.mockMvc.perform(
+            get(TestDataEvent.EVENT_BASE_URI + "/search")
+                .param("page", "0")
+                .param("size", "10")
+                .param("text", TestDataEvent.TEST_ARTIST_FIRSTNAME)
+                .header(securityProperties.getAuthHeader(), authToken)
+        ).andReturn();
+        MockHttpServletResponse response = mvcResult.getResponse();
+        assertEquals(HttpStatus.OK.value(), response.getStatus());
+        assertEquals(MediaType.APPLICATION_JSON_VALUE, response.getContentType());
+
+        List<EventDto> eventDtos = Arrays.asList(
+            objectMapper.readValue(response.getContentAsString(), EventDto[].class)
+        );
+        assertEquals(HttpStatus.OK.value(), response.getStatus());
+        assertEquals(eventDto.getName(), eventDtos.get(0).getName());
+        assertEquals(1, eventDtos.size());
     }
 }

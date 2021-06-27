@@ -8,6 +8,7 @@ import java.time.LocalDateTime;
 public interface TestDataUser extends TestData{
 
     String USER_BASE_URI = BASE_URI + "/users";
+    String LOGIN_BASE_URI = BASE_URI + "/authentication";
 
     String ADMIN_FIRST_NAME = "Max";
     String ADMIN_LAST_NAME = "Mustermann";
@@ -15,7 +16,7 @@ public interface TestDataUser extends TestData{
     String ADMIN_EMAIL = "admin@email.com";
     String ADMIN_PASSWORD = "password";
     LocalDateTime ADMIN_LAST_LOGIN = LocalDateTime.now();
-    int ADMIN_POINTS = 0;
+    Long ADMIN_POINTS = 0L;
     ApplicationUser.UserStatus ADMIN_USER_STATUS = ApplicationUser.UserStatus.ACTIVE;
     ApplicationUser.UserRole ADMIN_ROLE = ApplicationUser.UserRole.ADMIN;
     Address ADMIN_ADDRESS = Address.builder().name("Max Mustermann").lineOne("Teststraße 1").city("Wien").postcode("1010").country("Österreich").build();
@@ -23,10 +24,10 @@ public interface TestDataUser extends TestData{
     String DEFAULT_FIRST_NAME = "Max";
     String DEFAULT_LAST_NAME = "Mustermann";
     String DEFAULT_PHONE_NUMBER = "+43 660 123456789";
-    String DEFAULT_EMAIL = "admin@email.com";
+    String DEFAULT_EMAIL = "user@email.com";
     String DEFAULT_PASSWORD = "password";
     LocalDateTime DEFAULT_LAST_LOGIN = LocalDateTime.now();
-    int DEFAULT_POINTS = 0;
+    Long DEFAULT_POINTS = 0L;
     ApplicationUser.UserStatus DEFAULT_STATUS = ApplicationUser.UserStatus.ACTIVE;
     ApplicationUser.UserRole DEFAULT_ROLE = ApplicationUser.UserRole.CLIENT;
     Address DEFAULT_ADDRESS = Address.builder().name("Max Mustermann").lineOne("Teststraße 1").city("Wien").postcode("1010").country("Österreich").build();

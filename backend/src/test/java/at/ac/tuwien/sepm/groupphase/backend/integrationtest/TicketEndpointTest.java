@@ -631,4 +631,56 @@ public class TicketEndpointTest implements TestDataTicket, TestDataUser, TestDat
             () -> assertEquals(4 - ticketAmount, seatCountDtos.get(0).getFreeSeats())
         );
     }
+
+    @Test
+    @DisplayName("When there are no tickets all Elements in Sales should be 0.0d")
+    public void whenNoTickets_thenSalesListOnlyZeros() throws Exception{
+        MvcResult mvcResult = this.mockMvc.perform(
+            get(TICKET_BASE_URI + "/sales")
+        ).andReturn();
+        MockHttpServletResponse response = mvcResult.getResponse();
+        assertEquals(HttpStatus.OK.value(), response.getStatus());
+        assertEquals(MediaType.APPLICATION_JSON_VALUE, response.getContentType());
+
+        Double[] list = objectMapper.readValue(response.getContentAsString(), Double[].class);
+
+        for (Double d : list) {
+            assertEquals(d, 0.0d);
+        }
+
+    }
+
+    @Test
+    @DisplayName("When there is just one paid for ticket one of the Elements in Sales should be 1.0d and the rest 0.0d")
+    public void whenOneTicket_thenSalesListOneAndRestZeros() throws Exception{
+
+        this.mockMvc.perform(
+            post(TICKET_BASE_URI + "/" + ticketAmount)
+                .content(
+                    objectMapper.writeValueAsString(newTicketDto)
+                )
+                .contentType(MediaType.APPLICATION_JSON)
+                .header(securityProperties.getAuthHeader(), authToken)
+        ).andReturn();
+
+        this.mockMvc.perform(
+            put(TICKET_BASE_URI + "/checkout")
+                .header(securityProperties.getAuthHeader(), authToken)
+        ).andReturn();
+
+        MvcResult mvcResult = this.mockMvc.perform(
+            get(TICKET_BASE_URI + "/sales")
+        ).andReturn();
+        MockHttpServletResponse response = mvcResult.getResponse();
+        assertEquals(HttpStatus.OK.value(), response.getStatus());
+        assertEquals(MediaType.APPLICATION_JSON_VALUE, response.getContentType());
+
+        List<Double> list = Arrays.asList(
+            objectMapper.readValue(response.getContentAsString(), Double[].class)
+        );
+
+        assert(list.contains(1.0d));
+
+    }
+
 }

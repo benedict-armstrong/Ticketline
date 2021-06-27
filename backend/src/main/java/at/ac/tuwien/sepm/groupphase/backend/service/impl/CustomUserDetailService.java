@@ -13,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.User;
@@ -177,7 +178,7 @@ public class CustomUserDetailService implements UserService {
         String newGeneratedPassword = RandomStringUtils.randomAscii(16);
         user.setPassword(newGeneratedPassword);
 
-        ApplicationUser newUser = updateUser(user, false);
+        ApplicationUser newUser = updateUser(user, true);
 
         if (newUser != null) {
             simpleMailService.sendMail(user.getEmail(), "[Ticketline] Password reset", String.format("Hello %s %s,\n\nYour password was changed to '%s' (without ')!"
@@ -190,7 +191,47 @@ public class CustomUserDetailService implements UserService {
     @Override
     public List<ApplicationUser> getAll(Pageable pageRequest) {
         LOGGER.trace("getAll({})", pageRequest);
-        return userRepository.findAll(pageRequest).getContent();
+        return userRepository.findAllByStatusNot(ApplicationUser.UserStatus.DELETED, pageRequest).getContent();
     }
 
+    @Override
+    @Scheduled(fixedDelay = 18000)
+    public void resetPasswordAttemptCount() {
+        LOGGER.trace("resetPasswordAttemptCount()");
+        List<ApplicationUser> users = userRepository.findAllByPointsGreaterThan(0L);
+
+        for (ApplicationUser user : users) {
+            user.setPoints(0L);
+            userRepository.save(user);
+        }
+    }
+
+    @Override
+    public void delete(Long id) {
+        LOGGER.trace("delete({})", id);
+
+        ApplicationUser requester = userRepository.findUserByEmail((String) authenticationFacade.getAuthentication().getPrincipal());
+        if (requester == null) {
+            throw new NotFoundException("Couldn't find user with id " + id);
+        }
+
+        if (!requester.getId().equals(id)) {
+            throw new IllegalArgumentException("Attempted to delete another user");
+        } else if (requester.getRole() != ApplicationUser.UserRole.CLIENT) {
+            throw new IllegalArgumentException("Attempted to delete a non-client user");
+        } else if (requester.getStatus() == ApplicationUser.UserStatus.DELETED) {
+            throw new NotFoundException("Couldn't find user with id " + id);
+        }
+        requester.setFirstName(null);
+        requester.setLastName(null);
+        requester.setTelephoneNumber(null);
+        requester.setEmail(null);
+        requester.setPassword(null);
+        requester.setLastLogin(null);
+        requester.setLastReadNewsId(null);
+        requester.setPoints(null);
+        requester.setStatus(ApplicationUser.UserStatus.DELETED);
+        requester.setAddress(null);
+        userRepository.save(requester);
+    }
 }

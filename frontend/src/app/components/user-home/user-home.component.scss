@@ -50,3 +50,13 @@ button {
 .user-action-heading:hover {
   cursor: pointer;
 }
+
+div.buttons-wrapper {
+  display: flex;
+  justify-content: space-between;
+}
+
+div.buttons-wrapper button {
+  margin-left: 10px;
+  width: 100px;
+}

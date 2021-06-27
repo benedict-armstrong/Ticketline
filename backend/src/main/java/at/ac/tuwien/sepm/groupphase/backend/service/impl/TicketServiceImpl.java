@@ -11,7 +11,6 @@ import at.ac.tuwien.sepm.groupphase.backend.entity.TicketType;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Venue;
 import at.ac.tuwien.sepm.groupphase.backend.exception.FullCartException;
 import at.ac.tuwien.sepm.groupphase.backend.exception.NoTicketLeftException;
-import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepm.groupphase.backend.repository.TicketRepository;
 import at.ac.tuwien.sepm.groupphase.backend.security.AuthenticationFacade;
 import at.ac.tuwien.sepm.groupphase.backend.service.BookingService;
@@ -29,8 +28,10 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.lang.invoke.MethodHandles;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -257,6 +258,7 @@ public class TicketServiceImpl implements TicketService {
     }
 
     @Override
+    @Transactional
     public boolean delete(List<Long> ids) {
         LOGGER.trace("delete({})", ids);
         List<Ticket> tickets = ticketRepository.findByIdList(ids);
@@ -322,5 +324,32 @@ public class TicketServiceImpl implements TicketService {
             oldTicket.setTicketType(ticketType);
             return ticketRepository.save(oldTicket);
         }
+    }
+
+    @Override
+    public List<Double> getRelativeTicketSalesPastSevenDays() {
+        LOGGER.trace("getTicketSalesPastSevenDays()");
+        List<Long> list = new ArrayList<>();
+        List<Double> out = new ArrayList<>();
+        LocalDate today = LocalDate.now();
+
+        for (int i = 6; i >= 0; i--) {
+            LocalDate day = today.minusDays(i);
+            list.add(ticketRepository.countTicketByChangeDateBetweenAndStatus(day.atStartOfDay(), day.plusDays(1).atStartOfDay(), Ticket.Status.PAID_FOR));
+        }
+
+        Long max = Collections.max(list);
+
+        if (max == 0L) {
+            for (Long ignored : list) {
+                out.add(0.0d);
+            }
+        } else {
+            for (Long count : list) {
+                out.add((double) count / max);
+            }
+        }
+
+        return out;
     }
 }

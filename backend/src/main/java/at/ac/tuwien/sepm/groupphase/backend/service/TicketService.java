@@ -115,4 +115,12 @@ public interface TicketService {
      * @return updated Ticket
      */
     Ticket updateTicket(Ticket ticket);
+
+    /**
+     * Get ticket sales of last seven days.
+     *
+     * @return List of ticket sales on each day
+     */
+    List<Double> getRelativeTicketSalesPastSevenDays();
+
 }

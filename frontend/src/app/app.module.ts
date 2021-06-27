@@ -51,11 +51,15 @@ import { AddressDetailComponent } from './components/search/address-detail/addre
 import { SearchEventListComponent } from './components/search/search-event-list/search-event-list.component';
 import { SelectVenueComponent } from './components/event/select-venue/select-venue.component';
 import { SearchVenueListComponent } from './components/search/search-venue-list/search-venue-list.component';
+import { ExploreComponent } from './components/explore/explore.component';
+import { BarComponent } from './components/graphs/bar/bar.component';
+import { ExploreEventListItemComponent } from './components/explore/explore-event-list-item/explore-event-list-item.component';
 import { SelectSeatComponent } from './components/performance-detail/select-seat/select-seat.component';
 import { SelectSeatUnitComponent } from './components/performance-detail/select-seat-unit/select-seat-unit.component';
 import { EditUserComponent } from './components/edit-user/edit-user.component';
 import { UserManagementComponent } from './components/user-management/user-management.component';
 import { BannedAlertComponent } from './components/banned-alert/banned-alert.component';
+import { DeletedAlertComponent } from './components/deleted-alert/deleted-alert.component';
 import { FilterPipe } from './components/performance-detail/pipes/filter.pipe';
 import { CartListComponent } from './components/performance-detail/cart-list/cart-list.component';
 
@@ -110,11 +114,16 @@ import { CartListComponent } from './components/performance-detail/cart-list/car
     SearchVenueListComponent,
     SelectSeatComponent,
     SelectSeatUnitComponent,
+    ExploreComponent,
+    BarComponent,
+    ExploreEventListItemComponent,
     EditUserComponent,
     UserManagementComponent,
     BannedAlertComponent,
     FilterPipe,
-    CartListComponent
+    CartListComponent,
+    BannedAlertComponent,
+    DeletedAlertComponent
   ],
   imports: [
     BrowserModule,

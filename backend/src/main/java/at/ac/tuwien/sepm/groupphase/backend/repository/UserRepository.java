@@ -5,12 +5,16 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.List;
+
 public interface UserRepository extends JpaRepository<ApplicationUser, Long> {
 
     ApplicationUser findUserById(long id);
 
     ApplicationUser findUserByEmail(String email);
 
-    Page<ApplicationUser> findAll(Pageable pageable);
+    Page<ApplicationUser> findAllByStatusNot(ApplicationUser.UserStatus status, Pageable pageable);
+
+    List<ApplicationUser> findAllByPointsGreaterThan(Long number);
 
 }
