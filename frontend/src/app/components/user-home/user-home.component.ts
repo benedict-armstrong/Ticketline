@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { User } from 'src/app/dtos/user';
@@ -14,6 +14,9 @@ import {TicketGroup} from '../../dtos/ticketGroup';
   styleUrls: ['./user-home.component.scss'],
 })
 export class UserHomeComponent implements OnInit {
+
+  @ViewChild('deletionModal') deletionModal: ElementRef;
+
   // Error flag
   error = false;
   errorMessage = '';
@@ -157,6 +160,18 @@ export class UserHomeComponent implements OnInit {
         );
       }
     }
+  }
+
+  deleteAccount() {
+    this.userService.delete(this.user.id).subscribe(
+      response => {
+        this.deletionModal.nativeElement.click(); // close modal
+        this.authService.logoutUser();
+        this.router.navigate(['/deleted']);
+      }, error => {
+        this.defaultServiceErrorHandling(error);
+      }
+    );
   }
 
   vanishAlert(): void {
