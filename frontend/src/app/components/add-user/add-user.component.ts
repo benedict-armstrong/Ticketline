@@ -21,6 +21,9 @@ export class AddUserComponent implements OnInit {
   // Success Flag
   success = false;
 
+  // Indicates if navigated from user management view
+  management = false;
+
   constructor(
     private userService: UserService,
     private formBuilder: FormBuilder,
@@ -77,6 +80,13 @@ export class AddUserComponent implements OnInit {
       this.userService.createUser(user).subscribe(
         () => {
           this.success = true;
+          let destination = '/';
+          if (this.management) {
+            destination = '/users';
+          }
+          setTimeout(() => {
+            this.router.navigate([destination]);
+          }, 3000);
         },
         (error) => {
           this.defaultServiceErrorHandling(error);
@@ -92,7 +102,11 @@ export class AddUserComponent implements OnInit {
     this.success = false;
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    if (history.state.management) {
+      this.management = history.state.management;
+    }
+  }
 
   private defaultServiceErrorHandling(error: any) {
     console.log(error);
