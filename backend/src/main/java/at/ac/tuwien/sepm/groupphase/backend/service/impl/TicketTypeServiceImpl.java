@@ -15,7 +15,7 @@ import java.lang.invoke.MethodHandles;
 public class TicketTypeServiceImpl implements TicketTypeService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
-    private TicketTypeRepository ticketTypeRepository;
+    private final TicketTypeRepository ticketTypeRepository;
 
     @Autowired
     public TicketTypeServiceImpl(TicketTypeRepository ticketTypeRepository) {

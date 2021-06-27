@@ -3,8 +3,7 @@ package at.ac.tuwien.sepm.groupphase.backend.endpoint;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.NewTicketDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.SeatCountDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.TicketDto;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserDto;
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.PerformanceMapper;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.SeatCountMapper;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.TicketMapper;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.TicketTypeMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Ticket;
@@ -27,7 +26,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.security.PermitAll;
 import javax.validation.Valid;
-import javax.annotation.security.PermitAll;
 import java.lang.invoke.MethodHandles;
 import java.util.List;
 
@@ -38,16 +36,16 @@ public class TicketEndpoint {
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final TicketService ticketService;
     private final TicketMapper ticketMapper;
-    private final PerformanceMapper performanceMapper;
     private final TicketTypeMapper ticketTypeMapper;
+    private final SeatCountMapper seatCountMapper;
 
     @Autowired
     public TicketEndpoint(TicketService ticketService, TicketMapper ticketMapper,
-                          PerformanceMapper performanceMapper, TicketTypeMapper ticketTypeMapper) {
+                          TicketTypeMapper ticketTypeMapper, SeatCountMapper seatCountMapper) {
         this.ticketService = ticketService;
         this.ticketMapper = ticketMapper;
-        this.performanceMapper = performanceMapper;
         this.ticketTypeMapper = ticketTypeMapper;
+        this.seatCountMapper = seatCountMapper;
     }
 
     @GetMapping
@@ -162,12 +160,11 @@ public class TicketEndpoint {
     }
 
     @GetMapping("/{performanceId}/seatCounts")
-    //@Secured({"ROLE_USER", "ROLE_ORGANIZER", "ROLE_ADMIN"})
     @PermitAll
     @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "Get tickets from user that have been reserved")
     public List<SeatCountDto> getSeatCountsByPerformance(@PathVariable Long performanceId) {
         LOGGER.info("GET /api/v1/{}/seatCounts", performanceId);
-        return ticketService.getSeatCountsInPerformance(performanceId);
+        return  seatCountMapper.seatCountListToSeatCountDtoList(ticketService.getSeatCountsInPerformance(performanceId));
     }
 }

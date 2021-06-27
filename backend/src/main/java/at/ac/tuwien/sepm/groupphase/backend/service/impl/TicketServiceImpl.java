@@ -5,6 +5,7 @@ import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Booking;
 import at.ac.tuwien.sepm.groupphase.backend.entity.LayoutUnit;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Performance;
+import at.ac.tuwien.sepm.groupphase.backend.entity.SeatCount;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Sector;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Ticket;
 import at.ac.tuwien.sepm.groupphase.backend.entity.TicketType;
@@ -137,18 +138,18 @@ public class TicketServiceImpl implements TicketService {
             throw new NoTicketLeftException("This seat is not free anymore.");
         }
 
-        ticketList.add(
-            Ticket.builder()
-                .ticketType(ticketType)
-                .performance(performance)
-                .status(status)
-                .user(user)
-                .changeDate(LocalDateTime.now())
-                .seat(seat)
-                .build()
-        );
+        Ticket ticket = Ticket.builder()
+            .ticketType(ticketType)
+            .performance(performance)
+            .status(status)
+            .user(user)
+            .changeDate(LocalDateTime.now())
+            .seat(seat)
+            .build();
 
-        return ticketRepository.saveAll(ticketList);
+        ticketList.add(ticketRepository.save(ticket));
+
+        return ticketList;
     }
 
     @Override
@@ -187,19 +188,19 @@ public class TicketServiceImpl implements TicketService {
     }
 
     @Override
-    public List<SeatCountDto> getSeatCountsInPerformance(Long performanceId) {
+    public List<SeatCount> getSeatCountsInPerformance(Long performanceId) {
         LOGGER.trace("getSeatCountsInPerformanceBySector({})", performanceId);
 
         Performance performance = performanceService.findById(performanceId);
 
-        List<SeatCountDto> seatCounts = new LinkedList<>();
+        List<SeatCount> seatCounts = new LinkedList<>();
 
         for (Sector sector : performance.getVenue().getSectors()) {
             List<LayoutUnit> freeSeats = ticketRepository.getFreeSeatsInPerformanceAndSector(performance, sector);
 
             List<LayoutUnit> totalSeats = layoutUnitService.findBySector(sector);
 
-            seatCounts.add(SeatCountDto.builder()
+            seatCounts.add(SeatCount.builder()
                 .sectorId(sector.getId())
                 .freeSeats(freeSeats.size())
                 .totalSeats(totalSeats.size())

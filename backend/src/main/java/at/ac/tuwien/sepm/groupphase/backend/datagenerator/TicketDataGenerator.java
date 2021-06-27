@@ -1,11 +1,14 @@
 package at.ac.tuwien.sepm.groupphase.backend.datagenerator;
 
 import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
+import at.ac.tuwien.sepm.groupphase.backend.entity.Booking;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Event;
 import at.ac.tuwien.sepm.groupphase.backend.entity.LayoutUnit;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Performance;
+import at.ac.tuwien.sepm.groupphase.backend.entity.Sector;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Ticket;
 import at.ac.tuwien.sepm.groupphase.backend.entity.TicketType;
+import at.ac.tuwien.sepm.groupphase.backend.repository.BookingRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.TicketRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.EventRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.LayoutUnitRepository;
@@ -35,7 +38,7 @@ public class TicketDataGenerator {
     private final TicketRepository ticketRepository;
     private final EventRepository eventRepository;
     private final UserRepository userRepository;
-    private final LayoutUnitRepository layoutUnitRepository;
+    private final BookingRepository bookingRepository;
 
     @EventListener(ContextRefreshedEvent.class)
     public void onApplicationEvent(ContextRefreshedEvent event) {
@@ -43,11 +46,11 @@ public class TicketDataGenerator {
     }
 
     public TicketDataGenerator(TicketRepository ticketRepository, EventRepository eventRepository,
-                               UserRepository userRepository, LayoutUnitRepository layoutUnitRepository) {
+                               UserRepository userRepository, BookingRepository bookingRepository) {
         this.ticketRepository = ticketRepository;
         this.eventRepository = eventRepository;
         this.userRepository = userRepository;
-        this.layoutUnitRepository = layoutUnitRepository;
+        this.bookingRepository = bookingRepository;
     }
 
     @Transactional
@@ -70,7 +73,11 @@ public class TicketDataGenerator {
             Set<Ticket> ticketSet = new HashSet<>();
             for (int i = 0; i < NUMBER_OF_TICKETS_TO_GENERATE; i++) {
                 LayoutUnit seat = performance.getVenue().getLayout().get(i);
-                layoutUnitRepository.save(seat);
+
+                if (seat.getSector().getType().equals(Sector.SectorType.STAGE)) {
+                    continue;
+                }
+
                 ticketSet.add(Ticket.builder()
                     .ticketType(ticketType)
                     .performance(performance)
@@ -81,7 +88,17 @@ public class TicketDataGenerator {
                     .build()
                 );
             }
+
+            Booking booking = Booking.builder()
+                .createDate(LocalDateTime.now())
+                .user(user)
+                .tickets(ticketSet)
+                .status(Booking.Status.PAID_FOR)
+                .invoice(null)
+                .build();
+
             ticketRepository.saveAll(ticketSet);
+            bookingRepository.save(booking);
         }
     }
 }
