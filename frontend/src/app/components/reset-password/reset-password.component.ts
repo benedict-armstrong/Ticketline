@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import {ActivatedRoute} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {UserService} from '../../services/user.service';
 
@@ -18,7 +18,7 @@ export class ResetPasswordComponent implements OnInit {
 
   passwordChangeForm: FormGroup;
 
-  constructor(private userService: UserService, private route: ActivatedRoute, private formBuilder: FormBuilder) { }
+  constructor(private router: Router, private userService: UserService, private route: ActivatedRoute, private formBuilder: FormBuilder) { }
 
   ngOnInit(): void {
     this.route.queryParams.subscribe(params => {
@@ -49,12 +49,14 @@ export class ResetPasswordComponent implements OnInit {
       ) {
         const password = this.passwordChangeForm.value.password;
 
-        console.log(this.token);
         this.userService.changePassword(password, this.token).subscribe(
           () => {
             this.passwordSubmitted = false;
             this.passwordChangeForm.reset();
             this.passwordSuccess = true;
+            setTimeout(() => {
+              this.router.navigate(['/login']);
+            }, 3000);
           },
           (error) => {
             this.defaultPasswordErrorHandling(error);
