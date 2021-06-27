@@ -13,8 +13,8 @@
     <div class="info">
       <div class="detail">
         <h5>{{ticket.performance.title}}</h5>
-        <span> {{ticket.ticketType.title}} / {{ticket.ticketType.sector.name}}: 1x</span>
-        <span class="price"> à {{ticket.ticketType.price / 100 | currency:'EUR'}}</span>
+        <span> {{ticket.ticketType.title}} / {{ticket.ticketType.sector.name}}: Seat {{ticket.seat.customLabel}}</span>
+        <span class="price"> for {{ticket.ticketType.price / 100 | currency:'EUR'}}</span>
       </div>
     </div>
   </div>

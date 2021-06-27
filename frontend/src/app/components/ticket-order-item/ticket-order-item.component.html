@@ -2,11 +2,7 @@
   <div class="card-body">
     <div>
       <img src="assets/tickets.svg" alt="">
-<<<<<<< HEAD
       <h5 class="card-title">{{performance.title}} Tickets</h5>
-=======
-      <h5 class="card-title">{{performance.title}}</h5>
->>>>>>> 1dc6a542a79727047df674df7cc8cbb97419261f
     </div>
     <div class="card-text">
       <p>
@@ -39,12 +35,7 @@
         </div>
       </div>
     </div>
-<<<<<<< HEAD
-    <button class="secondary" *ngIf="reserved" disabled>Buy in orders</button>
+    <div class="secondary" *ngIf="reserved">Buy under All Orders</div>
     <button class="primary" (click)="clickDownloadTicket()" *ngIf="!reserved">Download Tickets</button>
-=======
-    <button class="primary" [routerLink]="['/ticket']" *ngIf="reserved" disabled>Buy in orders</button>
-    <button class="primary" [routerLink]="['/ticket']" *ngIf="!reserved">View</button>
->>>>>>> 1dc6a542a79727047df674df7cc8cbb97419261f
   </div>
 </div>
