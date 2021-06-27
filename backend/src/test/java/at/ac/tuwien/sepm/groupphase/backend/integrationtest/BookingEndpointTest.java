@@ -227,7 +227,7 @@ public class BookingEndpointTest implements TestAuthentification, TestDataTicket
             .user(this.savedUser)
             .tickets(ticketSet)
             .invoice(null)
-            .status(Booking.Status.RESERVED)
+            .status(Booking.Status.PAID_FOR)
             .build();
     }
 

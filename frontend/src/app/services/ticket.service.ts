@@ -4,6 +4,7 @@ import { Globals } from '../global/globals';
 import {Observable, Subject} from 'rxjs';
 import { NewTicket } from '../dtos/newTicket';
 import { Ticket } from '../dtos/ticket';
+import { CustomFile } from '../dtos/customFile';
 import { SeatCount } from '../dtos/seatCount';
 import {LayoutUnit} from '../dtos/layoutUnit';
 import {Performance} from '../dtos/performance';
@@ -156,10 +157,6 @@ export class TicketService {
     return this.httpClient.get<Ticket[]>(this.ticketBaseUri + '/reserved');
   }
 
-  getCancelledItems(): Observable<Ticket[]> {
-    return this.httpClient.get<Ticket[]>(this.ticketBaseUri + '/cancelled');
-  }
-
   addTicket(addTicket: NewTicket): Observable<Ticket[][]> {
     return new Observable<Ticket[][]>(subscriber => {
       this.httpClient.post<Ticket[]>(this.ticketBaseUri, addTicket).subscribe(
@@ -310,6 +307,14 @@ export class TicketService {
   reserve(): Observable<boolean> {
     this.updateCartState();
     return this.httpClient.put<boolean>(this.ticketBaseUri + '/reserve', null);
+  }
+
+  getTicketPdf(id: number): Observable<CustomFile> {
+    return this.httpClient.get<CustomFile>(this.ticketBaseUri + '/pdf/' + id);
+  }
+
+  confirmation(userId: number, performanceId: number): Observable<Ticket[]> {
+    return this.httpClient.get<Ticket[]>(this.ticketBaseUri + '/confirmation?user=' + userId + '&performance=' + performanceId);
   }
 
   getSales(): Observable<number[]> {

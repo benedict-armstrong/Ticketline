@@ -1,8 +1,8 @@
 package at.ac.tuwien.sepm.groupphase.backend.service.impl;
 
-import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.SeatCountDto;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Booking;
+import at.ac.tuwien.sepm.groupphase.backend.entity.File;
 import at.ac.tuwien.sepm.groupphase.backend.entity.LayoutUnit;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Performance;
 import at.ac.tuwien.sepm.groupphase.backend.entity.SeatCount;
@@ -17,6 +17,7 @@ import at.ac.tuwien.sepm.groupphase.backend.repository.TicketRepository;
 import at.ac.tuwien.sepm.groupphase.backend.security.AuthenticationFacade;
 import at.ac.tuwien.sepm.groupphase.backend.service.BookingService;
 import at.ac.tuwien.sepm.groupphase.backend.service.LayoutUnitService;
+import at.ac.tuwien.sepm.groupphase.backend.service.PdfService;
 import at.ac.tuwien.sepm.groupphase.backend.service.PerformanceService;
 import at.ac.tuwien.sepm.groupphase.backend.service.TicketService;
 import at.ac.tuwien.sepm.groupphase.backend.service.TicketTypeService;
@@ -47,9 +48,9 @@ public class TicketServiceImpl implements TicketService {
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final TicketRepository ticketRepository;
     private final UserService userService;
+    private final PerformanceService performanceService;
     private final AuthenticationFacade authenticationFacade;
     private final BookingService bookingService;
-    private final PerformanceService performanceService;
     private final LayoutUnitService layoutUnitService;
     private final TicketTypeService ticketTypeService;
 
@@ -310,6 +311,24 @@ public class TicketServiceImpl implements TicketService {
     }
 
     @Override
+    public List<Ticket> getTicketsForPerformance(long performanceId, long userId) {
+        LOGGER.trace("getTicketsForPerformance({} ,{})", performanceId, userId);
+        Performance performance = performanceService.findById(performanceId);
+        ApplicationUser user = userService.findApplicationUserByIdConfirmation(userId, true);
+
+        return ticketRepository.findByPerformanceAndUserAndStatus(performance, user, Ticket.Status.PAID_FOR);
+    }
+
+    @Override
+    public File getPdf(long performanceId) {
+        LOGGER.trace("getPdf() {}", performanceId);
+        ApplicationUser user = userService.findApplicationUserByEmail(authenticationFacade.getAuthentication().getPrincipal().toString());
+        List<Ticket> tickets = getTicketsForPerformance(performanceId, user.getId());
+        PdfService pdf = new PdfService(user);
+        pdf.createTicket(tickets);
+        return pdf.getFile();
+    }
+
     public Ticket updateTicket(Ticket ticket) {
         LOGGER.trace("updateTicket()");
         ApplicationUser user = userService.findApplicationUserByEmail(authenticationFacade.getMail(), false);

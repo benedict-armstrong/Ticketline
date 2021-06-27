@@ -43,7 +43,7 @@ public class File {
     public enum Type {
 
         // Supported file formats
-        IMAGE_JPG, IMAGE_JPEG, IMAGE_PNG;
+        IMAGE_JPG, IMAGE_JPEG, IMAGE_PNG, APPLICATION_PDF;
 
         /*
          *  To add support for more file formats, complete the list of enum cases above.

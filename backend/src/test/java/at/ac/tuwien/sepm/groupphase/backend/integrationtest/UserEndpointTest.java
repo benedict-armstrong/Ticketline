@@ -347,7 +347,7 @@ public class UserEndpointTest implements TestDataUser, TestDataAddress {
 
         UserLoginDto userLoginDto = UserLoginDto.builder().email(userDto.getEmail()).password("Wrong").build();
 
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < 4; i++) {
             MvcResult mvcResultLogin = this.mockMvc.perform(post(LOGIN_BASE_URI)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(userLoginDto)))
@@ -360,7 +360,7 @@ public class UserEndpointTest implements TestDataUser, TestDataAddress {
 
         ApplicationUser user = userRepository.findUserByEmail(userDto.getEmail());
 
-        assertEquals(user.getStatus(), ApplicationUser.UserStatus.BANNED);
+        assertEquals(ApplicationUser.UserStatus.BANNED, user.getStatus());
     }
 
     @Test

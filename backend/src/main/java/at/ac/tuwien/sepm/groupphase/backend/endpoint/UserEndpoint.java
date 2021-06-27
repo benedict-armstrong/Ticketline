@@ -72,6 +72,14 @@ public class UserEndpoint {
         return userMapper.applicationUserToUserDto(userService.findApplicationUserById(id));
     }
 
+    @GetMapping(value = {"/confirmation/{id}"})
+    @PermitAll
+    @Operation(summary = "Find User by Id")
+    public UserDto findByIdForConfirmation(@Valid @PathVariable("id") long id) {
+        LOGGER.info("GET /api/v1/users/confirmation/{}", id);
+        return userMapper.applicationUserToUserDto(userService.findApplicationUserByIdConfirmation(id, false));
+    }
+
     @PutMapping
     @PermitAll
     @Operation(summary = "Update User")

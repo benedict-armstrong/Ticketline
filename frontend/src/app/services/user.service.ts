@@ -33,6 +33,17 @@ export class UserService {
   }
 
   /**
+   * Loads name of user user from the backend
+   *
+   * @param id of user to load
+   * @return user with this id
+   */
+  getUserByIdForConfirmation(id: number): Observable<User> {
+    // console.log('Load user details for ' + id);
+    return this.httpClient.get<User>(this.userBaseUri + '/confirmation/' + id);
+  }
+
+  /**
    * Loads specific user from the backend
    *
    * @param email of user to load

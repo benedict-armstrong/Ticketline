@@ -23,6 +23,7 @@ import {UserManagementComponent} from './components/user-management/user-managem
 import {BannedAlertComponent} from './components/banned-alert/banned-alert.component';
 import {StatusGuard} from './guards/status.guard';
 import {MasterGuard} from './guards/master.guard';
+import {ConfirmationComponent} from './components/confirmation/confirmation.component';
 import {DeletedAlertComponent} from './components/deleted-alert/deleted-alert.component';
 import {ExploreComponent} from './components/explore/explore.component';
 import {ResetPasswordComponent} from './components/reset-password/reset-password.component';
@@ -67,6 +68,8 @@ const routes: Routes = [
   { path: 'users', component: UserManagementComponent, canActivate: [MasterGuard],
       data: {guards: [AuthGuard, StatusGuard], roles: ['ADMIN']} },
   { path: 'banned', component: BannedAlertComponent },
+  { path: 'confirmation/:userId/:perfId', component: ConfirmationComponent, canActivate: [MasterGuard],
+    data: {guards: [StatusGuard]} },
   { path: 'deleted', component: DeletedAlertComponent },
   {
     path: '', component: HomePageComponent, canActivate: [MasterGuard],

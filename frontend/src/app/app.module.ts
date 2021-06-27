@@ -59,6 +59,7 @@ import { SelectSeatUnitComponent } from './components/performance-detail/select-
 import { EditUserComponent } from './components/edit-user/edit-user.component';
 import { UserManagementComponent } from './components/user-management/user-management.component';
 import { BannedAlertComponent } from './components/banned-alert/banned-alert.component';
+import { ConfirmationComponent } from './components/confirmation/confirmation.component';
 import { FilterPipe } from './components/performance-detail/pipes/filter.pipe';
 import { CartListComponent } from './components/performance-detail/cart-list/cart-list.component';
 import { DeletedAlertComponent } from './components/deleted-alert/deleted-alert.component';
@@ -122,9 +123,10 @@ import { ResetPasswordComponent } from './components/reset-password/reset-passwo
     EditUserComponent,
     UserManagementComponent,
     BannedAlertComponent,
+    ConfirmationComponent,
+    DeletedAlertComponent,
     FilterPipe,
     CartListComponent,
-    DeletedAlertComponent,
     BookingListItemComponent,
     ResetPasswordComponent
   ],
