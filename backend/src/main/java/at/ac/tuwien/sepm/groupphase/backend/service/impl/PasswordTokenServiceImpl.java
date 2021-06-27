@@ -5,7 +5,12 @@ import at.ac.tuwien.sepm.groupphase.backend.entity.PasswordResetToken;
 import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepm.groupphase.backend.repository.PasswordTokenRepository;
 import at.ac.tuwien.sepm.groupphase.backend.service.PasswordTokenService;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDate;
+import java.util.List;
 
 @Service
 public class PasswordTokenServiceImpl implements PasswordTokenService {
@@ -22,6 +27,7 @@ public class PasswordTokenServiceImpl implements PasswordTokenService {
     }
 
     @Override
+    @Transactional
     public ApplicationUser findUserByToken(String token) {
         PasswordResetToken passwordResetToken = passwordTokenRepository.findOneByToken(token);
 
@@ -32,5 +38,11 @@ public class PasswordTokenServiceImpl implements PasswordTokenService {
         ApplicationUser user = passwordResetToken.getUser();
         passwordTokenRepository.delete(passwordResetToken);
         return user;
+    }
+
+    @Scheduled(fixedDelay = 60000)
+    public void deleteExpiredTokens() {
+        List<PasswordResetToken> resetTokenList = passwordTokenRepository.findAllByExpiryDateBefore(LocalDate.now());
+        passwordTokenRepository.deleteAll(resetTokenList);
     }
 }

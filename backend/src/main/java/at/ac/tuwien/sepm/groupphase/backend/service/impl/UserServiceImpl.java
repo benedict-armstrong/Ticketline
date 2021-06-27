@@ -189,12 +189,14 @@ public class UserServiceImpl implements UserService {
         PasswordResetToken myToken = PasswordResetToken.builder().token(token).user(user).expiryDate(expiryDate).build();
         myToken = passwordTokenService.save(myToken);
 
+        //Frontend Domain and port are hardcoded
         simpleMailService.sendMail(user.getEmail(), "[Ticketline] Password reset", String.format("Hello %s %s,\n\nSomeone requested a password reset link. If this wasn't you, you can ignore this mail."
             + "\n\nYou can change your password here: \n"
-            + "localhost:4200/changePassword?token=%s", user.getFirstName(), user.getLastName(), myToken.getToken()));
+            + "localhost:4200/changePassword?token=%s (this link is only valid for 24 hours)", user.getFirstName(), user.getLastName(), myToken.getToken()));
     }
 
     @Override
+    @Transactional
     public void changePassword(String password, String token) {
         LOGGER.trace("changePassword({}, {})", password, token);
 
