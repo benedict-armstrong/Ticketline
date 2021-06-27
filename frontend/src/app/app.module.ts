@@ -62,6 +62,7 @@ import { BannedAlertComponent } from './components/banned-alert/banned-alert.com
 import { DeletedAlertComponent } from './components/deleted-alert/deleted-alert.component';
 import { FilterPipe } from './components/performance-detail/pipes/filter.pipe';
 import { CartListComponent } from './components/performance-detail/cart-list/cart-list.component';
+import {BookingListItemComponent} from './components/booking-list-item/booking-list-item.component';
 
 @NgModule({
   declarations: [
@@ -123,7 +124,8 @@ import { CartListComponent } from './components/performance-detail/cart-list/car
     FilterPipe,
     CartListComponent,
     BannedAlertComponent,
-    DeletedAlertComponent
+    DeletedAlertComponent,
+    BookingListItemComponent
   ],
   imports: [
     BrowserModule,

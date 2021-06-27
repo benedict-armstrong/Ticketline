@@ -104,16 +104,6 @@ public class TicketEndpoint {
         return ticketMapper.ticketToTicketDto(ticketService.updateTicket(ticketMapper.ticketDtoToTicket(ticketDto)));
     }
 
-    /*
-    @PutMapping(path = "/{id}/cancel")
-    @Secured({"ROLE_USER", "ROLE_ORGANIZER", "ROLE_ADMIN"})
-    @ResponseStatus(HttpStatus.OK)
-    @Operation(summary = "Cancel a ticket")
-    public OrderDto cancelOrder(@PathVariable Long id) {
-        LOGGER.info("POST /api/v1/tickets/{}/cancel", id);
-        return orderMapper.orderToOrderDto(orderService.cancel(id));
-    }*/
-
     @DeleteMapping(path = "/{id}")
     @Secured({"ROLE_USER", "ROLE_ORGANIZER", "ROLE_ADMIN"})
     @ResponseStatus(HttpStatus.OK)
@@ -157,6 +147,15 @@ public class TicketEndpoint {
     public List<Double> getSales() {
         LOGGER.info("GET /api/v1/tickets/sales");
         return ticketService.getRelativeTicketSalesPastSevenDays();
+    }
+
+    @GetMapping("/cancelled")
+    @Secured({"ROLE_USER", "ROLE_ORGANIZER", "ROLE_ADMIN"})
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(summary = "Get tickets from user that have been cancelled")
+    public List<TicketDto> getCancelledTickets() {
+        LOGGER.info("GET /api/v1/tickets/cancelled");
+        return ticketMapper.ticketListToTicketDtoList(ticketService.getTickets(Ticket.Status.CANCELLED));
     }
 
     @GetMapping("/{performanceId}/seatCounts")

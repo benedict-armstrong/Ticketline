@@ -156,6 +156,10 @@ export class TicketService {
     return this.httpClient.get<Ticket[]>(this.ticketBaseUri + '/reserved');
   }
 
+  getCancelledItems(): Observable<Ticket[]> {
+    return this.httpClient.get<Ticket[]>(this.ticketBaseUri + '/cancelled');
+  }
+
   addTicket(addTicket: NewTicket): Observable<Ticket[][]> {
     return new Observable<Ticket[][]>(subscriber => {
       this.httpClient.post<Ticket[]>(this.ticketBaseUri, addTicket).subscribe(

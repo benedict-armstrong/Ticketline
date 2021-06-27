@@ -53,12 +53,12 @@ public class BookingEndpoint {
         return bookingMapper.bookingToBookingDto(bookingService.save(bookingMapper.bookingDtoToBooking(booking)));
     }
 
-    @PutMapping("/change")
+    @PutMapping
     @Secured({"ROLE_USER", "ROLE_ORGANIZER", "ROLE_ADMIN"})
     @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "Updates bookings and its tickets")
-    public BookingDto reserve(@RequestBody ChangeBookingDto booking) {
-        LOGGER.info("PUT /api/v1/bookings/change {}", booking);
+    public BookingDto update(@RequestBody ChangeBookingDto booking) {
+        LOGGER.info("PUT /api/v1/bookings {}", booking);
         return bookingMapper.bookingToBookingDto(bookingService.update(booking));
     }
 }

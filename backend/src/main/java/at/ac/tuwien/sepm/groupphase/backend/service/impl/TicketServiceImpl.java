@@ -301,7 +301,7 @@ public class TicketServiceImpl implements TicketService {
 
     @Override
     public void updateStatus(Set<Ticket> tickets, Ticket.Status status) {
-        LOGGER.trace("updateStatus()");
+        LOGGER.trace("updateStatus({}, {})", tickets, status);
         for (Ticket ticket : tickets) {
             ticket.setStatus(status);
         }

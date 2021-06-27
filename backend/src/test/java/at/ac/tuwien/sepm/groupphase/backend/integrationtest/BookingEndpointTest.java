@@ -6,6 +6,7 @@ import at.ac.tuwien.sepm.groupphase.backend.basetest.TestDataTicket;
 import at.ac.tuwien.sepm.groupphase.backend.basetest.TestDataUser;
 import at.ac.tuwien.sepm.groupphase.backend.config.properties.SecurityProperties;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.BookingDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.ChangeBookingDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.TicketDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.PerformanceMapper;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.TicketMapper;
@@ -62,6 +63,8 @@ public class BookingEndpointTest implements TestAuthentification, TestDataTicket
     private BookingDto bookingDto;
 
     private Booking booking;
+
+    private ApplicationUser savedUser;
 
     // Custom beans
 
@@ -134,7 +137,7 @@ public class BookingEndpointTest implements TestAuthentification, TestDataTicket
             .telephoneNumber(ADMIN_PHONE_NUMBER)
             .build();
 
-        ApplicationUser savedUser = saveUser(user, userRepository, passwordEncoder);
+        this.savedUser = saveUser(user, userRepository, passwordEncoder);
         authToken = authenticate(user, mockMvc, objectMapper);
 
         Artist savedArtist = artistRepository.save(Artist.builder()
@@ -187,7 +190,7 @@ public class BookingEndpointTest implements TestAuthentification, TestDataTicket
             .name("VENUE1")
             .address(address)
             .width(1)
-            .owner(savedUser)
+            .owner(this.savedUser)
             .build()
         );
 
@@ -202,7 +205,7 @@ public class BookingEndpointTest implements TestAuthentification, TestDataTicket
         );
 
         Ticket ticket1 = ticketRepository.save(Ticket.builder()
-            .user(savedUser)
+            .user(this.savedUser)
             .status(Ticket.Status.PAID_FOR)
             .changeDate(LocalDateTime.now())
             .ticketType(ticketType)
@@ -221,7 +224,7 @@ public class BookingEndpointTest implements TestAuthentification, TestDataTicket
 
         booking = Booking.builder()
             .createDate(LocalDateTime.now())
-            .user(savedUser)
+            .user(this.savedUser)
             .tickets(ticketSet)
             .invoice(null)
             .status(Booking.Status.RESERVED)
@@ -283,5 +286,61 @@ public class BookingEndpointTest implements TestAuthentification, TestDataTicket
         assertAll(
             () -> assertNotEquals(newBookingDtoArray.length, 0)
         );
+    }
+
+    @Test
+    @DisplayName("All tickets should have Status CANCELLED after cancelling the booking, as well as the booking itself")
+    public void whenCancelBooking_thenAllTicketsCancelled() throws Exception
+    {
+        bookingRepository.save(booking);
+        ChangeBookingDto changeBookingDto = ChangeBookingDto.builder().id(booking.getId()).status(Ticket.Status.CANCELLED.toString()).build();
+
+        MvcResult mvcResult = this.mockMvc.perform(
+            put(BASE_URI + "/bookings")
+                .content(
+                    objectMapper.writeValueAsString(changeBookingDto)
+                )
+                .contentType(MediaType.APPLICATION_JSON)
+                .header(securityProperties.getAuthHeader(), authToken)
+        ).andReturn();
+        MockHttpServletResponse response = mvcResult.getResponse();
+        assertEquals(HttpStatus.OK.value(), response.getStatus());
+        assertEquals(MediaType.APPLICATION_JSON_VALUE, response.getContentType());
+
+        Booking cancelledBooking = bookingRepository.findByUserAndId(this.savedUser, booking.getId());
+
+        assertEquals(cancelledBooking.getStatus(), Booking.Status.CANCELLED);
+
+        for (Ticket cancelledTicket : cancelledBooking.getTickets()) {
+            assertEquals(cancelledTicket.getStatus(), Ticket.Status.CANCELLED);
+        }
+    }
+
+    @Test
+    @DisplayName("Seats should be free, when Booking gets cancelled")
+    public void whenCancelBooking_thenAllSeatsFree() throws Exception
+    {
+        bookingRepository.save(booking);
+        ChangeBookingDto changeBookingDto = ChangeBookingDto.builder().id(booking.getId()).status(Ticket.Status.CANCELLED.toString()).build();
+
+        MvcResult mvcResult = this.mockMvc.perform(
+            put(BASE_URI + "/bookings")
+                .content(
+                    objectMapper.writeValueAsString(changeBookingDto)
+                )
+                .contentType(MediaType.APPLICATION_JSON)
+                .header(securityProperties.getAuthHeader(), authToken)
+        ).andReturn();
+        MockHttpServletResponse response = mvcResult.getResponse();
+        assertEquals(HttpStatus.OK.value(), response.getStatus());
+        assertEquals(MediaType.APPLICATION_JSON_VALUE, response.getContentType());
+
+        Booking cancelledBooking = bookingRepository.findByUserAndId(this.savedUser, booking.getId());
+
+        for (Ticket ticket : cancelledBooking.getTickets()) {
+            assertTrue(
+                ticketRepository.checkIfSeatIsFreeByPerformance(ticket.getPerformance(), ticket.getSeat())
+            );
+        }
     }
 }

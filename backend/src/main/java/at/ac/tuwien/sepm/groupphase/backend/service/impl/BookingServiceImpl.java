@@ -78,7 +78,6 @@ public class BookingServiceImpl implements BookingService {
         ApplicationUser user = userService.findApplicationUserByEmail((String) authenticationFacade.getAuthentication().getPrincipal());
         Booking oldBooking = bookingRepository.findByUserAndId(user, booking.getId());
 
-
         //Booking.Status changed
         if (booking.getStatus() != oldBooking.getStatus().toString()) {
             Ticket.Status status;
@@ -96,9 +95,7 @@ public class BookingServiceImpl implements BookingService {
                 default: status = Ticket.Status.RESERVED;
             }
 
-            if (status != Ticket.Status.CANCELLED) {
-                ticketService.updateStatus(oldBooking.getTickets(), status);
-            }
+            ticketService.updateStatus(oldBooking.getTickets(), status);
         }
 
         oldBooking.setStatus(newStatus);
@@ -124,6 +121,5 @@ public class BookingServiceImpl implements BookingService {
         } else {
             bookingRepository.delete(booking);
         }
-
     }
 }

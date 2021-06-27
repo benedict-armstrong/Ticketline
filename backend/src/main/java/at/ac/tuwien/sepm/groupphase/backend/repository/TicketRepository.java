@@ -62,7 +62,7 @@ public interface TicketRepository extends JpaRepository<Ticket, Long> {
      * @return list of all found seats
      */
     @Query("select l from LayoutUnit l "
-        + "left join Ticket t on t.seat = l and t.performance = :performance "
+        + "left join Ticket t on t.seat = l and t.performance = :performance and not t.status = 'CANCELLED'"
         + "where t.id is null and l.sector = :sector")
     List<LayoutUnit> getFreeSeatsInPerformanceAndSector(@Param("performance") Performance performance, @Param("sector") Sector sector);
 
@@ -73,7 +73,7 @@ public interface TicketRepository extends JpaRepository<Ticket, Long> {
      * @return list of all taken seats
      */
     @Query("select l from LayoutUnit l "
-        + "inner join Ticket t on t.seat = l "
+        + "inner join Ticket t on t.seat = l and not t.status = 'CANCELLED'"
         + "where t.performance = :performance")
     List<LayoutUnit> getTakenSeatsInPerformance(@Param("performance") Performance performance);
 
@@ -85,7 +85,7 @@ public interface TicketRepository extends JpaRepository<Ticket, Long> {
     * @return true if free, false if taken
     */
     @Query("select case when t.id is null then true else false end from LayoutUnit l "
-        + "LEFT JOIN Ticket t ON t.seat = l AND t.performance = :performance "
+        + "LEFT JOIN Ticket t ON t.seat = l AND t.performance = :performance AND NOT t.status = 'CANCELLED'"
         + "WHERE l = :seat")
     boolean checkIfSeatIsFreeByPerformance(@Param("performance") Performance performance, @Param("seat") LayoutUnit seat);
 

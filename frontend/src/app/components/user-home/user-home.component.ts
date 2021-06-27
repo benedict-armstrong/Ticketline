@@ -86,10 +86,11 @@ export class UserHomeComponent implements OnInit {
       (response) => {
         // Get all tickets
         response.forEach(value => {
-          this.createTicketGroups(value, false);
+          this.createTicketGroups(value, false, false);
         });
 
         this.loadReserved();
+        this.loadCancelled();
       },
       (error) => {
         this.defaultServiceErrorHandling(error);
@@ -106,14 +107,32 @@ export class UserHomeComponent implements OnInit {
           this.notPaid = true;
         }
         response.forEach(value => {
-          this.createTicketGroups(value, true);
+          this.createTicketGroups(value, true, false);
         });
 
         this.orders.sort((x, y) =>
           Date.parse(x.tickets[0].performance.date) - Date.parse(y.tickets[0].performance.date)).reverse();
-        this.newOrders = this.orders.filter(item => item.old === false);
+        this.newOrders = this.orders.filter(item => item.old === false && item.cancelled === false);
         this.loading = false;
         console.log(this.orders);
+      },
+      (error) => {
+        this.defaultServiceErrorHandling(error);
+      }
+    );
+  }
+
+  loadCancelled() {
+    console.log('loading cancelled orders');
+    this.ticketService.getCancelledItems().subscribe(
+      (response) => {
+        response.forEach(value => {
+          this.createTicketGroups(value, false, true);
+        });
+
+        this.orders.sort((x, y) =>
+          Date.parse(x.tickets[0].performance.date) - Date.parse(y.tickets[0].performance.date)).reverse();
+        this.loading = false;
       },
       (error) => {
         this.defaultServiceErrorHandling(error);
@@ -124,12 +143,12 @@ export class UserHomeComponent implements OnInit {
   /**
    * Sorting ticket into right TicketGroup
    */
-  createTicketGroups(ticket, reserved) {
-    const ticketGroup = this.orders.find(i => i.id === ticket.performance.id && i.reserved === reserved);
+  createTicketGroups(ticket, reserved, cancelled) {
+    const ticketGroup = this.orders.find(i => i.id === ticket.performance.id && i.reserved === reserved && i.cancelled === cancelled);
     if (ticketGroup == null) {
       const date = Date.parse(ticket.performance.date);
       const old = date < Date.now();
-      const newGroup = new TicketGroup(ticket.performance.id, [ticket], old, reserved);
+      const newGroup = new TicketGroup(ticket.performance.id, [ticket], old, reserved, cancelled);
       this.orders.push(newGroup);
     } else {
       ticketGroup.tickets.push(ticket);

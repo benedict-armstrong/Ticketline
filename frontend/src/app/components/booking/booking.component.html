@@ -1,31 +1,27 @@
 <h3>All Orders</h3>
 
 <app-loading-animation *ngIf="loading"></app-loading-animation>
+<div *ngIf="cancelled" class="col-12 alert alert-success alert-dismissible fade show" role="alert">
+  <strong>Success</strong> Order has successfully been cancelled, your money will be reimbursed.
+  <button type="button" (click)="this.cancelled = false;" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<div *ngIf="bought" class="col-12 alert alert-success alert-dismissible fade show" role="alert">
+  <strong>Success</strong>   Order successfully bought.
+  <button type="button" (click)="this.bought = false" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
 
-<div>
-  <div *ngFor="let booking of bookings">
-    <div class="booking list-item">
-      <div class="info">
-        <div class="detail">
-          <h5>{{booking.createDate | date:'EEEE, MMM d, y HH:mm'}}</h5>
-            <!-- <button *ngIf="booking.status === 'PAID_FOR'" class="secondary" type="button" [routerLink]="['/downloadInvoice']">Click for invoice download</button> -->
-            <button *ngIf="booking.status === 'RESERVED'" class="secondary" type="button" (click)="onBuyClick(booking)">Buy</button>
-            <!-- <button class="secondary" type="button" (click)="onStornoClick(booking.id)">Storno</button> -->
-        </div>
-      </div>
-    </div>
-    <div *ngFor="let ticket of booking.tickets">
-      <div class="ticket list-item offset-1" [routerLink]="['/performance-detail', ticket.performance.id]">
-        <div class="info">
-          <div class="detail">
-            <h5>{{ticket.performance.title}}</h5>
-            <span> {{ticket.ticketType.title}} / {{ticket.ticketType.sector.name}}: 1x</span>
-            <span class="price"> à {{ticket.ticketType.price / 100 | currency:'EUR'}}</span>
-          </div>
-        </div>
-      </div>
-    </div>
-    <hr/>
+<div *ngIf="!showAll">
+  <div *ngFor="let booking of bookings" [ngClass]="{'cancelled': booking.status === 'CANCELLED'}">
+    <app-booking-list-item (buyBooking)="onBuyClick($event)" (cancelBooking)="onStornoClick($event)" [booking]="booking"></app-booking-list-item>
+  </div>
+</div>
+<div *ngIf="showAll">
+  <div *ngFor="let booking of allBookings" [ngClass]="{'cancelled': booking.status === 'CANCELLED'}">
+    <app-booking-list-item (buyBooking)="onBuyClick($event)" (cancelBooking)="onStornoClick($event)" [booking]="booking"></app-booking-list-item>
   </div>
 </div>
 
@@ -33,5 +29,7 @@
   <h5 *ngIf="empty">Nothing here yet</h5>
   <h5 *ngIf="!empty">That's all</h5>
 </div>
+
+<button class="secondary" *ngIf="!showAll" (click)="showCancelledOrders()">Show cancelled orders</button>
 
 

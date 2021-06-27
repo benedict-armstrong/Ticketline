@@ -2,6 +2,7 @@ import {Component, Input, OnInit} from '@angular/core';
 import {TicketGroup} from '../../dtos/ticketGroup';
 import {Ticket} from '../../dtos/ticket';
 import {Performance} from '../../dtos/performance';
+import {TicketService} from '../../services/ticket.service';
 
 @Component({
   selector: 'app-ticket-order-item',
@@ -17,6 +18,7 @@ export class TicketOrderItemComponent implements OnInit {
 
   old = false;
   reserved = false;
+  cancelled = false;
   tooLong = false;
 
   @Input() set ticketItem(item: TicketGroup) {
@@ -25,6 +27,7 @@ export class TicketOrderItemComponent implements OnInit {
     this.performance = item.tickets[0].performance;
     this.old = item.old;
     this.reserved = item.reserved;
+    this.cancelled = item.cancelled;
 
     if (this.tickets.length > 5) {
       this.tooLong = true;
@@ -43,7 +46,7 @@ export class TicketOrderItemComponent implements OnInit {
   createAltTickets(ticket) {
     const ticketGroup = this.altTickets.find(i => i.ticketType.id === ticket.ticketType.id);
     if (ticketGroup == null) {
-      const newGroup = new Ticket(1, ticket.ticketType, this.performance, ticket.seat);
+      const newGroup = new Ticket(1, ticket.ticketType, this.performance, ticket.seat, ticket.status);
       this.altTickets.push(newGroup);
     } else {
       ticketGroup.id += 1;
