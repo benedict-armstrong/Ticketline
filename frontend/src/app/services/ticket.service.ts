@@ -25,6 +25,7 @@ export class TicketService {
   public errorMessage = '';
   public total = 0;
   public prices: number[];
+  public sameSectors: boolean[];
 
   private ticketBaseUri: string = this.globals.backendUri + '/tickets';
 
@@ -73,6 +74,26 @@ export class TicketService {
     });
   }
 
+  updateSameSector(): void {
+    this.sameSectors = [];
+    this.cart.forEach(inner => {
+      let sectorId = null;
+      let done = false;
+      for (const ticket of inner) {
+        if (sectorId === null) {
+          sectorId = ticket.ticketType.sector.id;
+        } else {
+          if (sectorId !== ticket.ticketType.sector.id) {
+            this.sameSectors.push(false);
+            done = true;
+            break;
+          }
+        }
+      }
+      this.sameSectors.push(true);
+    });
+  }
+
   updateShoppingCart(): Observable<boolean> {
     return new Observable<boolean>(subscriber => {
       this.error = false;
@@ -107,6 +128,7 @@ export class TicketService {
 
           this.cart = newCart;
           this.updatePrice();
+          this.updateSameSector();
           this.updateCartState();
 
           this.loading = false;
@@ -160,6 +182,7 @@ export class TicketService {
             this.cart.push(tickets);
           }
           this.updatePrice();
+          this.updateSameSector();
           this.updateCartState();
           subscriber.next(this.cart);
         },
@@ -182,6 +205,7 @@ export class TicketService {
             oldTicket.ticketType = ticket.ticketType;
 
             this.updatePrice();
+            this.updateSameSector();
             this.updateCartState();
             subscriber.next(ticket);
           }
@@ -211,6 +235,7 @@ export class TicketService {
               }
             });
             this.updatePrice();
+            this.updateSameSector();
             this.updateCartState();
             subscriber.next(this.cart);
           }
@@ -235,6 +260,7 @@ export class TicketService {
               this.cart[cartIndex].splice(ticketIndex, 1);
             }
             this.updatePrice();
+            this.updateSameSector();
             this.updateCartState();
             subscriber.next(this.cart);
           }
@@ -259,6 +285,7 @@ export class TicketService {
           if (response) {
             this.cart.splice(cartIndex, 1);
             this.updatePrice();
+            this.updateSameSector();
             this.updateCartState();
             subscriber.next();
           }

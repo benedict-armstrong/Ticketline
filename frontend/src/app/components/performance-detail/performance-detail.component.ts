@@ -12,7 +12,7 @@ import { SeatCount } from 'src/app/dtos/seatCount';
 })
 export class PerformanceDetailComponent implements OnInit {
 
-  performance: Performance;
+  performance: Performance = null;
   imgURL = [];
   error = false;
   errorMessage = '';
@@ -39,18 +39,24 @@ export class PerformanceDetailComponent implements OnInit {
   }
 
   selectSeatsFunc(value: boolean) {
+    const performanceId = this.activeRoute.snapshot.params.id;
+    this.performance = null;
+    this.getPerformance(performanceId);
     this.selectSeats = value;
   }
 
   private getPerformance(performanceId) {
     this.performanceService.getPerformanceById(performanceId).subscribe(
       (response) => {
-        this.performance = response;
+        if (this.performance === null) {
+          this.performance = response;
+        }
 
         this.ticketService.getSeatCounts(response.id).subscribe(
           (seatCounts: SeatCount[]) => {
-            for (const seatCount of seatCounts) {
-              for (const ticketType of response.ticketTypes) {
+            this.ticketCounts = [];
+            for (const ticketType of response.ticketTypes) {
+              for (const seatCount of seatCounts) {
                 if (seatCount.sectorId === ticketType.sector.id) {
                   this.ticketCounts.push(seatCount);
                 }
