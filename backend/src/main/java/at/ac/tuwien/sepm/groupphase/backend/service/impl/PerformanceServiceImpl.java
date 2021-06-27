@@ -22,14 +22,14 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
-public class CustomPerformanceService implements PerformanceService {
+public class PerformanceServiceImpl implements PerformanceService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final PerformanceRepository performanceRepository;
     private final TicketService ticketService;
 
     @Autowired
-    public CustomPerformanceService(PerformanceRepository performanceRepository, @Lazy TicketService ticketService) {
+    public PerformanceServiceImpl(PerformanceRepository performanceRepository, @Lazy TicketService ticketService) {
         this.performanceRepository = performanceRepository;
         this.ticketService = ticketService;
     }

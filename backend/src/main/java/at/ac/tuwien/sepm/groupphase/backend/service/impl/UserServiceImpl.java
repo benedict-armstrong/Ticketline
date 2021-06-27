@@ -28,7 +28,7 @@ import java.util.List;
 import java.util.Objects;
 
 @Service
-public class CustomUserDetailService implements UserService {
+public class UserServiceImpl implements UserService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final UserRepository userRepository;
@@ -38,7 +38,7 @@ public class CustomUserDetailService implements UserService {
 
 
     @Autowired
-    public CustomUserDetailService(UserRepository userRepository, PasswordEncoder passwordEncoder, AuthenticationFacade authenticationFacade, SimpleMailService simpleMailService) {
+    public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder, AuthenticationFacade authenticationFacade, SimpleMailService simpleMailService) {
         this.userRepository = userRepository;
         this.simpleMailService = simpleMailService;
         this.passwordEncoder = passwordEncoder;

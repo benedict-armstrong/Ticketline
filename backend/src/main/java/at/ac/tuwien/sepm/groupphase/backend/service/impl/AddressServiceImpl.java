@@ -14,12 +14,12 @@ import java.lang.invoke.MethodHandles;
 import java.util.List;
 
 @Service
-public class CustomAddressService implements AddressService {
+public class AddressServiceImpl implements AddressService {
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final AddressRepository addressRepository;
 
     @Autowired
-    public CustomAddressService(AddressRepository addressRepository) {
+    public AddressServiceImpl(AddressRepository addressRepository) {
         this.addressRepository = addressRepository;
     }
 
