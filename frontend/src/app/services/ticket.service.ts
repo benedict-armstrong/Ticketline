@@ -135,7 +135,7 @@ export class TicketService {
   }
 
   confirmation(userId: number, performanceId: number): Observable<Ticket[]> {
-    return this.httpClient.get<Ticket[]>(this.ticketBaseUri + '/confirmation/' + userId + '/' + performanceId);
+    return this.httpClient.get<Ticket[]>(this.ticketBaseUri + '/confirmation?user=' + userId + '&performance=' + performanceId);
   }
 
   private defaultServiceErrorHandling(error: any) {

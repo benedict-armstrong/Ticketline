@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -142,12 +143,12 @@ public class TicketEndpoint {
         return ticketService.getPdf(id);
     }
 
-    @GetMapping("/confirmation/{user}/{perf}")
+    @GetMapping("/confirmation")
     @PermitAll
     @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "Get ticket dtos for performance")
-    public List<TicketDto> getTicketDto(@PathVariable Long user, @PathVariable Long perf) {
-        LOGGER.info("GET /api/v1/tickets/confirmation/{}/{}", user, perf);
-        return ticketMapper.ticketListToTicketDtoList(ticketService.getTicketsForPerformance(perf, user));
+    public List<TicketDto> getTicketDto(@RequestParam Long user, @RequestParam Long performance) {
+        LOGGER.info("GET /api/v1/tickets/confirmation/{}/{}", user, performance);
+        return ticketMapper.ticketListToTicketDtoList(ticketService.getTicketsForPerformance(performance, user));
     }
 }
