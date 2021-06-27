@@ -1,0 +1,14 @@
+<div class="list-item">
+  <p>Ticket: {{ticket.seat.customLabel}} | {{ticket.ticketType.sector.name}} | {{ ticket.ticketType.sector.type | titlecase}} | {{ticket.ticketType.title}}
+  </p>
+  <div class="form-group">
+    <label for="selectedTicketType">Change Type:</label>
+    <select class="select-input form-select" name="selectedTicketType" id="selectedTicketType" [(ngModel)]="ticket.ticketType" (ngModelChange)="updateTicketType()">
+      <option *ngFor="let ticketType of performance.ticketTypes | filter:$any(ticket.seat.sector)" [ngValue]="ticketType">{{ticketType.title}}</option>
+    </select>
+    <div *ngIf="!ticket.ticketType" class="error">
+      <small class="form-text text-warning">Please select ticket type</small>
+    </div>
+  </div>
+</div>
+

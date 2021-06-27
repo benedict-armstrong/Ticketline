@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint.exceptionhandler;
 
+import at.ac.tuwien.sepm.groupphase.backend.exception.FullCartException;
 import at.ac.tuwien.sepm.groupphase.backend.exception.NoTicketLeftException;
 import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepm.groupphase.backend.exception.InvalidQueryParameterException;
@@ -59,6 +60,12 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     protected ResponseEntity<Object> handleNoTicketLeftException(RuntimeException ex, WebRequest request) {
         LOGGER.warn(ex.getMessage());
         return handleExceptionInternal(ex, ex.getMessage(), new HttpHeaders(), HttpStatus.NOT_FOUND, request);
+    }
+
+    @ExceptionHandler(value = {FullCartException.class})
+    protected ResponseEntity<Object> handleFullCartException(RuntimeException ex, WebRequest request) {
+        LOGGER.warn(ex.getMessage());
+        return handleExceptionInternal(ex, ex.getMessage(), new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
     }
 
     @ExceptionHandler(value = {UserAlreadyExistAuthenticationException.class})

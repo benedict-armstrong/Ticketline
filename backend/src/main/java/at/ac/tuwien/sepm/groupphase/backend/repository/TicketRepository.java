@@ -43,6 +43,17 @@ public interface TicketRepository extends JpaRepository<Ticket, Long> {
     List<Ticket> findByPerformanceAndStatus(Performance performance, Ticket.Status status);
 
     /**
+     * Finds Ticket by User, Status and Id.
+     *
+     * @param user Owner of Ticket
+     * @param status Status of Ticket
+     * @param id Ticket Id
+     * @return Ticket
+     */
+    Ticket findTicketByUserAndStatusAndId(ApplicationUser user, Ticket.Status status, Long id);
+
+
+    /**
      * Find all layoutUnit entries that are not referenced in any ticket of the given performance.
      * And are also within the given sector.
      *
@@ -54,6 +65,17 @@ public interface TicketRepository extends JpaRepository<Ticket, Long> {
         + "left join Ticket t on t.seat = l and t.performance = :performance "
         + "where t.id is null and l.sector = :sector")
     List<LayoutUnit> getFreeSeatsInPerformanceAndSector(@Param("performance") Performance performance, @Param("sector") Sector sector);
+
+    /**
+     * Find all layoutUnit entries that are referenced in a ticket of the given performance.
+     *
+     * @param performance of the tickets
+     * @return list of all taken seats
+     */
+    @Query("select l from LayoutUnit l "
+        + "inner join Ticket t on t.seat = l "
+        + "where t.performance = :performance")
+    List<LayoutUnit> getTakenSeatsInPerformance(@Param("performance") Performance performance);
 
     /**
     * Check if the given seat in the given performance is free.

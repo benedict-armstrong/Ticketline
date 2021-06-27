@@ -1,0 +1,35 @@
+<div class="select-seats">
+  <div class="">
+    <h5>{{performance.venue.name}}</h5>
+    <p>Click on a seat to add it to your cart. Hover to get more information.
+      <br>
+      Selected seats:
+      <svg id="selected-color" width="12" height="12">
+        <rect width="12" height="12" style="fill:rgb(0,0,255);" />
+      </svg>
+    </p>
+  </div>
+
+  <div class="venue-layout-grid-wrapper">
+    <div class="venue-layout-grid">
+      <div *ngFor="let row of layout">
+        <app-select-seat-unit (selectSeat)="addSeat($event)" (unSelectSeat)="removeSeat($event)" *ngFor="let unit of row"
+                              [performanceId]="performance.id"
+                              [layoutUnit]="unit"
+                              class="unit"
+        ></app-select-seat-unit>
+      </div>
+    </div>
+  </div>
+
+  <app-loading-animation *ngIf="updatingCart"></app-loading-animation>
+  <div class="selected-seats" *ngIf="!updatingCart && selectedTickets.length > 0">
+    <h5>Selected Seats</h5>
+    <p>Scroll to see all seats (Maximum 10)
+    </p>
+    <div class="selected-seat-list">
+      <app-cart-list *ngFor="let ticket of selectedTickets" [ticket]="ticket" [performance]="performance" (updatedTicketType)="updateTicketType($event)"></app-cart-list>
+    </div>
+  </div>
+
+</div>

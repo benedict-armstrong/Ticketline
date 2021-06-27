@@ -9,6 +9,7 @@ import at.ac.tuwien.sepm.groupphase.backend.basetest.TestDataUser;
 import at.ac.tuwien.sepm.groupphase.backend.basetest.TestDataVenue;
 import at.ac.tuwien.sepm.groupphase.backend.config.properties.SecurityProperties;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.NewTicketDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.SeatCountDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.TicketDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.PerformanceMapper;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.TicketMapper;
@@ -128,7 +129,19 @@ public class TicketEndpointTest implements TestDataTicket, TestDataUser, TestDat
 
     private NewTicketDto newTicketDto;
 
+    private NewTicketDto newTicketDtoLarge;
+
+    private NewTicketDto newTicketDtoLarger;
+
+    private NewTicketDto newTicketSeatDto;
+
     private final int ticketAmount = 1;
+
+    private final int ticketAmountLarge = 10;
+
+    private final int ticketAmountLarger = 10000;
+
+    private Performance savedPerformance;
 
     @BeforeEach
     public void beforeEach() throws Exception {
@@ -186,7 +199,7 @@ public class TicketEndpointTest implements TestDataTicket, TestDataUser, TestDat
             .build()
         );
 
-        Performance savedPerformance = performanceRepository.save(Performance.builder()
+        savedPerformance = performanceRepository.save(Performance.builder()
             .ticketTypes(ticketTypeSet)
             .date(LocalDateTime.now())
             .artist(savedArtist)
@@ -196,9 +209,32 @@ public class TicketEndpointTest implements TestDataTicket, TestDataUser, TestDat
             .build()
         );
 
-        newTicketDto = NewTicketDto.builder()
-            .performance(performanceMapper.performanceToPerformanceDto(savedPerformance))
+        newTicketSeatDto = NewTicketDto.builder()
+            .performanceId(performanceMapper.performanceToPerformanceDto(savedPerformance).getId())
             .ticketType(ticketTypeMapper.ticketTypeToTicketTypeDto(ticketType))
+            .amount(0)
+            .seatId(savedPerformance.getVenue().getLayout().get(0).getId())
+            .build();
+
+        newTicketDto = NewTicketDto.builder()
+            .performanceId(performanceMapper.performanceToPerformanceDto(savedPerformance).getId())
+            .ticketType(ticketTypeMapper.ticketTypeToTicketTypeDto(ticketType))
+            .amount(ticketAmount)
+            .seatId(null)
+            .build();
+
+        newTicketDtoLarge = NewTicketDto.builder()
+            .performanceId(performanceMapper.performanceToPerformanceDto(savedPerformance).getId())
+            .ticketType(ticketTypeMapper.ticketTypeToTicketTypeDto(ticketType))
+            .amount(ticketAmountLarge)
+            .seatId(null)
+            .build();
+
+        newTicketDtoLarger = NewTicketDto.builder()
+            .performanceId(performanceMapper.performanceToPerformanceDto(savedPerformance).getId())
+            .ticketType(ticketTypeMapper.ticketTypeToTicketTypeDto(ticketType))
+            .amount(ticketAmountLarger)
+            .seatId(null)
             .build();
     }
 
@@ -218,10 +254,8 @@ public class TicketEndpointTest implements TestDataTicket, TestDataUser, TestDat
     @DisplayName("Should save correct ticket when creating one")
     public void whenCreateTicket_thenGetBackCorrectTicket() throws Exception {
 
-        System.out.println(objectMapper.writeValueAsString(newTicketDto));
-
         MvcResult mvcResult = this.mockMvc.perform(
-            post(TICKET_BASE_URI + "/" + ticketAmount)
+            post(TICKET_BASE_URI)
                 .content(
                     objectMapper.writeValueAsString(newTicketDto)
                 )
@@ -243,15 +277,55 @@ public class TicketEndpointTest implements TestDataTicket, TestDataUser, TestDat
     }
 
     @Test
-    @DisplayName("Should return NoTicketLeftException")
-    public void whenCreateTicket_butTooManyTickets_thenNoTicketLeftException() throws Exception {
-
-        System.out.println(objectMapper.writeValueAsString(newTicketDto));
+    @DisplayName("Should save correct ticket when creating one")
+    public void whenCreateTicket_WithSeatId_thenGetBackCorrectTicket() throws Exception {
 
         MvcResult mvcResult = this.mockMvc.perform(
-            post(TICKET_BASE_URI + "/" + 10000)
+            post(TICKET_BASE_URI)
                 .content(
-                    objectMapper.writeValueAsString(newTicketDto)
+                    objectMapper.writeValueAsString(newTicketSeatDto)
+                )
+                .contentType(MediaType.APPLICATION_JSON)
+                .header(securityProperties.getAuthHeader(), authToken)
+        ).andReturn();
+        MockHttpServletResponse response = mvcResult.getResponse();
+        assertEquals(HttpStatus.CREATED.value(), response.getStatus());
+        assertEquals(MediaType.APPLICATION_JSON_VALUE, response.getContentType());
+
+        List<TicketDto> ticketDtos = Arrays.asList(
+            objectMapper.readValue(response.getContentAsString(), TicketDto[].class)
+        );
+
+        assertAll(
+            () -> assertNotNull(ticketDtos.get(0).getId()),
+            () -> assertEquals(1, ticketDtos.size())
+        );
+    }
+
+    @Test
+    @DisplayName("Should return 400 from FullCartException")
+    public void whenCreateTicket_butMoreThanMaxCartSize_thenFullCartException() throws Exception {
+
+        MvcResult mvcResult = this.mockMvc.perform(
+            post(TICKET_BASE_URI)
+                .content(
+                    objectMapper.writeValueAsString(newTicketDtoLarger)
+                )
+                .contentType(MediaType.APPLICATION_JSON)
+                .header(securityProperties.getAuthHeader(), authToken)
+        ).andReturn();
+        MockHttpServletResponse response = mvcResult.getResponse();
+        assertEquals(HttpStatus.BAD_REQUEST.value(), response.getStatus());
+    }
+
+    @Test
+    @DisplayName("Should return 404 from NoTicketLeftException")
+    public void whenCreateTicket_butMoreThenFreeSeats_thenNoTicketLeftException() throws Exception {
+
+        MvcResult mvcResult = this.mockMvc.perform(
+            post(TICKET_BASE_URI)
+                .content(
+                    objectMapper.writeValueAsString(newTicketDtoLarge)
                 )
                 .contentType(MediaType.APPLICATION_JSON)
                 .header(securityProperties.getAuthHeader(), authToken)
@@ -265,7 +339,7 @@ public class TicketEndpointTest implements TestDataTicket, TestDataUser, TestDat
     public void whenCreateTicket_thenGetAllTickets_GetCreatedTicket() throws Exception {
 
         MvcResult mvcResult = this.mockMvc.perform(
-            post(TICKET_BASE_URI  + "/" + ticketAmount)
+            post(TICKET_BASE_URI)
                 .content(
                     objectMapper.writeValueAsString(newTicketDto)
                 )
@@ -296,7 +370,7 @@ public class TicketEndpointTest implements TestDataTicket, TestDataUser, TestDat
     @DisplayName("Should return empty list after deleting ticket")
     public void whenGettingAllTickets_afterInsertingTicketAndDeletingTicket_thenShouldGetEmptyList() throws Exception {
         MvcResult mvcResult = this.mockMvc.perform(
-            post(TICKET_BASE_URI  + "/" + ticketAmount)
+            post(TICKET_BASE_URI)
                 .content(
                     objectMapper.writeValueAsString(newTicketDto)
                 )
@@ -336,12 +410,63 @@ public class TicketEndpointTest implements TestDataTicket, TestDataUser, TestDat
         );
     }
 
+    @Test
+    @DisplayName("Should return empty list after deleting ticket")
+    public void whenGettingAllTickets_afterInsertingTicketAndDeletingTicketUsingMassDelete_thenShouldGetEmptyList() throws Exception {
+        MvcResult mvcResult = this.mockMvc.perform(
+            post(TICKET_BASE_URI)
+                .content(
+                    objectMapper.writeValueAsString(newTicketDto)
+                )
+                .contentType(MediaType.APPLICATION_JSON)
+                .header(securityProperties.getAuthHeader(), authToken)
+        ).andReturn();
+        MockHttpServletResponse response = mvcResult.getResponse();
+
+        List<TicketDto> ticketDtos = Arrays.asList(
+            objectMapper.readValue(response.getContentAsString(), TicketDto[].class)
+        );
+
+        assertNotNull(ticketDtos.get(0));
+
+        List<Long> idList = new LinkedList<Long>();
+        for (TicketDto ticketDto : ticketDtos) {
+            idList.add(ticketDto.getId());
+        }
+
+        mvcResult = this.mockMvc.perform(
+            delete(TICKET_BASE_URI)
+                .content(objectMapper.writeValueAsString(idList))
+                .contentType(MediaType.APPLICATION_JSON)
+                .header(securityProperties.getAuthHeader(), authToken)
+        ).andReturn();
+        response = mvcResult.getResponse();
+        assertEquals(HttpStatus.OK.value(), response.getStatus());
+
+        mvcResult = this.mockMvc.perform(
+            get(TICKET_BASE_URI)
+                .header(securityProperties.getAuthHeader(), authToken)
+        ).andReturn();
+        response = mvcResult.getResponse();
+        assertEquals(HttpStatus.OK.value(), response.getStatus());
+        assertEquals(MediaType.APPLICATION_JSON_VALUE, response.getContentType());
+
+        List<TicketDto> newTicketDtos = Arrays.asList(
+            objectMapper.readValue(response.getContentAsString(), TicketDto[].class)
+        );
+
+        assertAll(
+            () -> assertNotNull(newTicketDtos),
+            () -> assertEquals(0, newTicketDtos.size())
+        );
+    }
+
 
     @Test
     @DisplayName("Should return 200 (true) when checkout")
     public void whenCreateTicket_thenCheckout_thenTicketShouldBePaidFor() throws Exception {
         MvcResult mvcResult = this.mockMvc.perform(
-            post(TICKET_BASE_URI  + "/" + ticketAmount)
+            post(TICKET_BASE_URI)
                 .content(
                     objectMapper.writeValueAsString(newTicketDto)
                 )
@@ -403,6 +528,111 @@ public class TicketEndpointTest implements TestDataTicket, TestDataUser, TestDat
     }
 
     @Test
+    @DisplayName("Should return 200 (true) when checkout")
+    public void whenCreateTicket_thenReserve_thenTicketShouldReserved() throws Exception {
+        MvcResult mvcResult = this.mockMvc.perform(
+            post(TICKET_BASE_URI)
+                .content(
+                    objectMapper.writeValueAsString(newTicketDto)
+                )
+                .contentType(MediaType.APPLICATION_JSON)
+                .header(securityProperties.getAuthHeader(), authToken)
+        ).andReturn();
+        MockHttpServletResponse response = mvcResult.getResponse();
+
+        List<TicketDto> ticketDtos = Arrays.asList(
+            objectMapper.readValue(response.getContentAsString(), TicketDto[].class)
+        );
+
+        mvcResult = this.mockMvc.perform(
+            put(TICKET_BASE_URI + "/reserve")
+                .header(securityProperties.getAuthHeader(), authToken)
+        ).andReturn();
+        response = mvcResult.getResponse();
+        assertEquals(HttpStatus.OK.value(), response.getStatus());
+        assertEquals(MediaType.APPLICATION_JSON_VALUE, response.getContentType());
+
+        boolean succeeded = objectMapper.readValue(response.getContentAsString(), boolean.class);
+        assertTrue(succeeded);
+
+        mvcResult = this.mockMvc.perform(
+            get(TICKET_BASE_URI + "/reserved")
+                .header(securityProperties.getAuthHeader(), authToken)
+        ).andReturn();
+        response = mvcResult.getResponse();
+        assertEquals(HttpStatus.OK.value(), response.getStatus());
+        assertEquals(MediaType.APPLICATION_JSON_VALUE, response.getContentType());
+
+        List<TicketDto> newTicketDtos = Arrays.asList(
+            objectMapper.readValue(response.getContentAsString(), TicketDto[].class)
+        );
+
+        List<Ticket> ticketList = ticketMapper.ticketDtoListToTicketList(newTicketDtos);
+
+        assertAll(
+            () -> assertNotNull(ticketList),
+            () -> assertNotNull(ticketList.get(0)),
+            () -> assertEquals(Ticket.Status.RESERVED, ticketList.get(0).getStatus())
+        );
+    }
+
+    @Test
+    @DisplayName("Should return 200 (false) when reserve with empty cart")
+    public void whenReserve_andEmptyCart_thenReturnFalse() throws Exception {
+
+        MvcResult mvcResult = this.mockMvc.perform(
+            put(TICKET_BASE_URI + "/reserve")
+                .header(securityProperties.getAuthHeader(), authToken)
+        ).andReturn();
+        MockHttpServletResponse response = mvcResult.getResponse();
+        assertEquals(HttpStatus.OK.value(), response.getStatus());
+        assertEquals(MediaType.APPLICATION_JSON_VALUE, response.getContentType());
+
+        boolean succeeded = objectMapper.readValue(response.getContentAsString(), boolean.class);
+        assertFalse(succeeded);
+    }
+
+    @Test
+    @DisplayName("Should return list of seatCounts")
+    public void whenCreateTicket_thenRequestSeatCounts_shouldReturnSeatCounts() throws Exception {
+        MvcResult mvcResult = this.mockMvc.perform(
+            post(TICKET_BASE_URI)
+                .content(
+                    objectMapper.writeValueAsString(newTicketDto)
+                )
+                .contentType(MediaType.APPLICATION_JSON)
+                .header(securityProperties.getAuthHeader(), authToken)
+        ).andReturn();
+        MockHttpServletResponse response = mvcResult.getResponse();
+
+        List<TicketDto> ticketDtos = Arrays.asList(
+            objectMapper.readValue(response.getContentAsString(), TicketDto[].class)
+        );
+
+        Long performanceId = ticketDtos.get(0).getPerformance().getId();
+
+        mvcResult = this.mockMvc.perform(
+            get(TICKET_BASE_URI + "/" + performanceId + "/seatCounts")
+                .header(securityProperties.getAuthHeader(), authToken)
+        ).andReturn();
+        response = mvcResult.getResponse();
+        assertEquals(HttpStatus.OK.value(), response.getStatus());
+        assertEquals(MediaType.APPLICATION_JSON_VALUE, response.getContentType());
+
+        List<SeatCountDto> seatCountDtos = Arrays.asList(
+            objectMapper.readValue(response.getContentAsString(), SeatCountDto[].class)
+        );
+
+        assertAll(
+            () -> assertNotNull(seatCountDtos),
+            () -> assertNotNull(seatCountDtos.get(0)),
+            () -> assertEquals(savedPerformance.getVenue().getSectors().get(0).getId(), seatCountDtos.get(0).getSectorId()),
+            () -> assertEquals(4, seatCountDtos.get(0).getTotalSeats()),
+            () -> assertEquals(4 - ticketAmount, seatCountDtos.get(0).getFreeSeats())
+        );
+    }
+
+    @Test
     @DisplayName("When there are no tickets all Elements in Sales should be 0.0d")
     public void whenNoTickets_thenSalesListOnlyZeros() throws Exception{
         MvcResult mvcResult = this.mockMvc.perform(
@@ -425,7 +655,7 @@ public class TicketEndpointTest implements TestDataTicket, TestDataUser, TestDat
     public void whenOneTicket_thenSalesListOneAndRestZeros() throws Exception{
 
         this.mockMvc.perform(
-            post(TICKET_BASE_URI + "/" + ticketAmount)
+            post(TICKET_BASE_URI)
                 .content(
                     objectMapper.writeValueAsString(newTicketDto)
                 )
@@ -449,7 +679,7 @@ public class TicketEndpointTest implements TestDataTicket, TestDataUser, TestDat
             objectMapper.readValue(response.getContentAsString(), Double[].class)
         );
 
-        assert(list.contains(1.0d));
+        assertTrue(list.contains(1.0d));
 
     }
 
