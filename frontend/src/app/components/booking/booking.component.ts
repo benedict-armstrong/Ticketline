@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import {BookingService} from '../../services/booking.service';
 import {Booking} from '../../dtos/booking';
 import {ChangeBooking} from '../../dtos/changeBooking';
+import {FileService} from '../../services/file.service';
 import {ViewportScroller} from '@angular/common';
 
 @Component({
@@ -47,6 +48,20 @@ export class BookingComponent implements OnInit {
     );
   }
 
+  downloadClick(booking: Booking) {
+    const pdf = booking.invoice;
+    const newDate = new Date(booking.createDate);
+    const filename = newDate.getDate() + '-' + newDate.getMonth() + '-' + newDate.getFullYear();
+
+    const a = document.createElement('a');
+    document.body.appendChild(a);
+    const url = window.URL.createObjectURL(FileService.asFile(pdf.data, pdf.type));
+    a.href = url;
+    a.download = filename + '.pdf';
+    a.click();
+    window.URL.revokeObjectURL(url);
+  }
+
   onBuyClick(booking) {
     const changeBooking = new ChangeBooking(booking.id, 'PAID_FOR');
     this.bookingService.updateBooking(changeBooking).subscribe(
@@ -60,15 +75,21 @@ export class BookingComponent implements OnInit {
     );
   }
 
-  onStornoClick(booking) {
+  onStornoClick(booking: Booking) {
     const changeBooking = new ChangeBooking(booking.id, 'CANCELLED');
     this.bookingService.updateBooking(changeBooking).subscribe(
       (response) => {
-        if (booking.status !== 'RESERVED') {
-          this.cancelled = true;
+        if (response == null) { // From reserved to canceled
+          this.bookings = this.bookings.filter(item => item.id !== booking.id);
+          this.allBookings = this.allBookings.filter(item => item.id !== booking.id);
+        } else {
+          const bookIndex = this.bookings.indexOf(booking);
+          const allBookIndex = this.allBookings.indexOf(booking);
+          booking = response;
+          this.bookings[bookIndex] = booking;
+          this.allBookings[allBookIndex] = booking;
         }
 
-        booking.status = response.status;
 
         this.scrollToTop();
       }, error => {

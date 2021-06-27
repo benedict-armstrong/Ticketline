@@ -23,6 +23,7 @@ import {UserManagementComponent} from './components/user-management/user-managem
 import {BannedAlertComponent} from './components/banned-alert/banned-alert.component';
 import {StatusGuard} from './guards/status.guard';
 import {MasterGuard} from './guards/master.guard';
+import {ConfirmationComponent} from './components/confirmation/confirmation.component';
 import {DeletedAlertComponent} from './components/deleted-alert/deleted-alert.component';
 import {ExploreComponent} from './components/explore/explore.component';
 
@@ -66,84 +67,9 @@ const routes: Routes = [
   { path: 'users', component: UserManagementComponent, canActivate: [MasterGuard],
       data: {guards: [AuthGuard, StatusGuard], roles: ['ADMIN']} },
   { path: 'banned', component: BannedAlertComponent },
+  { path: 'confirmation/:userId/:perfId', component: ConfirmationComponent, canActivate: [MasterGuard],
+    data: {guards: [StatusGuard]} },
   { path: 'deleted', component: DeletedAlertComponent },
-  {
-    path: '', component: HomePageComponent, canActivate: [MasterGuard],
-    data: {guards: [StatusGuard]}
-  },
-  {
-    path: 'login', component: LoginComponent, canActivate: [MasterGuard],
-    data: {guards: [StatusGuard]}
-  },
-  {
-    path: 'register', component: RegisterComponent, canActivate: [MasterGuard],
-    data: {guards: [StatusGuard]}
-  },
-  {
-    path: 'news', component: NewsComponent, canActivate: [MasterGuard],
-    data: {guards: [StatusGuard]}
-  },
-  {
-    path: 'events', component: SearchResultComponent, canActivate: [MasterGuard],
-    data: {guards: [StatusGuard]}
-  },
-  {
-    path: 'news-detail/:id', component: NewsDetailComponent, canActivate: [MasterGuard],
-    data: {guards: [StatusGuard]}
-  },
-  {
-    path: 'address-detail/:id', component: AddressDetailComponent, canActivate: [MasterGuard],
-    data: {guards: [StatusGuard]}
-  },
-  {
-    path: 'artist-detail/:id', component: ArtistDetailComponent, canActivate: [MasterGuard],
-    data: {guards: [StatusGuard]}
-  },
-  {
-    path: 'event-detail/:id', component: EventDetailComponent, canActivate: [MasterGuard],
-    data: {guards: [StatusGuard]}
-  },
-  {
-    path: 'add-venue', component: AddVenueComponent, canActivate: [MasterGuard],
-    data: {guards: [AuthGuard, StatusGuard], roles: ['ADMIN', 'ORGANIZER']}
-  },
-  {
-    path: 'performance-detail/:id', component: PerformanceDetailComponent, canActivate: [MasterGuard],
-    data: {guards: [StatusGuard]}
-  },
-  {
-    path: 'user', component: UserHomeComponent, canActivate: [MasterGuard],
-    data: {guards: [AuthGuard, StatusGuard], roles: ['ADMIN', 'ORGANIZER', 'USER']}
-  },
-  {
-    path: 'ticket', component: TicketDetailComponent, canActivate: [MasterGuard],
-    data: {guards: [AuthGuard, StatusGuard], roles: ['ADMIN', 'ORGANIZER', 'USER']}
-  },
-  {
-    path: 'add-news/:id', component: AddNewsComponent, canActivate: [MasterGuard],
-    data: {guards: [AuthGuard, StatusGuard], roles: ['ADMIN', 'ORGANIZER']}
-  },
-  {
-    path: 'add-user', component: AddUserComponent, canActivate: [MasterGuard],
-    data: {guards: [AuthGuard, StatusGuard], roles: ['ADMIN']}
-  },
-  {
-    path: 'add-event', component: AddEventComponent, canActivate: [MasterGuard],
-    data: {guards: [AuthGuard, StatusGuard], roles: ['ADMIN', 'ORGANIZER']}
-  },
-  {
-    path: 'orders', component: BookingComponent, canActivate: [MasterGuard],
-    data: {guards: [AuthGuard, StatusGuard], roles: ['ADMIN', 'ORGANIZER', 'USER']}
-  },
-  {
-    path: 'edit-user/:id', component: EditUserComponent, canActivate: [MasterGuard],
-    data: {guards: [AuthGuard, StatusGuard], roles: ['ADMIN', 'ORGANIZER', 'USER']}
-  },
-  {
-    path: 'users', component: UserManagementComponent, canActivate: [MasterGuard],
-    data: {guards: [AuthGuard, StatusGuard], roles: ['ADMIN']}
-  },
-  {path: 'banned', component: BannedAlertComponent},
   {path: 'explore', component: ExploreComponent}
 ];
 
