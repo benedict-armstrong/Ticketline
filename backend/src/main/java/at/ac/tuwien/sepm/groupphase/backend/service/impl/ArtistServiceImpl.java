@@ -13,11 +13,11 @@ import java.lang.invoke.MethodHandles;
 import java.util.List;
 
 @Service
-public class CustomArtistService implements ArtistService {
+public class ArtistServiceImpl implements ArtistService {
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final ArtistRepository artistRepository;
 
-    public CustomArtistService(ArtistRepository artistRepository) {
+    public ArtistServiceImpl(ArtistRepository artistRepository) {
         this.artistRepository = artistRepository;
     }
 

@@ -42,7 +42,7 @@ import java.util.List;
 import java.util.Set;
 
 @Service
-public class CustomEventService implements EventService {
+public class EventServiceImpl implements EventService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final EventRepository eventRepository;
@@ -51,7 +51,7 @@ public class CustomEventService implements EventService {
     EntityManager entityManager;
 
     @Autowired
-    public CustomEventService(EventRepository eventRepository) {
+    public EventServiceImpl(EventRepository eventRepository) {
         this.eventRepository = eventRepository;
     }
 
