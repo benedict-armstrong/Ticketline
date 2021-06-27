@@ -1,6 +1,20 @@
-$primary: rgb(203, 103, 111);
-$primary-darker: rgba(193, 73, 83, 1);
-$gray-242: rgb(242, 242, 242);
-$gray-131: rgb(131, 131, 131);
+$primary: #E76F51;
+$primary-darker: darken($primary, 10%); //#D7431D;
+$primary-lighter: lighten($primary, 10%);//#EE9781;
+
+$primary1: #E76F51;
+
+$secondary: #335F70;
+$secondary-darker: darken($secondary, 10%);
+$secondary-lighter: lighten($secondary, 10%);
+
+$tertiary: #E9C46A;
+$tertiary-darker: darken($tertiary, 10%);
+$tertiary-lighter: lighten($tertiary, 10%);
+
+$gray: #d9d9d9;
+$gray-darker: darken($gray, 10%);
+$gray-lighter: lighten($gray, 10%);
+
 $cancelled: rgba(255,0,16,0.26);
 

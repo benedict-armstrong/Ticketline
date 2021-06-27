@@ -5,6 +5,7 @@ import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Booking;
 import at.ac.tuwien.sepm.groupphase.backend.entity.LayoutUnit;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Performance;
+import at.ac.tuwien.sepm.groupphase.backend.entity.SeatCount;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Sector;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Ticket;
 import at.ac.tuwien.sepm.groupphase.backend.entity.TicketType;
@@ -12,14 +13,13 @@ import at.ac.tuwien.sepm.groupphase.backend.entity.Venue;
 import at.ac.tuwien.sepm.groupphase.backend.exception.FullCartException;
 import at.ac.tuwien.sepm.groupphase.backend.exception.NoTicketLeftException;
 import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
-import at.ac.tuwien.sepm.groupphase.backend.repository.SectorRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.TicketRepository;
-import at.ac.tuwien.sepm.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepm.groupphase.backend.security.AuthenticationFacade;
 import at.ac.tuwien.sepm.groupphase.backend.service.BookingService;
 import at.ac.tuwien.sepm.groupphase.backend.service.LayoutUnitService;
 import at.ac.tuwien.sepm.groupphase.backend.service.PerformanceService;
 import at.ac.tuwien.sepm.groupphase.backend.service.TicketService;
+import at.ac.tuwien.sepm.groupphase.backend.service.TicketTypeService;
 import at.ac.tuwien.sepm.groupphase.backend.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,8 +30,10 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.lang.invoke.MethodHandles;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -49,6 +51,7 @@ public class TicketServiceImpl implements TicketService {
     private final BookingService bookingService;
     private final PerformanceService performanceService;
     private final LayoutUnitService layoutUnitService;
+    private final TicketTypeService ticketTypeService;
 
     private final Long maxCartSize = 10L;
 
@@ -58,13 +61,16 @@ public class TicketServiceImpl implements TicketService {
                              AuthenticationFacade authenticationFacade,
                              BookingService bookingService,
                              PerformanceService performanceService,
-                             LayoutUnitService layoutUnitService) {
+                             LayoutUnitService layoutUnitService,
+                             TicketTypeService ticketTypeService) {
         this.ticketRepository = ticketRepository;
         this.userService = userService;
         this.authenticationFacade = authenticationFacade;
         this.bookingService = bookingService;
         this.performanceService = performanceService;
         this.layoutUnitService = layoutUnitService;
+        this.ticketTypeService = ticketTypeService;
+
     }
 
     @Override
@@ -132,18 +138,18 @@ public class TicketServiceImpl implements TicketService {
             throw new NoTicketLeftException("This seat is not free anymore.");
         }
 
-        ticketList.add(
-            Ticket.builder()
-                .ticketType(ticketType)
-                .performance(performance)
-                .status(status)
-                .user(user)
-                .changeDate(LocalDateTime.now())
-                .seat(seat)
-                .build()
-        );
+        Ticket ticket = Ticket.builder()
+            .ticketType(ticketType)
+            .performance(performance)
+            .status(status)
+            .user(user)
+            .changeDate(LocalDateTime.now())
+            .seat(seat)
+            .build();
 
-        return ticketRepository.saveAll(ticketList);
+        ticketList.add(ticketRepository.save(ticket));
+
+        return ticketList;
     }
 
     @Override
@@ -182,19 +188,19 @@ public class TicketServiceImpl implements TicketService {
     }
 
     @Override
-    public List<SeatCountDto> getSeatCountsInPerformance(Long performanceId) {
+    public List<SeatCount> getSeatCountsInPerformance(Long performanceId) {
         LOGGER.trace("getSeatCountsInPerformanceBySector({})", performanceId);
 
         Performance performance = performanceService.findById(performanceId);
 
-        List<SeatCountDto> seatCounts = new LinkedList<SeatCountDto>();
+        List<SeatCount> seatCounts = new LinkedList<>();
 
         for (Sector sector : performance.getVenue().getSectors()) {
             List<LayoutUnit> freeSeats = ticketRepository.getFreeSeatsInPerformanceAndSector(performance, sector);
 
             List<LayoutUnit> totalSeats = layoutUnitService.findBySector(sector);
 
-            seatCounts.add(SeatCountDto.builder()
+            seatCounts.add(SeatCount.builder()
                 .sectorId(sector.getId())
                 .freeSeats(freeSeats.size())
                 .totalSeats(totalSeats.size())
@@ -254,6 +260,7 @@ public class TicketServiceImpl implements TicketService {
     }
 
     @Override
+    @Transactional
     public boolean delete(List<Long> ids) {
         LOGGER.trace("delete({})", ids);
         List<Ticket> tickets = ticketRepository.findByIdList(ids);
@@ -281,7 +288,7 @@ public class TicketServiceImpl implements TicketService {
     @Transactional
     public void pruneReservations(List<Performance> performances) {
         LOGGER.trace("pruneReservations()");
-        List<Ticket> tickets = new ArrayList();
+        List<Ticket> tickets = new ArrayList<>();
         for (Performance performance : performances) {
             tickets.addAll(ticketRepository.findByPerformanceAndStatus(performance, Ticket.Status.RESERVED));
         }
@@ -300,5 +307,51 @@ public class TicketServiceImpl implements TicketService {
         }
 
         ticketRepository.saveAll(tickets);
+    }
+
+    @Override
+    public Ticket updateTicket(Ticket ticket) {
+        LOGGER.trace("updateTicket()");
+        ApplicationUser user = userService.findApplicationUserByEmail(authenticationFacade.getMail());
+        Ticket oldTicket = ticketRepository.findTicketByUserAndStatusAndId(user, Ticket.Status.IN_CART, ticket.getId());
+
+        if (oldTicket == null) {
+            throw new NotFoundException("Ticket doesn't exist");
+        } else {
+
+            if (!ticket.getTicketType().getSector().equals(oldTicket.getTicketType().getSector())) {
+                throw new IllegalArgumentException("Type must be for same Sector");
+            }
+            TicketType ticketType = ticketTypeService.getTicketTypeById(ticket.getTicketType().getId());
+            oldTicket.setTicketType(ticketType);
+            return ticketRepository.save(oldTicket);
+        }
+    }
+
+    @Override
+    public List<Double> getRelativeTicketSalesPastSevenDays() {
+        LOGGER.trace("getTicketSalesPastSevenDays()");
+        List<Long> list = new ArrayList<>();
+        List<Double> out = new ArrayList<>();
+        LocalDate today = LocalDate.now();
+
+        for (int i = 6; i >= 0; i--) {
+            LocalDate day = today.minusDays(i);
+            list.add(ticketRepository.countTicketByChangeDateBetweenAndStatus(day.atStartOfDay(), day.plusDays(1).atStartOfDay(), Ticket.Status.PAID_FOR));
+        }
+
+        Long max = Collections.max(list);
+
+        if (max == 0L) {
+            for (Long ignored : list) {
+                out.add(0.0d);
+            }
+        } else {
+            for (Long count : list) {
+                out.add((double) count / max);
+            }
+        }
+
+        return out;
     }
 }

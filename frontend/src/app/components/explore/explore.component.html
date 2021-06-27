@@ -1,0 +1,14 @@
+<div class="explore">
+  <h1 class="text-center header">Explore popular events</h1>
+  <div  class="sales-chart">
+    <app-bar [data]="this.data"></app-bar>
+  </div>
+
+  <h2>This weeks most popular events:</h2>
+  <div class="event-list">
+    <app-explore-event-list-item *ngFor="let topEvent of topEvents" [topEvent]="topEvent" [data]="{
+      hot: true
+    }"></app-explore-event-list-item>
+  </div>
+
+</div>

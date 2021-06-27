@@ -2,8 +2,11 @@ package at.ac.tuwien.sepm.groupphase.backend.endpoint;
 
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.EventDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.PaginationDto;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.TopEventDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.EventMapper;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.PaginationMapper;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.TopEventMapper;
+import at.ac.tuwien.sepm.groupphase.backend.entity.TopEvent;
 import at.ac.tuwien.sepm.groupphase.backend.service.EventService;
 import io.swagger.v3.oas.annotations.Operation;
 import org.slf4j.Logger;
@@ -33,13 +36,15 @@ public class EventEndpoint {
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final EventService eventService;
     private final EventMapper eventMapper;
+    private final TopEventMapper topEventMapper;
     private final PaginationMapper paginationMapper;
 
     @Autowired
-    public EventEndpoint(EventService eventService, EventMapper eventMapper, PaginationMapper paginationMapper) {
+    public EventEndpoint(EventService eventService, EventMapper eventMapper, PaginationMapper paginationMapper, TopEventMapper topEventMapper) {
         this.eventService = eventService;
         this.eventMapper = eventMapper;
         this.paginationMapper = paginationMapper;
+        this.topEventMapper = topEventMapper;
     }
 
     @Secured("ROLE_ORGANIZER")
@@ -66,6 +71,15 @@ public class EventEndpoint {
     }
 
     @Transactional
+    @PermitAll
+    @GetMapping(value = "/top")
+    @Operation(summary = "Get top events")
+    public List<TopEventDto> findTopEvents(PaginationDto paginationDto) {
+        LOGGER.info("GET /api/v1/events/top");
+
+        return topEventMapper.topEventListToTopEventDtoList(eventService.findTopEvents(paginationMapper.paginationDtoToPageable(paginationDto)));
+    }
+
     @PermitAll
     @GetMapping(value = "/{id}")
     @Operation(summary = "Get a specific event")

@@ -2,10 +2,11 @@
   <div class="card-body">
     <div>
       <img src="assets/tickets.svg" alt="">
-      <h5 class="card-title">{{eventType}} Tickets</h5>
+      <h5 class="card-title">{{performance.title}}</h5>
     </div>
     <div class="card-text">
       <p>
+        {{eventType}} Tickets<br>
         {{performance.date  | date:'EEEE, MMM d, y HH:mm'}}<br>
         {{performance.venue.name}}
       </p>
@@ -34,7 +35,7 @@
         </div>
       </div>
     </div>
-    <button [routerLink]="['/ticket']" *ngIf="reserved" disabled>Buy in orders</button>
-    <button [routerLink]="['/ticket']" *ngIf="!reserved">View</button>
+    <button class="primary" [routerLink]="['/ticket']" *ngIf="reserved" disabled>Buy in orders</button>
+    <button class="primary" [routerLink]="['/ticket']" *ngIf="!reserved">View</button>
   </div>
 </div>

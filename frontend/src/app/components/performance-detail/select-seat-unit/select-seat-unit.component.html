@@ -10,8 +10,7 @@
 >
   <div class="grid-unit" [ngClass]="{
   'available': this.layoutUnit,
-  'booked': this.layoutUnit && !this.layoutUnit.free,
-  'inCart': this.layoutUnit && !this.layoutUnit.free && this.inCart
+  'booked': this.layoutUnit && !this.layoutUnit.free && !this.layoutUnit.selected
   }"
        [ngStyle]="{
        'background-color': this.layoutUnit ? $any(this.layoutUnit.sector).color.toString(): 'transparent'
