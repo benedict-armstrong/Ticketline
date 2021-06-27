@@ -119,6 +119,77 @@ public class CustomEventService implements EventService {
         return eventRepository.findAll(builder.build(), pageable).getContent();
     }
 
+    @Transactional(readOnly = true)
+    @Override
+    public List<Event> search(String text, Pageable pageable) {
+        LOGGER.trace("searchEvent({})", text);
+
+        FullTextEntityManager fullTextEntityManager = Search.getFullTextEntityManager(entityManager);
+        // Only on first start to index everything, after that ORM will synchronize
+        try {
+            fullTextEntityManager.createIndexer().startAndWait();
+        } catch (InterruptedException e) {
+            throw new IllegalStateException(e.getMessage());
+        }
+
+        QueryBuilder qb = fullTextEntityManager.getSearchFactory()
+            .buildQueryBuilder().forEntity(Event.class).get();
+
+        BooleanQuery.Builder booleanQuery = new BooleanQuery.Builder();
+
+        List<String> textList = Arrays.asList(text.split(" "));
+
+        for (String txt : textList) {
+            booleanQuery.add(qb.keyword()
+                .fuzzy()
+                .withEditDistanceUpTo(2)
+                .withPrefixLength(0)
+                .onField("name")
+                .andField("performances.title")
+                .andField("performances.artist.firstName")
+                .andField("performances.artist.lastName")
+                .matching(txt.toLowerCase())
+                .createQuery(), BooleanClause.Occur.SHOULD);
+            booleanQuery.add(qb.keyword()
+                .onField("performances.artist.firstName")
+                .andField("performances.artist.lastName")
+                .matching(txt.toLowerCase())
+                .createQuery(), BooleanClause.Occur.SHOULD);
+        }
+
+        Query query = qb.bool()
+            .should(
+                qb.keyword()
+                    .fuzzy()
+                    .withEditDistanceUpTo(2)
+                    .withPrefixLength(0)
+                    .onField("name")
+                    .andField("description")
+                    .andField("performances.title")
+                    .andField("performances.description")
+                    .andField("performances.artist.firstName")
+                    .andField("performances.artist.lastName")
+                    .matching(text.toLowerCase())
+                    .createQuery())
+            .should(
+                qb.keyword()
+                    .onField("description")
+                    .andField("performances.description")
+                    .matching(text.toLowerCase())
+                    .createQuery())
+            .should(booleanQuery.build())
+            .createQuery();
+
+        // wrap Lucene query in a javax.persistence.Query
+        FullTextQuery jpaQuery =
+            fullTextEntityManager.createFullTextQuery(query, Event.class);
+
+        jpaQuery.setFirstResult(pageable.getPageNumber() * pageable.getPageSize());
+
+        // execute search
+        return (List<Event>) jpaQuery.getResultList();
+    }
+
     @Override
     public List<TopEvent> findTopEvents(Pageable pageable) {
         LOGGER.trace("findTopEvents({})", pageable);
@@ -147,77 +218,5 @@ public class CustomEventService implements EventService {
         }
 
         return topEvents;
-    }
-
-    @Transactional(readOnly = true)
-    @Override
-    public List<Event> search(String text, Pageable pageable) {
-        LOGGER.trace("searchEvent({})", text);
-
-        FullTextEntityManager fullTextEntityManager = Search.getFullTextEntityManager(entityManager);
-        // Only on first start to index everything, after that ORM will synchronize
-        try {
-            fullTextEntityManager.createIndexer().startAndWait();
-        } catch (InterruptedException e) {
-            throw new IllegalStateException(e.getMessage());
-        }
-
-        QueryBuilder qb = fullTextEntityManager.getSearchFactory()
-                            .buildQueryBuilder().forEntity(Event.class).get();
-
-        BooleanQuery.Builder booleanQuery = new BooleanQuery.Builder();
-
-        List<String> textList = Arrays.asList(text.split(" "));
-
-        for (String txt : textList) {
-            booleanQuery.add(qb.keyword()
-                .fuzzy()
-                .withEditDistanceUpTo(2)
-                .withPrefixLength(0)
-                .onField("name")
-                .andField("performances.title")
-                .andField("performances.artist.firstName")
-                .andField("performances.artist.lastName")
-                .matching(txt.toLowerCase())
-                .createQuery(), BooleanClause.Occur.SHOULD);
-            booleanQuery.add(qb.keyword()
-                .onField("performances.artist.firstName")
-                .andField("performances.artist.lastName")
-                .matching(txt.toLowerCase())
-                .createQuery(), BooleanClause.Occur.SHOULD);
-        }
-
-        Query query = qb.bool()
-                        .should(
-                            qb.keyword()
-                            .fuzzy()
-                            .withEditDistanceUpTo(2)
-                            .withPrefixLength(0)
-                            .onField("name")
-                            .andField("description")
-                            .andField("performances.title")
-                            .andField("performances.description")
-                            .andField("performances.artist.firstName")
-                            .andField("performances.artist.lastName")
-                            .matching(text.toLowerCase())
-                            .createQuery())
-                        .should(
-                            qb.keyword()
-                            .onField("description")
-                            .andField("performances.description")
-                            .matching(text.toLowerCase())
-                            .createQuery())
-                        .should(booleanQuery.build())
-            .createQuery();
-
-        // wrap Lucene query in a javax.persistence.Query
-        FullTextQuery jpaQuery =
-            fullTextEntityManager.createFullTextQuery(query, Event.class);
-
-        jpaQuery.setFirstResult(pageable.getPageNumber() * pageable.getPageSize());
-
-        // execute search
-        return (List<Event>) jpaQuery.getResultList();
-
     }
 }

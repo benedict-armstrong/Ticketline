@@ -44,18 +44,18 @@ public interface EventService {
     List<Event> search(Event event, Pageable pageable);
 
     /**
-     * Find all events with pagination sorted by date.
-     * Also contains information about ticket sales.
-     *
-     * @return list of all events
-     */
-    List<TopEvent> findTopEvents(Pageable pageable);
-
-    /**
      * Returns a list of events which match the full text search.
      *
      * @param text to search with
      * @return list of events with all possible values
      */
     List<Event> search(String text, Pageable pageable);
+
+    /**
+     * Find all events with pagination sorted by date.
+     * Also contains information about ticket sales.
+     *
+     * @return list of all events
+     */
+    List<TopEvent> findTopEvents(Pageable pageable);
 }
