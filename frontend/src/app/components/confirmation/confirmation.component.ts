@@ -26,7 +26,7 @@ export class ConfirmationComponent implements OnInit {
   ngOnInit(): void {
     const userId = this.actRoute.snapshot.params.userId;
     const performanceId = this.actRoute.snapshot.params.perfId;
-    this.userService.getUserById(userId).subscribe(
+    this.userService.getUserByIdForConfirmation(userId).subscribe(
       (response) => {
         this.user = response;
         this.user.lastName = this.user.lastName.charAt(0) + '.';

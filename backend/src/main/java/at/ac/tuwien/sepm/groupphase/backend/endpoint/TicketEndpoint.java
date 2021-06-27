@@ -133,20 +133,20 @@ public class TicketEndpoint {
         return ticketMapper.ticketListToTicketDtoList(ticketService.getTickets(Ticket.Status.RESERVED));
     }
 
-    @GetMapping("/ticketPdf/{id}")
+    @GetMapping("/pdf/{id}")
     @Secured({"ROLE_USER", "ROLE_ORGANIZER", "ROLE_ADMIN"})
     @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "Get ticket pdf for performance")
     public File getTicketPdf(@PathVariable Long id) {
-        LOGGER.info("GET /api/v1/tickets/ticketPdf/{}", id);
+        LOGGER.info("GET /api/v1/tickets/pdf/{}", id);
         return ticketService.getPdf(id);
     }
 
     @GetMapping("/confirmation/{user}/{perf}")
     @PermitAll
     @ResponseStatus(HttpStatus.OK)
-    @Operation(summary = "Get ticket pdf for performance")
-    public List<TicketDto> getTicketPdf(@PathVariable Long user, @PathVariable Long perf) {
+    @Operation(summary = "Get ticket dtos for performance")
+    public List<TicketDto> getTicketDto(@PathVariable Long user, @PathVariable Long perf) {
         LOGGER.info("GET /api/v1/tickets/confirmation/{}/{}", user, perf);
         return ticketMapper.ticketListToTicketDtoList(ticketService.getTicketsForPerformance(perf, user));
     }

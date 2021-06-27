@@ -5,7 +5,6 @@ import { Observable } from 'rxjs';
 import { NewTicket } from '../dtos/newTicket';
 import { Ticket } from '../dtos/ticket';
 import { CustomFile } from '../dtos/customFile';
-import { TicketGroup } from '../dtos/ticketGroup';
 
 @Injectable({
   providedIn: 'root'
@@ -132,7 +131,7 @@ export class TicketService {
   }
 
   getTicketPdf(id: number): Observable<CustomFile> {
-    return this.httpClient.get<CustomFile>(this.ticketBaseUri + '/ticketPdf/' + id);
+    return this.httpClient.get<CustomFile>(this.ticketBaseUri + '/pdf/' + id);
   }
 
   confirmation(userId: number, performanceId: number): Observable<Ticket[]> {

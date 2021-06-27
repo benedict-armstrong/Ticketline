@@ -5,8 +5,8 @@ import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepm.groupphase.backend.entity.File;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Performance;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Ticket;
+import at.ac.tuwien.sepm.groupphase.backend.exception.PdfException;
 import com.itextpdf.text.Document;
-import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Element;
 import com.itextpdf.text.Font;
 import com.itextpdf.text.Paragraph;
@@ -14,15 +14,19 @@ import com.itextpdf.text.Phrase;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.ByteArrayOutputStream;
-import java.io.FileOutputStream;
+import java.lang.invoke.MethodHandles;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Set;
 
 public class PdfService {
+    private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+
     private Document globalDocument;
     private ByteArrayOutputStream stream = new ByteArrayOutputStream();
     private ApplicationUser user;
@@ -46,12 +50,14 @@ public class PdfService {
     }
 
     public File getFile() {
+        LOGGER.trace("getFile()");
         globalDocument.close();
         File returnFile = new File(stream.toByteArray(), File.Type.APPLICATION_PDF);
         return returnFile;
     }
 
-    private void addHeaderData() throws DocumentException {
+    private void addHeaderData() {
+        LOGGER.trace("addHeaderData()");
         //COMPANY ADDRESS
         String addressString = "ticketline GmbH\n";
         addressString += "Karlsplatz 13\n";
@@ -72,11 +78,16 @@ public class PdfService {
         Paragraph user = new Paragraph(userString, normalFont);
         addEmptyLine(user, 1);
 
-        globalDocument.add(address);
-        globalDocument.add(user);
+        try {
+            globalDocument.add(address);
+            globalDocument.add(user);
+        } catch (Exception e) {
+            throw new PdfException("Pdf Header creation failed");
+        }
     }
 
     public void createInvoice(Set<Ticket> tickets, int previous) {
+        LOGGER.trace("createInvoice({}, {})", tickets, previous);
         //INVOICE NUMBER
         Paragraph number = new Paragraph("Invoice No " + (previous + 1), bigFont);
         number.setAlignment(Element.ALIGN_LEFT);
@@ -155,11 +166,12 @@ public class PdfService {
             globalDocument.add(table);
             globalDocument.add(dateDis);
         } catch (Exception e) {
-            e.printStackTrace();
+            throw new PdfException("Pdf invoice creation failed");
         }
     }
 
     public void createStorno(Set<Ticket> tickets, int previous) {
+        LOGGER.trace("createStorno({}, {})", tickets, previous);
         //INVOICE NUMBER
         Paragraph number = new Paragraph("Storno No " + (previous + 1), bigFont);
         number.setAlignment(Element.ALIGN_LEFT);
@@ -184,11 +196,12 @@ public class PdfService {
             globalDocument.add(date);
             globalDocument.add(text);
         } catch (Exception e) {
-            e.printStackTrace();
+            throw new PdfException("Pdf storno creation failed");
         }
     }
 
     public void createTicket(List<Ticket> tickets) {
+        LOGGER.trace("createTicket({})", tickets);
         if (tickets.size() != 0) {
             //PERFORMANCE
             Performance perf = tickets.get(0).getPerformance();
@@ -224,13 +237,14 @@ public class PdfService {
                 globalDocument.add(table);
                 globalDocument.add(qr);
             } catch (Exception e) {
-                e.printStackTrace();
+                throw new PdfException("Pdf ticket creation failed");
             }
         }
 
     }
 
     private void addEmptyLine(Paragraph paragraph, int number) {
+        LOGGER.trace("addEmptyLine({}, {})", paragraph, number);
         for (int i = 0; i < number; i++) {
             paragraph.add(new Paragraph(" "));
         }

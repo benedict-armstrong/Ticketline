@@ -4,8 +4,10 @@ import at.ac.tuwien.sepm.groupphase.backend.exception.NoTicketLeftException;
 import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepm.groupphase.backend.exception.InvalidQueryParameterException;
 import at.ac.tuwien.sepm.groupphase.backend.exception.BadFileException;
+import at.ac.tuwien.sepm.groupphase.backend.exception.PdfException;
 import at.ac.tuwien.sepm.groupphase.backend.exception.UserAlreadyExistAuthenticationException;
 import at.ac.tuwien.sepm.groupphase.backend.exception.AuthorizationException;
+import com.itextpdf.text.DocumentException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
@@ -71,6 +73,12 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     protected ResponseEntity<Object> handleAuthorizationException(RuntimeException ex, WebRequest request) {
         LOGGER.warn(ex.getMessage());
         return handleExceptionInternal(ex, ex.getMessage(), new HttpHeaders(), HttpStatus.UNAUTHORIZED, request);
+    }
+
+    @ExceptionHandler(value = { PdfException.class })
+    protected ResponseEntity<Object> handlePdfException(RuntimeException ex, WebRequest request) {
+        LOGGER.warn(ex.getMessage());
+        return handleExceptionInternal(ex, ex.getMessage(), new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
     }
 
     @ExceptionHandler(value = { IllegalArgumentException.class, IllegalStateException.class })

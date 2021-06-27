@@ -47,7 +47,7 @@ public class CustomUserDetailService implements UserService {
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        LOGGER.debug("Load a user by email");
+        LOGGER.trace("Load a user by email");
         try {
             ApplicationUser applicationUser = findApplicationUserByEmail(email);
 
@@ -68,7 +68,7 @@ public class CustomUserDetailService implements UserService {
 
     @Override
     public ApplicationUser findApplicationUserById(long id) {
-        LOGGER.debug("Find application user by id");
+        LOGGER.trace("Find application user by id");
         ApplicationUser manager = userRepository.findUserByEmail(authenticationFacade.getAuthentication().getPrincipal().toString());
         if (authenticationFacade.isAdmin() || manager.getId() == id) {
             ApplicationUser applicationUser = userRepository.findUserById(id);
@@ -79,6 +79,25 @@ public class CustomUserDetailService implements UserService {
             }
         } else {
             throw new AuthorizationException("You don't have the authorization the view this user");
+        }
+    }
+
+    @Override
+    public ApplicationUser findApplicationUserByIdConfirmation(long id, boolean ticketQuery) {
+        LOGGER.trace("Find application user by id for confirmation");
+        ApplicationUser applicationUser = userRepository.findUserById(id);
+        if (applicationUser != null) {
+            if (ticketQuery) {
+                return applicationUser;
+            } else {
+                ApplicationUser returnUser = new ApplicationUser();
+                returnUser.setFirstName(applicationUser.getFirstName());
+                returnUser.setLastName(applicationUser.getLastName().charAt(0) + "");
+                return returnUser;
+            }
+
+        } else {
+            throw new NotFoundException(String.format("Could not find the user with the id %d", id));
         }
     }
 
@@ -94,7 +113,7 @@ public class CustomUserDetailService implements UserService {
 
     @Override
     public ApplicationUser addUser(ApplicationUser user) {
-        LOGGER.debug("Add new User to System");
+        LOGGER.trace("Add new User to System");
 
         //throw UserAlreadyExistAuthenticationException if email is already in system
         if (userRepository.findUserByEmail(user.getEmail()) == null) {
@@ -131,7 +150,7 @@ public class CustomUserDetailService implements UserService {
 
     @Override
     public ApplicationUser updateUser(ApplicationUser user, Boolean firstAuthentication) {
-        LOGGER.debug("Update User");
+        LOGGER.trace("Update User");
         if (!firstAuthentication) {
             //Stop non allowed users to change users
             ApplicationUser manager = userRepository.findUserByEmail(authenticationFacade.getAuthentication().getPrincipal().toString());

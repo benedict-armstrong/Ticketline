@@ -221,9 +221,9 @@ public class TicketServiceImpl implements TicketService {
 
     @Override
     public List<Ticket> getTicketsForPerformance(long performanceId, long userId) {
-        LOGGER.trace("getTicketsForPerformance()");
+        LOGGER.trace("getTicketsForPerformance({} ,{})", performanceId, userId);
         Performance performance = performanceService.findById(performanceId);
-        ApplicationUser user = userService.findApplicationUserById(userId);
+        ApplicationUser user = userService.findApplicationUserByIdConfirmation(userId, true);
 
         return ticketRepository.findByPerformanceAndUserAndStatus(performance, user, Ticket.Status.PAID_FOR);
     }
