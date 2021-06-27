@@ -103,8 +103,8 @@
     <h5>Saved venue Layout ({{venueLayout.length}}x{{venueLayout[0].length}})</h5>
   </div>
 
-  <button type="submit" form="venueForm" class="primary" [disabled]="!this.venueLayout"
-    [ngClass]="{'disabled': !this.venueLayout}">Add Venue</button>
+  <button type="submit" form="venueForm" class="primary" [disabled]="!this.venueLayout || success"
+    [ngClass]="{'deactivated': !this.venueLayout || success}">Add Venue</button>
 
   <div *ngIf="error" class="col-12 alert alert-danger alert-dismissible fade show" role="alert">
     <strong>Error! </strong> {{ errorMessage }}
@@ -112,7 +112,7 @@
     </button>
   </div>
   <div *ngIf="success" class="col-12 alert alert-success alert-dismissible fade show" role="alert">
-    <strong>Success</strong> Successfully added venue.
+    <strong>Success:</strong> The venue has been added. Redirect in 3...
     <button type="button" (click)="vanishSuccess()" class="btn-close" data-dismiss="alert" aria-label="Close">
     </button>
   </div>
