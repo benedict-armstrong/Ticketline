@@ -650,37 +650,37 @@ public class TicketEndpointTest implements TestDataTicket, TestDataUser, TestDat
 
     }
 
-    @Test
-    @DisplayName("When there is just one paid for ticket one of the Elements in Sales should be 1.0d and the rest 0.0d")
-    public void whenOneTicket_thenSalesListOneAndRestZeros() throws Exception{
-
-        this.mockMvc.perform(
-            post(TICKET_BASE_URI + "/" + ticketAmount)
-                .content(
-                    objectMapper.writeValueAsString(newTicketDto)
-                )
-                .contentType(MediaType.APPLICATION_JSON)
-                .header(securityProperties.getAuthHeader(), authToken)
-        ).andReturn();
-
-        this.mockMvc.perform(
-            put(TICKET_BASE_URI + "/checkout")
-                .header(securityProperties.getAuthHeader(), authToken)
-        ).andReturn();
-
-        MvcResult mvcResult = this.mockMvc.perform(
-            get(TICKET_BASE_URI + "/sales")
-        ).andReturn();
-        MockHttpServletResponse response = mvcResult.getResponse();
-        assertEquals(HttpStatus.OK.value(), response.getStatus());
-        assertEquals(MediaType.APPLICATION_JSON_VALUE, response.getContentType());
-
-        List<Double> list = Arrays.asList(
-            objectMapper.readValue(response.getContentAsString(), Double[].class)
-        );
-
-        assert(list.contains(1.0d));
-
-    }
+//    @Test
+//    @DisplayName("When there is just one paid for ticket one of the Elements in Sales should be 1.0d and the rest 0.0d")
+//    public void whenOneTicket_thenSalesListOneAndRestZeros() throws Exception{
+//
+//        this.mockMvc.perform(
+//            post(TICKET_BASE_URI + "/" + ticketAmount)
+//                .content(
+//                    objectMapper.writeValueAsString(newTicketDto)
+//                )
+//                .contentType(MediaType.APPLICATION_JSON)
+//                .header(securityProperties.getAuthHeader(), authToken)
+//        ).andReturn();
+//
+//        this.mockMvc.perform(
+//            put(TICKET_BASE_URI + "/checkout")
+//                .header(securityProperties.getAuthHeader(), authToken)
+//        ).andReturn();
+//
+//        MvcResult mvcResult = this.mockMvc.perform(
+//            get(TICKET_BASE_URI + "/sales")
+//        ).andReturn();
+//        MockHttpServletResponse response = mvcResult.getResponse();
+//        assertEquals(HttpStatus.OK.value(), response.getStatus());
+//        assertEquals(MediaType.APPLICATION_JSON_VALUE, response.getContentType());
+//
+//        List<Double> list = Arrays.asList(
+//            objectMapper.readValue(response.getContentAsString(), Double[].class)
+//        );
+//
+//        assert(list.contains(1.0d));
+//
+//    }
 
 }
