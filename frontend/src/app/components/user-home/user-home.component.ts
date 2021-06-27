@@ -126,19 +126,13 @@ export class UserHomeComponent implements OnInit {
     console.log('loading cancelled orders');
     this.ticketService.getCancelledItems().subscribe(
       (response) => {
-        // Get all reserved tickets
-        if (response.length > 0) {
-          this.notPaid = true;
-        }
         response.forEach(value => {
           this.createTicketGroups(value, false, true);
         });
 
         this.orders.sort((x, y) =>
           Date.parse(x.tickets[0].performance.date) - Date.parse(y.tickets[0].performance.date)).reverse();
-        this.newOrders = this.orders.filter(item => item.old === false);
         this.loading = false;
-        console.log(this.orders);
       },
       (error) => {
         this.defaultServiceErrorHandling(error);

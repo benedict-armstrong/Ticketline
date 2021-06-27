@@ -38,7 +38,7 @@ export class TicketOrderItemComponent implements OnInit {
     // this.eventType = item.event.eventType.charAt(0) + item.event.eventType.slice(1).toLowerCase();
   }
 
-  constructor(private ticketService: TicketService) { }
+  constructor() { }
 
   ngOnInit(): void {
   }
@@ -51,14 +51,5 @@ export class TicketOrderItemComponent implements OnInit {
     } else {
       ticketGroup.id += 1;
     }
-  }
-
-  onStornoClick(item: TicketGroup) {
-    console.log(item.tickets);
-    this.ticketService.cancel(item.tickets).subscribe(() => {
-      this.cancelled = true;
-    }, error => {
-      console.error(error);
-    });
   }
 }

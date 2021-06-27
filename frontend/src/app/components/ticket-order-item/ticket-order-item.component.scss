@@ -1,3 +1,5 @@
+@import "../../../colors.scss";
+
 img {
   width: 30pt;
 }
@@ -22,7 +24,7 @@ img {
 
 .cancelled {
   opacity: 0.5;
-  background-color: #c14953;
+  background-color: $cancelled;
 }
 
 .reserved {
