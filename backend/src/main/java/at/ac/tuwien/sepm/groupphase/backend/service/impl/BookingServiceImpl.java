@@ -45,7 +45,7 @@ public class BookingServiceImpl implements BookingService {
     @Override
     public Booking save(Set<Ticket> tickets, Booking.Status status) {
         LOGGER.trace("saveBooking({})", tickets);
-        ApplicationUser user = userService.findApplicationUserByEmail((String) authenticationFacade.getAuthentication().getPrincipal());
+        ApplicationUser user = userService.findApplicationUserByEmail((String) authenticationFacade.getAuthentication().getPrincipal(), false);
         Booking booking = Booking.builder()
             .user(user)
             .createDate(LocalDateTime.now())
@@ -61,7 +61,7 @@ public class BookingServiceImpl implements BookingService {
     public Booking save(Booking booking) {
         LOGGER.trace("saveBooking({})", booking);
         booking.setUser(
-            userService.findApplicationUserByEmail((String) authenticationFacade.getAuthentication().getPrincipal())
+            userService.findApplicationUserByEmail((String) authenticationFacade.getAuthentication().getPrincipal(), false)
         );
         booking.setCreateDate(LocalDateTime.now());
         booking.setInvoice(null);
@@ -75,7 +75,7 @@ public class BookingServiceImpl implements BookingService {
     public Booking update(ChangeBookingDto booking) {
         LOGGER.trace("update({})", booking);
         Booking.Status newStatus = Booking.Status.valueOf(booking.getStatus());
-        ApplicationUser user = userService.findApplicationUserByEmail((String) authenticationFacade.getAuthentication().getPrincipal());
+        ApplicationUser user = userService.findApplicationUserByEmail((String) authenticationFacade.getAuthentication().getPrincipal(), false);
         Booking oldBooking = bookingRepository.findByUserAndId(user, booking.getId());
 
         //Booking.Status changed
@@ -105,7 +105,7 @@ public class BookingServiceImpl implements BookingService {
     @Override
     public List<Booking> getBookings() {
         LOGGER.trace("getBookings()");
-        ApplicationUser user = userService.findApplicationUserByEmail((String) authenticationFacade.getAuthentication().getPrincipal());
+        ApplicationUser user = userService.findApplicationUserByEmail((String) authenticationFacade.getAuthentication().getPrincipal(), false);
         return bookingRepository.findByUser(user);
     }
 

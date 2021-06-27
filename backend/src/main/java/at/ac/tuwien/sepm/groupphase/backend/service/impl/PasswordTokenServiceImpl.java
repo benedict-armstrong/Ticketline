@@ -9,7 +9,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -40,9 +40,10 @@ public class PasswordTokenServiceImpl implements PasswordTokenService {
         return user;
     }
 
-    @Scheduled(fixedDelay = 60000)
+    @Override
+    @Scheduled(fixedDelay = 18000)
     public void deleteExpiredTokens() {
-        List<PasswordResetToken> resetTokenList = passwordTokenRepository.findAllByExpiryDateBefore(LocalDate.now());
+        List<PasswordResetToken> resetTokenList = passwordTokenRepository.findAllByExpiryTimeBefore(LocalDateTime.now());
         passwordTokenRepository.deleteAll(resetTokenList);
     }
 }

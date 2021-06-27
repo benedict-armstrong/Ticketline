@@ -60,7 +60,7 @@ public class UserEndpoint {
     @Operation(summary = "Find User by Email")
     public UserDto findByEmail(@Valid @PathVariable("email") String email) {
         LOGGER.info("GET /api/v1/users/{}", email);
-        return userMapper.applicationUserToUserDto(userService.findApplicationUserByEmail(email));
+        return userMapper.applicationUserToUserDto(userService.findApplicationUserByEmail(email, false));
     }
 
     @Transactional

@@ -20,4 +20,9 @@ public interface PasswordTokenService {
      * @return the correct user
      */
     ApplicationUser findUserByToken(String token);
+
+    /**
+     * checks for expires tokens every half hour and deletes them.
+     */
+    void deleteExpiredTokens();
 }

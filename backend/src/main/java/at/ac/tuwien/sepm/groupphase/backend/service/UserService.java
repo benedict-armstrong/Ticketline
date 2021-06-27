@@ -36,9 +36,10 @@ public interface UserService extends UserDetailsService {
      * Find an application user based on the email address.
      *
      * @param email the email address
+     * @param force if true, dont throw NotFoundException
      * @return a application user
      */
-    ApplicationUser findApplicationUserByEmail(String email);
+    ApplicationUser findApplicationUserByEmail(String email, boolean force);
 
     /**
      * Add a user to system.

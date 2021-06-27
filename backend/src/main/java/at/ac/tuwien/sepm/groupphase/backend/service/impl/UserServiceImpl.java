@@ -56,7 +56,7 @@ public class UserServiceImpl implements UserService {
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         LOGGER.debug("Load a user by email");
         try {
-            ApplicationUser applicationUser = findApplicationUserByEmail(email);
+            ApplicationUser applicationUser = findApplicationUserByEmail(email, false);
 
             List<GrantedAuthority> grantedAuthorities;
             if (applicationUser.getRole() == ApplicationUser.UserRole.ADMIN) {
@@ -90,10 +90,10 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public ApplicationUser findApplicationUserByEmail(String email) {
+    public ApplicationUser findApplicationUserByEmail(String email, boolean force) {
         LOGGER.debug("Find application user by email");
         ApplicationUser applicationUser = userRepository.findUserByEmail(email);
-        if (applicationUser != null) {
+        if (applicationUser != null || force) {
             return applicationUser;
         }
         throw new NotFoundException(String.format("Could not find the user with the email address %s", email));
@@ -182,17 +182,21 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public void sendPasswordResetLink(String email) {
         LOGGER.trace("sendPasswordResetLink({})", email);
-        ApplicationUser user = findApplicationUserByEmail(email);
+        ApplicationUser user = findApplicationUserByEmail(email, true);
 
-        LocalDate expiryDate = LocalDate.now().plusDays(1L);
+        if (user == null) {
+            return;
+        }
+
+        LocalDateTime expiryTime = LocalDateTime.now().plusDays(1L);
         String token = UUID.randomUUID().toString();
-        PasswordResetToken myToken = PasswordResetToken.builder().token(token).user(user).expiryDate(expiryDate).build();
+        PasswordResetToken myToken = PasswordResetToken.builder().token(token).user(user).expiryTime(expiryTime).build();
         myToken = passwordTokenService.save(myToken);
 
         //Frontend Domain and port are hardcoded
         simpleMailService.sendMail(user.getEmail(), "[Ticketline] Password reset", String.format("Hello %s %s,\n\nSomeone requested a password reset link. If this wasn't you, you can ignore this mail."
             + "\n\nYou can change your password here: \n"
-            + "localhost:4200/changePassword?token=%s (this link is only valid for 24 hours)", user.getFirstName(), user.getLastName(), myToken.getToken()));
+            + "http://localhost:4200/changePassword?token=%s (this link is only valid for 24 hours)", user.getFirstName(), user.getLastName(), myToken.getToken()));
     }
 
     @Override
