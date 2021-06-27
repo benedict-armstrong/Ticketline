@@ -56,7 +56,9 @@
     </div>
   </div>
 
-<app-loading-animation *ngIf="loadingFullTextSearch"></app-loading-animation>
+<div class="loading-wrapper">
+  <app-loading-animation *ngIf="loadingFullTextSearch"></app-loading-animation>
+</div>
 
 <div *ngIf="addressSearched">
   <div class="text-center more" (click)="addressSearch.searchAddress()">
