@@ -25,6 +25,7 @@ import {StatusGuard} from './guards/status.guard';
 import {MasterGuard} from './guards/master.guard';
 import {DeletedAlertComponent} from './components/deleted-alert/deleted-alert.component';
 import {ExploreComponent} from './components/explore/explore.component';
+import {ResetPasswordComponent} from './components/reset-password/reset-password.component';
 
 const routes: Routes = [
   { path: '', component: HomePageComponent, canActivate: [MasterGuard],
@@ -143,8 +144,8 @@ const routes: Routes = [
     path: 'users', component: UserManagementComponent, canActivate: [MasterGuard],
     data: {guards: [AuthGuard, StatusGuard], roles: ['ADMIN']}
   },
-  {path: 'banned', component: BannedAlertComponent},
-  {path: 'explore', component: ExploreComponent}
+  { path: 'explore', component: ExploreComponent },
+  { path: 'changePassword', component: ResetPasswordComponent }
 ];
 
 @NgModule({

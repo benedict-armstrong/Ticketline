@@ -7,14 +7,14 @@
       </button>
     </div>
     <div *ngIf="success" class="col-12 alert alert-success alert-dismissible fade show" role="alert">
-      <strong>Success!</strong> New password sent to the given email!
+      <strong>Success!</strong> Password reset link sent to the given email!
       <button type="button" (click)="vanishAlert()" class="close" data-dismiss="alert" aria-label="Close">
         <span aria-hidden="true">&times;</span>
       </button>
     </div>
     <h3>Ticketline</h3>
     <p></p>
-    <form calss="form" [formGroup]="loginForm" (ngSubmit)="login()">
+    <form class="form" *ngIf="!resetPassword" [formGroup]="loginForm" (ngSubmit)="login()">
       <div class="form-group">
         <label for="email">EMAIL</label>
         <input type="email" class="text-input form-control" name="email" id="email" formControlName="email"
@@ -33,12 +33,18 @@
       </div>
       <button type="submit" name="signin" id="signin" class="primary">SIGN IN</button>
     </form>
-    <div>
+    <div *ngIf="!resetPassword">
       <button class="secondary" type="signup" name="signup" id="signup" [routerLink]="['/register']">SIGN
         UP</button>
     </div>
-    <div *ngIf="badCredentials">
-      <button class="secondary" type="rest" name="rest" id="rest" (click)="reset()">Reset Password</button>
-    </div>
+    <button *ngIf="!resetPassword" class="secondary" type="reset" name="resetPassword" id="resetPassword" (click)="resetPassword = true">Reset Password</button>
+    <form *ngIf="resetPassword" [formGroup]="resetPasswordForm" (submit)="reset()">
+      <div class="form-group">
+        <label for="resetEmail">EMAIL</label>
+        <input type="email" class="text-input form-control" name="resetEmail" id="resetEmail" formControlName="resetEmail"
+               aria-describedby="resetEmailHelpId" placeholder="Enter your email">
+        <button type="submit" name="reset" id="reset" class="primary">Send reset link</button>
+      </div>
+    </form>
   </div>
 </div>

@@ -1,14 +1,15 @@
 package at.ac.tuwien.sepm.groupphase.backend.service.impl;
 
 import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
+import at.ac.tuwien.sepm.groupphase.backend.entity.PasswordResetToken;
 import at.ac.tuwien.sepm.groupphase.backend.exception.AuthorizationException;
 import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepm.groupphase.backend.exception.UserAlreadyExistAuthenticationException;
 import at.ac.tuwien.sepm.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepm.groupphase.backend.security.AuthenticationFacade;
+import at.ac.tuwien.sepm.groupphase.backend.service.PasswordTokenService;
 import at.ac.tuwien.sepm.groupphase.backend.service.SimpleMailService;
 import at.ac.tuwien.sepm.groupphase.backend.service.UserService;
-import org.apache.commons.lang3.RandomStringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,25 +22,31 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.lang.invoke.MethodHandles;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 
 @Service
 public class UserServiceImpl implements UserService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final UserRepository userRepository;
+    private final PasswordTokenService passwordTokenService;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationFacade authenticationFacade;
     private final SimpleMailService simpleMailService;
 
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder, AuthenticationFacade authenticationFacade, SimpleMailService simpleMailService) {
+    public UserServiceImpl(UserRepository userRepository, PasswordTokenService passwordTokenService, PasswordEncoder passwordEncoder, AuthenticationFacade authenticationFacade, SimpleMailService simpleMailService) {
         this.userRepository = userRepository;
+        this.passwordTokenService = passwordTokenService;
         this.simpleMailService = simpleMailService;
         this.passwordEncoder = passwordEncoder;
         this.authenticationFacade = authenticationFacade;
@@ -172,20 +179,28 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public ApplicationUser resetPassword(ApplicationUser user) {
-        LOGGER.trace("resetPassword({})", user);
+    @Transactional
+    public void sendPasswordResetLink(String email) {
+        LOGGER.trace("sendPasswordResetLink({})", email);
+        ApplicationUser user = findApplicationUserByEmail(email);
 
-        String newGeneratedPassword = RandomStringUtils.randomAscii(16);
-        user.setPassword(newGeneratedPassword);
+        LocalDate expiryDate = LocalDate.now().plusDays(1L);
+        String token = UUID.randomUUID().toString();
+        PasswordResetToken myToken = PasswordResetToken.builder().token(token).user(user).expiryDate(expiryDate).build();
+        myToken = passwordTokenService.save(myToken);
 
-        ApplicationUser newUser = updateUser(user, true);
+        simpleMailService.sendMail(user.getEmail(), "[Ticketline] Password reset", String.format("Hello %s %s,\n\nSomeone requested a password reset link. If this wasn't you, you can ignore this mail."
+            + "\n\nYou can change your password here: \n"
+            + "localhost:4200/changePassword?token=%s", user.getFirstName(), user.getLastName(), myToken.getToken()));
+    }
 
-        if (newUser != null) {
-            simpleMailService.sendMail(user.getEmail(), "[Ticketline] Password reset", String.format("Hello %s %s,\n\nYour password was changed to '%s' (without ')!"
-                + " It can be changed in the 'My Account' Tab, after you logged in.", user.getFirstName(), user.getLastName(), newGeneratedPassword));
-        }
+    @Override
+    public void changePassword(String password, String token) {
+        LOGGER.trace("changePassword({}, {})", password, token);
 
-        return newUser;
+        ApplicationUser user = passwordTokenService.findUserByToken(token);
+        user.setPassword(passwordEncoder.encode(password));
+        userRepository.save(user);
     }
 
     @Override

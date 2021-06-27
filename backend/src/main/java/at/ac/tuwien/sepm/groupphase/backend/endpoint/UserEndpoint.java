@@ -1,21 +1,19 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint;
 
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.ChangePasswordDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.PaginationDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.PaginationMapper;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.UserMapper;
 import at.ac.tuwien.sepm.groupphase.backend.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.annotation.Secured;
-import org.springframework.security.core.Authentication;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -90,13 +88,22 @@ public class UserEndpoint {
         return userMapper.applicationUserToUserDto(userService.updateLastRead(userId, lastReadNewsId));
     }
 
+    @PostMapping("/reset")
+    @PermitAll
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(summary = "Send password reset link to email")
+    public void sendPasswordResetLink(@Valid @RequestBody String email) {
+        LOGGER.info("POST /api/v1/users/reset {}", email);
+        userService.sendPasswordResetLink(email);
+    }
+
     @PutMapping("/reset")
     @PermitAll
     @ResponseStatus(HttpStatus.OK)
-    @Operation(summary = "Reset User password")
-    public UserDto resetPassword(@Valid @RequestBody String email) {
-        LOGGER.info("PUT /api/v1/users/reset {}", email);
-        return userMapper.applicationUserToUserDto(userService.resetPassword(userService.findApplicationUserByEmail(email)));
+    @Operation(summary = "Change password for user with token")
+    public void changePassword(@Valid @RequestBody ChangePasswordDto changePasswordDto) {
+        LOGGER.info("PUT /api/v1/users/reset {}", changePasswordDto);
+        userService.changePassword(changePasswordDto.getPassword(), changePasswordDto.getToken());
     }
 
     @GetMapping
