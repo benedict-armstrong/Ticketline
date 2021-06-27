@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -49,8 +50,22 @@ public interface TicketRepository extends JpaRepository<Ticket, Long> {
      * @param sector the seats have to be in
      * @return list of all found seats
      */
-    @Query("select l from LayoutUnit l left join Ticket t on t.seat = l and t.performance = :performance where t.id is null and l.sector = :sector")
-    List<LayoutUnit> getFreeSeatsInPerfromanceAndSector(@Param("performance") Performance performance, @Param("sector") Sector sector);
+    @Query("select l from LayoutUnit l "
+        + "left join Ticket t on t.seat = l and t.performance = :performance "
+        + "where t.id is null and l.sector = :sector")
+    List<LayoutUnit> getFreeSeatsInPerformanceAndSector(@Param("performance") Performance performance, @Param("sector") Sector sector);
+
+    /**
+    * Check if the given seat in the given performance is free.
+    *
+    * @param performance to check in
+    * @param seat the seat
+    * @return true if free, false if taken
+    */
+    @Query("select case when t.id is null then true else false end from LayoutUnit l "
+        + "LEFT JOIN Ticket t ON t.seat = l AND t.performance = :performance "
+        + "WHERE l = :seat")
+    boolean checkIfSeatIsFreeByPerformance(@Param("performance") Performance performance, @Param("seat") LayoutUnit seat);
 
     /**
      * Find all tickets from a list of ids.
@@ -60,4 +75,12 @@ public interface TicketRepository extends JpaRepository<Ticket, Long> {
      */
     @Query("select t from Ticket t where t.id in :ids")
     List<Ticket> findByIdList(@Param("ids") List<Long> ids);
+
+    /**
+     * Get number of Tickets with given Date.
+     *
+     * @param changeDate Date
+     * @return number of Tickets last changed on given Date
+     */
+    long countTicketByChangeDateBetweenAndStatus(LocalDateTime changeDate, LocalDateTime changeDate2, Ticket.Status status);
 }

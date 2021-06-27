@@ -74,10 +74,10 @@ public class TicketDataGenerator {
                 ticketSet.add(Ticket.builder()
                     .ticketType(ticketType)
                     .performance(performance)
-                    .changeDate(LocalDateTime.now().plusMinutes(100))
+                    .changeDate(LocalDateTime.now().minusDays(2).plusMinutes(100))
                     .user(user)
                     .seat(seat)
-                    .status(Ticket.Status.IN_CART)
+                    .status(Ticket.Status.PAID_FOR)
                     .build()
                 );
             }

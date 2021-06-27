@@ -51,6 +51,9 @@ import { AddressDetailComponent } from './components/search/address-detail/addre
 import { SearchEventListComponent } from './components/search/search-event-list/search-event-list.component';
 import { SelectVenueComponent } from './components/event/select-venue/select-venue.component';
 import { SearchVenueListComponent } from './components/search/search-venue-list/search-venue-list.component';
+import { ExploreComponent } from './components/explore/explore.component';
+import { BarComponent } from './components/graphs/bar/bar.component';
+import { ExploreEventListItemComponent } from './components/explore/explore-event-list-item/explore-event-list-item.component';
 import { EditUserComponent } from './components/edit-user/edit-user.component';
 import { UserManagementComponent } from './components/user-management/user-management.component';
 import { BannedAlertComponent } from './components/banned-alert/banned-alert.component';
@@ -105,6 +108,9 @@ import { DeletedAlertComponent } from './components/deleted-alert/deleted-alert.
     TicketOrderItemComponent,
     SelectVenueComponent,
     SearchVenueListComponent,
+    ExploreComponent,
+    BarComponent,
+    ExploreEventListItemComponent,
     EditUserComponent,
     UserManagementComponent,
     BannedAlertComponent,

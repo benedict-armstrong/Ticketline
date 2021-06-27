@@ -2,7 +2,10 @@ package at.ac.tuwien.sepm.groupphase.backend.service.impl;
 
 import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Event;
+import at.ac.tuwien.sepm.groupphase.backend.entity.LayoutUnit;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Performance;
+import at.ac.tuwien.sepm.groupphase.backend.entity.Sector;
+import at.ac.tuwien.sepm.groupphase.backend.entity.TopEvent;
 import at.ac.tuwien.sepm.groupphase.backend.repository.EventRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.PerformanceRepository;
 import at.ac.tuwien.sepm.groupphase.backend.service.EventService;
@@ -30,6 +33,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.lang.invoke.MethodHandles;
+import java.util.LinkedList;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -129,7 +133,7 @@ public class CustomEventService implements EventService {
         }
 
         QueryBuilder qb = fullTextEntityManager.getSearchFactory()
-                            .buildQueryBuilder().forEntity(Event.class).get();
+            .buildQueryBuilder().forEntity(Event.class).get();
 
         BooleanQuery.Builder booleanQuery = new BooleanQuery.Builder();
 
@@ -154,26 +158,26 @@ public class CustomEventService implements EventService {
         }
 
         Query query = qb.bool()
-                        .should(
-                            qb.keyword()
-                            .fuzzy()
-                            .withEditDistanceUpTo(2)
-                            .withPrefixLength(0)
-                            .onField("name")
-                            .andField("description")
-                            .andField("performances.title")
-                            .andField("performances.description")
-                            .andField("performances.artist.firstName")
-                            .andField("performances.artist.lastName")
-                            .matching(text.toLowerCase())
-                            .createQuery())
-                        .should(
-                            qb.keyword()
-                            .onField("description")
-                            .andField("performances.description")
-                            .matching(text.toLowerCase())
-                            .createQuery())
-                        .should(booleanQuery.build())
+            .should(
+                qb.keyword()
+                    .fuzzy()
+                    .withEditDistanceUpTo(2)
+                    .withPrefixLength(0)
+                    .onField("name")
+                    .andField("description")
+                    .andField("performances.title")
+                    .andField("performances.description")
+                    .andField("performances.artist.firstName")
+                    .andField("performances.artist.lastName")
+                    .matching(text.toLowerCase())
+                    .createQuery())
+            .should(
+                qb.keyword()
+                    .onField("description")
+                    .andField("performances.description")
+                    .matching(text.toLowerCase())
+                    .createQuery())
+            .should(booleanQuery.build())
             .createQuery();
 
         // wrap Lucene query in a javax.persistence.Query
@@ -184,6 +188,35 @@ public class CustomEventService implements EventService {
 
         // execute search
         return (List<Event>) jpaQuery.getResultList();
+    }
 
+    @Override
+    public List<TopEvent> findTopEvents(Pageable pageable) {
+        LOGGER.trace("findTopEvents({})", pageable);
+
+        List<Event> events = eventRepository.findAllByOrderByStartDateAsc(pageable).getContent();
+
+        List<TopEvent> topEvents = new LinkedList<>();
+
+        List<Long> soldTickets = eventRepository.findSoldTicketsOrderByStartDateAsc(pageable.getOffset(), pageable.getPageSize());
+
+        for (int i = 0; i < events.size(); i++) {
+            Set<Performance> performances = events.get(i).getPerformances();
+
+            Long totalTickets = 0L;
+
+            for (Performance performance : performances) {
+                List<LayoutUnit> layout = performance.getVenue().getLayout();
+                for (LayoutUnit layoutUnit : layout) {
+                    if (!layoutUnit.getSector().getType().equals(Sector.SectorType.STAGE)) {
+                        totalTickets++;
+                    }
+                }
+            }
+
+            topEvents.add(new TopEvent(events.get(i), totalTickets, soldTickets.get(i)));
+        }
+
+        return topEvents;
     }
 }
