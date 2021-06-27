@@ -1,0 +1,34 @@
+@import "src/colors";
+
+.info {
+  align-items: center;
+}
+
+.info img {
+  height: 100px;
+}
+
+.date-time {
+  color: $primary;
+}
+
+.detail {
+  margin-left: 20pt;
+  width: clamp(400px, 600px, 600px);
+}
+
+.availability {
+  width: 100%;
+  height: 25px;
+  background-color: lighten($secondary-lighter, 10%);
+  border-radius: 5px;
+}
+
+.availability > div {
+  background-color: $secondary-lighter;
+  border-radius: inherit;
+  color: white;
+  padding: 2pt;
+  font-size: 10pt;
+  height: 25px;
+}

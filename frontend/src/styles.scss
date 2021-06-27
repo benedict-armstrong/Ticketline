@@ -1,8 +1,18 @@
 /* You can add global styles to this file, and also import other style files */
 @import "./colors.scss";
+@import "animations";
 
 body {
-  font-family: "Roboto", sans-serif !important;
+  font-family: "Heebo", sans-serif !important;
+}
+
+::selection {
+  background: $secondary;
+  color: white;
+}
+
+.header {
+  font-weight: 800;
 }
 
 button.primary,
@@ -12,7 +22,7 @@ button.secondary {
   margin: 10px 0;
   height: 45px;
   border-radius: 10px;
-  border: 1px solid $gray-242;
+  border: 1px solid $gray-lighter;
   box-shadow: rgba(0, 0, 0, 0.1) 0 4px 12px;
   font-weight: 800;
 }
@@ -44,12 +54,12 @@ button.secondary {
 }
 
 button.primary.locked {
-  background: $gray-131;
+  background: $gray-darker;
 }
 
 button.secondary.locked,
 button.close.locked {
-  color: $gray-131;
+  color: $gray-darker;
 }
 
 button.no-shadow {
@@ -69,20 +79,20 @@ select.select-input {
   border: none;
   font-size: 12pt;
   height: 50px;
-  background-color: $gray-242;
+  background-color: $gray-lighter;
   border-radius: 3px;
 }
 
 textarea.text-input {
   border: none;
   font-size: 12pt;
-  background-color: $gray-242;
+  background-color: $gray-lighter;
   border-radius: 3px;
 }
 
 input.text-input:focus,
 textarea.text-input:focus {
-  background-color: $gray-242;
+  background-color: $gray-lighter;
   outline: none;
   border: none;
   box-shadow: none;

@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -50,6 +51,17 @@ public interface TicketRepository extends JpaRepository<Ticket, Long> {
      * @return list of all found tickets
      */
     List<Ticket> findByPerformanceAndUserAndStatus(Performance performance, ApplicationUser user, Ticket.Status status);
+
+    /**
+     * Finds Ticket by User, Status and Id.
+     *
+     * @param user Owner of Ticket
+     * @param status Status of Ticket
+     * @param id Ticket Id
+     * @return Ticket
+     */
+    Ticket findTicketByUserAndStatusAndId(ApplicationUser user, Ticket.Status status, Long id);
+
 
     /**
      * Find all layoutUnit entries that are not referenced in any ticket of the given performance.
@@ -95,4 +107,12 @@ public interface TicketRepository extends JpaRepository<Ticket, Long> {
      */
     @Query("select t from Ticket t where t.id in :ids")
     List<Ticket> findByIdList(@Param("ids") List<Long> ids);
+
+    /**
+     * Get number of Tickets with given Date.
+     *
+     * @param changeDate Date
+     * @return number of Tickets last changed on given Date
+     */
+    long countTicketByChangeDateBetweenAndStatus(LocalDateTime changeDate, LocalDateTime changeDate2, Ticket.Status status);
 }

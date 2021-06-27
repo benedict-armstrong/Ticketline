@@ -1,0 +1,16 @@
+<div class="bar-chart">
+  <div class="chart">
+    <div class="chart-item chart-data">
+      <div class="chart-data-point"  *ngFor="let item of data.values">
+        <div class="bar grow-in-y" [style]="{'height': item * 100 + '%'}">
+        </div>
+      </div>
+    </div>
+    <div class="chart-item chart-labels">
+      <div class="chart-label" *ngFor="let item of data.xLabels">
+        {{item}}
+      </div>
+    </div>
+  </div>
+  <p class="text-center">{{data.name}}</p>
+</div>

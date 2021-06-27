@@ -25,6 +25,7 @@ import {StatusGuard} from './guards/status.guard';
 import {MasterGuard} from './guards/master.guard';
 import {ConfirmationComponent} from './components/confirmation/confirmation.component';
 import {DeletedAlertComponent} from './components/deleted-alert/deleted-alert.component';
+import {ExploreComponent} from './components/explore/explore.component';
 
 const routes: Routes = [
   { path: '', component: HomePageComponent, canActivate: [MasterGuard],
@@ -68,13 +69,15 @@ const routes: Routes = [
   { path: 'banned', component: BannedAlertComponent },
   { path: 'confirmation/:userId/:perfId', component: ConfirmationComponent, canActivate: [MasterGuard],
     data: {guards: [StatusGuard]} },
-  { path: 'deleted', component: DeletedAlertComponent }
+  { path: 'deleted', component: DeletedAlertComponent },
+  {path: 'explore', component: ExploreComponent}
 ];
 
 @NgModule({
   imports: [
-    RouterModule.forRoot(routes, { scrollPositionRestoration: 'enabled' }),
+    RouterModule.forRoot(routes, {scrollPositionRestoration: 'enabled'}),
   ],
   exports: [RouterModule],
 })
-export class AppRoutingModule {}
+export class AppRoutingModule {
+}

@@ -37,6 +37,12 @@ export class SelectSeatComponent implements OnInit {
     (error) => {
       console.error(error);
     });
+
+    this.ticketService.cartState$.subscribe(
+      (data) => {
+        this.selectedTickets = [].concat(...data).filter((t: Ticket) => t.performance.id === this.performance.id);
+      }
+    );
   }
 
   addSeat(seat: LayoutUnitSelect): void {
@@ -51,10 +57,10 @@ export class SelectSeatComponent implements OnInit {
       1,
       seat.id
     );
+    console.log(ticket);
     this.updatingCart = true;
     this.ticketService.addTicket(ticket).subscribe(
-      (data) => {
-        this.selectedTickets = [].concat(...data).filter((t: Ticket) => t.performance.id === this.performance.id);
+      () => {
         this.updatingCart = false;
       },
       (error) => {
@@ -66,9 +72,8 @@ export class SelectSeatComponent implements OnInit {
 
   removeSeat(seat: LayoutUnitSelect): void {
     this.updatingCart = true;
-    this.ticketService.removeTicketBySeat(seat).subscribe(
-      (data) => {
-        this.selectedTickets = [].concat(...data).filter((t: Ticket) => t.performance.id === this.performance.id);
+     this.ticketService.removeTicketBySeatAndPerformance(seat, this.performance).subscribe(
+      () => {
         this.updatingCart = false;
       },
       (error) => {
@@ -76,11 +81,18 @@ export class SelectSeatComponent implements OnInit {
         this.updatingCart = false;
       }
     );
-    // const index = this.selectedTickets.findIndex(
-    //   (ticket) =>  ticket.seat === seat
-    // );
-    // if (index > -1) {
-    //   this.selectedTickets.splice(index, 1);
-    // }
+  }
+
+  updateTicketType(ticket: Ticket) {
+    this.updatingCart = true;
+    this.ticketService.updateTicketType(ticket).subscribe(
+      () => {
+        this.updatingCart = false;
+      },
+      (error) => {
+        console.error(error);
+        this.updatingCart = false;
+      }
+    );
   }
 }

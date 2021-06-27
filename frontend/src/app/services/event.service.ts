@@ -3,6 +3,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Globals } from '../global/globals';
 import { Event } from '../dtos/event';
+import { TopEvent } from '../dtos/topEvent';
 
 @Injectable({
   providedIn: 'root'
@@ -22,6 +23,16 @@ export class ApplicationEventService {
     params = params.set('page', String(page));
     params = params.set('size', String(size));
     return this.httpClient.get<Event[]>(this.eventBaseUri, { params });
+  }
+
+  /**
+   * Loads all topEvents from the backend with pagination
+   */
+   getTopEvents(page: number, size: number): Observable<TopEvent[]> {
+    let params = new HttpParams();
+    params = params.set('page', String(page));
+    params = params.set('size', String(size));
+    return this.httpClient.get<TopEvent[]>(this.eventBaseUri + '/top', { params });
   }
 
   /**

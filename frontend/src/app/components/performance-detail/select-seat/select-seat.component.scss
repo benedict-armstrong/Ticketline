@@ -72,3 +72,7 @@
   margin-right: 5px;
   color: $primary;
 }
+
+#selected-color rect {
+  fill: $tertiary !important;
+}

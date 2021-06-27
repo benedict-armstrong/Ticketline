@@ -3,8 +3,8 @@ package at.ac.tuwien.sepm.groupphase.backend.service;
 import at.ac.tuwien.sepm.groupphase.backend.entity.File;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.SeatCountDto;
 import at.ac.tuwien.sepm.groupphase.backend.entity.LayoutUnit;
-import at.ac.tuwien.sepm.groupphase.backend.entity.Booking;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Performance;
+import at.ac.tuwien.sepm.groupphase.backend.entity.SeatCount;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Ticket;
 import at.ac.tuwien.sepm.groupphase.backend.entity.TicketType;
 
@@ -57,7 +57,7 @@ public interface TicketService {
      * @param performanceId of the tickets
      * @return list of the amounts
      */
-    List<SeatCountDto> getSeatCountsInPerformance(Long performanceId);
+    List<SeatCount> getSeatCountsInPerformance(Long performanceId);
 
     /**
      * Adds all the tickets in the users cart to a booking entity and changes their status to PAID_FOR.
@@ -109,7 +109,6 @@ public interface TicketService {
      */
     void updateStatus(Set<Ticket> tickets, Ticket.Status status);
 
-
     /**
      * Returns all tickets from user for this performance.
      *
@@ -126,4 +125,20 @@ public interface TicketService {
      * @return pdf file.
      */
     File getPdf(long performanceId);
+
+    /**
+     * Update Ticket in cart.
+     *
+     * @param ticket Ticket with new information
+     * @return updated Ticket
+     */
+    Ticket updateTicket(Ticket ticket);
+
+    /**
+     * Get ticket sales of last seven days.
+     *
+     * @return List of ticket sales on each day
+     */
+    List<Double> getRelativeTicketSalesPastSevenDays();
+
 }

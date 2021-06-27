@@ -1,0 +1,56 @@
+@import "./colors.scss";
+
+// underline text in secondary color on hover
+
+.underline-header {
+  cursor: pointer;
+  span {
+    background-image: linear-gradient(
+        transparent calc(75% - 15%),
+        lighten($secondary-lighter, 40%) 5px,
+    );
+    background-size: 0;
+    background-repeat: no-repeat;
+    display: inline;
+    transition: 0.5s ease;
+  }
+
+  &:hover {
+    span {
+      background-size: 90%;
+    }
+  }
+}
+
+// slide in on load
+
+@keyframes growInY {
+  0% {
+    opacity: 0;
+    transform: scale(1, 0);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1, 1);
+  }
+}
+
+.grow-in-y {
+  animation: 0.3s ease-out 0s 1 growInY;
+}
+
+
+// Fade in
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0.2;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.fade-in {
+  animation: 0.4s ease-out 0s 1 fadeIn;
+}
