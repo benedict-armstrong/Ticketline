@@ -10,6 +10,7 @@ import {FileService} from '../../services/file.service';
 export class NewsItemComponent implements OnInit, OnChanges {
 
   @Input() lastRead: number = null;
+  @Input() removeBadge = false;
 
   item: News;
   imgURL: any;
@@ -33,6 +34,9 @@ export class NewsItemComponent implements OnInit, OnChanges {
       this.read = false;
     } else {
       this.read = this.lastRead >= this.item.id;
+    }
+    if (this.removeBadge) {
+      this.read = true;
     }
   }
 

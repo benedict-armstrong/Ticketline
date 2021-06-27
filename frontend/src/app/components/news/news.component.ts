@@ -20,6 +20,7 @@ export class NewsComponent implements OnInit {
   loadingOnlyUnread = true;
   finishedAfter = false;
   lastReadNews: number = null; // Local copy used for comparison - should not be uploaded
+  removeBadges = false;
 
   wasError = false;
   errorMessage: string;
@@ -116,6 +117,7 @@ export class NewsComponent implements OnInit {
 
   markAllAsRead() {
     this.loadingOnlyUnread = false;
+    this.removeBadges = true;
     this.user.lastReadNewsId = this.news[0].id;
     this.userService.updateLastRead(this.user, this.user.lastReadNewsId).subscribe(
       user => {
