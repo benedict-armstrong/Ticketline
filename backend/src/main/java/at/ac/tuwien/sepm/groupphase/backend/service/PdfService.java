@@ -46,7 +46,7 @@ public class PdfService {
             globalDocument.open();
             addHeaderData();
         } catch (Exception e) {
-            e.printStackTrace();
+            throw new PdfException("Pdf constructor creation failed");
         }
     }
 
