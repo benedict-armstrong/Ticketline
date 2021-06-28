@@ -1,4 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { TicketService } from 'src/app/services/ticket.service';
 
 @Component({
@@ -12,7 +13,8 @@ export class ShoppingcartComponent implements OnInit {
   public success = false;
   public errorMessage = '';
 
-  constructor(public ticketService: TicketService) {}
+  constructor(public ticketService: TicketService,
+    private router: Router) {}
 
   ngOnInit(): void {
   }
@@ -27,6 +29,7 @@ export class ShoppingcartComponent implements OnInit {
       (response) => {
         if (response) {
           this.ticketService.reload();
+          this.router.navigate(['/user']);
         }
       },
       (error) => {
@@ -40,6 +43,7 @@ export class ShoppingcartComponent implements OnInit {
       (response) => {
         if (response) {
           this.ticketService.reload();
+          this.router.navigate(['/user']);
           this.success = true;
         }
       },
