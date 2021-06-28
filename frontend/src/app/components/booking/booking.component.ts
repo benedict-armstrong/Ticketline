@@ -62,11 +62,16 @@ export class BookingComponent implements OnInit {
     window.URL.revokeObjectURL(url);
   }
 
-  onBuyClick(booking) {
+  onBuyClick(booking: Booking) {
     const changeBooking = new ChangeBooking(booking.id, 'PAID_FOR');
     this.bookingService.updateBooking(changeBooking).subscribe(
       (response) => {
-        booking.status = response.status;
+        const bookIndex = this.bookings.indexOf(booking);
+        const allBookIndex = this.allBookings.indexOf(booking);
+        booking = response;
+        this.bookings[bookIndex] = booking;
+        this.allBookings[allBookIndex] = booking;
+        
         this.bought = true;
         this.scrollToTop();
       }, error => {

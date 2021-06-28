@@ -86,6 +86,10 @@ public class TicketServiceImpl implements TicketService {
         ApplicationUser user = userService.findApplicationUserByEmail((String) authenticationFacade.getAuthentication().getPrincipal(), false);
         Performance performance = performanceService.findById(performanceId);
 
+        if (performance.getDate().isBefore(LocalDateTime.now())) {
+            throw new DateInThePastException("This performance has already happened, you can not buy anymore tickets.");
+        }
+
 
         List<Ticket> currentTickets = ticketRepository.findByUserAndStatus(user, Ticket.Status.IN_CART);
         if (currentTickets.size() + amount > maxCartSize) {

@@ -80,6 +80,7 @@ export class TicketListItemComponent implements OnInit {
         }
       };
       this.defaultServiceErrorHandling(error);
+      return;
     }
     if (this.inThePast) {
       this.error = true;
@@ -89,6 +90,7 @@ export class TicketListItemComponent implements OnInit {
         }
       };
       this.defaultServiceErrorHandling(error);
+      //return;
     }
     if (!this.waiting) {
       if (this.ticketForm.valid) {
