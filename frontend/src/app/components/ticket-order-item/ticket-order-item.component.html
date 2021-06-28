@@ -8,7 +8,7 @@
       <p>
         {{eventType}} Tickets<br>
         {{performance.date  | date:'EEEE, MMM d, y HH:mm'}}<br>
-        {{performance.venue.name}}
+        {{$any(performance.venue).name}}
       </p>
       <div *ngIf="!tooLong">
         <div *ngFor="let entry of tickets">
