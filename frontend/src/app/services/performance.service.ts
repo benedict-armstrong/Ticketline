@@ -3,7 +3,6 @@ import {HttpClient, HttpParams} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {Globals} from '../global/globals';
 import {Performance} from '../dtos/performance';
-import {Event} from '../dtos/event';
 
 @Injectable({
   providedIn: 'root'
@@ -33,10 +32,10 @@ export class ApplicationPerformanceService {
   }
 
   /**
-   * Add a new event
+   * Add a new performance
    */
-  addEvent(event: Performance): Observable<Performance> {
-    return this.httpClient.post<Performance>(this.performanceBaseUri, event);
+  addPerformance(performance: Performance): Observable<Performance> {
+    return this.httpClient.post<Performance>(this.performanceBaseUri, performance);
   }
 
   /**
@@ -49,11 +48,11 @@ export class ApplicationPerformanceService {
     if (date) {
       params = params.set('date', date.toISOString());
     }
-    if(event !== null){
+    if (event !== null) {
       params = params.set('eventId', event.toString());
     }
 
-    if(venue !== null){
+    if (venue !== null) {
       params = params.set('venue', venue.toString());
     }
 

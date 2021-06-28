@@ -4,6 +4,7 @@ import {Ticket} from '../../../dtos/ticket';
 import { TicketService } from 'src/app/services/ticket.service';
 import {Performance} from '../../../dtos/performance';
 import {NewTicket} from '../../../dtos/newTicket';
+import {Venue} from '../../../dtos/venue';
 
 @Component({
   selector: 'app-select-seat',
@@ -25,14 +26,18 @@ export class SelectSeatComponent implements OnInit {
 
   ngOnInit(): void {
     this.ticketService.updateShoppingCart().subscribe(() => {
-        for (const row of this.performance.venue.layout) {
-          for (const unit of row) {
-            if (unit) {
-              unit.sector = this.performance.venue.sectors.find(s => s.id === unit.sector);
+        if (this.performance.venue instanceof Venue) {
+          for (const row of this.performance.venue.layout) {
+            for (const unit of row) {
+              if (unit) {
+                unit.sector = this.performance.venue.sectors.find(s => s.id === unit.sector);
+              }
             }
           }
+          this.layout = this.performance.venue.layout;
+        } else {
+          console.error('Venue not processable');
         }
-        this.layout = this.performance.venue.layout;
       },
     (error) => {
       console.error(error);

@@ -69,6 +69,21 @@ export class ApplicationEventService {
    * Add a new event
    */
   addEvent(event: Event): Observable<Event> {
+    if (event.performances.length > 1) {
+      for (const p of event.performances) {
+        if (this.hasOwnProperty(p.venue, 'id')) {
+          const v = p.venue;
+          event.performances.forEach((performance) => {
+            // @ts-ignore
+            if (this.hasOwnProperty(performance.venue, 'id') && performance.venue.id === v.id && performance.venue !== v) {
+              // @ts-ignore
+              performance.venue = v.id;
+            }
+          });
+        }
+      }
+    }
+    console.log(event);
     return this.httpClient.post<Event>(this.eventBaseUri, event);
   }
 
@@ -82,5 +97,10 @@ export class ApplicationEventService {
     params = params.set('size', String(size));
 
     return this.httpClient.get<Event[]>(this.eventBaseUri + '/search', { params });
+  }
+
+  // eslint-disable-next-line @typescript-eslint/ban-types
+  private hasOwnProperty<X extends {}, Y extends PropertyKey>(obj: X, prop: Y): obj is X & Record<Y, unknown> {
+    return obj.hasOwnProperty(prop);
   }
 }
