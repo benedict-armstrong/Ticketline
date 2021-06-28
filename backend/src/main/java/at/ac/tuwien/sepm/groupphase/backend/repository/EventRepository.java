@@ -52,5 +52,5 @@ public interface EventRepository extends JpaRepository<Event, Long>, JpaSpecific
      *
      * @return list of all events
      */
-    List<Event> findAllByStartDateAfterOrderByStartDateAsc(LocalDate date);
+    List<Event> findAllByStartDateAfterOrderByStartDateDesc(LocalDate date);
 }

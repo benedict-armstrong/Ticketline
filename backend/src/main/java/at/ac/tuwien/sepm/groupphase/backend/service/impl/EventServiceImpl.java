@@ -199,7 +199,7 @@ public class EventServiceImpl implements EventService {
     public List<TopEvent> findTopEvents() {
         LOGGER.trace("findTopEvents()");
 
-        List<Event> events = eventRepository.findAllByStartDateAfterOrderByStartDateAsc(LocalDate.now());
+        List<Event> events = eventRepository.findAllByStartDateAfterOrderByStartDateDesc(LocalDate.now());
 
         List<TopEvent> topEvents = new LinkedList<>();
 
