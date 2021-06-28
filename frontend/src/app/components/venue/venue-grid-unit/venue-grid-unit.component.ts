@@ -18,6 +18,10 @@ export class VenueGridUnitComponent implements OnInit {
   @Output()
   clickedUnit = new EventEmitter<SeatUnit>();
 
+  @Output()
+  touched = new EventEmitter();
+  edited = false;
+
   colors: string[] = [
     '#CCCCCC',
     '#FF6633',
@@ -38,6 +42,11 @@ export class VenueGridUnitComponent implements OnInit {
   ngOnInit(): void {}
 
   toggle() {
+    if (!this.edited) {
+      this.touched.emit();
+      this.edited = true;
+    }
+
     if (this.activeTool.action === 'assignSector') {
       if (this.activeTool.scope === 'single') {
         this.seatUnit.available = true;
@@ -57,6 +66,11 @@ export class VenueGridUnitComponent implements OnInit {
 
   toggleEvent(event?) {
     if ((event && (event.buttons === 1 || event.buttons === 3)) || !event) {
+      if (!this.edited) {
+        this.touched.emit();
+        this.edited = true;
+      }
+
       if (this.activeTool.scope === 'single') {
         if (this.activeTool.action === 'add') {
           this.seatUnit.available = true;

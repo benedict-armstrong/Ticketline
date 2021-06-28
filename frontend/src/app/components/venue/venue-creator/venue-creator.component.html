@@ -6,7 +6,10 @@
     <p>
       Instructions:<br>
       Select a size of Grid first and then start by using the <i class="bi bi-dash-square-fill"></i> tool to remove all areas that cant be used as by spectators.
-      Then assign the seats
+      Then assign the seats using the assign Tool.
+      You can use the tools to set single squares, rows or columns.
+      Make sure to create the sectors you want first as you can't remove sectors after you have edited the venue.
+      Click 'Save Layout' to save the layout you've just created.
     </p>
   </div>
 
@@ -97,7 +100,7 @@
 
   <div class="venue-layout-grid">
     <div>Front</div>
-    <app-venue-layout-grid [venueLayout]="this.venueLayout" [activeTool]="this.activeTool"></app-venue-layout-grid>
+    <app-venue-layout-grid [venueLayout]="this.venueLayout" [activeTool]="this.activeTool" (layoutTouched)="touched()"></app-venue-layout-grid>
   </div>
 
   <button class="secondary" type='button' (click)="save()">Save Layout</button>

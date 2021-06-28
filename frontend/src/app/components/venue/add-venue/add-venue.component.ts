@@ -17,6 +17,7 @@ export class AddVenueComponent implements OnInit {
   error = false;
   success = false;
   errorMessage = '';
+  touched = false;
 
   sectors: Sector[] = [];
   venueLayout: LayoutUnit[][];
@@ -45,6 +46,10 @@ export class AddVenueComponent implements OnInit {
   updateLayout(venueLayout: LayoutUnit[][]) {
     console.log(venueLayout);
     this.venueLayout = venueLayout;
+  }
+
+  markTouched() {
+    this.touched = true;
   }
 
   add() {

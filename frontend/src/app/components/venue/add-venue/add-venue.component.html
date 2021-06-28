@@ -85,10 +85,10 @@
 
   <h5>Venue Sectors</h5>
 
-  <app-venue-add-sector (newSector)="updateSector($event)"></app-venue-add-sector>
+  <app-venue-add-sector (newSector)="updateSector($event)" [lockSectors]="touched"></app-venue-add-sector>
 
 
-  <app-venue-creator *ngIf="sectors" [sectors]="this.sectors" (createdVenueLayout)="updateLayout($event)">
+  <app-venue-creator *ngIf="sectors" [sectors]="this.sectors" (createdVenueLayout)="updateLayout($event)" (venueTouched)="markTouched()">
   </app-venue-creator>
 
   <div *ngIf="!sectors" class="text-center">
