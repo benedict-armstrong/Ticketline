@@ -66,9 +66,6 @@ public class TicketDataGenerator {
             List<Event> events = eventRepository.findAll();
 
             for (int i = 0; i < NUMBER_OF_TICKETS_TO_GENERATE; i++) {
-
-                Set<Ticket> ticketSet = new HashSet<>();
-
                 int numberOfUsers = users.size();
                 ApplicationUser user = users.get(i % numberOfUsers);
                 LOGGER.info("Generating ticket for {}", user.getFirstName());
@@ -92,6 +89,8 @@ public class TicketDataGenerator {
                 }
 
                 Random rand = new Random();
+
+                Set<Ticket> ticketSet = new HashSet<>();
 
                 ticketSet.add(Ticket.builder()
                     .ticketType(ticketType)
