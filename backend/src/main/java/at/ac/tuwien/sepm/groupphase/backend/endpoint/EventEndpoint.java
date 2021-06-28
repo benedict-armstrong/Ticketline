@@ -74,10 +74,9 @@ public class EventEndpoint {
     @PermitAll
     @GetMapping(value = "/top")
     @Operation(summary = "Get top events")
-    public List<TopEventDto> findTopEvents(PaginationDto paginationDto) {
+    public List<TopEventDto> findTopEvents() {
         LOGGER.info("GET /api/v1/events/top");
-
-        return topEventMapper.topEventListToTopEventDtoList(eventService.findTopEvents(paginationMapper.paginationDtoToPageable(paginationDto)));
+        return topEventMapper.topEventListToTopEventDtoList(eventService.findTopEvents());
     }
 
     @PermitAll

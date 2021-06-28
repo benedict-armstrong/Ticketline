@@ -28,11 +28,8 @@ export class ApplicationEventService {
   /**
    * Loads all topEvents from the backend with pagination
    */
-   getTopEvents(page: number, size: number): Observable<TopEvent[]> {
-    let params = new HttpParams();
-    params = params.set('page', String(page));
-    params = params.set('size', String(size));
-    return this.httpClient.get<TopEvent[]>(this.eventBaseUri + '/top', { params });
+   getTopEvents(): Observable<TopEvent[]> {
+    return this.httpClient.get<TopEvent[]>(this.eventBaseUri + '/top');
   }
 
   /**

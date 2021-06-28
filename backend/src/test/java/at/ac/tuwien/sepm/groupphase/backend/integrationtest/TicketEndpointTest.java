@@ -201,7 +201,7 @@ public class TicketEndpointTest implements TestDataTicket, TestDataUser, TestDat
 
         savedPerformance = performanceRepository.save(Performance.builder()
             .ticketTypes(ticketTypeSet)
-            .date(LocalDateTime.now())
+            .date(LocalDateTime.now().plusDays(1))
             .artist(savedArtist)
             .description("THIS IS A PERFORMANCE")
             .title("PERFORMANCE 1")

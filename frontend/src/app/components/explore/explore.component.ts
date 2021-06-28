@@ -23,7 +23,7 @@ export class ExploreComponent implements OnInit {
   }
 
   getEvents() {
-    this.eventService.getTopEvents(0, 5).subscribe(
+    this.eventService.getTopEvents().subscribe(
       (data) => this.topEvents = data
     );
   }
