@@ -19,6 +19,7 @@ import at.ac.tuwien.sepm.groupphase.backend.service.BookingService;
 import at.ac.tuwien.sepm.groupphase.backend.service.LayoutUnitService;
 import at.ac.tuwien.sepm.groupphase.backend.service.PdfService;
 import at.ac.tuwien.sepm.groupphase.backend.service.PerformanceService;
+import at.ac.tuwien.sepm.groupphase.backend.service.SimpleMailService;
 import at.ac.tuwien.sepm.groupphase.backend.service.TicketService;
 import at.ac.tuwien.sepm.groupphase.backend.service.TicketTypeService;
 import at.ac.tuwien.sepm.groupphase.backend.service.UserService;
@@ -53,6 +54,7 @@ public class TicketServiceImpl implements TicketService {
     private final BookingService bookingService;
     private final LayoutUnitService layoutUnitService;
     private final TicketTypeService ticketTypeService;
+    private final SimpleMailService simpleMailService;
 
     private final Long maxCartSize = 10L;
 
@@ -63,7 +65,7 @@ public class TicketServiceImpl implements TicketService {
                              BookingService bookingService,
                              PerformanceService performanceService,
                              LayoutUnitService layoutUnitService,
-                             TicketTypeService ticketTypeService) {
+                             TicketTypeService ticketTypeService, SimpleMailService simpleMailService) {
         this.ticketRepository = ticketRepository;
         this.userService = userService;
         this.authenticationFacade = authenticationFacade;
@@ -72,6 +74,7 @@ public class TicketServiceImpl implements TicketService {
         this.layoutUnitService = layoutUnitService;
         this.ticketTypeService = ticketTypeService;
 
+        this.simpleMailService = simpleMailService;
     }
 
     @Override
