@@ -12,7 +12,7 @@
 
       <div class="col-5">
         <div class="form-group">
-          <label for="postcode">Description</label>
+          <label for="description">Description</label>
           <input type="text" name="description" formControlName="description" class="text-input form-control"
             id="description" placeholder="Enter Description">
         </div>
@@ -32,7 +32,7 @@
     <div
       *ngIf="submitted && (venueAddSectorForm.controls.name.errors || venueAddSectorForm.controls.description.errors)"
       class="error">
-      <small class="form-text text-warning">Name and description required</small>
+      <small class="form-text text-danger">Name and description required</small>
     </div>
     <button type="submit" id="addSector" class="secondary">Add Sector</button>
   </form>
