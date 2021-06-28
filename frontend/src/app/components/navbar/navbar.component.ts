@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
+import { throttleTime } from 'rxjs/operators';
 import { AuthService } from 'src/app/services/auth.service';
 import { TicketService } from 'src/app/services/ticket.service';
 
@@ -55,6 +56,8 @@ export class NavbarComponent implements OnInit {
    * Performs full text search over events
    */
   fullTextSearch() {
-    this.router.navigate(['/events'], { queryParams: { search: this.fulltextSearchForm.value.text } });
+    this.router.navigateByUrl('/', {skipLocationChange: true}).then(() =>
+      this.router.navigate(['/events'], { queryParams: { search: this.fulltextSearchForm.value.text } })
+    );
   }
 }
