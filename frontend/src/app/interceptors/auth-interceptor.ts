@@ -21,7 +21,7 @@ export class AuthInterceptor implements HttpInterceptor {
 
     // Do not intercept authentication requests or if no user is logged in
     if (req.url === authUri || !this.authService.isLoggedIn()) {
-      console.log('Unauthenticated Request');
+      //console.log('Unauthenticated Request');
       return next.handle(req);
     }
 

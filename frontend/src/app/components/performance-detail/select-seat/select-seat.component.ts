@@ -39,7 +39,7 @@ export class SelectSeatComponent implements OnInit {
         this.layout = temp.layout;
       },
     (error) => {
-      console.error(error);
+      //console.error(error);
       this.defaultServiceErrorHandling(error);
     });
 
@@ -63,14 +63,14 @@ export class SelectSeatComponent implements OnInit {
       1,
       seat.id
     );
-    console.log(ticket);
+    //console.log(ticket);
     this.updatingCart = true;
     this.ticketService.addTicket(ticket).subscribe(
       () => {
         this.updatingCart = false;
       },
       (error) => {
-        console.error(error);
+        //console.error(error);
         this.defaultServiceErrorHandling(error);
         this.updatingCart = false;
       }
@@ -85,7 +85,7 @@ export class SelectSeatComponent implements OnInit {
         this.updatingCart = false;
       },
       (error) => {
-        console.error(error);
+        //console.error(error);
         this.defaultServiceErrorHandling(error);
         this.updatingCart = false;
       }
@@ -100,7 +100,7 @@ export class SelectSeatComponent implements OnInit {
         this.updatingCart = false;
       },
       (error) => {
-        console.error(error);
+        //console.error(error);
         this.defaultServiceErrorHandling(error);
         this.updatingCart = false;
       }
@@ -112,7 +112,7 @@ export class SelectSeatComponent implements OnInit {
   }
 
   private defaultServiceErrorHandling(error: any) {
-    console.log(error);
+    //console.log(error);
     this.error = true;
     if (typeof error.error === 'object') {
       this.errorMessage = error.error.error;

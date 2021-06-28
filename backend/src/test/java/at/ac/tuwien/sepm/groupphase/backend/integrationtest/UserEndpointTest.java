@@ -39,7 +39,11 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
@@ -414,6 +418,106 @@ public class UserEndpointTest implements TestDataUser, TestDataAddress {
         ).andReturn();
         MockHttpServletResponse response2 = mvcResult2.getResponse();
         assertEquals(HttpStatus.NOT_FOUND.value(), response2.getStatus());
+    }
+
+    @Test
+    public void whenGetUserByEmail_then200AndUser() throws Exception {
+        defaultUser.setRole(ApplicationUser.UserRole.CLIENT);
+        ApplicationUser savedUser = userRepository.save(defaultUser);
+        String token = jwtTokenizer.getAuthToken(savedUser.getEmail(), USER_ROLES);
+
+        MvcResult mvcResult = this.mockMvc.perform(
+            get(USER_BASE_URI + "/" + savedUser.getEmail())
+                .header(securityProperties.getAuthHeader(), token)
+        ).andReturn();
+        MockHttpServletResponse response = mvcResult.getResponse();
+        assertEquals(HttpStatus.OK.value(), response.getStatus());
+
+        UserDto userResponse = objectMapper.readValue(response.getContentAsString(),
+            UserDto.class);
+
+        assertAll(
+            () -> assertNotNull(userResponse),
+            () -> assertEquals(savedUser.getEmail(), userResponse.getEmail())
+        );
+    }
+
+    @Test
+    public void whenGetUserById_then200AndUser() throws Exception {
+        defaultUser.setRole(ApplicationUser.UserRole.CLIENT);
+        ApplicationUser savedUser = userRepository.save(defaultUser);
+        String token = jwtTokenizer.getAuthToken(savedUser.getEmail(), USER_ROLES);
+
+        MvcResult mvcResult = this.mockMvc.perform(
+            get(USER_BASE_URI + "/id/" + savedUser.getId())
+                .header(securityProperties.getAuthHeader(), token)
+        ).andReturn();
+        MockHttpServletResponse response = mvcResult.getResponse();
+        assertEquals(HttpStatus.OK.value(), response.getStatus());
+
+        UserDto userResponse = objectMapper.readValue(response.getContentAsString(),
+            UserDto.class);
+
+        assertAll(
+            () -> assertNotNull(userResponse),
+            () -> assertEquals(savedUser.getId(), userResponse.getId())
+        );
+    }
+
+    @Test
+    public void whenUpdateUser_then200AndUserWithNewData() throws Exception {
+        defaultUser.setRole(ApplicationUser.UserRole.CLIENT);
+        ApplicationUser savedUser = userRepository.save(defaultUser);
+        String token = jwtTokenizer.getAuthToken(savedUser.getEmail(), USER_ROLES);
+
+        savedUser.setFirstName("NewName");
+        savedUser.setLastName("NewLastName");
+
+        MvcResult mvcResult = this.mockMvc.perform(
+            put(USER_BASE_URI)
+                .content(
+                    objectMapper.writeValueAsString(userMapper.applicationUserToUserDto(savedUser))
+                )
+                .contentType(MediaType.APPLICATION_JSON)
+                .header(securityProperties.getAuthHeader(), token)
+        ).andReturn();
+        MockHttpServletResponse response = mvcResult.getResponse();
+        assertEquals(HttpStatus.OK.value(), response.getStatus());
+
+        UserDto userResponse = objectMapper.readValue(response.getContentAsString(),
+            UserDto.class);
+
+        assertAll(
+            () -> assertNotNull(userResponse),
+            () -> assertEquals(savedUser.getFirstName(), userResponse.getFirstName()),
+            () -> assertEquals(savedUser.getLastLogin(), userResponse.getLastLogin()),
+            () -> assertEquals(savedUser.getId(), userResponse.getId())
+        );
+    }
+
+    @Test
+    public void whenGetAllUsers_then200AndListOfUsers() throws Exception {
+        defaultUser.setRole(ApplicationUser.UserRole.CLIENT);
+        ApplicationUser savedUser = userRepository.save(defaultUser);
+
+        MvcResult mvcResult = this.mockMvc.perform(
+            get(USER_BASE_URI)
+                .param("page", "0")
+                .param("size", "10")
+                .header(securityProperties.getAuthHeader(), jwtTokenizer.getAuthToken(ADMIN_USER, ADMIN_ROLES))
+        ).andReturn();
+        MockHttpServletResponse response = mvcResult.getResponse();
+        assertEquals(HttpStatus.OK.value(), response.getStatus());
+
+        UserDto[] userDtos = objectMapper.readValue(
+            response.getContentAsString(), UserDto[].class
+        );
+
+        assertAll(
+            () -> assertNotNull(userDtos),
+            () -> assertEquals(1, userDtos.length),
+            () -> assertEquals(savedUser.getId(), userDtos[0].getId())
+        );
     }
 
     @Test

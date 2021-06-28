@@ -1,5 +1,7 @@
+@import "../../../colors";
+
 .managing-row {
-  background-color: lightcyan;
+  background-color: $primary-lighterer;
   font-weight: bold;
 }
 
@@ -27,6 +29,12 @@ div.actions-cell i.bi:not(.deactivated):hover {
   align-items: center;
 }
 
+.left-wrapper {
+  display: flex;
+  justify-content: left;
+  align-items: baseline;
+}
+
 .right-wrapper {
   display: flex;
   align-items: center;
@@ -35,4 +43,14 @@ div.actions-cell i.bi:not(.deactivated):hover {
 
 .right-wrapper select {
   margin-left: 10px;
+}
+
+.add-user-bi {
+  margin-left: 10px;
+  font-size: 18pt;
+}
+
+.add-user-bi:hover {
+  transform: scale(1.25);
+  transition: 0.1s;
 }

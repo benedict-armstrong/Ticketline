@@ -41,7 +41,7 @@ export class ArtistDetailComponent implements OnInit {
           this.noPerformance = false;
         }
       }, error => {
-        console.error(error);
+        //console.error(error);
       }
     );
   }

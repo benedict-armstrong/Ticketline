@@ -32,7 +32,7 @@
     <div
       *ngIf="submitted && (venueAddSectorForm.controls.name.errors || venueAddSectorForm.controls.description.errors)"
       class="error">
-      <small class="form-text text-warning">Name and description required</small>
+      <small class="form-text text-danger">Name and description required</small>
     </div>
     <button type="submit" id="addSector" class="secondary">Add Sector</button>
   </form>

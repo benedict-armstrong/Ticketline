@@ -112,6 +112,35 @@ public class AddressEndpointTest implements TestAuthentification, TestDataAddres
     }
 
     @Test
+    @DisplayName("Should return 200 and address object")
+    public void whenCreateAddress_GetAddressById_then200AndAddress() throws Exception {
+        MvcResult mvcResult = this.mockMvc.perform(
+            post(ADDRESS_BASE_URI)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(addressDto))
+                .header(securityProperties.getAuthHeader(), authToken)
+        ).andReturn();
+
+        MockHttpServletResponse response = mvcResult.getResponse();
+        AddressDto savedDto = objectMapper.readValue(response.getContentAsString(), AddressDto.class);
+
+        mvcResult = this.mockMvc.perform(
+            get(ADDRESS_BASE_URI + "/" + savedDto.getId())
+                .header(securityProperties.getAuthHeader(), authToken)
+        ).andReturn();
+
+        response = mvcResult.getResponse();
+        assertEquals(HttpStatus.OK.value(), response.getStatus());
+
+        AddressDto foundDto = objectMapper.readValue(response.getContentAsString(), AddressDto.class);
+
+        assertAll(
+            () -> assertNotNull(foundDto),
+            () -> assertEquals(savedDto.getId(), foundDto.getId())
+        );
+    }
+
+    @Test
     @DisplayName("Should return 200 and address with name from search")
     public void whenAddressGiven_SearchWithName_ShouldReturn200AndAddress() throws Exception {
         saveAddress(addressDto);

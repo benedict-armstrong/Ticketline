@@ -19,17 +19,14 @@ export class StatusGuard implements CanActivate {
       this.userService.getUserByEmail(this.authService.getUserEmail()).subscribe(
         response => {
           if (response.status === 'BANNED') {
-            console.log('No access due to ban');
+            //console.log('No access due to ban');
             this.router.navigate(['/banned']);
             this.authService.logoutUser();
             return false;
           } else {
             return true;
           }
-        }, error => {
-          console.error(error);
-          return false;
-        }
+        }, _ => false
       );
     } else {
       return of(true);

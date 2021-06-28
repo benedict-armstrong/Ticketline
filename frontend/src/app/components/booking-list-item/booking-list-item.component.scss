@@ -1,7 +1,8 @@
 @import "../../../colors.scss";
+@import "src/styles";
 
 .ticket:hover {
-  box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
+  box-shadow: rgba(0, 0, 0, 0.1) 0 4px 12px;
 }
 
 .ticket {
@@ -13,16 +14,14 @@
   background-color: $gray-lighter;
 }
 
-.booking:hover {
-  box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
-}
-
 .booking {
   display: flex;
   margin-top: 20px;
   justify-content: space-between;
   align-items: center;
   cursor: pointer;
+  width: 100%;
+  margin-left: 0;
 }
 
 .info {
@@ -42,5 +41,26 @@
 
 .detail button {
   width: 25%;
-  margin: 0px 10px;
+  margin: 0 10px;
+}
+
+div.booking div.detail {
+  display: flex;
+  align-items: baseline;
+}
+
+div.booking div.detail button {
+  width: 200px;
+  height: 35px;
+}
+
+.btns-wrap {
+  display: flex;
+  align-items: center;
+  margin-bottom: 5px;
+}
+
+.date-wrap {
+  display: flex;
+  align-items: flex-end;
 }
