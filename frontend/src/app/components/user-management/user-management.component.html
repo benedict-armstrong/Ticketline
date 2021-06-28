@@ -50,7 +50,7 @@
       <td class="center-cell">
         <div class="actions-cell">
           <i [routerLink]="['/edit-user/' + user.id]" [state]="{management: true}" class="bi bi-pencil" title="Edit"></i>
-          <i (click)="resetPassword(user)" class="bi bi-key" title="Reset Password"></i>
+          <i (click)="resetPassword(user)" class="bi bi-key" title="Send reset password link"></i>
           <i (click)="toggleStatus(user)" class="bi" [class.deactivated]="user.id === managingUser.id || user.role === 'ADMIN'"
              [class.bi-person-x]="user.status === 'ACTIVE'" [class.bi-person-check]="user.status === 'BANNED'"
              [attr.title]="user.status === 'ACTIVE' ? 'Ban' : 'Unban'"></i>

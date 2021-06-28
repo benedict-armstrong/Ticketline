@@ -10,6 +10,6 @@ export class Performance {
     public date: string,
     public ticketTypes: TicketType[],
     public artist: Artist,
-    public venue: Venue
+    public venue: Venue | number
   ) {}
 }

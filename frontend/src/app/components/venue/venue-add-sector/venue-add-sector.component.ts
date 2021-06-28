@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Sector } from 'src/app/dtos/sector';
 @Component({
@@ -7,7 +7,10 @@ import { Sector } from 'src/app/dtos/sector';
   styleUrls: ['./venue-add-sector.component.scss'],
 })
 export class VenueAddSectorComponent implements OnInit {
+
   @Output() newSector = new EventEmitter<Sector[]>();
+
+  @Input() lockSectors: boolean;
 
   venueAddSectorForm: FormGroup;
   sectors: Sector[] = [
@@ -71,6 +74,9 @@ export class VenueAddSectorComponent implements OnInit {
   removeSector(sector: Sector) {
     if (this.sectors.length < 2) {
       alert('You must at least have one sector.');
+      return;
+    } else if (this.lockSectors) {
+      alert('You can\'t remove sectors after you have edited a venue.');
       return;
     }
     const index = this.sectors.indexOf(sector);

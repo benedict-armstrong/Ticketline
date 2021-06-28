@@ -17,10 +17,12 @@ export class VenueCreatorComponent implements OnInit {
 
   @Output() createdVenueLayout = new EventEmitter<LayoutUnit[][]>();
 
+  @Output() venueTouched = new EventEmitter();
+
   venueLayoutForm: FormGroup;
   submitted = false;
   venueLayout: SeatUnit[][];
-  frontText = 'Front';
+
 
   activeTool: GridTool = {
     action: 'remove',
@@ -33,7 +35,7 @@ export class VenueCreatorComponent implements OnInit {
 
   @HostListener('window:beforeunload', ['$event'])
   doSomething($event) {
-    if (this.venueLayout) {
+    if (this.venueTouched) {
       $event.returnValue = 'Your data will be lost!';
     }
   }
@@ -110,6 +112,10 @@ export class VenueCreatorComponent implements OnInit {
 
   toggleReassign() {
     this.activeTool.reassign = !this.activeTool.reassign;
+  }
+
+  touched() {
+    this.venueTouched.emit();
   }
 
   save() {

@@ -81,7 +81,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
             .map(GrantedAuthority::getAuthority)
             .collect(Collectors.toList());
 
-        ApplicationUser applicationUser = userService.findApplicationUserByEmail(user.getUsername());
+        ApplicationUser applicationUser = userService.findApplicationUserByEmail(user.getUsername(), false);
         if (applicationUser.getStatus() == ApplicationUser.UserStatus.BANNED) {
             throw new LockedException("User account is blocked");
         }

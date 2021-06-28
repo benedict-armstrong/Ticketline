@@ -3,12 +3,15 @@ package at.ac.tuwien.sepm.groupphase.backend.integrationtest;
 import at.ac.tuwien.sepm.groupphase.backend.basetest.TestDataAddress;
 import at.ac.tuwien.sepm.groupphase.backend.basetest.TestDataUser;
 import at.ac.tuwien.sepm.groupphase.backend.config.properties.SecurityProperties;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.ChangePasswordDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserLoginDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.UserMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Address;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
+import at.ac.tuwien.sepm.groupphase.backend.entity.PasswordResetToken;
 import at.ac.tuwien.sepm.groupphase.backend.repository.AddressRepository;
+import at.ac.tuwien.sepm.groupphase.backend.repository.PasswordTokenRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepm.groupphase.backend.security.JwtTokenizer;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -22,12 +25,20 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
+
 import static org.junit.jupiter.api.Assertions.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -48,6 +59,12 @@ public class UserEndpointTest implements TestDataUser, TestDataAddress {
 
     @Autowired
     private AddressRepository addressRepository;
+
+    @Autowired
+    private PasswordTokenRepository passwordTokenRepository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -118,6 +135,7 @@ public class UserEndpointTest implements TestDataUser, TestDataAddress {
 
     @AfterEach
     public void afterEach() {
+        passwordTokenRepository.deleteAll();
         userRepository.deleteAll();
         addressRepository.deleteAll();
     }
@@ -333,7 +351,7 @@ public class UserEndpointTest implements TestDataUser, TestDataAddress {
 
         UserLoginDto userLoginDto = UserLoginDto.builder().email(userDto.getEmail()).password("Wrong").build();
 
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < 4; i++) {
             MvcResult mvcResultLogin = this.mockMvc.perform(post(LOGIN_BASE_URI)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(userLoginDto)))
@@ -346,7 +364,7 @@ public class UserEndpointTest implements TestDataUser, TestDataAddress {
 
         ApplicationUser user = userRepository.findUserByEmail(userDto.getEmail());
 
-        assertEquals(user.getStatus(), ApplicationUser.UserStatus.BANNED);
+        assertEquals(ApplicationUser.UserStatus.BANNED, user.getStatus());
     }
 
     @Test
@@ -500,6 +518,78 @@ public class UserEndpointTest implements TestDataUser, TestDataAddress {
             () -> assertEquals(1, userDtos.length),
             () -> assertEquals(savedUser.getId(), userDtos[0].getId())
         );
+    }
+
+    @Test
+    public void whenUserResetPassword_andLoginWithNewPassword_then200() throws Exception {
+        defaultUser.setRole(ApplicationUser.UserRole.CLIENT);
+        ApplicationUser savedUser = userRepository.save(defaultUser);
+        String token = jwtTokenizer.getAuthToken(savedUser.getEmail(), USER_ROLES);
+
+        MvcResult mvcResult1 = this.mockMvc.perform(
+            post(USER_BASE_URI + "/reset")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(savedUser.getEmail())
+                .header(securityProperties.getAuthHeader(), token)
+        ).andReturn();
+        MockHttpServletResponse response1 = mvcResult1.getResponse();
+        assertEquals(HttpStatus.OK.value(), response1.getStatus());
+
+        List<PasswordResetToken> passwordResetToken = passwordTokenRepository.findAllByExpiryTimeBefore(LocalDateTime.now().plusDays(2));
+        ChangePasswordDto changePasswordDto = ChangePasswordDto.builder().password("newPassword").token(passwordResetToken.get(0).getToken()).build();
+
+        MvcResult mvcResult2 = this.mockMvc.perform(
+            put(USER_BASE_URI + "/reset")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(changePasswordDto))
+                .header(securityProperties.getAuthHeader(), token)
+        ).andReturn();
+
+        MockHttpServletResponse response2 = mvcResult2.getResponse();
+        assertEquals(HttpStatus.OK.value(), response2.getStatus());
+
+        UserLoginDto userLoginDto = UserLoginDto.builder().email(savedUser.getEmail()).password("newPassword").build();
+
+        MvcResult mvcResult3 = this.mockMvc.perform(
+            post(LOGIN_BASE_URI)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(userLoginDto))
+                .header(securityProperties.getAuthHeader(), token)
+        ).andReturn();
+        MockHttpServletResponse response3 = mvcResult3.getResponse();
+        assertEquals(HttpStatus.OK.value(), response3.getStatus());
+    }
+
+    @Test
+    public void whenUserResetPassword_tokenShouldBeDeleted() throws Exception {
+        defaultUser.setRole(ApplicationUser.UserRole.CLIENT);
+        ApplicationUser savedUser = userRepository.save(defaultUser);
+        String token = jwtTokenizer.getAuthToken(savedUser.getEmail(), USER_ROLES);
+
+        MvcResult mvcResult1 = this.mockMvc.perform(
+            post(USER_BASE_URI + "/reset")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(savedUser.getEmail())
+                .header(securityProperties.getAuthHeader(), token)
+        ).andReturn();
+        MockHttpServletResponse response1 = mvcResult1.getResponse();
+        assertEquals(HttpStatus.OK.value(), response1.getStatus());
+
+        List<PasswordResetToken> passwordResetToken = passwordTokenRepository.findAllByExpiryTimeBefore(LocalDateTime.now().plusDays(2));
+        ChangePasswordDto changePasswordDto = ChangePasswordDto.builder().password("newPassword").token(passwordResetToken.get(0).getToken()).build();
+
+        MvcResult mvcResult2 = this.mockMvc.perform(
+            put(USER_BASE_URI + "/reset")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(changePasswordDto))
+                .header(securityProperties.getAuthHeader(), token)
+        ).andReturn();
+
+        MockHttpServletResponse response2 = mvcResult2.getResponse();
+        assertEquals(HttpStatus.OK.value(), response2.getStatus());
+
+        Optional<PasswordResetToken> nonExistentPasswordToken = passwordTokenRepository.findById(passwordResetToken.get(0).getId());
+        assertTrue(nonExistentPasswordToken.isEmpty());
     }
 
 }

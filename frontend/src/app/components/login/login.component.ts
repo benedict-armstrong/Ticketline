@@ -13,8 +13,9 @@ import { UserService } from 'src/app/services/user.service';
 export class LoginComponent implements OnInit {
 
   loginForm: FormGroup;
+  resetPasswordForm: FormGroup;
   success = false;
-  badCredentials = false;
+  resetPassword = false;
   // Error flag
   error = false;
   errorMessage = '';
@@ -29,6 +30,10 @@ export class LoginComponent implements OnInit {
       email: ['', [Validators.required]],
       password: ['', [Validators.required]],
       keepLogin: [true]
+    });
+
+    this.resetPasswordForm = this.formBuilder.group({
+      resetEmail: ['', [Validators.required]]
     });
   }
 
@@ -56,9 +61,7 @@ export class LoginComponent implements OnInit {
         },
         error => {
           this.defaultServiceErrorHandling(error);
-          if (error.status === 401) {
-            this.badCredentials = true;
-          } else if (error.status === 403) {
+          if (error.status === 403) {
             this.router.navigate(['/banned']);
           }
         }
@@ -73,12 +76,12 @@ export class LoginComponent implements OnInit {
    * Send reset email
    */
   reset() {
-    const email = this.loginForm.value.email;
+    const email = this.resetPasswordForm.value.resetEmail;
     this.error = false;
-    this.userService.resetPassword(email).subscribe(
-      response => {
+    this.userService.sendResetLink(email).subscribe(
+      () => {
         this.success = true;
-        this.badCredentials = false;
+        this.resetPassword = false;
       }, error => {
         //console.error(error);
       }

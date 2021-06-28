@@ -60,10 +60,11 @@ import { EditUserComponent } from './components/edit-user/edit-user.component';
 import { UserManagementComponent } from './components/user-management/user-management.component';
 import { BannedAlertComponent } from './components/banned-alert/banned-alert.component';
 import { ConfirmationComponent } from './components/confirmation/confirmation.component';
-import { DeletedAlertComponent } from './components/deleted-alert/deleted-alert.component';
 import { FilterPipe } from './components/performance-detail/pipes/filter.pipe';
 import { CartListComponent } from './components/performance-detail/cart-list/cart-list.component';
-import {BookingListItemComponent} from './components/booking-list-item/booking-list-item.component';
+import { DeletedAlertComponent } from './components/deleted-alert/deleted-alert.component';
+import { BookingListItemComponent } from './components/booking-list-item/booking-list-item.component';
+import { ResetPasswordComponent } from './components/reset-password/reset-password.component';
 
 @NgModule({
   declarations: [
@@ -126,7 +127,8 @@ import {BookingListItemComponent} from './components/booking-list-item/booking-l
     DeletedAlertComponent,
     FilterPipe,
     CartListComponent,
-    BookingListItemComponent
+    BookingListItemComponent,
+    ResetPasswordComponent
   ],
   imports: [
     BrowserModule,

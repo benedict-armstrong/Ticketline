@@ -10,8 +10,10 @@ import at.ac.tuwien.sepm.groupphase.backend.security.AuthenticationFacade;
 import at.ac.tuwien.sepm.groupphase.backend.service.BookingService;
 import at.ac.tuwien.sepm.groupphase.backend.service.FileService;
 import at.ac.tuwien.sepm.groupphase.backend.service.PdfService;
+import at.ac.tuwien.sepm.groupphase.backend.service.SimpleMailService;
 import at.ac.tuwien.sepm.groupphase.backend.service.TicketService;
 import at.ac.tuwien.sepm.groupphase.backend.service.UserService;
+import com.github.javafaker.App;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +23,7 @@ import org.springframework.stereotype.Service;
 
 import java.lang.invoke.MethodHandles;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -33,25 +36,27 @@ public class BookingServiceImpl implements BookingService {
     private final TicketService ticketService;
     private final UserService userService;
     private final FileService fileService;
+    private final SimpleMailService simpleMailService;
     private final AuthenticationFacade authenticationFacade;
 
     @Autowired
-    public BookingServiceImpl(BookingRepository  bookingRepository,
+    public BookingServiceImpl(BookingRepository bookingRepository,
                               @Lazy TicketService ticketService,
                               UserService userService,
                               FileService fileService,
-                              AuthenticationFacade authenticationFacade) {
+                              SimpleMailService simpleMailService, AuthenticationFacade authenticationFacade) {
         this.bookingRepository = bookingRepository;
         this.ticketService = ticketService;
         this.userService = userService;
         this.fileService = fileService;
+        this.simpleMailService = simpleMailService;
         this.authenticationFacade = authenticationFacade;
     }
 
     @Override
     public Booking save(Set<Ticket> tickets, Booking.Status status) {
         LOGGER.info("saveBooking({})", tickets);
-        ApplicationUser user = userService.findApplicationUserByEmail((String) authenticationFacade.getAuthentication().getPrincipal());
+        ApplicationUser user = userService.findApplicationUserByEmail((String) authenticationFacade.getAuthentication().getPrincipal(), false);
         File invoice;
 
         if (status == Booking.Status.RESERVED) {
@@ -71,13 +76,22 @@ public class BookingServiceImpl implements BookingService {
             .build();
         LOGGER.info(booking.toString());
 
-        return bookingRepository.save(booking);
+        Booking savedBooking = bookingRepository.save(booking);
+
+        List<File> pdfs = new ArrayList<>();
+        pdfs.add(savedBooking.getInvoice());
+        pdfs.add(
+            ticketService.getPdf(savedBooking.getTickets().iterator().next().getPerformance().getId())
+        );
+
+        sendPurchaseConfirmationEmail(user, pdfs);
+        return savedBooking;
     }
 
     @Override
     public Booking save(Booking booking) {
         LOGGER.trace("saveBooking({})", booking);
-        ApplicationUser user = userService.findApplicationUserByEmail(authenticationFacade.getAuthentication().getPrincipal().toString());
+        ApplicationUser user = userService.findApplicationUserByEmail(authenticationFacade.getAuthentication().getPrincipal().toString(), false);
         booking.setUser(user);
         booking.setCreateDate(LocalDateTime.now());
         booking.setInvoice(null);
@@ -91,9 +105,10 @@ public class BookingServiceImpl implements BookingService {
     public Booking update(ChangeBookingDto booking) {
         LOGGER.trace("update({})", booking);
         Booking.Status newStatus = Booking.Status.valueOf(booking.getStatus());
-        ApplicationUser user = userService.findApplicationUserByEmail((String) authenticationFacade.getAuthentication().getPrincipal());
+        ApplicationUser user = userService.findApplicationUserByEmail((String) authenticationFacade.getAuthentication().getPrincipal(), false);
         Booking oldBooking = bookingRepository.findByUserAndId(user, booking.getId());
         Booking.Status oldStatus = oldBooking.getStatus();
+        List<File> pdfs = new ArrayList<>();
 
         //Booking.Status changed
         if (booking.getStatus() != oldStatus.toString()) {
@@ -107,6 +122,12 @@ public class BookingServiceImpl implements BookingService {
                     File invoice = fileService.addFile(pdf.getFile());
                     oldBooking.setInvoice(invoice);
 
+                    pdfs.add(invoice);
+                    pdfs.add(
+                        ticketService.getPdf(oldBooking.getTickets().iterator().next().getPerformance().getId())
+                    );
+
+                    sendPurchaseConfirmationEmail(user, pdfs);
                     break;
                 case RESERVED:
                     status = Ticket.Status.RESERVED;
@@ -118,6 +139,9 @@ public class BookingServiceImpl implements BookingService {
                         stornoPdf.createStorno(oldBooking.getTickets(), fileService.getPdfCount());
                         File storno = fileService.addFile(stornoPdf.getFile());
                         oldBooking.setInvoice(storno);
+
+                        pdfs.add(storno);
+                        sendStornoConfirmationEmail(user, pdfs);
                     }
                     break;
                 default: status = Ticket.Status.RESERVED;
@@ -138,7 +162,7 @@ public class BookingServiceImpl implements BookingService {
     @Override
     public List<Booking> getBookings() {
         LOGGER.trace("getBookings()");
-        ApplicationUser user = userService.findApplicationUserByEmail((String) authenticationFacade.getAuthentication().getPrincipal());
+        ApplicationUser user = userService.findApplicationUserByEmail((String) authenticationFacade.getAuthentication().getPrincipal(), false);
         return bookingRepository.findByUser(user);
     }
 
@@ -154,5 +178,21 @@ public class BookingServiceImpl implements BookingService {
         } else {
             bookingRepository.delete(booking);
         }
+    }
+
+    private void sendPurchaseConfirmationEmail(ApplicationUser user, List<File> attachments) {
+        simpleMailService.sendMail(user.getEmail(), "[Ticketline] Invoice for your recently bought tickets",
+            String.format("<h1> Hello %s %s, </h1></br></br>Attached you can download the invoice and the tickets for your recent purchase.",
+                user.getFirstName(), user.getLastName()),
+            attachments
+        );
+    }
+
+    private void sendStornoConfirmationEmail(ApplicationUser user, List<File> attachments) {
+        simpleMailService.sendMail(user.getEmail(), "[Ticketline] Storno invoice for your cancelled purchase",
+            String.format("<h1> Hello %s %s, </h1></br></br>Attached you can download the storno invoice for the purchase you recently cancelled.",
+                user.getFirstName(), user.getLastName()),
+            attachments
+        );
     }
 }

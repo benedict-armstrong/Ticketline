@@ -1,6 +1,6 @@
 <div class="select-seats">
   <div class="">
-    <h5>{{performance.venue.name}}</h5>
+    <h5>{{$any(performance.venue).name}}</h5>
     <p>Click on a seat to add it to your cart. Hover to get more information.
       <br>
       Selected seats:
@@ -22,13 +22,24 @@
     </div>
   </div>
 
-  <app-loading-animation *ngIf="updatingCart"></app-loading-animation>
-  <div *ngIf="!updatingCart && selectedTickets.length > 0">
-    <h5>Selected Seats</h5>
-    <p>Scroll to see all seats (Maximum 10)
-    </p>
-    <div class="selected-seat-list">
-      <app-cart-list *ngFor="let ticket of selectedTickets" [ticket]="ticket" [performance]="performance" (updatedTicketType)="updateTicketType($event)"></app-cart-list>
+  <div *ngIf="error" class="col-12 alert alert-danger alert-dismissible fade show" role="alert">
+    <strong>Error! </strong> {{ errorMessage }}
+    <button type="button" (click)="vanishAlert()" class="close" data-dismiss="alert" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+
+  <div class="cart-wrapper">
+    <div class="text-center">
+      <app-loading-animation *ngIf="updatingCart"></app-loading-animation>
+    </div>
+    <div class="selected-seats" *ngIf="!updatingCart && selectedTickets.length > 0">
+      <h5>Selected Seats</h5>
+      <p>Scroll to see all seats (Maximum 10)
+      </p>
+      <div class="selected-seat-list">
+        <app-cart-list *ngFor="let ticket of selectedTickets" [ticket]="ticket" [performance]="performance" (updatedTicketType)="updateTicketType($event)"></app-cart-list>
+      </div>
     </div>
     <p>You will find the tickets in your cart.</p>
   </div>

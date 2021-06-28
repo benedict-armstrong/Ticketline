@@ -4,6 +4,7 @@ import {Ticket} from '../../../dtos/ticket';
 import { TicketService } from 'src/app/services/ticket.service';
 import {Performance} from '../../../dtos/performance';
 import {NewTicket} from '../../../dtos/newTicket';
+import {Venue} from '../../../dtos/venue';
 
 @Component({
   selector: 'app-select-seat',
@@ -19,23 +20,27 @@ export class SelectSeatComponent implements OnInit {
   selectedTickets: Ticket[] = [];
 
   updatingCart = false;
+  error = false;
+  errorMessage: string;
 
   constructor(private ticketService: TicketService) {
   }
 
   ngOnInit(): void {
     this.ticketService.updateShoppingCart().subscribe(() => {
-        for (const row of this.performance.venue.layout) {
+        const temp = this.performance.venue as Venue;
+        for (const row of temp.layout) {
           for (const unit of row) {
             if (unit) {
-              unit.sector = this.performance.venue.sectors.find(s => s.id === unit.sector);
+              unit.sector = temp.sectors.find(s => s.id === unit.sector);
             }
           }
         }
-        this.layout = this.performance.venue.layout;
+        this.layout = temp.layout;
       },
     (error) => {
       //console.error(error);
+      this.defaultServiceErrorHandling(error);
     });
 
     this.ticketService.cartState$.subscribe(
@@ -46,6 +51,7 @@ export class SelectSeatComponent implements OnInit {
   }
 
   addSeat(seat: LayoutUnitSelect): void {
+    this.vanishAlert();
     const ticketType = this.performance.ticketTypes.find(
       (tt) =>
         // @ts-ignore
@@ -65,12 +71,14 @@ export class SelectSeatComponent implements OnInit {
       },
       (error) => {
         //console.error(error);
+        this.defaultServiceErrorHandling(error);
         this.updatingCart = false;
       }
     );
   }
 
   removeSeat(seat: LayoutUnitSelect): void {
+    this.vanishAlert();
     this.updatingCart = true;
      this.ticketService.removeTicketBySeatAndPerformance(seat, this.performance).subscribe(
       () => {
@@ -78,12 +86,14 @@ export class SelectSeatComponent implements OnInit {
       },
       (error) => {
         //console.error(error);
+        this.defaultServiceErrorHandling(error);
         this.updatingCart = false;
       }
     );
   }
 
   updateTicketType(ticket: Ticket) {
+    this.vanishAlert();
     this.updatingCart = true;
     this.ticketService.updateTicketType(ticket).subscribe(
       () => {
@@ -91,8 +101,23 @@ export class SelectSeatComponent implements OnInit {
       },
       (error) => {
         //console.error(error);
+        this.defaultServiceErrorHandling(error);
         this.updatingCart = false;
       }
     );
+  }
+
+  vanishAlert() {
+    this.error = false;
+  }
+
+  private defaultServiceErrorHandling(error: any) {
+    //console.log(error);
+    this.error = true;
+    if (typeof error.error === 'object') {
+      this.errorMessage = error.error.error;
+    } else {
+      this.errorMessage = error.error;
+    }
   }
 }

@@ -1,7 +1,6 @@
-import { Component, Input, OnInit } from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import { GridTool } from '../models/gridTool';
 import { SeatUnit } from '../models/seatUnit';
-import { Sector } from 'src/app/dtos/sector';
 
 @Component({
   selector: 'app-venue-layout-grid',
@@ -15,11 +14,15 @@ export class VenueLayoutGridComponent implements OnInit {
   @Input()
   activeTool: GridTool;
 
+  @Output()
+  layoutTouched = new EventEmitter<boolean>();
+
   constructor() {}
 
   ngOnInit(): void {}
 
   seatUnitClicked(seatUnit: SeatUnit) {
+    this.layoutTouched.emit(true);
     let found = false;
     for (const row of this.venueLayout) {
       const index = row.indexOf(seatUnit);
@@ -27,7 +30,7 @@ export class VenueLayoutGridComponent implements OnInit {
         found = true;
         if (this.activeTool.scope === 'row') {
           if (this.activeTool.action === 'remove') {
-            row.map((su) => ((su.available = false), (su.sector = null)));
+            row.map((su) => ((su.sector = null), (su.available = false)));
           } else if (this.activeTool.action === 'add') {
             row.map((su) => (su.available = true));
           } else if (this.activeTool.action === 'assignSector') {
