@@ -4,7 +4,9 @@ import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.ChangeBookingDto;
 import at.ac.tuwien.sepm.groupphase.backend.entity.ApplicationUser;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Booking;
 import at.ac.tuwien.sepm.groupphase.backend.entity.File;
+import at.ac.tuwien.sepm.groupphase.backend.entity.Performance;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Ticket;
+import at.ac.tuwien.sepm.groupphase.backend.exception.DateInThePastException;
 import at.ac.tuwien.sepm.groupphase.backend.repository.BookingRepository;
 import at.ac.tuwien.sepm.groupphase.backend.security.AuthenticationFacade;
 import at.ac.tuwien.sepm.groupphase.backend.service.BookingService;
@@ -24,6 +26,8 @@ import org.springframework.stereotype.Service;
 import java.lang.invoke.MethodHandles;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -109,9 +113,29 @@ public class BookingServiceImpl implements BookingService {
         Booking oldBooking = bookingRepository.findByUserAndId(user, booking.getId());
         Booking.Status oldStatus = oldBooking.getStatus();
         List<File> pdfs = new ArrayList<>();
+        boolean statusChanged = !booking.getStatus().equals(oldStatus.toString());
+
+        Set<Performance> handledPerformances = new HashSet<>();
+        for (Ticket ticket : oldBooking.getTickets()) {
+            Performance performance = ticket.getPerformance();
+            if (performance.getDate().isBefore(LocalDateTime.now())) {
+                throw new DateInThePastException("Can't change booking with ticket for past performance");
+            }
+
+            if (statusChanged && newStatus == Booking.Status.PAID_FOR) {
+                if (handledPerformances.contains(performance)) {
+                    continue;
+                }
+
+                pdfs.add(
+                    ticketService.getPdf(performance.getId())
+                );
+                handledPerformances.add(performance);
+            }
+        }
 
         //Booking.Status changed
-        if (booking.getStatus() != oldStatus.toString()) {
+        if (statusChanged) {
             Ticket.Status status;
 
             switch (newStatus) {
@@ -123,9 +147,6 @@ public class BookingServiceImpl implements BookingService {
                     oldBooking.setInvoice(invoice);
 
                     pdfs.add(invoice);
-                    pdfs.add(
-                        ticketService.getPdf(oldBooking.getTickets().iterator().next().getPerformance().getId())
-                    );
 
                     sendPurchaseConfirmationEmail(user, pdfs);
                     break;
