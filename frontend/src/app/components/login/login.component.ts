@@ -37,7 +37,11 @@ export class LoginComponent implements OnInit {
     });
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    if (this.authService.isLoggedIn()) {
+      this.router.navigate(['/user']);
+    }
+  }
 
   /**
    * Perform login after submitting the form to sign in.
@@ -79,7 +83,7 @@ export class LoginComponent implements OnInit {
         this.success = true;
         this.resetPassword = false;
       }, error => {
-        console.error(error);
+        //console.error(error);
       }
     );
   }
@@ -90,7 +94,7 @@ export class LoginComponent implements OnInit {
   }
 
   private defaultServiceErrorHandling(error: any) {
-    console.log(error);
+    //console.log(error);
     this.error = true;
     if (typeof error.error === 'object') {
       this.errorMessage = error.error.error;

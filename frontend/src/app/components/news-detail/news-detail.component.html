@@ -1,83 +1,62 @@
 <article class="news-detail" *ngIf="newsItem">
-    <div class="header">
-        <div class="row">
-            <div id="carouselExampleControls" class="carousel slide col-md-8" data-bs-ride="carousel">
-                <div class="carousel-inner">
-                  <div *ngIf="newsItem.images.length > 0">
-                    <div  class="carousel-item active" *ngFor="let imgs of imgURL let i = index" [ngClass]="{'active': i == 0 }">
-                        <img class="card-img-top" [src]="imgs" alt="">
-                    </div>
-                  </div>
-                </div>
-                <div *ngIf="newsItem.images.length > 1">
-                <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
-                  <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                  <span class="visually-hidden">Previous</span>
-                </button>
-                <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
-                  <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                  <span class="visually-hidden">Next</span>
-                </button>
+  <div class="header">
+    <div class="row">
+      <div id="carouselExampleControls" class="carousel slide col-md-8" data-bs-ride="carousel">
+        <div class="carousel-inner">
+          <div *ngIf="newsItem.images.length > 0">
+            <div  class="carousel-item active" *ngFor="let imgs of imgURL let i = index" [ngClass]="{'active': i == 0 }">
+              <img class="card-img-top" [src]="imgs" alt="">
             </div>
+          </div>
+        </div>
+        <div *ngIf="newsItem.images.length > 1">
+          <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+          </button>
+          <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+          </button>
+        </div>
+      </div>
+      <div class="col-md-4" *ngIf="correspondingEvent">
+        <div class="details">
+          <div>
+            <h4><strong>{{correspondingEvent.name}}</strong></h4>
+            <div class="dateGroup">
+              <div class="date">
+                <span>From: {{correspondingEvent.startDate | date:'dd.MM.yyyy'}}</span>
               </div>
-            <div class="col-md-4" *ngIf="correspondingEvent">
-                <div class="details">
-                    <div>
-                        <p><em>Corresponding event</em></p>
-
-                        <div class="dateGroup">
-                          <div class="date">
-                            <span class="fst-italic">From:</span>
-                              <div id="startMonth">
-                                {{correspondingEvent.startDate | date:'MMM'}}
-                              </div>
-                              <div id="startDay">
-                                {{correspondingEvent.startDate | date:'d'}}
-                              </div>
-                              <div id="startYear">
-                                {{correspondingEvent.startDate | date:'y'}}
-                              </div>
-                            </div>
-                          <div class="date">
-                            <span class="fst-italic">To:</span>
-                            <div id="endMonth">
-                                {{correspondingEvent.endDate | date:'MMM'}}
-                              </div>
-                              <div id="endDay">
-                                {{correspondingEvent.endDate | date:'d'}}
-                              </div>
-                              <div id="endYear">
-                                {{correspondingEvent.endDate | date:'y'}}
-                              </div>
-                          </div>
-                        </div>
-                        <h4><strong>{{correspondingEvent.name}}</strong></h4>
-                        <p>38€</p>
-                    </div>
-                    <button class="primary" id="get-tickets" [routerLink]="['/event-detail', correspondingEvent.id]">Get tickets</button>
-                </div>
+              <div class="date">
+                <span>Until: {{correspondingEvent.endDate | date:'dd.MM.yyyy'}}</span>
+              </div>
             </div>
+          </div>
+          <button class="primary" id="get-tickets" [routerLink]="['/event-detail', correspondingEvent.id]">Get tickets</button>
         </div>
+      </div>
     </div>
-    <div class="body">
-        <div class="row">
-            <div class="col-md-8">
-                <h3>{{newsItem.title}}</h3>
-                <p> {{newsItem.text}}
-                </p>
-            </div>
-            <div class="col-md-4 additional-info">
-                <h5>About this article</h5>
+  </div>
+  <div class="body">
+    <div class="row">
+      <div class="col-md-8">
+        <h3>{{newsItem.title}}</h3>
+        <p> {{newsItem.text}}
+        </p>
+      </div>
+      <div class="col-md-4 additional-info">
+        <h5>About this article</h5>
 
-                <p>
-                    Published on:<br>
-                    {{date.toLocaleDateString()}} at {{date.getHours()}}:{{date.getMinutes()}}<br>
-                </p>
+        <p>
+          Published on:<br>
+          {{date.toLocaleDateString()}} at {{date.getHours()}}:{{date.getMinutes()}}<br>
+        </p>
 
-                <p>Written by: <br>
-                    {{newsItem.author}}</p>
-            </div>
-        </div>
-
+        <p>Written by: <br>
+          {{newsItem.author}}</p>
+      </div>
     </div>
+
+  </div>
 </article>

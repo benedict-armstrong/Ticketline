@@ -57,5 +57,5 @@ public interface EventService {
      *
      * @return list of all events
      */
-    List<TopEvent> findTopEvents(Pageable pageable);
+    List<TopEvent> findTopEvents();
 }

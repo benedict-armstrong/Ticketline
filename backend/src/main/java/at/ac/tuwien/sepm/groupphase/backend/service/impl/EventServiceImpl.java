@@ -34,6 +34,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.lang.invoke.MethodHandles;
+import java.time.LocalDate;
 import java.util.LinkedList;
 import java.time.LocalDateTime;
 import java.util.Arrays;
@@ -195,14 +196,14 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public List<TopEvent> findTopEvents(Pageable pageable) {
-        LOGGER.trace("findTopEvents({})", pageable);
+    public List<TopEvent> findTopEvents() {
+        LOGGER.trace("findTopEvents()");
 
-        List<Event> events = eventRepository.findAllByOrderByStartDateAsc(pageable).getContent();
+        List<Event> events = eventRepository.findAllByStartDateAfterOrderByStartDateAsc(LocalDate.now());
 
         List<TopEvent> topEvents = new LinkedList<>();
 
-        List<Long> soldTickets = eventRepository.findSoldTicketsOrderByStartDateAsc(pageable.getOffset(), pageable.getPageSize());
+        List<Long> soldTickets = eventRepository.findSoldTicketsOrderByStartDateDescAfterDate(LocalDate.now());
 
         for (int i = 0; i < events.size(); i++) {
             Set<Performance> performances = events.get(i).getPerformances();

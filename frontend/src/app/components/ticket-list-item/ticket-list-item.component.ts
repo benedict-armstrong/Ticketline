@@ -34,6 +34,7 @@ export class TicketListItemComponent implements OnInit {
   public success = false;
   public waiting = false;
   public loggedIn = false;
+  public inThePast = false;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -48,6 +49,9 @@ export class TicketListItemComponent implements OnInit {
   ngOnInit(): void {
     this.sector = this.ticketType.sector;
     this.loggedIn = this.authService.isLoggedIn();
+    if (new Date(this.performance.date).getTime() < new Date().getTime()) {
+      this.inThePast = true;
+    }
   }
 
   incAmount(): void {
@@ -73,6 +77,15 @@ export class TicketListItemComponent implements OnInit {
       const error = {
         error: {
           error: 'You are not logged in.'
+        }
+      };
+      this.defaultServiceErrorHandling(error);
+    }
+    if (this.inThePast) {
+      this.error = true;
+      const error = {
+        error: {
+          error: 'This performance has already happened, you can not buy tickets anymore.'
         }
       };
       this.defaultServiceErrorHandling(error);
@@ -110,7 +123,7 @@ export class TicketListItemComponent implements OnInit {
   }
 
   private defaultServiceErrorHandling(error: any) {
-    console.log(error);
+    //console.log(error);
     this.error = true;
     if (typeof error.error === 'object') {
       this.errorMessage = error.error.error;

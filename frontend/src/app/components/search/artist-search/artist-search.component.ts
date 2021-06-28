@@ -51,7 +51,7 @@ export class ArtistSearchComponent implements OnInit {
           this.searchedArtists.emit(this.artists);
           this.searchedNoArtist.emit(this.noArtist);
         }, error => {
-          console.error(error);
+          //console.error(error);
         }
       );
     } else {
@@ -68,7 +68,7 @@ export class ArtistSearchComponent implements OnInit {
           this.searchedArtists.emit(this.artists);
           this.searchedNoArtist.emit(this.noArtist);
         }, error => {
-          console.error(error);
+          //console.error(error);
         }
       );
     }

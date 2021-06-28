@@ -9,10 +9,10 @@
                placeholder="Enter event name">
         <div *ngIf="submitted && addEventForm.controls.name.errors" class="error">
           <small class="form-text text-danger" *ngIf="addEventForm.controls.name.errors.required">
-            Event name is required!
+            Event name is required
           </small>
           <small class="form-text text-danger" *ngIf="addEventForm.controls.name.errors.maxLength">
-            Event name cannot be more than 100 characters!
+            Event name cannot be more than 100 characters
           </small>
         </div>
       </div>
@@ -22,10 +22,10 @@
                   id="description" placeholder="Enter description"></textarea>
         <div *ngIf="submitted && addEventForm.controls.description.errors" class="error">
           <small class="form-text text-danger" *ngIf="addEventForm.controls.description.errors.required">
-            Description is required!
+            Description is required
           </small>
           <small class="form-text text-danger" *ngIf="addEventForm.controls.description.errors.maxLength">
-            Description cannot be more than 100 characters!
+            Description cannot be more than 100 characters
           </small>
         </div>
       </div>
@@ -34,11 +34,10 @@
         <input type="number" name="duration" formControlName="duration" class="text-input form-control" id="duration">
         <div *ngIf="submitted && addEventForm.controls.duration.errors" class="error">
           <small class="form-text text-danger" *ngIf="addEventForm.controls.duration.errors.required">
-            Duration is
-            required!
+            Duration is required
           </small>
           <small class="form-text text-danger" *ngIf="addEventForm.controls.duration.errors.min">
-            Duration must be greater than 0!
+            Duration must be greater than 0
           </small>
         </div>
       </div>
@@ -52,8 +51,7 @@
         </select>
         <div *ngIf="submitted && addEventForm.controls.eventType.errors" class="error">
           <small class="form-text text-danger" *ngIf="addEventForm.controls.eventType.errors.required">
-            Eventtype is
-            required!
+            Eventtype is required
           </small>
         </div>
       </div>
@@ -65,10 +63,10 @@
                  id="startDate">
           <div *ngIf="submitted && addEventForm.controls.startDate.errors" class="error">
             <small class="form-text text-danger" *ngIf="addEventForm.controls.startDate.errors.required">
-              Start date is required!
+              Start date is required
             </small>
             <small class="form-text text-danger" *ngIf="addEventForm.controls.startDate.errors.invalidDate">
-              Start date must be in the future!
+              Start date must be in the future
             </small>
           </div>
         </div>
@@ -78,10 +76,10 @@
                  id="endDate">
           <div *ngIf="submitted && addEventForm.controls.endDate.errors" class="error">
             <small class="form-text text-danger" *ngIf="addEventForm.controls.endDate.errors.required">
-              End date is required!
+              End date is required
             </small>
             <small class="form-text text-danger" *ngIf="addEventForm.controls.endDate.errors.invalidDate">
-              End date must be after start date!
+              End date must be after start date
             </small>
           </div>
         </div>
@@ -91,17 +89,17 @@
         <label for="files" class="required">Picture Upload</label>
         <p id="file-info">Supported formats: jpg, jpeg, png. The maximum file size is 1MB.</p>
         <input formControlName="files" id="files" type="file" class="form-control" (change)="onFileChange($event)">
-        <div *ngIf="submitted && files.length === 0" class="alert alert-danger">
-          <div>Atleast one image required</div>
+        <div *ngIf="submitted && files.length === 0">
+          <small class="form-text text-danger">At least one image is required</small>
         </div>
-        <div *ngIf="fileNoImage" class="alert alert-danger">
-          <div>The uploaded file is no image</div>
+        <div *ngIf="fileNoImage">
+          <small class="form-text text-danger">The uploaded file is no image</small>
         </div>
-        <div *ngIf="tooManyFiles" class="alert alert-danger">
-          <div>Max. 10 images per performance</div>
+        <div *ngIf="tooManyFiles">
+          <small class="form-text text-danger">Max. 10 images per performance</small>
         </div>
-        <div *ngIf="fileTooBig" class="alert alert-danger">
-          <div>File must be smaller than 1MB</div>
+        <div *ngIf="fileTooBig">
+          <small class="form-text text-danger">File must be smaller than 1MB</small>
         </div>
       </div>
 
@@ -149,8 +147,8 @@
         </table>
       </div>
 
-      <div *ngIf="performances.length === 0 && submitted" class="alert alert-danger">
-        Atleast one performance required!
+      <div *ngIf="performances.length === 0 && submitted">
+        <small class="form-text text-danger">At least one performance is required</small>
       </div>
 
       <div class="col-3">
@@ -173,7 +171,7 @@
       </button>
     </div>
     <div *ngIf="success" class="col-12 alert alert-success alert-dismissible fade show" role="alert">
-      <strong>Success</strong> The performance is added.
+      <strong>Success:</strong> The performance has been added.
       <button type="button" (click)="vanishAlert()" class="close" data-dismiss="alert" aria-label="Close">
         <span aria-hidden="true">&times;</span>
       </button>

@@ -1,6 +1,5 @@
 @import "src/colors";
-
-@import "src/colors";
+@import "src/styles";
 
 .artist {
   display: flex;
@@ -23,9 +22,14 @@
 }
 
 .detail {
-  margin-left: 10px;
+  margin-left: 0;
 }
 
 h5 {
   margin: 10px 0;
+}
+
+div.artist.list-item {
+  width: 100%;
+  margin-left: 0;
 }

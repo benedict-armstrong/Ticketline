@@ -1,7 +1,12 @@
 @import "../../../colors.scss";
 
-.card:hover {
+.card {
   box-shadow: rgba(0, 0, 0, 0.1) 0 4px 12px;
+}
+
+.card:hover {
+  transform: scale(1.05);
+  transition: 0.25s;
 }
 
 img {

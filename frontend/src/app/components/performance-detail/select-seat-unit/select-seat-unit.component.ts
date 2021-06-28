@@ -26,25 +26,24 @@ export class SelectSeatUnitComponent implements OnInit {
 
   ngOnInit(): void {
     if (this.layoutUnit) {
-        this.initLayoutUnit();
-
-        this.ticketService.cartState$.subscribe(
-          (data) => {
-            const tickets = [].concat(...data).filter((t: Ticket) => t.performance.id === this.performanceId);
-            if (tickets.find((t: Ticket) => t.seat.id === this.layoutUnit.id)) {
-              this.title = 'Already in your cart';
-              this.layoutUnit.selected = true;
-            } else {
-              if (this.layoutUnit.selected) {
-                this.layoutUnit.free = true;
-              }
-              this.layoutUnit.selected = false;
-              this.setTitle();
+      this.initLayoutUnit();
+      this.ticketService.cartState$.subscribe(
+        (data) => {
+          const tickets = [].concat(...data).filter((t: Ticket) => t.performance.id === this.performanceId);
+          if (tickets.find((t: Ticket) => t.seat.id === this.layoutUnit.id)) {
+            this.title = 'Already in your cart';
+            this.layoutUnit.selected = true;
+          } else {
+            if (this.layoutUnit.selected) {
+              this.layoutUnit.free = true;
             }
+            this.layoutUnit.selected = false;
+            this.setTitle();
           }
-        );
-      }
+        }
+      );
     }
+  }
 
   select(): void {
     if (typeof this.layoutUnit.sector === 'object' && this.hasOwnProperty(this.layoutUnit.sector, 'type')) {

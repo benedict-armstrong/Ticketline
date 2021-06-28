@@ -6,7 +6,7 @@
     <input type="email" class="text-input form-control" name="venueName" id="venueName" formControlName="venueName"
       placeholder="Enter venue name">
     <div *ngIf="submitted && venueForm.controls.venueName.errors" class="error">
-      <small class="form-text text-warning" *ngIf="venueForm.controls.venueName.errors.required">Name
+      <small class="form-text text-danger" *ngIf="venueForm.controls.venueName.errors.required">Name
         is
         required!
       </small>
@@ -20,7 +20,7 @@
     <input type="text" name="addressName" formControlName="addressName" class="text-input form-control" id="addressName"
       aria-describedby="addressNameHelp" placeholder="Enter Address Name">
     <div *ngIf="submitted && venueForm.controls.addressName.errors" class="error">
-      <small class="form-text text-warning" *ngIf="venueForm.controls.addressName.errors.required">Your Address Name
+      <small class="form-text text-danger" *ngIf="venueForm.controls.addressName.errors.required">Your Address Name
         is
         required!
       </small>
@@ -32,7 +32,7 @@
     <input type="text" name="lineOne" formControlName="lineOne" class="text-input form-control" id="lineOne"
       aria-describedby="lineOneHelp" placeholder="Enter line one">
     <div *ngIf="submitted && venueForm.controls.lineOne.errors" class="error">
-      <small class="form-text text-warning" *ngIf="venueForm.controls.lineOne.errors.required">Your line one is
+      <small class="form-text text-danger" *ngIf="venueForm.controls.lineOne.errors.required">Your line one is
         required!
       </small>
     </div>
@@ -51,7 +51,7 @@
         <input type="text" name="city" formControlName="city" class="text-input form-control" id="city"
           aria-describedby="cityHelp" placeholder="Enter City name">
         <div *ngIf="submitted && venueForm.controls.city.errors" class="error">
-          <small class="form-text text-warning" *ngIf="venueForm.controls.city.errors.required">Your City Name is
+          <small class="form-text text-danger" *ngIf="venueForm.controls.city.errors.required">Your City Name is
             required!
           </small>
         </div>
@@ -64,7 +64,7 @@
         <input type="text" name="postcode" formControlName="postcode" class="text-input form-control" id="postcode"
           aria-describedby="postcodeHelp" placeholder="Enter Postcode">
         <div *ngIf="submitted && venueForm.controls.postcode.errors" class="error">
-          <small class="form-text text-warning" *ngIf="venueForm.controls.postcode.errors.required">Your Postcode is
+          <small class="form-text text-danger" *ngIf="venueForm.controls.postcode.errors.required">Your Postcode is
             required!
           </small>
         </div>
@@ -77,7 +77,7 @@
     <input type="text" name="country" formControlName="country" class="text-input form-control" id="country"
       aria-describedby="countryHelp" placeholder="Enter Country">
     <div *ngIf="submitted && venueForm.controls.country.errors" class="error">
-      <small class="form-text text-warning" *ngIf="venueForm.controls.country.errors.required">Your Country is
+      <small class="form-text text-danger" *ngIf="venueForm.controls.country.errors.required">Your Country is
         required!
       </small>
     </div>
@@ -103,8 +103,8 @@
     <h5>Saved venue Layout ({{venueLayout.length}}x{{venueLayout[0].length}})</h5>
   </div>
 
-  <button type="submit" form="venueForm" class="primary" [disabled]="!this.venueLayout"
-    [ngClass]="{'disabled': !this.venueLayout}">Add Venue</button>
+  <button type="submit" form="venueForm" class="primary" [disabled]="!this.venueLayout || success"
+    [ngClass]="{'deactivated': !this.venueLayout || success}">Add Venue</button>
 
   <div *ngIf="error" class="col-12 alert alert-danger alert-dismissible fade show" role="alert">
     <strong>Error! </strong> {{ errorMessage }}
@@ -112,7 +112,7 @@
     </button>
   </div>
   <div *ngIf="success" class="col-12 alert alert-success alert-dismissible fade show" role="alert">
-    <strong>Success</strong> Successfully added venue.
+    <strong>Success:</strong> The venue has been added. Redirect in 3...
     <button type="button" (click)="vanishSuccess()" class="btn-close" data-dismiss="alert" aria-label="Close">
     </button>
   </div>
