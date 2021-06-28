@@ -7,11 +7,11 @@
 }
 
 .user-info {
-  margin: 20px 0px;
+  margin: 20px 0;
 }
 
 .cards h3 {
-  margin: 30px 0px;
+  margin: 30px 0;
 }
 
 .card {
@@ -59,4 +59,10 @@ div.buttons-wrapper {
 div.buttons-wrapper button {
   margin-left: 10px;
   width: 100px;
+}
+
+.no-tickets-alert {
+  color: gray;
+  text-align: center;
+  width: 100%;
 }

@@ -10,6 +10,7 @@ import at.ac.tuwien.sepm.groupphase.backend.entity.Sector;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Ticket;
 import at.ac.tuwien.sepm.groupphase.backend.entity.TicketType;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Venue;
+import at.ac.tuwien.sepm.groupphase.backend.exception.DateInThePastException;
 import at.ac.tuwien.sepm.groupphase.backend.exception.FullCartException;
 import at.ac.tuwien.sepm.groupphase.backend.exception.NoTicketLeftException;
 import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
@@ -19,9 +20,11 @@ import at.ac.tuwien.sepm.groupphase.backend.service.BookingService;
 import at.ac.tuwien.sepm.groupphase.backend.service.LayoutUnitService;
 import at.ac.tuwien.sepm.groupphase.backend.service.PdfService;
 import at.ac.tuwien.sepm.groupphase.backend.service.PerformanceService;
+import at.ac.tuwien.sepm.groupphase.backend.service.SimpleMailService;
 import at.ac.tuwien.sepm.groupphase.backend.service.TicketService;
 import at.ac.tuwien.sepm.groupphase.backend.service.TicketTypeService;
 import at.ac.tuwien.sepm.groupphase.backend.service.UserService;
+import org.apache.tomcat.jni.Local;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,6 +56,7 @@ public class TicketServiceImpl implements TicketService {
     private final BookingService bookingService;
     private final LayoutUnitService layoutUnitService;
     private final TicketTypeService ticketTypeService;
+    private final SimpleMailService simpleMailService;
 
     private final Long maxCartSize = 10L;
 
@@ -63,7 +67,7 @@ public class TicketServiceImpl implements TicketService {
                              BookingService bookingService,
                              PerformanceService performanceService,
                              LayoutUnitService layoutUnitService,
-                             TicketTypeService ticketTypeService) {
+                             TicketTypeService ticketTypeService, SimpleMailService simpleMailService) {
         this.ticketRepository = ticketRepository;
         this.userService = userService;
         this.authenticationFacade = authenticationFacade;
@@ -72,6 +76,7 @@ public class TicketServiceImpl implements TicketService {
         this.layoutUnitService = layoutUnitService;
         this.ticketTypeService = ticketTypeService;
 
+        this.simpleMailService = simpleMailService;
     }
 
     @Override
@@ -80,6 +85,10 @@ public class TicketServiceImpl implements TicketService {
 
         ApplicationUser user = userService.findApplicationUserByEmail((String) authenticationFacade.getAuthentication().getPrincipal(), false);
         Performance performance = performanceService.findById(performanceId);
+
+        if (performance.getDate().isBefore(LocalDateTime.now())) {
+            throw new DateInThePastException("This performance has already happened, you can not buy anymore tickets.");
+        }
 
 
         List<Ticket> currentTickets = ticketRepository.findByUserAndStatus(user, Ticket.Status.IN_CART);
@@ -121,6 +130,10 @@ public class TicketServiceImpl implements TicketService {
 
         ApplicationUser user = userService.findApplicationUserByEmail((String) authenticationFacade.getAuthentication().getPrincipal(), false);
         Performance performance = performanceService.findById(performanceId);
+
+        if (performance.getDate().isBefore(LocalDateTime.now())) {
+            throw new DateInThePastException("This performance has already happened, you can not buy anymore tickets.");
+        }
 
         List<Ticket> currentTickets = ticketRepository.findByUserAndStatus(user, Ticket.Status.IN_CART);
         if (currentTickets.size() + 1 > maxCartSize) {

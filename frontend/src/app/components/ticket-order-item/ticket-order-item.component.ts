@@ -66,7 +66,7 @@ export class TicketOrderItemComponent implements OnInit {
         const pdf = response;
         this.download(FileService.asFile(pdf.data, pdf.type));
       }, error => {
-        console.error(error);
+        //console.error(error);
       }
     );
   }

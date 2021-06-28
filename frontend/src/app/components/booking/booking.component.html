@@ -14,20 +14,20 @@
   </button>
 </div>
 
-<div *ngIf="!showAll">
-  <div *ngFor="let booking of bookings" [ngClass]="{'cancelled': booking.status === 'CANCELLED'}">
+<div *ngIf="!showAll" class="full-w">
+  <div *ngFor="let booking of bookings" class="full-w" [ngClass]="{'cancelled': booking.status === 'CANCELLED'}">
     <app-booking-list-item (buyBooking)="onBuyClick($event)" (cancelBooking)="onStornoClick($event)" (downloadBooking)="downloadClick($event)" [booking]="booking"></app-booking-list-item>
   </div>
 </div>
-<div *ngIf="showAll">
-  <div *ngFor="let booking of allBookings" [ngClass]="{'cancelled': booking.status === 'CANCELLED'}">
+<div *ngIf="showAll" class="full-w">
+  <div *ngFor="let booking of allBookings" class="full-w" [ngClass]="{'cancelled': booking.status === 'CANCELLED'}">
     <app-booking-list-item (buyBooking)="onBuyClick($event)" (cancelBooking)="onStornoClick($event)" (downloadBooking)="downloadClick($event)" [booking]="booking"></app-booking-list-item>
   </div>
 </div>
 
-<div>
+<div class="text-center">
   <h5 *ngIf="empty">Nothing here yet</h5>
-  <h5 *ngIf="!empty">That's all</h5>
+  <h5 *ngIf="!empty">No more orders</h5>
 </div>
 
 <button class="secondary" *ngIf="!showAll" (click)="showCancelledOrders()">Show cancelled orders</button>

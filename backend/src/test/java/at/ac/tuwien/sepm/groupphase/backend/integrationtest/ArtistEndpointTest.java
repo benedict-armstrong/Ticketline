@@ -3,6 +3,7 @@ package at.ac.tuwien.sepm.groupphase.backend.integrationtest;
 import at.ac.tuwien.sepm.groupphase.backend.basetest.TestAuthentification;
 import at.ac.tuwien.sepm.groupphase.backend.basetest.TestDataArtist;
 import at.ac.tuwien.sepm.groupphase.backend.config.properties.SecurityProperties;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.AddressDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.ArtistDto;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Artist;
 import at.ac.tuwien.sepm.groupphase.backend.repository.ArtistRepository;
@@ -119,6 +120,35 @@ public class ArtistEndpointTest implements TestAuthentification, TestDataArtist 
 
         MockHttpServletResponse response = mvcResult.getResponse();
         assertEquals(HttpStatus.BAD_REQUEST.value(), response.getStatus());
+    }
+
+    @Test
+    @DisplayName("Should return 200 and artist object")
+    public void whenCreateArtist_GetArtistById_then200AndArtist() throws Exception {
+        MvcResult mvcResult = this.mockMvc.perform(
+            post(ARTIST_BASE_URI)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(artistDto))
+                .header(securityProperties.getAuthHeader(), authToken)
+        ).andReturn();
+
+        MockHttpServletResponse response = mvcResult.getResponse();
+        ArtistDto savedDto = objectMapper.readValue(response.getContentAsString(), ArtistDto.class);
+
+        mvcResult = this.mockMvc.perform(
+            get(ARTIST_BASE_URI + "/" + savedDto.getId())
+                .header(securityProperties.getAuthHeader(), authToken)
+        ).andReturn();
+
+        response = mvcResult.getResponse();
+        assertEquals(HttpStatus.OK.value(), response.getStatus());
+
+        ArtistDto foundDto = objectMapper.readValue(response.getContentAsString(), ArtistDto.class);
+
+        assertAll(
+            () -> assertNotNull(foundDto),
+            () -> assertEquals(savedDto.getId(), foundDto.getId())
+        );
     }
 
     @Test

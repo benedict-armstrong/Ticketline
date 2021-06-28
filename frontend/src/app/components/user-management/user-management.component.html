@@ -1,5 +1,8 @@
 <div class="top-wrapper">
-  <h3>Manage Users</h3>
+  <div class="left-wrapper">
+    <h3>Manage Users</h3>
+    <i [routerLink]="['/add-user']" [state]="{management: true}" class="add-user-bi bi bi-person-plus" title="Add a user"></i>
+  </div>
   <div class="right-wrapper">
     <div>
       <label for="size">Show:</label>

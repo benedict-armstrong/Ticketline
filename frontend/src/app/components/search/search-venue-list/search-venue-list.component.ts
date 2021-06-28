@@ -66,7 +66,7 @@ export class SearchVenueListComponent implements OnInit, OnChanges {
   getVenues() {
     this.venueService.getVenues().subscribe(
       (response) => {
-        console.log(response);
+        //console.log(response);
 
         this.venues.push(...response);
         this.filteredVenues.push(...response);
@@ -76,7 +76,7 @@ export class SearchVenueListComponent implements OnInit, OnChanges {
           this.filterVenues();
         }
       }, error => {
-        console.error(error);
+        //console.error(error);
       }
     );
   }

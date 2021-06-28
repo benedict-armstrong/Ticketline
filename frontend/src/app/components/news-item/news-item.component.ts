@@ -1,6 +1,7 @@
 import {Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
 import {News} from '../../dtos/news';
 import {FileService} from '../../services/file.service';
+import {AuthService} from '../../services/auth.service';
 
 @Component({
   selector: 'app-news-item',
@@ -10,6 +11,7 @@ import {FileService} from '../../services/file.service';
 export class NewsItemComponent implements OnInit, OnChanges {
 
   @Input() lastRead: number = null;
+  @Input() removeBadge = false;
 
   item: News;
   imgURL: any;
@@ -23,16 +25,23 @@ export class NewsItemComponent implements OnInit, OnChanges {
     }
   }
 
-  constructor() { }
+  constructor(private authService: AuthService) { }
 
   ngOnInit(): void {
   }
 
   ngOnChanges(changes: SimpleChanges) {
+    if (!this.authService.isLoggedIn()) {
+      this.read = true;
+      return;
+    }
     if (this.lastRead == null) {
       this.read = false;
     } else {
       this.read = this.lastRead >= this.item.id;
+    }
+    if (this.removeBadge) {
+      this.read = true;
     }
   }
 

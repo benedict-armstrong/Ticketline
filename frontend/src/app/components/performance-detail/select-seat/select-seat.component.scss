@@ -56,15 +56,16 @@
   width: 15px;
 }
 
-.cart-wrapper {
-  height: 500px;
-}
-
 .selected-seat-list {
+  height: 500px;
   overflow: scroll;
   width: 100%;
   counter-reset: seat-counter;
   height: 400px;
+}
+
+.cart-wrapper {
+  height: 500px;
 }
 
 .selected-seat-list > div {

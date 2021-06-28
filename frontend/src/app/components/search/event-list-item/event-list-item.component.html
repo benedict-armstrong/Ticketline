@@ -1,4 +1,4 @@
-<div class="event list-item" [routerLink]="['/event-detail', eventItem.id]">
+<div id="result-card" class="event list-item" [routerLink]="['/event-detail', eventItem.id]">
     <div class="info">
         <img src="{{previewImageUrl}}" alt="">
         <div class="detail">
@@ -9,7 +9,7 @@
     <div *ngFor="let performance of eventItem.performances">
       <div class="performance list-item offset-2" [routerLink]="['/performance-detail', performance.id]">
         <div class="info">
-          <div class="detail">
+          <div>
             <h5>{{performance.title}}</h5>
             <span class="date-time">{{performance.date | date:'EEEE, MMM d, y HH:mm'}}: </span>
             <span class="artist">{{performance.artist.firstName}} {{performance.artist.lastName}}, </span>

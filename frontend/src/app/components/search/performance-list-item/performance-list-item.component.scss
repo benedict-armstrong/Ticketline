@@ -1,0 +1,10 @@
+@import "src/styles";
+
+.performance {
+  background-color: $gray-lighter;
+}
+
+div.performance.list-item {
+  width: 100%;
+  margin-left: 0;
+}

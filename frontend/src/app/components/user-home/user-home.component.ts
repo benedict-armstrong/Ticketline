@@ -180,7 +180,7 @@ export class UserHomeComponent implements OnInit {
   }
 
   private defaultServiceErrorHandling(error: any) {
-    console.log(error);
+    //console.log(error);
     this.error = true;
     if (typeof error.error === 'object') {
       this.errorMessage = error.error.error;
@@ -190,7 +190,7 @@ export class UserHomeComponent implements OnInit {
   }
 
   private defaultPasswordErrorHandling(error: any) {
-    console.log(error);
+    //console.log(error);
     this.passwordError = true;
     if (typeof error.error === 'object') {
       this.passwordErrorMessage = error.error.error;

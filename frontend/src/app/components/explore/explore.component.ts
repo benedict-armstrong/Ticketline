@@ -23,8 +23,12 @@ export class ExploreComponent implements OnInit {
   }
 
   getEvents() {
-    this.eventService.getTopEvents(0, 5).subscribe(
-      (data) => this.topEvents = data
+    this.eventService.getTopEvents().subscribe(
+      (data) => {
+        this.topEvents = data;
+        this.topEvents.sort((a, b) => b.soldTickets/b.totalTickets - a.soldTickets/a.totalTickets);
+        this.topEvents.splice(5, this.topEvents.length - 5);
+      }
     );
   }
 

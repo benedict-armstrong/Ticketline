@@ -11,6 +11,8 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Repository
@@ -40,8 +42,15 @@ public interface EventRepository extends JpaRepository<Event, Long>, JpaSpecific
     @Query(value = "SELECT count(t.id) as soldTickets FROM Event e "
         + "inner join Performance p on p.event_id = e.id "
         + "left join Ticket t on t.performance_id = p.id "
+        + "WHERE e.start_date >= ?1 "
         + "GROUP BY e.id "
-        + "ORDER BY e.start_date ASC "
-        + "OFFSET ?1 ROWS FETCH NEXT ?2 ROWS ONLY ", nativeQuery = true)
-    List<Long> findSoldTicketsOrderByStartDateAsc(Long offset, int limit);
+        + "ORDER BY e.start_date DESC ", nativeQuery = true)
+    List<Long> findSoldTicketsOrderByStartDateDescAfterDate(LocalDate date);
+
+    /**
+     * Find all event entries that happen after the date and sorted descending.
+     *
+     * @return list of all events
+     */
+    List<Event> findAllByStartDateAfterOrderByStartDateDesc(LocalDate date);
 }

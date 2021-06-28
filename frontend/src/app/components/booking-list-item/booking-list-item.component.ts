@@ -18,7 +18,6 @@ export class BookingListItemComponent implements OnInit {
   }
 
   onStornoClick(booking) {
-    booking.status = 'CANCELLED';
     this.cancelBooking.emit(booking);
   }
 

@@ -168,7 +168,7 @@ public class EventEndpointTest implements TestDataEvent, TestAuthentification {
     }
 
     @Test
-    @DisplayName("Should return 201 and news object with set ID")
+    @DisplayName("Should return 201 and event object with set ID")
     public void whenCreateEvent_then201AndEventWithIdAndPublishedAt() throws Exception {
         eventDto.getPerformances()[0].setArtist(saveArtist(artistDto));
         eventDto.getPerformances()[0].setVenue(saveVenue(venueDto));
@@ -290,6 +290,38 @@ public class EventEndpointTest implements TestDataEvent, TestAuthentification {
 
         MockHttpServletResponse response = mvcResult.getResponse();
         assertEquals(HttpStatus.CONFLICT.value(), response.getStatus());
+    }
+
+    @Test
+    @DisplayName("Should return 200 and event object")
+    public void whenCreateEvent_GetEventById_then200AndEvent() throws Exception {
+        eventDto.getPerformances()[0].setArtist(saveArtist(artistDto));
+        eventDto.getPerformances()[0].setVenue(saveVenue(venueDto));
+
+        MvcResult mvcResult = this.mockMvc.perform(
+            post(TestDataEvent.EVENT_BASE_URI)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(eventDto))
+                .header(securityProperties.getAuthHeader(), authToken)
+        ).andReturn();
+
+        MockHttpServletResponse response = mvcResult.getResponse();
+        EventDto savedDto = objectMapper.readValue(response.getContentAsString(), EventDto.class);
+
+        mvcResult = this.mockMvc.perform(
+            get(EVENT_BASE_URI + "/" + savedDto.getId())
+                .header(securityProperties.getAuthHeader(), authToken)
+        ).andReturn();
+
+        response = mvcResult.getResponse();
+        assertEquals(HttpStatus.OK.value(), response.getStatus());
+
+        EventDto foundDto = objectMapper.readValue(response.getContentAsString(), EventDto.class);
+
+        assertAll(
+            () -> assertNotNull(foundDto),
+            () -> assertEquals(savedDto.getId(), foundDto.getId())
+        );
     }
 
     @Test

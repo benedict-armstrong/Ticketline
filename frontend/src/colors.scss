@@ -1,6 +1,7 @@
 $primary: #E76F51;
 $primary-darker: darken($primary, 10%); //#D7431D;
 $primary-lighter: lighten($primary, 10%);//#EE9781;
+$primary-lighterer: lighten($primary-lighter, 23%);
 
 $primary1: #E76F51;
 

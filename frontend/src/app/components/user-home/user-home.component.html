@@ -7,11 +7,17 @@
     </div>
     <div *ngIf="!loading">
       <div *ngIf="!showAll" class="row row-cols-1 row-cols-md-4 g-4">
+        <div *ngIf="newOrders.length === 0" class="no-tickets-alert">
+          No tickets yet
+        </div>
         <div *ngFor="let entry of newOrders" class="col">
           <app-ticket-order-item [ticketItem]="entry"></app-ticket-order-item>
         </div>
       </div>
       <div *ngIf="showAll" class="row row-cols-1 row-cols-md-4 g-4">
+        <div *ngIf="orders.length === 0" class="no-tickets-alert">
+          No tickets yet
+        </div>
         <div *ngFor="let entry of orders" class="col">
           <app-ticket-order-item [ticketItem]="entry"></app-ticket-order-item>
         </div>
@@ -19,7 +25,6 @@
     </div>
 
     <button class="secondary" *ngIf="!showAll" (click)="showAll = true">Show expired tickets</button>
-    <button class="secondary" *ngIf="notPaid" [routerLink]="['/orders']">Click here to show orders</button>
   </div>
   <div class="user-info cards">
     <h3>Your Profile</h3>
