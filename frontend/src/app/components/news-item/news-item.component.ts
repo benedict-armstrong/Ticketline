@@ -1,6 +1,7 @@
 import {Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
 import {News} from '../../dtos/news';
 import {FileService} from '../../services/file.service';
+import {AuthService} from '../../services/auth.service';
 
 @Component({
   selector: 'app-news-item',
@@ -24,12 +25,16 @@ export class NewsItemComponent implements OnInit, OnChanges {
     }
   }
 
-  constructor() { }
+  constructor(private authService: AuthService) { }
 
   ngOnInit(): void {
   }
 
   ngOnChanges(changes: SimpleChanges) {
+    if (!this.authService.isLoggedIn()) {
+      this.read = true;
+      return;
+    }
     if (this.lastRead == null) {
       this.read = false;
     } else {
