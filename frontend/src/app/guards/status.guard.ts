@@ -26,10 +26,7 @@ export class StatusGuard implements CanActivate {
           } else {
             return true;
           }
-        }, error => {
-          //console.error(error);
-          return false;
-        }
+        }, _ => false
       );
     } else {
       return of(true);
