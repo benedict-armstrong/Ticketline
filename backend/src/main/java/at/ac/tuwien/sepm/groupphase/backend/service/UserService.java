@@ -6,6 +6,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 public interface UserService extends UserDetailsService {
@@ -32,12 +33,22 @@ public interface UserService extends UserDetailsService {
     ApplicationUser findApplicationUserById(long id);
 
     /**
+     * Find an application user based on their id.
+     *
+     * @param id the id
+     * @param tickerQuery boolean if is asked for tickets (true) or name (false)
+     * @return a application user
+     */
+    ApplicationUser findApplicationUserByIdConfirmation(long id, boolean tickerQuery);
+
+    /**
      * Find an application user based on the email address.
      *
      * @param email the email address
+     * @param force if true, dont throw NotFoundException
      * @return a application user
      */
-    ApplicationUser findApplicationUserByEmail(String email);
+    ApplicationUser findApplicationUserByEmail(String email, boolean force);
 
     /**
      * Add a user to system.
@@ -65,15 +76,22 @@ public interface UserService extends UserDetailsService {
     ApplicationUser updateLastRead(Long userId, Long lastReadNewsId);
 
     /**
-     * Updates User with new password and sends it per mail.
+     * Sends email with password reset link to user with given email.
      *
-     * @param user to update
-     * @return updated User
+     * @param email of the user
      */
-    ApplicationUser resetPassword(ApplicationUser user);
+    void sendPasswordResetLink(String email);
 
     /**
-     * Retrieves a list of all users.
+     * change the password of the user identified by token.
+     *
+     * @param password the new password
+     * @param token to identify the user
+     */
+    void changePassword(String password, String token);
+
+    /**
+     * Retrieves a list of all non-deleted users.
      *
      * @param pageRequest the page and size to be retrieved.
      * @return the list of users on this page.
@@ -85,5 +103,12 @@ public interface UserService extends UserDetailsService {
      *
      */
     void resetPasswordAttemptCount();
+
+    /**
+     * Deletes a user from the application.
+     *
+     * @param id the ID of the user to be deleted
+     */
+    void delete(Long id);
 
 }

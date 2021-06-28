@@ -62,6 +62,8 @@ public class TicketRepositoryTest implements TestDataUser, TestDataVenue, TestDa
 
     private Sector savedSector;
 
+    private LayoutUnit seat;
+
     @BeforeEach
     public void beforeEach() throws Exception {
         ApplicationUser savedUser = userRepository.save(TestDataUser.getAdmin());
@@ -80,11 +82,13 @@ public class TicketRepositoryTest implements TestDataUser, TestDataVenue, TestDa
             .build()
         );
 
+        seat = savedVenue.getLayout().get(0);
+
         ticket = Ticket.builder()
             .user(savedUser)
             .ticketType(savedPerformance.getTicketTypes().iterator().next())
             .performance(savedPerformance)
-            .seat(savedVenue.getLayout().get(0))
+            .seat(seat)
             .changeDate(LocalDateTime.now())
             .status(Ticket.Status.IN_CART)
             .build();
@@ -121,12 +125,31 @@ public class TicketRepositoryTest implements TestDataUser, TestDataVenue, TestDa
     @Test
     @DisplayName("Should return free seat entitys when asking for them")
     public void whenGetFreeSeats_thenListOfFreeSeats() {
-        List<LayoutUnit> seats = ticketRepository.getFreeSeatsInPerfromanceAndSector(savedPerformance, savedSector);
-
-        System.out.println(seats);
+        List<LayoutUnit> seats = ticketRepository.getFreeSeatsInPerformanceAndSector(savedPerformance, savedSector);
 
         assertAll(
             () -> assertNotNull(seats)
+        );
+    }
+
+    @Test
+    @DisplayName("Should return true if seat is free")
+    public void whenCheckIfSeatIsFree_thenTrue() {
+        boolean free = ticketRepository.checkIfSeatIsFreeByPerformance(savedPerformance, seat);
+
+        assertAll(
+            () -> assertTrue(free)
+        );
+    }
+
+    @Test
+    @DisplayName("Should return false if seat is not free")
+    public void whenCheckIfSeatIsFree_afterBookingSeat_thenFalse() {
+        ticketRepository.save(ticket);
+        boolean free = ticketRepository.checkIfSeatIsFreeByPerformance(savedPerformance, seat);
+
+        assertAll(
+            () -> assertFalse(free)
         );
     }
 }

@@ -37,7 +37,7 @@ public class EventDataGenerator {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-    private static final int NUMBER_OF_EVENTS_TO_GENERATE = 5;
+    private static final int NUMBER_OF_EVENTS_TO_GENERATE = 200;
 
     private final EventRepository eventRepository;
     private final FileRepository fileRepository;
@@ -65,7 +65,7 @@ public class EventDataGenerator {
 
     @PostConstruct
     private void generateEvent() {
-        if (eventRepository.findAll().size() > 0) {
+        if (eventRepository.findAll().size() >= NUMBER_OF_EVENTS_TO_GENERATE) {
             LOGGER.debug("Events have already been generated");
         } else {
             LOGGER.debug("Generating {} event entries", NUMBER_OF_EVENTS_TO_GENERATE);
@@ -75,13 +75,13 @@ public class EventDataGenerator {
                 .filter(item -> item.getType() == File.Type.IMAGE_JPG || item.getType() == File.Type.IMAGE_PNG)
                 .collect(Collectors.toList());
             List<Venue>  venues  = venueRepository.findAll();
+            int numberOfVenues = venues.size();
 
             Faker faker = new Faker();
 
             int imageOffset = 0;
             for (int i = 0; i < NUMBER_OF_EVENTS_TO_GENERATE; i++) {
                 Set<Performance> performances = new HashSet<>();
-                int venueOffset = 0;
                 int artistOffset = 0;
 
 
@@ -107,12 +107,12 @@ public class EventDataGenerator {
 
                 eventRepository.save(event);
 
+                LOGGER.info("Generating Event {}", event.getName());
+
                 //generate 4 performances per event
                 for (int j = 0; j < 4; j++) {
 
-
-                    Venue venue = venues.get(venueOffset);
-                    venueOffset = (venueOffset + 1) % venues.size();
+                    Venue venue = venues.get(i % numberOfVenues);
 
                     Set<TicketType> ticketTypeSet = new HashSet<>();
 
@@ -143,7 +143,7 @@ public class EventDataGenerator {
 
                 event.setPerformances(performances);
 
-                LOGGER.debug("saving event {}", event);
+                LOGGER.info("saving event {}", event.getName());
                 eventRepository.save(event);
             }
         }

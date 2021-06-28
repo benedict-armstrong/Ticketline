@@ -1,6 +1,15 @@
-<h1 class="text-center">Find the perfect event</h1>
-<h5>Filter by:</h5>
-<div id="search-btns">
+<h1 class="text-center header">Find the perfect event</h1>
+
+<form class="search-form" [formGroup]="this.fulltextSearchForm" (ngSubmit)="resetFullTextSearch(); fullTextSearch()">
+  <input class="form-control search text-input"  type="search" placeholder="Search" aria-label="Search" formControlName="text">
+</form>
+
+<div class="text-center add-filters-wrapper">
+  <button class="filterButton primary" data-bs-toggle="collapse" data-bs-target="#search-btns" aria-expanded="true" aria-controls="showFilters">
+    Add filters
+  </button>
+</div>
+<div id="search-btns" class="accordion-collapse collapse" aria-labelledby="addFilters">
   <div id="search-btn-list">
     <button id="eventSearchBtn" class="filterButton secondary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseEventSearch"
             aria-expanded="false" aria-controls="collapseEventSearch" (click)="triggerSearchBtn('eventSearchBtn')">
@@ -26,29 +35,33 @@
 <app-address-search #addressSearch (searchedAddresses)="setSearchAddresses($event)" (searchedNoAddress)="setNoAddress($event)"></app-address-search>
 <app-performance-search #performanceSearch (searchedPerformances)="setSearchPerformances($event)" (searchedNoPerformance)="setNoPerformance($event)" (searchedEventPerformance)="setSearchedEventPerformance($event)" (searchedVenuePerformance)="setSearchedVenuePerformance($event)"></app-performance-search>
 
- <div *ngIf="eventSearched">
-    <div *ngFor="let event of events">
-      <app-event-list-item [eventItem]="event"></app-event-list-item>
-    </div>
+<div *ngIf="eventSearched || fullTextSearched">
+  <div *ngFor="let event of events">
+    <app-event-list-item [eventItem]="event"></app-event-list-item>
   </div>
+</div>
 
-  <div *ngIf="artistSearched">
-    <div *ngFor="let artist of artists">
-      <app-artist-list-item [artist]="artist"></app-artist-list-item>
-    </div>
+<div *ngIf="artistSearched">
+  <div *ngFor="let artist of artists">
+    <app-artist-list-item [artist]="artist"></app-artist-list-item>
   </div>
+</div>
 
-  <div *ngIf="addressSearched">
-    <div *ngFor="let location of addresses">
-      <app-address-list-item [address]="location"></app-address-list-item>
-    </div>
+<div *ngIf="addressSearched">
+  <div *ngFor="let location of addresses">
+    <app-address-list-item [address]="location"></app-address-list-item>
   </div>
+</div>
 
-  <div *ngIf="performanceSearched">
-    <div *ngFor="let perf of performances">
-      <app-performance-list-item [performance]="perf" [event]="eventPerformance"></app-performance-list-item>
-    </div>
+<div *ngIf="performanceSearched">
+  <div *ngFor="let perf of performances">
+    <app-performance-list-item [performance]="perf" [event]="eventPerformance"></app-performance-list-item>
   </div>
+</div>
+
+<div class="loading-wrapper">
+  <app-loading-animation *ngIf="loadingFullTextSearch"></app-loading-animation>
+</div>
 
 <div *ngIf="addressSearched">
   <div class="text-center more" (click)="addressSearch.searchAddress()">
@@ -88,5 +101,14 @@
   </div>
   <div class="text-center more">
     <h3 *ngIf="noPerformance">You're all caught up</h3>
+  </div>
+</div>
+<div *ngIf="fullTextSearched">
+  <div class="text-center more" (click)="fullTextSearch()">
+    <h3 *ngIf="!noEvent" class="clickable">Load More</h3>
+    <h3 *ngIf="!noEvent" class="clickable"><i class="bi bi-arrow-bar-down"></i></h3>
+  </div>
+  <div class="text-center more">
+    <h3 *ngIf="noEvent">You're all caught up</h3>
   </div>
 </div>

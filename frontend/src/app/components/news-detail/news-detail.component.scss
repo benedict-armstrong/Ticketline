@@ -14,17 +14,11 @@
   justify-content: space-between;
   padding: 20px;
   height: 100%;
-  background-color: $gray-242;
+  background-color: $gray-lighter;
 }
 
 #performer {
-  color: $gray-131;
-}
-
-.date {
-  margin-bottom: 20px;
-  text-align: center;
-  width: 30px;
+  color: $gray-lighter;
 }
 
 #month {
@@ -42,11 +36,4 @@
 .carousel-inner img {
   object-fit: cover;
   -webkit-transform: translateY(calc(-50% + 250px));
-}
-
-.dateGroup {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-around;
-  font-weight: bold;
 }

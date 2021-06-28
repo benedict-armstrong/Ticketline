@@ -1,0 +1,66 @@
+@import "../../../colors.scss";
+@import "src/styles";
+
+.ticket:hover {
+  box-shadow: rgba(0, 0, 0, 0.1) 0 4px 12px;
+}
+
+.ticket {
+  display: flex;
+  flex-direction: row;
+  margin-top: 5px;
+  align-items: center;
+  cursor: pointer;
+  background-color: $gray-lighter;
+}
+
+.booking {
+  display: flex;
+  margin-top: 20px;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  width: 100%;
+  margin-left: 0;
+}
+
+.info {
+  display: flex;
+  width: 100%;
+}
+
+.price {
+  color: #c14953;
+  margin-left: 25px;
+}
+
+.detail {
+  margin-left: 10px;
+  width: 100%;
+}
+
+.detail button {
+  width: 25%;
+  margin: 0 10px;
+}
+
+div.booking div.detail {
+  display: flex;
+  align-items: baseline;
+}
+
+div.booking div.detail button {
+  width: 200px;
+  height: 35px;
+}
+
+.btns-wrap {
+  display: flex;
+  align-items: center;
+  margin-bottom: 5px;
+}
+
+.date-wrap {
+  display: flex;
+  align-items: flex-end;
+}

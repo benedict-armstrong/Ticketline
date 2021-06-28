@@ -33,6 +33,17 @@ export class UserService {
   }
 
   /**
+   * Loads name of user user from the backend
+   *
+   * @param id of user to load
+   * @return user with this id
+   */
+  getUserByIdForConfirmation(id: number): Observable<User> {
+    // console.log('Load user details for ' + id);
+    return this.httpClient.get<User>(this.userBaseUri + '/confirmation/' + id);
+  }
+
+  /**
    * Loads specific user from the backend
    *
    * @param email of user to load
@@ -68,13 +79,25 @@ export class UserService {
   }
 
   /**
-   * Reset password in the backend
+   * Send reset password link to email in the backend
    *
    * @param email to update
    */
-  resetPassword(email: string): Observable<User> {
-    // console.log('Reset password for user with email ' + email);
-    return this.httpClient.put<User>(this.userBaseUri + '/reset', email);
+  sendResetLink(email: string): Observable<void> {
+    return this.httpClient.post<void>(this.userBaseUri + '/reset', email);
+  }
+
+  /**
+   * change password of user identified by token
+   *
+   * @param password the new password
+   * @param token used to identify user
+   */
+  changePassword(password: string, token: string): Observable<void> {
+    return this.httpClient.put<void>(this.userBaseUri + '/reset', {
+      password,
+      token
+    });
   }
 
   /**
@@ -88,6 +111,15 @@ export class UserService {
     params = params.set('page', String(page));
     params = params.set('size', String(size));
     return this.httpClient.get<User[]>(this.userBaseUri, {params});
+  }
+
+  /**
+   * Deletes a user from the application.
+   *
+   * @param id the id of the user to be removed.
+   */
+  delete(id: number): Observable<any> {
+    return this.httpClient.delete(this.userBaseUri + '/' + id);
   }
 
 }

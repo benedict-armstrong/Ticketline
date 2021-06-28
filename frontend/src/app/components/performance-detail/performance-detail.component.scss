@@ -1,7 +1,7 @@
 @import "../../../colors.scss";
 
 .event {
-  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+  box-shadow: rgba(100, 100, 111, 0.2) 0 7px 29px 0;
   margin: 10px;
 }
 
@@ -10,7 +10,7 @@
 }
 
 .additional-event-info {
-  background-color: $gray-242;
+  background-color: $gray-lighter;
 }
 
 .jumbotron img {
@@ -24,7 +24,7 @@
 }
 
 .header .info {
-  color: rgba(193, 73, 83, 1);
+  color: $primary;
 }
 
 .header > h3, .header > .add-news {
@@ -34,14 +34,15 @@
 .options {
   display: flex;
   justify-content: center;
+  margin-bottom: -20px;
 }
 
 .card:hover {
-  border: 1px solid rgba(193, 73, 83, 1);
+  border: 1px solid $primary;
 }
 
 .card.selected {
-  border: 1px solid rgba(193, 73, 83, 1);
+  border: 1px solid $primary;
 }
 
 .tickets > p {
@@ -50,11 +51,11 @@
 
 .tickets {
   margin-top: 20px;
-  padding: 20px 0px;
+  padding: 20px 0;
 }
 
 .selected-items p {
-  margin: 0px;
+  margin: 0;
 }
 
 .selected-items {
@@ -86,4 +87,18 @@
 
 h4 {
   margin: 10px 0;
+}
+
+div.header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 50px;
+}
+
+div.header .right-wrap {
+  background-color: $gray-lighter;
+  width: 30%;
+  padding-left: 20px;
+  padding-top: 5px;
+  padding-bottom: 5px;
 }

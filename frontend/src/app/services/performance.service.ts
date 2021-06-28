@@ -3,7 +3,6 @@ import {HttpClient, HttpParams} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {Globals} from '../global/globals';
 import {Performance} from '../dtos/performance';
-import {Event} from '../dtos/event';
 
 @Injectable({
   providedIn: 'root'
@@ -33,31 +32,27 @@ export class ApplicationPerformanceService {
   }
 
   /**
-   * Add a new event
+   * Add a new performance
    */
-  addEvent(event: Performance): Observable<Performance> {
-    return this.httpClient.post<Performance>(this.performanceBaseUri, event);
+  addPerformance(performance: Performance): Observable<Performance> {
+    return this.httpClient.post<Performance>(this.performanceBaseUri, performance);
   }
 
   /**
    * Search all Performances
    */
-  searchPerformances(page: number, size: number, date: Date, event: number, price: number, venue: number): Observable<Performance[]> {
+  searchPerformances(page: number, size: number, date: Date, event: number, venue: number): Observable<Performance[]> {
     let params = new HttpParams();
     params = params.set('page', String(page));
     params = params.set('size', String(size));
     if (date) {
       params = params.set('date', date.toISOString());
     }
-    if(event !== null){
+    if (event !== null) {
       params = params.set('eventId', event.toString());
     }
 
-    if(price !== null){
-      params = params.set('price', price.toString());
-    }
-
-    if(venue !== null){
+    if (venue !== null) {
       params = params.set('venue', venue.toString());
     }
 

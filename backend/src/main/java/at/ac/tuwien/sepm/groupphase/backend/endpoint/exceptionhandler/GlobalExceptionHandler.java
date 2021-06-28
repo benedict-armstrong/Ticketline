@@ -1,11 +1,16 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint.exceptionhandler;
 
+import at.ac.tuwien.sepm.groupphase.backend.exception.DateInThePastException;
+import at.ac.tuwien.sepm.groupphase.backend.exception.FullCartException;
+import at.ac.tuwien.sepm.groupphase.backend.exception.MailException;
 import at.ac.tuwien.sepm.groupphase.backend.exception.NoTicketLeftException;
 import at.ac.tuwien.sepm.groupphase.backend.exception.NotFoundException;
 import at.ac.tuwien.sepm.groupphase.backend.exception.InvalidQueryParameterException;
 import at.ac.tuwien.sepm.groupphase.backend.exception.BadFileException;
+import at.ac.tuwien.sepm.groupphase.backend.exception.PdfException;
 import at.ac.tuwien.sepm.groupphase.backend.exception.UserAlreadyExistAuthenticationException;
 import at.ac.tuwien.sepm.groupphase.backend.exception.AuthorizationException;
+import com.itextpdf.text.DocumentException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
@@ -61,6 +66,12 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return handleExceptionInternal(ex, ex.getMessage(), new HttpHeaders(), HttpStatus.NOT_FOUND, request);
     }
 
+    @ExceptionHandler(value = {FullCartException.class})
+    protected ResponseEntity<Object> handleFullCartException(RuntimeException ex, WebRequest request) {
+        LOGGER.warn(ex.getMessage());
+        return handleExceptionInternal(ex, ex.getMessage(), new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
+    }
+
     @ExceptionHandler(value = {UserAlreadyExistAuthenticationException.class})
     protected ResponseEntity<Object> handleUserAlreadyExists(RuntimeException ex, WebRequest request) {
         LOGGER.warn(ex.getMessage());
@@ -73,11 +84,23 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return handleExceptionInternal(ex, ex.getMessage(), new HttpHeaders(), HttpStatus.UNAUTHORIZED, request);
     }
 
+    @ExceptionHandler(value = { PdfException.class, MailException.class})
+    protected ResponseEntity<Object> handleFrameworkException(RuntimeException ex, WebRequest request) {
+        LOGGER.warn(ex.getMessage());
+        return handleExceptionInternal(ex, ex.getMessage(), new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
+    }
+
     @ExceptionHandler(value = { IllegalArgumentException.class, IllegalStateException.class })
     protected ResponseEntity<Object> handleConflict(
         RuntimeException ex, WebRequest request) {
         return handleExceptionInternal(ex, ex.getMessage(),
             new HttpHeaders(), HttpStatus.CONFLICT, request);
+    }
+
+    @ExceptionHandler(value = {DateInThePastException.class})
+    protected ResponseEntity<Object> handleDateInThePastException(RuntimeException ex, WebRequest request) {
+        LOGGER.warn(ex.getMessage());
+        return handleExceptionInternal(ex, ex.getMessage(), new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
     }
 
     /**

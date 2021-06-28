@@ -48,7 +48,6 @@ export class AddEventComponent implements OnInit {
 
   addEvent(): void {
     this.submitted = true;
-
     if (this.addEventForm.valid
       && this.performances.length !== 0
       && this.files.length !== 0
@@ -116,7 +115,7 @@ export class AddEventComponent implements OnInit {
     this.fileTooBig = false;
     if (event.target.files.length > 0) {
       const file = event.target.files[0];
-      console.log(file.size);
+      //console.log(file.size);
       if (!file.type.includes('image')) {
         this.fileNoImage = true;
       } else if (this.event.images.length >= 10) {
@@ -142,9 +141,9 @@ export class AddEventComponent implements OnInit {
   }
 
   private defaultServiceErrorHandling(error: any) {
-    console.log(error);
+    //console.log(error);
     this.error = true;
-    console.log(error.error);
+    //console.log(error.error);
     if (typeof error.error === 'object') {
       this.errorMessage = error.error.error;
     } else {

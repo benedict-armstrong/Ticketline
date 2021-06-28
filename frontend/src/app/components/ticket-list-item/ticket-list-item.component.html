@@ -1,17 +1,20 @@
 <div class="list-item">
     <div class="row">
         <div class="col-6">
-            <h4>{{ticketType.sector.name}} | {{ticketType.title}} ({{ticketCount}} Tickets)</h4>
-            <span>Best experience | {{ticketType.price / 100 | currency:'EUR'}}</span>
+            <h4>{{ticketType.sector.name}} | {{ticketType.title}} ({{ticketCount.freeSeats}}/{{ticketCount.totalSeats}} Tickets)</h4>
+            <div class="additional-info">
+              <span>{{ticketType.sector.description}} | {{ticketType.price / 100 | currency:'EUR'}}</span>
+              <div *ngIf="selectSeat" [style]="{'background': this.ticketType.sector.color}" class="color"></div>
+            </div>
         </div>
-        <div class="col-6 formContainer">
+        <div class="col-6 formContainer" *ngIf="!selectSeat">
             <form id="form" class="options" [formGroup]="ticketForm" (ngSubmit)="addToCart()">
                 <div class="count inline">
                     <button class="secondary no-shadow no-border" (click)="decAmount()" type="button"><i class="bi bi-dash-circle"></i></button>
                     <input type="number" formControlName="amount" [ngClass]="{'error': validationError}">
                     <button class="secondary no-shadow no-border" (click)="incAmount()" type="button"><i class="bi bi-plus-circle"></i></button>
                 </div>
-                <button class="add primary" [ngClass]="{'locked': this.waiting}" type="submit">Add to Cart</button>
+                <button class="add primary" [ngClass]="{'locked deactivated': this.waiting || !this.loggedIn || inThePast}" type="submit">Add to Cart</button>
             </form>
         </div>
     </div>

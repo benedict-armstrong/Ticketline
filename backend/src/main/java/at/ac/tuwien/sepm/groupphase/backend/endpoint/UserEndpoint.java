@@ -1,19 +1,19 @@
 package at.ac.tuwien.sepm.groupphase.backend.endpoint;
 
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.ChangePasswordDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.PaginationDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.UserDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.PaginationMapper;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.UserMapper;
 import at.ac.tuwien.sepm.groupphase.backend.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.annotation.Secured;
-import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -54,20 +54,30 @@ public class UserEndpoint {
         return userMapper.applicationUserToUserDto(userService.addUser(userMapper.userDtoToApplicationUser(userDto)));
     }
 
+    @Transactional
     @GetMapping(value = {"/{email}"})
     @PermitAll
     @Operation(summary = "Find User by Email")
     public UserDto findByEmail(@Valid @PathVariable("email") String email) {
         LOGGER.info("GET /api/v1/users/{}", email);
-        return userMapper.applicationUserToUserDto(userService.findApplicationUserByEmail(email));
+        return userMapper.applicationUserToUserDto(userService.findApplicationUserByEmail(email, false));
     }
 
+    @Transactional
     @GetMapping(value = {"/id/{id}"})
     @Secured({"ROLE_USER", "ROLE_ORGANIZER", "ROLE_ADMIN"})
     @Operation(summary = "Find User by Id")
     public UserDto findById(@Valid @PathVariable("id") long id) {
         LOGGER.info("GET /api/v1/users/{}", id);
         return userMapper.applicationUserToUserDto(userService.findApplicationUserById(id));
+    }
+
+    @GetMapping(value = {"/confirmation/{id}"})
+    @PermitAll
+    @Operation(summary = "Find User by Id")
+    public UserDto findByIdForConfirmation(@Valid @PathVariable("id") long id) {
+        LOGGER.info("GET /api/v1/users/confirmation/{}", id);
+        return userMapper.applicationUserToUserDto(userService.findApplicationUserByIdConfirmation(id, false));
     }
 
     @PutMapping
@@ -86,13 +96,22 @@ public class UserEndpoint {
         return userMapper.applicationUserToUserDto(userService.updateLastRead(userId, lastReadNewsId));
     }
 
+    @PostMapping("/reset")
+    @PermitAll
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(summary = "Send password reset link to email")
+    public void sendPasswordResetLink(@Valid @RequestBody String email) {
+        LOGGER.info("POST /api/v1/users/reset {}", email);
+        userService.sendPasswordResetLink(email);
+    }
+
     @PutMapping("/reset")
     @PermitAll
     @ResponseStatus(HttpStatus.OK)
-    @Operation(summary = "Reset User password")
-    public UserDto resetPassword(@Valid @RequestBody String email) {
-        LOGGER.info("PUT /api/v1/users/reset {}", email);
-        return userMapper.applicationUserToUserDto(userService.resetPassword(userService.findApplicationUserByEmail(email)));
+    @Operation(summary = "Change password for user with token")
+    public void changePassword(@Valid @RequestBody ChangePasswordDto changePasswordDto) {
+        LOGGER.info("PUT /api/v1/users/reset {}", changePasswordDto);
+        userService.changePassword(changePasswordDto.getPassword(), changePasswordDto.getToken());
     }
 
     @GetMapping
@@ -103,6 +122,15 @@ public class UserEndpoint {
         return userMapper.applicationUserListToUserDtoList(
             userService.getAll(paginationMapper.paginationDtoToPageable(paginationDto))
         );
+    }
+
+    @DeleteMapping("/{id}")
+    @Secured("ROLE_USER")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @Operation(summary = "Delete user")
+    public void delete(@PathVariable("id") Long id) {
+        LOGGER.info("DELETE /api/v1/users/{}", id);
+        userService.delete(id);
     }
 
 }

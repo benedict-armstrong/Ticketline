@@ -1,0 +1,36 @@
+@import "src/colors";
+@import "src/animations";
+
+.chart {
+  margin: 20px;
+  max-width: 100vw;
+}
+
+.chart-item {
+  display: flex;
+  justify-content: space-between;
+}
+
+.chart-item > div {
+  width: clamp(50px, 120px, 100px);
+  display: flex;
+  justify-content: center;
+}
+
+
+.chart-data-point {
+  height: 150px;
+  align-items: flex-end;
+}
+
+.bar {
+  background-color: $primary-lighter;
+  width: 25px;
+  border-radius: 5px;
+  margin: 10px;
+}
+
+.bar:hover {
+  transform: scale(1.05);
+  background-color: $primary;
+}

@@ -1,0 +1,20 @@
+<div class="grid-unit-wrapper"
+     title="{{this.title}}"
+     [ngClass]="this.layoutUnit ? {
+      'standing': $any(this.layoutUnit!.sector).type == 'STANDING',
+      'stage': $any(this.layoutUnit!.sector).type == 'STAGE',
+      'seated': $any(this.layoutUnit!.sector).type == 'SEATED',
+      'selected': this.layoutUnit.selected
+      }: {}"
+     (click)="select()"
+>
+  <div class="grid-unit" [ngClass]="{
+  'available': this.layoutUnit,
+  'booked': this.layoutUnit && !this.layoutUnit.free && !this.layoutUnit.selected
+  }"
+       [ngStyle]="{
+       'background-color': this.layoutUnit ? $any(this.layoutUnit.sector).color.toString(): 'transparent'
+       }"
+  >
+  </div>
+</div>

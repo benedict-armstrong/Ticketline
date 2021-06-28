@@ -28,3 +28,21 @@ h5 {
   display: flex;
   justify-content: space-around;
 }
+
+.highlight {
+  background-color: yellow;
+}
+
+.loading-wrapper {
+  display: flex;
+  justify-content: center;
+}
+
+.add-filters-wrapper {
+  margin-top: 5px;
+}
+
+.search-form {
+  margin-top: 20px;
+  margin-bottom: 10px;
+}

@@ -16,8 +16,10 @@ import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.NewsDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.PerformanceDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.dto.VenueDto;
 import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.EventMapper;
+import at.ac.tuwien.sepm.groupphase.backend.endpoint.mapper.FileMapper;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Artist;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Event;
+import at.ac.tuwien.sepm.groupphase.backend.entity.File;
 import at.ac.tuwien.sepm.groupphase.backend.entity.News;
 import at.ac.tuwien.sepm.groupphase.backend.entity.Performance;
 import at.ac.tuwien.sepm.groupphase.backend.repository.AddressRepository;
@@ -27,6 +29,7 @@ import at.ac.tuwien.sepm.groupphase.backend.repository.FileRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.NewsRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.UserRepository;
 import at.ac.tuwien.sepm.groupphase.backend.repository.VenueRepository;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -94,6 +97,9 @@ public class NewsEndpointTest implements TestDataNews, TestDataFile, TestAuthent
     @Autowired
     private SecurityProperties securityProperties;
 
+    @Autowired
+    private FileMapper fileMapper;
+
     private final NewsDto newsDto = NewsDto.builder()
         .title("Testtitle")
         .text("Testtext")
@@ -114,12 +120,14 @@ public class NewsEndpointTest implements TestDataNews, TestDataFile, TestAuthent
         saveUser(AUTH_USER_ORGANIZER, userRepository, passwordEncoder);
         authToken = authenticate(AUTH_USER_ORGANIZER, mockMvc, objectMapper);
 
+        ArtistDto artistDto = saveArtist(TestDataArtist.getArtistDto());
+
         PerformanceDto[] performanceDtos = new PerformanceDto[1];
         performanceDtos[0] = PerformanceDto.builder()
             .title(TestDataEvent.TEST_EVENT_PERFORMANCE_TITLE)
             .description(TestDataEvent.TEST_EVENT_PERFORMANCE_DESCRIPTION)
             .date(TestDataEvent.TEST_PERFORMANCE_DATE)
-            .artist(TestDataArtist.getArtistDto())
+            .artist(artistDto)
             .ticketTypes(TestDataTicket.getTicketTypeDtos())
             .venue(TestDataVenue.getVenueDto())
             .build();
@@ -139,8 +147,8 @@ public class NewsEndpointTest implements TestDataNews, TestDataFile, TestAuthent
             .performances(performanceDtos)
             .build();
 
-        fileRepository.save(IMAGE_FILE);
-        newsDto.setImages(new FileDto[]{IMAGE_FILE_DTO});
+        File savedFile = fileRepository.save(IMAGE_FILE);
+        newsDto.setImages(new FileDto[]{fileMapper.fileToFileDto(savedFile)});
 
         EventDto savedEventDto = saveEvent(eventDto);
         newsDto.setEvent(savedEventDto.getId());
@@ -154,6 +162,16 @@ public class NewsEndpointTest implements TestDataNews, TestDataFile, TestAuthent
                 .header(securityProperties.getAuthHeader(), authToken)
         ).andReturn();
         return objectMapper.readValue(mvcResult.getResponse().getContentAsString(), EventDto.class);
+    }
+
+    private ArtistDto saveArtist(ArtistDto artistDto) throws Exception {
+        MvcResult mvcResult = this.mockMvc.perform(
+            post(BASE_URI + "/artists")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(artistDto))
+                .header(securityProperties.getAuthHeader(), authToken)
+        ).andReturn();
+        return objectMapper.readValue(mvcResult.getResponse().getContentAsString(), ArtistDto.class);
     }
 
     private VenueDto saveVenue(VenueDto venueDto) throws Exception {
@@ -175,6 +193,27 @@ public class NewsEndpointTest implements TestDataNews, TestDataFile, TestAuthent
         venueRepository.deleteAll();
         userRepository.deleteAll();
         addressRepository.deleteAll();
+    }
+
+    @Test
+    @DisplayName("Should return 201 and news object with set ID")
+    public void whenCreateEvent_then201AndNewsWithId() throws Exception {
+
+        MvcResult mvcResult = this.mockMvc.perform(
+            post(NEWS_BASE_URI)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(newsDto))
+                .header(securityProperties.getAuthHeader(), authToken)
+        ).andReturn();
+
+        MockHttpServletResponse response = mvcResult.getResponse();
+        assertEquals(HttpStatus.CREATED.value(), response.getStatus());
+        assertEquals(MediaType.APPLICATION_JSON_VALUE, response.getContentType());
+
+        NewsDto savedDto = objectMapper.readValue(response.getContentAsString(), NewsDto.class);
+        assertAll(
+            () -> assertNotNull(savedDto.getId())
+        );
     }
 
     @Test

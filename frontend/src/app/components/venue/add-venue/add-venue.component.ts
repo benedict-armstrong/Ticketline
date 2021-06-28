@@ -5,6 +5,7 @@ import { LayoutUnit } from 'src/app/dtos/layoutUnit';
 import { Sector } from 'src/app/dtos/sector';
 import { Venue } from 'src/app/dtos/venue';
 import { VenueService } from 'src/app/services/venue.service';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-add-venue',
@@ -17,13 +18,15 @@ export class AddVenueComponent implements OnInit {
   error = false;
   success = false;
   errorMessage = '';
+  touched = false;
 
   sectors: Sector[] = [];
   venueLayout: LayoutUnit[][];
 
   constructor(
     private formBuilder: FormBuilder,
-    private venueService: VenueService
+    private venueService: VenueService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -43,8 +46,12 @@ export class AddVenueComponent implements OnInit {
   }
 
   updateLayout(venueLayout: LayoutUnit[][]) {
-    console.log(venueLayout);
+    //console.log(venueLayout);
     this.venueLayout = venueLayout;
+  }
+
+  markTouched() {
+    this.touched = true;
   }
 
   add() {
@@ -69,6 +76,9 @@ export class AddVenueComponent implements OnInit {
       this.venueService.create(venue).subscribe(
         () => {
           this.success = true;
+          setTimeout(() => {
+            this.router.navigate(['/']);
+          }, 3000);
         },
         (error) => {
           this.defaultServiceErrorHandling(error);
@@ -89,10 +99,10 @@ export class AddVenueComponent implements OnInit {
   }
 
   private defaultServiceErrorHandling(error: any) {
-    console.log(error);
+    //console.log(error);
     this.error = true;
     if (typeof error.error === 'object') {
-      console.log('error');
+      //console.log('error');
       this.errorMessage = error.error.error;
     } else {
       this.errorMessage = error.error;

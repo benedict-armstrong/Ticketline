@@ -48,7 +48,7 @@ export class EventSearchComponent implements OnInit {
       this.size = 8;
       this.eventService.getEvents(this.page, this.size).subscribe(
         response => {
-          console.log(response);
+          //console.log(response);
 
           // for (const event of response) {
           //   const date = new Date(event.date).toDateString();
@@ -72,14 +72,14 @@ export class EventSearchComponent implements OnInit {
           this.searchedDates.emit(this.dates);
           this.searchedNoEvent.emit(this.noEvent);
         }, error => {
-          console.error(error);
+          //console.error(error);
         }
       );
     } else {
       this.eventService.searchEvents(this.page, this.size, this.eventSearchForm.value.title,
         this.eventSearchForm.value.description, this.eventSearchForm.value.duration, this.eventSearchForm.value.eventType).subscribe(
           response => {
-            console.log(response);
+            //console.log(response);
 
             // for (const event of response) {
             //   const date = new Date(event.date).toDateString();
@@ -101,7 +101,7 @@ export class EventSearchComponent implements OnInit {
             this.searchedNoEvent.emit(this.noEvent);
             this.searchPagination.emit(true);
           }, error => {
-            console.error(error);
+            //console.error(error);
           }
         );
     }

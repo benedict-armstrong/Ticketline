@@ -1,4 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { FormBuilder, FormGroup } from '@angular/forms';
+import { Router } from '@angular/router';
+import { throttleTime } from 'rxjs/operators';
 import { AuthService } from 'src/app/services/auth.service';
 import { TicketService } from 'src/app/services/ticket.service';
 
@@ -9,9 +12,18 @@ import { TicketService } from 'src/app/services/ticket.service';
 })
 export class NavbarComponent implements OnInit {
 
-  constructor(private authService: AuthService, private ticketService: TicketService) {}
+  fulltextSearchForm: FormGroup;
 
-  ngOnInit(): void {}
+  constructor(private authService: AuthService,
+              private formBuilder: FormBuilder,
+              private ticketService: TicketService,
+              private router: Router) { }
+
+  ngOnInit(): void {
+    this.fulltextSearchForm = this.formBuilder.group({
+      text: ['', []],
+    });
+  }
 
   toggleCart() {
     this.ticketService.toggleStatus();
@@ -38,5 +50,14 @@ export class NavbarComponent implements OnInit {
 
   hasOrganizerPermission(): boolean {
     return this.authService.getUserRole() === 'ORGANIZER' || this.hasAdminPermission();
+  }
+
+  /**
+   * Performs full text search over events
+   */
+  fullTextSearch() {
+    this.router.navigateByUrl('/', {skipLocationChange: true}).then(() =>
+      this.router.navigate(['/events'], { queryParams: { search: this.fulltextSearchForm.value.text } })
+    );
   }
 }

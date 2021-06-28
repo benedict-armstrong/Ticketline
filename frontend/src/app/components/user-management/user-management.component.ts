@@ -88,11 +88,10 @@ export class UserManagementComponent implements OnInit {
   }
 
   resetPassword(user: User) {
-    this.userService.resetPassword(user.email).subscribe(
-      response => {
-        user = response;
+    this.userService.sendResetLink(user.email).subscribe(
+      () => {
         this.success = true;
-        this.successMessage = 'The password for ' + user.email + ' has been reset.';
+        this.successMessage = 'Password reset link has been sent to ' + user.email;
       }, error => {
         this.handleError(error);
       }

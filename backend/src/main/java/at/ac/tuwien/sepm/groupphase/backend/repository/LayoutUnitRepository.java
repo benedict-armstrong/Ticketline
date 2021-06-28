@@ -9,4 +9,12 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.List;
 
 public interface LayoutUnitRepository extends JpaRepository<LayoutUnit, Long> {
+
+    /**
+     * Find all layoutUnits in given Sector.
+     *
+     * @param sector of the layoutUnits to find
+     * @return list of all found layoutUnits
+     */
+    List<LayoutUnit> findLayoutUnitBySector(Sector sector);
 }

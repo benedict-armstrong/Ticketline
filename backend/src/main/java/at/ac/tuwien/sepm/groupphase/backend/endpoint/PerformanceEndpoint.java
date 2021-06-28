@@ -53,7 +53,7 @@ public class PerformanceEndpoint {
 
     @PermitAll
     @GetMapping(value = "/{id}")
-    @Operation(summary = "Get a specific performance")
+    @Operation(summary = "Get a specific performance (will also check seats in the venue)")
     public PerformanceDto findById(@PathVariable Long id) {
         LOGGER.info("GET /api/v1/performances/{}", id);
         return performanceMapper.performanceToPerformanceDto(performanceService.findById(id));

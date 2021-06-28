@@ -1,13 +1,12 @@
 @import "src/colors";
-
-@import "src/colors";
+@import "src/styles";
 
 .location {
   display: flex;
   max-height: 130px;
   justify-content: space-between;
   align-items: center;
-  background-color: $gray-242;
+  background-color: $gray-lighter;
 }
 
 
@@ -20,7 +19,7 @@
 }
 
 .date-time {
-  color: #c14953;
+  color: $primary;
 }
 
 .detail {
@@ -29,4 +28,9 @@
 
 h5 {
   margin-top: 1rem;
+}
+
+div.location.list-item {
+  width: 100%;
+  margin-left: 0;
 }

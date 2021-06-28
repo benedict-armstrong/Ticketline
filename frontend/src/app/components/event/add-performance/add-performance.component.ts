@@ -40,6 +40,9 @@ export class AddPerformanceComponent implements OnInit {
 
   addPerformance() {
     this.submitted = true;
+
+    //console.log(this.ticketTypes);
+
     if (this.addPerformanceForm.valid && this.artist && this.venue) {
       this.performance = new Performance(
         null,
@@ -54,7 +57,7 @@ export class AddPerformanceComponent implements OnInit {
       this.performanceAdded.emit(this.performance);
       this.addPerformanceForm.reset();
     } else {
-      console.log('Invalid Input');
+      //console.log('Invalid Input');
     }
   }
 

@@ -41,16 +41,16 @@ export class AddressService {
     if (lineOne !== '') {
       params = params.set('lineOne', lineOne);
     }
-    if (lineOne !== '') {
+    if (lineTwo !== '') {
       params = params.set('lineTwo', lineTwo);
     }
-    if (lineOne !== '') {
+    if (city !== '') {
       params = params.set('city', city);
     }
-    if (lineOne !== '') {
+    if (postCode !== '') {
       params = params.set('postCode', postCode);
     }
-    if (lineOne !== '') {
+    if (country !== '') {
       params = params.set('country', country);
     }
 

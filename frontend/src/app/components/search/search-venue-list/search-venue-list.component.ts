@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { VenueService } from 'src/app/services/venue.service';
 
@@ -7,9 +7,11 @@ import { VenueService } from 'src/app/services/venue.service';
   templateUrl: './search-venue-list.component.html',
   styleUrls: ['./search-venue-list.component.scss']
 })
-export class SearchVenueListComponent implements OnInit {
+export class SearchVenueListComponent implements OnInit, OnChanges {
 
   @Output() selectedVenue = new EventEmitter<any>();
+
+  @Input() reset = false;
 
   venueSearchForm: FormGroup;
   venues = [];
@@ -23,7 +25,21 @@ export class SearchVenueListComponent implements OnInit {
       selectedVenue: ['', []],
     });
 
+    this.venues = [];
+    this.filteredVenues = [];
     this.getVenues();
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (this.reset) {
+      this.venueSearchForm = this.formBuilder.group({
+        venueName: ['', []],
+        selectedVenue: ['', []],
+      });
+
+      this.getVenues();
+      this.reset = false;
+    }
   }
 
   filterVenues() {
@@ -50,7 +66,7 @@ export class SearchVenueListComponent implements OnInit {
   getVenues() {
     this.venueService.getVenues().subscribe(
       (response) => {
-        console.log(response);
+        //console.log(response);
 
         this.venues.push(...response);
         this.filteredVenues.push(...response);
@@ -60,7 +76,7 @@ export class SearchVenueListComponent implements OnInit {
           this.filterVenues();
         }
       }, error => {
-        console.error(error);
+        //console.error(error);
       }
     );
   }

@@ -1,7 +1,8 @@
 @import "../../../colors.scss";
+@import "../../../styles.scss";
 
 .event {
-  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+  box-shadow: rgba(100, 100, 111, 0.2) 0 7px 29px 0;
   margin: 10px;
 }
 
@@ -9,22 +10,17 @@
   margin: 20px 0;
 }
 
-.additional-event-info {
-  background-color: $gray-242;
-}
-
-.jumbotron img {
-  width: 100%;
-  object-fit: cover;
-  height: 500px;
-}
-
 .main {
   padding: 20px;
 }
 
+.header {
+  background-color: $gray-lighter;
+  margin-right: 0;
+}
+
 .header .info {
-  color: rgba(193, 73, 83, 1);
+  color: $primary;
 }
 
 .header > h3, .header > .add-news {
@@ -37,11 +33,11 @@
 }
 
 .card:hover {
-  border: 1px solid rgba(193, 73, 83, 1);
+  border: 1px solid $primary;
 }
 
 .card.selected {
-  border: 1px solid rgba(193, 73, 83, 1);
+  border: 1px solid $primary;
 }
 
 .tickets > p {
@@ -50,11 +46,11 @@
 
 .tickets {
   margin-top: 20px;
-  padding: 20px 0px;
+  padding: 20px 0;
 }
 
 .selected-items p {
-  margin: 0px;
+  margin: 0;
 }
 
 .selected-items {
@@ -95,22 +91,26 @@ h4 {
   margin-top: 5px;
   align-items: center;
   cursor: pointer;
-  background-color: $gray-242;
+  background-color: $gray-lighter;
+  margin-left: 0;
 }
 
-.performance:hover {
-  box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
+div.performance.list-item {
+  width: 100%;
 }
+
+//.performance {
+//  box-shadow: rgba(0, 0, 0, 0.1) 0 4px 12px;
+//}
+//
+//.performance:hover {
+//  background: lighten(lightgray, 15%);
+//}
 
 .info {
   display: flex;
 }
 
 .date-time {
-  color: #c14953;
+  color: $primary;
 }
-
-.detail {
-  margin-left: 10px;
-}
-

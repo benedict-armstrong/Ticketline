@@ -2,12 +2,13 @@
   <div class="card-body">
     <div>
       <img src="assets/tickets.svg" alt="">
-      <h5 class="card-title">{{eventType}} Tickets</h5>
+      <h5 class="card-title">{{performance.title}} Tickets</h5>
     </div>
     <div class="card-text">
       <p>
+        {{eventType}} Tickets<br>
         {{performance.date  | date:'EEEE, MMM d, y HH:mm'}}<br>
-        {{performance.venue.name}}
+        {{$any(performance.venue).name}}
       </p>
       <div *ngIf="!tooLong">
         <div *ngFor="let entry of tickets">
@@ -34,7 +35,7 @@
         </div>
       </div>
     </div>
-    <button [routerLink]="['/ticket']" *ngIf="reserved" disabled>Buy in orders</button>
-    <button [routerLink]="['/ticket']" *ngIf="!reserved">View</button>
+    <div class="secondary" *ngIf="reserved">Buy under All Orders</div>
+    <button class="primary" (click)="clickDownloadTicket()" *ngIf="!reserved">Download Tickets</button>
   </div>
 </div>

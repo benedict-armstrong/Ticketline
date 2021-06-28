@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { User } from 'src/app/dtos/user';
@@ -14,6 +14,9 @@ import {TicketGroup} from '../../dtos/ticketGroup';
   styleUrls: ['./user-home.component.scss'],
 })
 export class UserHomeComponent implements OnInit {
+
+  @ViewChild('deletionModal') deletionModal: ElementRef;
+
   // Error flag
   error = false;
   errorMessage = '';
@@ -87,6 +90,7 @@ export class UserHomeComponent implements OnInit {
         });
 
         this.loadReserved();
+        // this.loadCancelled();
       },
       (error) => {
         this.defaultServiceErrorHandling(error);
@@ -95,7 +99,6 @@ export class UserHomeComponent implements OnInit {
   }
 
   loadReserved() {
-    console.log('loading reserved orders');
     this.ticketService.getReservedItems().subscribe(
       (response) => {
         // Get all reserved tickets
@@ -110,7 +113,6 @@ export class UserHomeComponent implements OnInit {
           Date.parse(x.tickets[0].performance.date) - Date.parse(y.tickets[0].performance.date)).reverse();
         this.newOrders = this.orders.filter(item => item.old === false);
         this.loading = false;
-        console.log(this.orders);
       },
       (error) => {
         this.defaultServiceErrorHandling(error);
@@ -159,6 +161,18 @@ export class UserHomeComponent implements OnInit {
     }
   }
 
+  deleteAccount() {
+    this.userService.delete(this.user.id).subscribe(
+      response => {
+        this.deletionModal.nativeElement.click(); // close modal
+        this.authService.logoutUser();
+        this.router.navigate(['/deleted']);
+      }, error => {
+        this.defaultServiceErrorHandling(error);
+      }
+    );
+  }
+
   vanishAlert(): void {
     this.error = false;
     this.passwordSuccess = false;
@@ -166,7 +180,7 @@ export class UserHomeComponent implements OnInit {
   }
 
   private defaultServiceErrorHandling(error: any) {
-    console.log(error);
+    //console.log(error);
     this.error = true;
     if (typeof error.error === 'object') {
       this.errorMessage = error.error.error;
@@ -176,7 +190,7 @@ export class UserHomeComponent implements OnInit {
   }
 
   private defaultPasswordErrorHandling(error: any) {
-    console.log(error);
+    //console.log(error);
     this.passwordError = true;
     if (typeof error.error === 'object') {
       this.passwordErrorMessage = error.error.error;

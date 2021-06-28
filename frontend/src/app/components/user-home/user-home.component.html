@@ -7,11 +7,17 @@
     </div>
     <div *ngIf="!loading">
       <div *ngIf="!showAll" class="row row-cols-1 row-cols-md-4 g-4">
+        <div *ngIf="newOrders.length === 0" class="no-tickets-alert">
+          No tickets yet
+        </div>
         <div *ngFor="let entry of newOrders" class="col">
           <app-ticket-order-item [ticketItem]="entry"></app-ticket-order-item>
         </div>
       </div>
       <div *ngIf="showAll" class="row row-cols-1 row-cols-md-4 g-4">
+        <div *ngIf="orders.length === 0" class="no-tickets-alert">
+          No tickets yet
+        </div>
         <div *ngFor="let entry of orders" class="col">
           <app-ticket-order-item [ticketItem]="entry"></app-ticket-order-item>
         </div>
@@ -19,10 +25,9 @@
     </div>
 
     <button class="secondary" *ngIf="!showAll" (click)="showAll = true">Show expired tickets</button>
-    <button class="secondary" *ngIf="notPaid" [routerLink]="['/orders']">Click here to show orders</button>
   </div>
   <div class="user-info cards">
-    <h3>Address and Contact Info</h3>
+    <h3>Your Profile</h3>
     <div class="row row-cols-1 row-cols-md-4 g-4">
       <div class="col">
         <div class="card h-100">
@@ -60,20 +65,17 @@
           </div>
         </div>
       </div>
-<!--      <div class="col">-->
-<!--        <div class="card h-100">-->
-<!--          <div class="card-body">-->
-<!--            <div>-->
-<!--              <i class="bi bi-mailbox"></i>-->
-<!--              <h5 class="card-title">Shipping Address</h5>-->
-<!--            </div>-->
-<!--            <p class="card-text text-muted">-->
-<!--              Same as Address-->
-<!--            </p>-->
-<!--            <button class="primary">Edit</button>-->
-<!--          </div>-->
-<!--        </div>-->
-<!--      </div>-->
+      <div class="col">
+        <div class="card h-100">
+          <div class="card-body">
+            <div>
+              <i class="bi bi-receipt-cutoff"></i>
+              <h5 class="card-title">All Orders</h5>
+            </div>
+            <button class="primary" [routerLink]="['/orders']">View Orders</button>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
   <div class="user-actions cards" id="userActions">
@@ -145,17 +147,6 @@
           </div>
         </div>
       </div>
-      <div class="col">
-        <div class="card h-100">
-          <div class="card-body">
-            <div>
-              <i class="bi bi-receipt-cutoff"></i>
-              <h5 class="card-title">All Orders</h5>
-            </div>
-            <button class="primary" [routerLink]="['/orders']">View Orders</button>
-          </div>
-        </div>
-      </div>
       <div *ngIf="this.user.role === 'ADMIN'" class="col">
         <div class="card h-100">
           <div class="card-body">
@@ -165,6 +156,40 @@
             </div>
             <button class="primary" [routerLink]="['/users']">View Users</button>
           </div>
+        </div>
+      </div>
+      <div *ngIf="this.user.role === 'CLIENT'" class="col">
+        <div class="card h-100">
+          <div class="card-body">
+            <div>
+              <i class="bi bi-trash"></i>
+              <h5 class="card-title">Delete Account</h5>
+            </div>
+            <button class="primary" data-bs-toggle="modal" data-bs-target="#exampleModal">Delete Account</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal -->
+<div #deletionModal class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Danger zone</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        Your account information will be deleted immediately with no possibility to be restored.<br/><br/>
+        For legal reasons, we still have to store your invoices, as well as information about your payments and tickets.<br/><br/>
+        Click on <em>Delete</em> if you wish to delete your account.
+      </div>
+      <div class="modal-footer">
+        <div class="buttons-wrapper">
+          <button type="button" class="secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="button" class="primary" (click)="deleteAccount()">Delete</button>
         </div>
       </div>
     </div>
