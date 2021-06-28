@@ -1,6 +1,5 @@
 @import "src/colors";
-
-@import "src/colors";
+@import "src/styles";
 
 .location {
   display: flex;
@@ -29,4 +28,9 @@
 
 h5 {
   margin-top: 1rem;
+}
+
+div.location.list-item {
+  width: 100%;
+  margin-left: 0;
 }
