@@ -1,52 +1,48 @@
 <div class="search">
-    <div class="filters">
-        <div class="collapse" id="collapsePerformanceSearch">
-            <div class="card">
-                <form [formGroup]="this.performanceSearchForm" (ngSubmit)="resetValues(); searchPerformances()">
-                    <div class="card-body">
-                        <div class="row">
-                            <h3>Search for performances</h3>
-                            <div class="col">
-                                <div class="row mb-3">
-                                    <label for="filterDate" class="col-sm-3 col-form-label">Date</label>
-                                    <div class="col-sm-9">
-                                        <input type="date" class="text-input form-control" id="filterDate"
-                                            formControlName="date">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col">
-                                <div class="row mb-3">
-                                    <label for="filterTime" class="col-sm-3 col-form-label">Time</label>
-                                    <div class="col-sm-9">
-                                        <input type="time" class="text-input form-control" id="filterTime"
-                                            formControlName="time">
-                                    </div>
-                                </div>
-                            </div>
-                            <div *ngIf="!doDateSearch" class="error">
-                                <small class="form-text text-warning">Please give a date with time! </small>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <app-search-venue-list [reset]="resetVenue" (selectedVenue)="setSelectedVenue($event)"></app-search-venue-list>
-                        </div>
-                        <div class="row">
-                            <app-search-event-list [reset]="resetEvent" (selectedEvent)="setSelectedEvent($event)"></app-search-event-list>
-                        </div>
-                    </div>
-                    <div class="card-footer">
-                        <div class="row">
-                            <div class="col">
-                                <button type="submit" class="secondary filterButton">Apply</button>
-                            </div>
-                            <div class="col">
-                                <button type="button" class="secondary filterButton" (click)="resetSearchFields()">Reset</button>
-                            </div>
-                        </div>
-                    </div>
-                </form>
+  <div class="filters">
+    <div class="collapse" id="collapsePerformanceSearch">
+      <div class="card">
+        <form [formGroup]="this.performanceSearchForm" (ngSubmit)="resetValues(); searchPerformances()">
+          <div class="card-body">
+            <div class="row">
+              <h3>Search for performances</h3>
+              <div class="col">
+                <div class="row mb-3">
+                  <label for="filterDate" class="col-sm-3 col-form-label">Date</label>
+                  <div class="col-sm-9">
+                    <input type="date" class="text-input form-control" id="filterDate"
+                           formControlName="date">
+                  </div>
+                </div>
+              </div>
+              <div class="col">
+                <div class="row mb-3">
+                  <label for="filterTime" class="col-sm-3 col-form-label">Time</label>
+                  <div class="col-sm-9">
+                    <input type="time" class="text-input form-control" id="filterTime"
+                           formControlName="time">
+                  </div>
+                </div>
+              </div>
+              <div *ngIf="!doDateSearch" class="error">
+                <small class="form-text text-warning">Please give a date with time! </small>
+              </div>
             </div>
-        </div>
+            <div class="row">
+              <app-search-venue-list [reset]="resetVenue" (selectedVenue)="setSelectedVenue($event)"></app-search-venue-list>
+            </div>
+            <div class="row">
+              <app-search-event-list [reset]="resetEvent" (selectedEvent)="setSelectedEvent($event)"></app-search-event-list>
+            </div>
+          </div>
+          <div class="card-footer">
+            <div class="row row-btns">
+              <button type="submit" class="secondary filterButton">Apply</button>
+              <button type="button" class="secondary filterButton" (click)="resetSearchFields()">Reset</button>
+            </div>
+          </div>
+        </form>
+      </div>
     </div>
+  </div>
 </div>
