@@ -57,6 +57,9 @@ export class PerformanceDetailComponent implements OnInit {
           this.performance.venue = response.venue;
         }
 
+        this.performance.ticketTypes.sort((a, b) => a.price - b.price);
+        this.performance.ticketTypes.sort((a, b) => a.sector.id - b.sector.id);
+
         this.ticketService.getSeatCounts(response.id).subscribe(
           (seatCounts: SeatCount[]) => {
             this.ticketCounts = [];
