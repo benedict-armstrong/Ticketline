@@ -20,6 +20,8 @@ export class SelectSeatComponent implements OnInit {
   selectedTickets: Ticket[] = [];
 
   updatingCart = false;
+  error = false;
+  errorMessage: string;
 
   constructor(private ticketService: TicketService) {
   }
@@ -38,6 +40,7 @@ export class SelectSeatComponent implements OnInit {
       },
     (error) => {
       console.error(error);
+      this.defaultServiceErrorHandling(error);
     });
 
     this.ticketService.cartState$.subscribe(
@@ -48,6 +51,7 @@ export class SelectSeatComponent implements OnInit {
   }
 
   addSeat(seat: LayoutUnitSelect): void {
+    this.vanishAlert();
     const ticketType = this.performance.ticketTypes.find(
       (tt) =>
         // @ts-ignore
@@ -67,12 +71,14 @@ export class SelectSeatComponent implements OnInit {
       },
       (error) => {
         console.error(error);
+        this.defaultServiceErrorHandling(error);
         this.updatingCart = false;
       }
     );
   }
 
   removeSeat(seat: LayoutUnitSelect): void {
+    this.vanishAlert();
     this.updatingCart = true;
      this.ticketService.removeTicketBySeatAndPerformance(seat, this.performance).subscribe(
       () => {
@@ -80,12 +86,14 @@ export class SelectSeatComponent implements OnInit {
       },
       (error) => {
         console.error(error);
+        this.defaultServiceErrorHandling(error);
         this.updatingCart = false;
       }
     );
   }
 
   updateTicketType(ticket: Ticket) {
+    this.vanishAlert();
     this.updatingCart = true;
     this.ticketService.updateTicketType(ticket).subscribe(
       () => {
@@ -93,8 +101,23 @@ export class SelectSeatComponent implements OnInit {
       },
       (error) => {
         console.error(error);
+        this.defaultServiceErrorHandling(error);
         this.updatingCart = false;
       }
     );
+  }
+
+  vanishAlert() {
+    this.error = false;
+  }
+
+  private defaultServiceErrorHandling(error: any) {
+    console.log(error);
+    this.error = true;
+    if (typeof error.error === 'object') {
+      this.errorMessage = error.error.error;
+    } else {
+      this.errorMessage = error.error;
+    }
   }
 }

@@ -56,8 +56,11 @@
   width: 15px;
 }
 
-.selected-seat-list {
+.cart-wrapper {
   height: 500px;
+}
+
+.selected-seat-list {
   overflow: scroll;
   width: 100%;
   counter-reset: seat-counter;

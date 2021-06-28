@@ -10,7 +10,7 @@
       <div class="availability-wrapper">
         Tickets sold:
         <div class="availability">
-          <div class="text-center" [style]="{'width': topEvent.soldTickets / topEvent.totalTickets * 100 + '%'}">{{topEvent.soldTickets / topEvent.totalTickets * 100 }}%</div>
+          <div class="text-center" [style]="{'width': topEvent.soldTickets / topEvent.totalTickets * 100 + '%'}">{{topEvent.soldTickets / topEvent.totalTickets * 100 | number:".2-2" }}%</div>
         </div>
       </div>
     </div>
