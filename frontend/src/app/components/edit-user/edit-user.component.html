@@ -9,7 +9,7 @@
           <input type="text" name="firstName" formControlName="firstName" class="text-input form-control" id="firstName"
             aria-describedby="firstNameHelp" placeholder="Enter first Name">
           <div *ngIf="submitted && editUserForm.controls.firstName.errors" class="error">
-            <small class="form-text text-warning" *ngIf="editUserForm.controls.firstName.errors.required">Your first Name
+            <small class="form-text text-danger" *ngIf="editUserForm.controls.firstName.errors.required">Your first Name
               is
               required!
             </small>
@@ -22,7 +22,7 @@
           <input type="text" name="lastName" formControlName="lastName" class="text-input form-control" id="lastName"
             aria-describedby="lastNameHelp" placeholder="Enter last Name">
           <div *ngIf="submitted && editUserForm.controls.lastName.errors" class="error">
-            <small class="form-text text-warning" *ngIf="editUserForm.controls.lastName.errors.required">Your last Name
+            <small class="form-text text-danger" *ngIf="editUserForm.controls.lastName.errors.required">Your last Name
               is
               required!
             </small>
@@ -36,7 +36,7 @@
       <input type="email" name="email" formControlName="email" class="text-input form-control" id="email"
         aria-describedby="emailHelp" placeholder="Enter email">
       <div *ngIf="submitted && editUserForm.controls.email.errors" class="error">
-        <small class="form-text text-warning" *ngIf="editUserForm.controls.email.errors.required">Your email is
+        <small class="form-text text-danger" *ngIf="editUserForm.controls.email.errors.required">Your email is
           required!
         </small>
       </div>
@@ -59,7 +59,7 @@
             <option value="ADMIN">Admin</option>
           </select>
           <div *ngIf="submitted && editUserForm.controls.role.errors" class="error">
-            <small class="form-text text-warning" *ngIf="editUserForm.controls.role.errors.required">A User Role is
+            <small class="form-text text-danger" *ngIf="editUserForm.controls.role.errors.required">A User Role is
               required!
             </small>
           </div>
@@ -74,7 +74,7 @@
             <option value="BANNED">Banned</option>
           </select>
           <div *ngIf="submitted && editUserForm.controls.status.errors" class="error">
-            <small class="form-text text-warning" *ngIf="editUserForm.controls.status.errors.required">A status is
+            <small class="form-text text-danger" *ngIf="editUserForm.controls.status.errors.required">A status is
               required!
             </small>
           </div>
@@ -87,7 +87,7 @@
       <input type="text" name="addressName" formControlName="addressName" class="text-input form-control"
         id="addressName" aria-describedby="addressNameHelp" placeholder="Enter Address Name">
       <div *ngIf="submitted && editUserForm.controls.addressName.errors" class="error">
-        <small class="form-text text-warning" *ngIf="editUserForm.controls.addressName.errors.required">Your Address Name
+        <small class="form-text text-danger" *ngIf="editUserForm.controls.addressName.errors.required">Your Address Name
           is
           required!
         </small>
@@ -99,7 +99,7 @@
       <input type="text" name="lineOne" formControlName="lineOne" class="text-input form-control" id="lineOne"
         aria-describedby="lineOneHelp" placeholder="Enter line one">
       <div *ngIf="submitted && editUserForm.controls.lineOne.errors" class="error">
-        <small class="form-text text-warning" *ngIf="editUserForm.controls.lineOne.errors.required">Your line one is
+        <small class="form-text text-danger" *ngIf="editUserForm.controls.lineOne.errors.required">Your line one is
           required!
         </small>
       </div>
@@ -118,7 +118,7 @@
           <input type="text" name="city" formControlName="city" class="text-input form-control" id="city"
             aria-describedby="cityHelp" placeholder="Enter City name">
           <div *ngIf="submitted && editUserForm.controls.city.errors" class="error">
-            <small class="form-text text-warning" *ngIf="editUserForm.controls.city.errors.required">Your City Name is
+            <small class="form-text text-danger" *ngIf="editUserForm.controls.city.errors.required">Your City Name is
               required!
             </small>
           </div>
@@ -130,7 +130,7 @@
           <input type="text" name="postcode" formControlName="postcode" class="text-input form-control" id="postcode"
             aria-describedby="postcodeHelp" placeholder="Enter Postcode">
           <div *ngIf="submitted && editUserForm.controls.postcode.errors" class="error">
-            <small class="form-text text-warning" *ngIf="editUserForm.controls.postcode.errors.required">Your Postcode is
+            <small class="form-text text-danger" *ngIf="editUserForm.controls.postcode.errors.required">Your Postcode is
               required!
             </small>
           </div>
@@ -143,7 +143,7 @@
       <input type="text" name="country" formControlName="country" class="text-input form-control" id="country"
         aria-describedby="countryHelp" placeholder="Enter Country">
       <div *ngIf="submitted && editUserForm.controls.country.errors" class="error">
-        <small class="form-text text-warning" *ngIf="editUserForm.controls.country.errors.required">Your Country is
+        <small class="form-text text-danger" *ngIf="editUserForm.controls.country.errors.required">Your Country is
           required!
         </small>
       </div>
