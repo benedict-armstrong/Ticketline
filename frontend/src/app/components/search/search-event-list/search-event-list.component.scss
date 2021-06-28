@@ -1,7 +1,23 @@
 .eventSelector {
-    height: 100%;
+  height: 100%;
 }
 
 .moreEvents {
-    width: 10%;
+  width: 10%;
+}
+
+.event-l {
+  padding-left: 10px;
+}
+
+#div-btm {
+  margin-top: -10px;
+}
+
+button.moreEvents {
+  width: 200px;
+}
+
+select.eventSelector {
+  width: 100%;
 }
