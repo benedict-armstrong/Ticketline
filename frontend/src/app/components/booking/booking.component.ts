@@ -42,8 +42,6 @@ export class BookingComponent implements OnInit {
           this.empty = false;
         }
         this.loading = false;
-      }, error => {
-        //console.error(error);
       }
     );
   }
@@ -69,8 +67,6 @@ export class BookingComponent implements OnInit {
         booking.status = response.status;
         this.bought = true;
         this.scrollToTop();
-      }, error => {
-        //console.error(error);
       }
     );
   }
@@ -93,8 +89,6 @@ export class BookingComponent implements OnInit {
 
 
         this.scrollToTop();
-      }, error => {
-        //console.error(error);
       }
     );
   }
