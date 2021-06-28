@@ -26,18 +26,15 @@ export class SelectSeatComponent implements OnInit {
 
   ngOnInit(): void {
     this.ticketService.updateShoppingCart().subscribe(() => {
-        if (this.performance.venue instanceof Venue) {
-          for (const row of this.performance.venue.layout) {
-            for (const unit of row) {
-              if (unit) {
-                unit.sector = this.performance.venue.sectors.find(s => s.id === unit.sector);
-              }
+        const temp = this.performance.venue as Venue;
+        for (const row of temp.layout) {
+          for (const unit of row) {
+            if (unit) {
+              unit.sector = temp.sectors.find(s => s.id === unit.sector);
             }
           }
-          this.layout = this.performance.venue.layout;
-        } else {
-          console.error('Venue not processable');
         }
+        this.layout = temp.layout;
       },
     (error) => {
       console.error(error);
