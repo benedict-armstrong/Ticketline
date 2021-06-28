@@ -148,7 +148,7 @@ public class UserServiceImpl implements UserService {
                 user.setStatus(ApplicationUser.UserStatus.ACTIVE);
             }
 
-            simpleMailService.sendMail(user.getEmail(), "New Account at Ticketline", String.format("Hello %s %s,\n\nwelcome to Ticketline!", user.getFirstName(), user.getLastName()));
+            simpleMailService.sendMail(user.getEmail(), "New Account at Ticketline", String.format("Hello %s %s,\n\nwelcome to Ticketline!", user.getFirstName(), user.getLastName()), null);
 
             return userRepository.save(user);
         }
@@ -213,9 +213,9 @@ public class UserServiceImpl implements UserService {
         myToken = passwordTokenService.save(myToken);
 
         //Frontend Domain and port are hardcoded
-        simpleMailService.sendMail(user.getEmail(), "[Ticketline] Password reset", String.format("Hello %s %s,\n\nSomeone requested a password reset link. If this wasn't you, you can ignore this mail."
-            + "\n\nYou can change your password here: \n"
-            + "http://localhost:4200/changePassword?token=%s (this link is only valid for 24 hours)", user.getFirstName(), user.getLastName(), myToken.getToken()));
+        simpleMailService.sendMail(user.getEmail(), "[Ticketline] Password reset", String.format("<h1> Hello %s %s,</h1></br></br>Someone requested a password reset link. If this wasn't you, you can ignore this mail."
+            + "</br></br>You can change your password here: </br>"
+            + "http://localhost:4200/changePassword?token=%s (this link is only valid for 24 hours)", user.getFirstName(), user.getLastName(), myToken.getToken()), null);
     }
 
     @Override

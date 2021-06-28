@@ -88,6 +88,7 @@ export class BookingComponent implements OnInit {
           booking = response;
           this.bookings[bookIndex] = booking;
           this.allBookings[allBookIndex] = booking;
+          this.cancelled = true;
         }
 
 
