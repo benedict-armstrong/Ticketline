@@ -19,7 +19,7 @@ import java.time.LocalDateTime;
 public class UserDataGenerator {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
-    private static final int NUMBER_OF_USER_TO_GENERATE = 5;
+    private static final int NUMBER_OF_USER_TO_GENERATE = 10;
     private static final String TEST_USER_NAME = "user";
     private static final String TEST_ADDRESS_NAME = "Address";
     private static final String TEST_ADDRESS_CITY = "Vienna";
@@ -37,7 +37,7 @@ public class UserDataGenerator {
     @PostConstruct
     private void generateUser() {
 
-        if (userRepository.findAll().size() > 2) {
+        if (userRepository.findAll().size() >= NUMBER_OF_USER_TO_GENERATE) {
             LOGGER.debug("user already generated");
         } else {
             LOGGER.debug("generating {} user entries", NUMBER_OF_USER_TO_GENERATE);
@@ -45,7 +45,7 @@ public class UserDataGenerator {
             for (int i = 0; i < NUMBER_OF_USER_TO_GENERATE; i++) {
                 ApplicationUser user = ApplicationUser.builder()
                     .email(TEST_USER_NAME + i + "@mail.com")
-                    .password(TEST_USER_NAME + i + TEST_USER_NAME)
+                    .password("password")
                     .firstName(TEST_USER_NAME + i + "first")
                     .lastName(TEST_USER_NAME + i + "last")
                     .role(ApplicationUser.UserRole.CLIENT)

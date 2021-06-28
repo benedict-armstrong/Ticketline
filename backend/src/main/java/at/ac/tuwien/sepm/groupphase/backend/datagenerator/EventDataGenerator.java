@@ -37,7 +37,7 @@ public class EventDataGenerator {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-    private static final int NUMBER_OF_EVENTS_TO_GENERATE = 5;
+    private static final int NUMBER_OF_EVENTS_TO_GENERATE = 10;
 
     private final EventRepository eventRepository;
     private final FileRepository fileRepository;
@@ -65,7 +65,7 @@ public class EventDataGenerator {
 
     @PostConstruct
     private void generateEvent() {
-        if (eventRepository.findAll().size() > 0) {
+        if (eventRepository.findAll().size() >= NUMBER_OF_EVENTS_TO_GENERATE) {
             LOGGER.debug("Events have already been generated");
         } else {
             LOGGER.debug("Generating {} event entries", NUMBER_OF_EVENTS_TO_GENERATE);

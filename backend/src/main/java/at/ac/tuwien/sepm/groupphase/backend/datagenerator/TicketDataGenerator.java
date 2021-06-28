@@ -25,6 +25,8 @@ import javax.transaction.Transactional;
 import java.lang.invoke.MethodHandles;
 import java.time.LocalDateTime;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Random;
 import java.util.Set;
 
 @Profile("generateData")
@@ -55,50 +57,64 @@ public class TicketDataGenerator {
 
     @Transactional
     public void generateTickets() {
-        if (ticketRepository.findAll().size() > 0) {
+        if (ticketRepository.findAll().size() >= NUMBER_OF_TICKETS_TO_GENERATE) {
             LOGGER.debug("Tickets have already been generated");
         } else {
             LOGGER.debug("Generating {} tickets", NUMBER_OF_TICKETS_TO_GENERATE);
 
-            ApplicationUser user = userRepository.findAll().get(0);
-            Event event = eventRepository.findAll().get(0);
-            Performance performance = (Performance) event.getPerformances().toArray()[0];
-            TicketType ticketType = (TicketType) performance.getTicketTypes().toArray()[0];
+            List<ApplicationUser> users = userRepository.findAll();
+            List<Event> events = eventRepository.findAll();
 
-            if (NUMBER_OF_TICKETS_TO_GENERATE > performance.getVenue().getLayout().size()) {
-                NUMBER_OF_TICKETS_TO_GENERATE = performance.getVenue().getLayout().size();
-                LOGGER.debug("Can only generate {} tickets due to limited amount of seats at venue", NUMBER_OF_TICKETS_TO_GENERATE);
-            }
-
-            Set<Ticket> ticketSet = new HashSet<>();
             for (int i = 0; i < NUMBER_OF_TICKETS_TO_GENERATE; i++) {
+
+                Set<Ticket> ticketSet = new HashSet<>();
+
+                int numberOfUsers = users.size();
+                ApplicationUser user = users.get(i % numberOfUsers);
+                LOGGER.info("Generating ticket for {}", user.getFirstName());
+
+                int numberOfEvents = events.size();
+                Event event = events.get(i % numberOfEvents);
+                Set<Performance> performances = event.getPerformances();
+                int numberOfPerformances = performances.size();
+                Performance performance = (Performance) performances.toArray()[i % numberOfPerformances];
+                TicketType ticketType = (TicketType) performance.getTicketTypes().toArray()[0];
+
+                if (NUMBER_OF_TICKETS_TO_GENERATE > performance.getVenue().getLayout().size()) {
+                    NUMBER_OF_TICKETS_TO_GENERATE = performance.getVenue().getLayout().size();
+                    LOGGER.debug("Can only generate {} tickets due to limited amount of seats at venue", NUMBER_OF_TICKETS_TO_GENERATE);
+                }
+
                 LayoutUnit seat = performance.getVenue().getLayout().get(i);
 
                 if (seat.getSector().getType().equals(Sector.SectorType.STAGE)) {
                     continue;
                 }
 
+                Random rand = new Random();
+
                 ticketSet.add(Ticket.builder()
                     .ticketType(ticketType)
                     .performance(performance)
-                    .changeDate(LocalDateTime.now().minusDays(2).plusMinutes(100))
+                    .changeDate(LocalDateTime.now().minusDays(i % 5 + rand.nextInt(7)).plusMinutes(rand.nextInt(100)))
                     .user(user)
                     .seat(seat)
                     .status(Ticket.Status.PAID_FOR)
                     .build()
                 );
+
+                Booking booking = Booking.builder()
+                    .createDate(LocalDateTime.now())
+                    .user(user)
+                    .tickets(ticketSet)
+                    .status(Booking.Status.PAID_FOR)
+                    .invoice(null)
+                    .build();
+
+                ticketRepository.saveAll(ticketSet);
+                bookingRepository.save(booking);
             }
 
-            Booking booking = Booking.builder()
-                .createDate(LocalDateTime.now())
-                .user(user)
-                .tickets(ticketSet)
-                .status(Booking.Status.PAID_FOR)
-                .invoice(null)
-                .build();
-
-            ticketRepository.saveAll(ticketSet);
-            bookingRepository.save(booking);
         }
     }
 }
