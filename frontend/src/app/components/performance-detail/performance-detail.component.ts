@@ -25,11 +25,10 @@ export class PerformanceDetailComponent implements OnInit {
 
   ngOnInit(): void {
     this.selectSeats = false;
-    const performanceId = this.activeRoute.snapshot.params.id;
-    this.getPerformance(performanceId);
+    this.getPerformance();
     this.ticketService.cartState$.subscribe(
       () => {
-        this.getPerformance(performanceId);
+        this.getPerformance();
       }
     );
   }
@@ -39,17 +38,23 @@ export class PerformanceDetailComponent implements OnInit {
   }
 
   selectSeatsFunc(value: boolean) {
-    const performanceId = this.activeRoute.snapshot.params.id;
-    this.performance = null;
-    this.getPerformance(performanceId);
     this.selectSeats = value;
   }
 
-  private getPerformance(performanceId) {
+  private getPerformance() {
+    const performanceId = this.activeRoute.snapshot.params.id;
     this.performanceService.getPerformanceById(performanceId).subscribe(
       (response) => {
-        if (this.performance === null) {
+        if (this.performance === null || this.performance === undefined) {
           this.performance = response;
+        } else {
+          this.performance.artist = response.artist;
+          this.performance.date = response.date;
+          this.performance.description = response.description;
+          this.performance.id = response.id;
+          this.performance.ticketTypes = response.ticketTypes;
+          this.performance.title = response.title;
+          this.performance.venue = response.venue;
         }
 
         this.ticketService.getSeatCounts(response.id).subscribe(

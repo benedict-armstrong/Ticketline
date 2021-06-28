@@ -55,7 +55,6 @@ export class TicketService {
 
   reload(): void {
     this.updateShoppingCart().subscribe(() => {
-        this.updateCartState();
     },
     (error) => {
       this.defaultServiceErrorHandling(error);
@@ -300,12 +299,10 @@ export class TicketService {
   }
 
   checkout(): Observable<boolean> {
-    this.updateCartState();
     return this.httpClient.put<boolean>(this.ticketBaseUri + '/checkout', null);
   }
 
   reserve(): Observable<boolean> {
-    this.updateCartState();
     return this.httpClient.put<boolean>(this.ticketBaseUri + '/reserve', null);
   }
 
