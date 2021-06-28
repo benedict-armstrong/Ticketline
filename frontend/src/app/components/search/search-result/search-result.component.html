@@ -1,6 +1,6 @@
 <h1 class="text-center header">Find the perfect event</h1>
 
-<form [formGroup]="this.fulltextSearchForm" (ngSubmit)="resetFullTextSearch(); fullTextSearch()">
+<form class="search-form" [formGroup]="this.fulltextSearchForm" (ngSubmit)="resetFullTextSearch(); fullTextSearch()">
   <input class="form-control search text-input"  type="search" placeholder="Search" aria-label="Search" formControlName="text">
 </form>
 
