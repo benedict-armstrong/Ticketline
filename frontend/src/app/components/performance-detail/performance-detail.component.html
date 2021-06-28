@@ -1,24 +1,22 @@
 <div class="performance" *ngIf="performance">
   <div class="main">
     <div class="header">
-      <h3>{{performance.title}}</h3>
-      <div class="row performance-info">
-        <div class="col-8">
-          <p>{{performance.description}}</p>
-        </div>
-        <div class="col-4 additional-performance-info">
-          <h4>Time</h4>
-          <p class="info">{{performance.date | date:'EEEE, MMM d, y HH:mm'}} <br>
-          <h4>Performer</h4>
-          <p>{{performance.artist.firstName}} {{performance.artist.lastName}}</p>
-          <h4>Location</h4>
-          <p>
-            {{this.performance.venue.name}}<br>
-            {{this.performance.venue.address.lineOne}}<br>
-            {{this.performance.venue.address.postcode}} {{this.performance.venue.address.city}} <br>
-            {{this.performance.venue.address.country}}
-          </p>
-        </div>
+      <div class="left-wrap">
+        <h3>{{performance.title}}</h3>
+        <p>{{performance.description}}</p>
+      </div>
+      <div class="right-wrap">
+        <h4>Time</h4>
+        <p class="info">{{performance.date | date:'EEEE, MMM d, y HH:mm'}} <br>
+        <h4>Performer</h4>
+        <p>{{performance.artist.firstName}} {{performance.artist.lastName}}</p>
+        <h4>Location</h4>
+        <p>
+          {{this.performance.venue.name}}<br>
+          {{this.performance.venue.address.lineOne}}<br>
+          {{this.performance.venue.address.postcode}} {{this.performance.venue.address.city}} <br>
+          {{this.performance.venue.address.country}}
+        </p>
       </div>
     </div>
     <div class="body">
