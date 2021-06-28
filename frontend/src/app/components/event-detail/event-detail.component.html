@@ -22,9 +22,6 @@
           </div>
         </div>
     <div class="col-md-4 event-info">
-          <div class="add-news" *ngIf="hasOrganizerPermission()">
-            <button class="primary" [routerLink]="['/add-news', eventItem.id]">Add News</button>
-          </div>
           <h3>{{eventItem.name}}</h3>
 
           <p>
@@ -37,6 +34,10 @@
             Duration: {{eventItem.duration}} minutes<br>
             {{eventItem.eventType | titlecase}}
           </p>
+
+          <div class="add-news" *ngIf="hasOrganizerPermission()">
+            <button class="primary" [routerLink]="['/add-news', eventItem.id]">Add News</button>
+          </div>
 
       </div>
     </div>
