@@ -17,6 +17,7 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.lang.invoke.MethodHandles;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -26,6 +27,9 @@ import java.util.List;
 public class VenueDataGenerator {
 
     private static final int NUMBER_OF_VENUES_TO_GENERATE = 25;
+
+    private static final int NUMBER_OF_SEATS = 500;
+    private static final int NUMBER_OF_STANDING = 500;
 
     private final VenueService venueService;
 
@@ -46,21 +50,30 @@ public class VenueDataGenerator {
         for (int i = 0; i < NUMBER_OF_VENUES_TO_GENERATE; i++) {
 
             Sector sectorStage = Sector.builder().localId(0L).name("SectorDto stage").color("#CCCCCC").type(Sector.SectorType.STAGE).build();
-            Sector sectorSeated = Sector.builder().localId(1L).name("SectorDto seated").color("#867FD2").type(Sector.SectorType.SEATED).build();
-            Sector sectorStanding = Sector.builder().localId(2L).name("SectorDto standing").color("#837F22").type(Sector.SectorType.STANDING).build();
+            Sector sectorSeated = Sector.builder().localId(1L).name("SectorDto seated").color("#EE9781").type(Sector.SectorType.SEATED).build();
+            Sector sectorStanding = Sector.builder().localId(2L).name("SectorDto standing").color("#335F70").type(Sector.SectorType.STANDING).build();
 
 
-            int venueWidth = 3;
+            int venueWidth = 25;
+            int size;
 
-            List<LayoutUnit> venueLayout = Arrays.asList(
-                LayoutUnit.builder().sector(sectorStage).localId(0).customLabel("1").build(),
-                LayoutUnit.builder().sector(sectorStage).localId(1).customLabel("2").build(),
-                LayoutUnit.builder().sector(sectorStage).localId(2).customLabel("3").build(),
-                LayoutUnit.builder().sector(sectorSeated).localId(3).customLabel("4").build(),
-                LayoutUnit.builder().sector(sectorSeated).localId(5).customLabel("6").build(),
-                LayoutUnit.builder().sector(sectorStanding).localId(6).customLabel("7").build(),
-                LayoutUnit.builder().sector(sectorStanding).localId(7).customLabel("8").build()
-            );
+            List<LayoutUnit> venueLayout = new ArrayList<>();
+
+            for (int j = 0; j < venueWidth * 2; j++) {
+                venueLayout.add(LayoutUnit.builder().sector(sectorStage).localId(j).customLabel("" + j).build());
+            }
+
+            size = venueLayout.size();
+            for (int j = size; j < NUMBER_OF_SEATS + size; j++) {
+                venueLayout.add(LayoutUnit.builder().sector(sectorSeated).localId(j).customLabel("" + j).build());
+            }
+
+            size = venueLayout.size();
+            for (int j = size; j < NUMBER_OF_STANDING + size; j++) {
+                venueLayout.add(LayoutUnit.builder().sector(sectorStanding).localId(j).customLabel("" + j).build());
+            }
+
+
 
             Faker faker = new Faker();
 
@@ -73,7 +86,7 @@ public class VenueDataGenerator {
 
             venueService.add(
                 Venue.builder()
-                    .name("Venue" + NUMBER_OF_VENUES_TO_GENERATE)
+                    .name("Venue " + i)
                     .sectors(Arrays.asList(sectorSeated, sectorStage, sectorStanding))
                     .address(
                         Address.builder()

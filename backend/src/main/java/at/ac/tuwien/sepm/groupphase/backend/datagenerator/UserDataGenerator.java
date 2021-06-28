@@ -19,7 +19,7 @@ import java.time.LocalDateTime;
 public class UserDataGenerator {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
-    private static final int NUMBER_OF_USER_TO_GENERATE = 10;
+    private static final int NUMBER_OF_USER_TO_GENERATE = 1000;
     private static final String TEST_USER_NAME = "user";
     private static final String TEST_ADDRESS_NAME = "Address";
     private static final String TEST_ADDRESS_CITY = "Vienna";

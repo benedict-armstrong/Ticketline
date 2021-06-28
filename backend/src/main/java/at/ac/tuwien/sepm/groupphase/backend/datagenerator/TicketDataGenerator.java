@@ -35,7 +35,7 @@ import java.util.Set;
 public class TicketDataGenerator {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
-    private static int NUMBER_OF_TICKETS_TO_GENERATE = 10;
+    private static int NUMBER_OF_TICKETS_TO_GENERATE = 1000;
 
     private final TicketRepository ticketRepository;
     private final EventRepository eventRepository;
@@ -79,7 +79,7 @@ public class TicketDataGenerator {
 
                 if (NUMBER_OF_TICKETS_TO_GENERATE > performance.getVenue().getLayout().size()) {
                     NUMBER_OF_TICKETS_TO_GENERATE = performance.getVenue().getLayout().size();
-                    LOGGER.debug("Can only generate {} tickets due to limited amount of seats at venue", NUMBER_OF_TICKETS_TO_GENERATE);
+                    LOGGER.info("Can only generate {} tickets due to limited amount of seats at venue", NUMBER_OF_TICKETS_TO_GENERATE);
                 }
 
                 LayoutUnit seat = performance.getVenue().getLayout().get(i);
