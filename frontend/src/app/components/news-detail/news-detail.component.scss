@@ -21,12 +21,6 @@
   color: $gray-lighter;
 }
 
-.date {
-  margin-bottom: 20px;
-  text-align: center;
-  width: 30px;
-}
-
 #month {
   font-size: 9.5pt;
 }
@@ -42,11 +36,4 @@
 .carousel-inner img {
   object-fit: cover;
   -webkit-transform: translateY(calc(-50% + 250px));
-}
-
-.dateGroup {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-around;
-  font-weight: bold;
 }
