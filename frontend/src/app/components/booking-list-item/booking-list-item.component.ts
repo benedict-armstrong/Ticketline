@@ -11,10 +11,16 @@ export class BookingListItemComponent implements OnInit {
   @Output() cancelBooking = new EventEmitter<Booking>();
   @Output() buyBooking = new EventEmitter<Booking>();
   @Output() downloadBooking = new EventEmitter<Booking>();
+  inThePast = false;
 
   constructor() { }
 
   ngOnInit(): void {
+    for (const ticket of this.booking.tickets) {
+      if (new Date(ticket.performance.date).getTime() < new Date().getTime()) {
+        this.inThePast = true;
+      }
+    }
   }
 
   onStornoClick(booking) {

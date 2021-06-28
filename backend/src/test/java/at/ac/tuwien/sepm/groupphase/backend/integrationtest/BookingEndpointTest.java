@@ -196,7 +196,7 @@ public class BookingEndpointTest implements TestAuthentification, TestDataTicket
 
         Performance savedPerformance = performanceRepository.save(Performance.builder()
             .ticketTypes(ticketTypeSet)
-            .date(LocalDateTime.now())
+            .date(LocalDateTime.now().plusDays(3))
             .artist(savedArtist)
             .description("THIS IS A PERFORMANCE")
             .title("PERFORMANCE 1")
@@ -342,5 +342,27 @@ public class BookingEndpointTest implements TestAuthentification, TestDataTicket
                 ticketRepository.checkIfSeatIsFreeByPerformance(ticket.getPerformance(), ticket.getSeat())
             );
         }
+    }
+
+    @Test
+    @DisplayName("Seats should be free, when Booking gets cancelled")
+    public void whenCancelBookingOfPerformanceInPast_then400() throws Exception
+    {
+        Performance invalidPerformance = booking.getTickets().iterator().next().getPerformance();
+        invalidPerformance.setDate(LocalDateTime.now().minusDays(1));
+        performanceRepository.save(invalidPerformance);
+        bookingRepository.save(booking);
+        ChangeBookingDto changeBookingDto = ChangeBookingDto.builder().id(booking.getId()).status(Ticket.Status.CANCELLED.toString()).build();
+
+        MvcResult mvcResult = this.mockMvc.perform(
+            put(BASE_URI + "/bookings")
+                .content(
+                    objectMapper.writeValueAsString(changeBookingDto)
+                )
+                .contentType(MediaType.APPLICATION_JSON)
+                .header(securityProperties.getAuthHeader(), authToken)
+        ).andReturn();
+        MockHttpServletResponse response = mvcResult.getResponse();
+        assertEquals(HttpStatus.BAD_REQUEST.value(), response.getStatus());
     }
 }
