@@ -32,7 +32,11 @@ export class LoginComponent implements OnInit {
     });
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    if (this.authService.isLoggedIn()) {
+      this.router.navigate(['/user']);
+    }
+  }
 
   /**
    * Perform login after submitting the form to sign in.
