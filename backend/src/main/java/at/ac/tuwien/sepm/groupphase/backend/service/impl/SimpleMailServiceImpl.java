@@ -1,6 +1,7 @@
 package at.ac.tuwien.sepm.groupphase.backend.service.impl;
 
 import at.ac.tuwien.sepm.groupphase.backend.entity.File;
+import at.ac.tuwien.sepm.groupphase.backend.exception.MailException;
 import at.ac.tuwien.sepm.groupphase.backend.service.SimpleMailService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,7 +50,7 @@ public class SimpleMailServiceImpl implements SimpleMailService {
 
             javaMailSender.send(msg);
         } catch (MessagingException exception) {
-            throw new RuntimeException(exception.getMessage());
+            throw new MailException("Sending mail failed: " + exception.getMessage());
         }
     }
 }
