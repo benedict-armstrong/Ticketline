@@ -58,7 +58,7 @@ export class AddressSearchComponent implements OnInit {
           this.searchedAddresses.emit(this.addresses);
           this.searchedNoAddress.emit(this.noAddress);
         }, error => {
-          console.error(error);
+          //console.error(error);
         }
       );
     } else {
@@ -76,7 +76,7 @@ export class AddressSearchComponent implements OnInit {
           this.searchedAddresses.emit(this.addresses);
           this.searchedNoAddress.emit(this.noAddress);
         }, error => {
-          console.error(error);
+          //console.error(error);
         }
       );
     }

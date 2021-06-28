@@ -35,7 +35,7 @@ export class SelectSeatComponent implements OnInit {
         this.layout = this.performance.venue.layout;
       },
     (error) => {
-      console.error(error);
+      //console.error(error);
     });
 
     this.ticketService.cartState$.subscribe(
@@ -57,14 +57,14 @@ export class SelectSeatComponent implements OnInit {
       1,
       seat.id
     );
-    console.log(ticket);
+    //console.log(ticket);
     this.updatingCart = true;
     this.ticketService.addTicket(ticket).subscribe(
       () => {
         this.updatingCart = false;
       },
       (error) => {
-        console.error(error);
+        //console.error(error);
         this.updatingCart = false;
       }
     );
@@ -77,7 +77,7 @@ export class SelectSeatComponent implements OnInit {
         this.updatingCart = false;
       },
       (error) => {
-        console.error(error);
+        //console.error(error);
         this.updatingCart = false;
       }
     );
@@ -90,7 +90,7 @@ export class SelectSeatComponent implements OnInit {
         this.updatingCart = false;
       },
       (error) => {
-        console.error(error);
+        //console.error(error);
         this.updatingCart = false;
       }
     );

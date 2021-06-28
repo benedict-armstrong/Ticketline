@@ -64,7 +64,7 @@ export class PerformanceSearchComponent implements OnInit {
           this.searchedPerformances.emit(this.performances);
           this.searchedNoPerformance.emit(this.noPerformance);
         }, error => {
-          console.error(error);
+          //console.error(error);
         }
       );
 
@@ -104,7 +104,7 @@ export class PerformanceSearchComponent implements OnInit {
       if (this.doDateSearch) {
         this.performanceService.searchPerformances(this.page, this.size, date, eventId, venueId).subscribe(
             response => {
-              console.log(response);
+              //console.log(response);
               this.performances.push(...response);
 
               if (response.length < this.size) {
@@ -127,7 +127,7 @@ export class PerformanceSearchComponent implements OnInit {
                 this.searchedVenuePerformance.emit(undefined);
               }
             }, error => {
-              console.error(error);
+              //console.error(error);
             }
           );
       }

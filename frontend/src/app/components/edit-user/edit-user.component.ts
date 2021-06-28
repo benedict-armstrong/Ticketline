@@ -99,7 +99,7 @@ export class EditUserComponent implements OnInit {
         }
       );
     } else {
-      console.log('Invalid input');
+      //console.log('Invalid input');
     }
   }
 
@@ -160,7 +160,7 @@ export class EditUserComponent implements OnInit {
   }
 
   private defaultServiceErrorHandling(error: any) {
-    console.log(error);
+    //console.log(error);
     this.error = true;
     if (typeof error.error === 'object') {
       this.errorMessage = error.error.error;

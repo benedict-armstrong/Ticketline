@@ -80,7 +80,7 @@ export class SearchEventListComponent implements OnInit, OnChanges {
   getEvents(){
     this.eventService.getEvents(this.page, this.size).subscribe(
       (response) => {
-        console.log(response);
+        //console.log(response);
 
         this.events.push(...response);
         this.filteredEvents.push(...response);
@@ -95,7 +95,7 @@ export class SearchEventListComponent implements OnInit, OnChanges {
           this.filterEvents();
         }
       }, error => {
-        console.error(error);
+        //console.error(error);
       }
     );
   }

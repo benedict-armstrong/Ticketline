@@ -44,7 +44,7 @@ export class NewsComponent implements OnInit {
           this.user = user;
           this.loadBatch();
         }, error => {
-          console.log(error);
+          //console.log(error);
         }
       );
     }

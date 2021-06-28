@@ -45,7 +45,7 @@ export class AddVenueComponent implements OnInit {
   }
 
   updateLayout(venueLayout: LayoutUnit[][]) {
-    console.log(venueLayout);
+    //console.log(venueLayout);
     this.venueLayout = venueLayout;
   }
 
@@ -94,10 +94,10 @@ export class AddVenueComponent implements OnInit {
   }
 
   private defaultServiceErrorHandling(error: any) {
-    console.log(error);
+    //console.log(error);
     this.error = true;
     if (typeof error.error === 'object') {
-      console.log('error');
+      //console.log('error');
       this.errorMessage = error.error.error;
     } else {
       this.errorMessage = error.error;

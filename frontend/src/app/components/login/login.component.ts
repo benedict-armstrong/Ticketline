@@ -80,7 +80,7 @@ export class LoginComponent implements OnInit {
         this.success = true;
         this.badCredentials = false;
       }, error => {
-        console.error(error);
+        //console.error(error);
       }
     );
   }
@@ -91,7 +91,7 @@ export class LoginComponent implements OnInit {
   }
 
   private defaultServiceErrorHandling(error: any) {
-    console.log(error);
+    //console.log(error);
     this.error = true;
     if (typeof error.error === 'object') {
       this.errorMessage = error.error.error;

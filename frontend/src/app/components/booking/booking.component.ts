@@ -43,7 +43,7 @@ export class BookingComponent implements OnInit {
         }
         this.loading = false;
       }, error => {
-        console.error(error);
+        //console.error(error);
       }
     );
   }
@@ -70,7 +70,7 @@ export class BookingComponent implements OnInit {
         this.bought = true;
         this.scrollToTop();
       }, error => {
-        console.error(error);
+        //console.error(error);
       }
     );
   }
@@ -93,7 +93,7 @@ export class BookingComponent implements OnInit {
 
         this.scrollToTop();
       }, error => {
-        console.error(error);
+        //console.error(error);
       }
     );
   }

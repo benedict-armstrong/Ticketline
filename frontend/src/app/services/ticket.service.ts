@@ -318,7 +318,7 @@ export class TicketService {
   }
 
   private defaultServiceErrorHandling(error: any) {
-    console.log(error);
+    //console.log(error);
     this.error = true;
     if (typeof error.error === 'object') {
       if (error.error.error === '' || error.error.error === null || error.error.error === undefined) {

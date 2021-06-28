@@ -37,7 +37,7 @@ export class AddTicketTypeComponent implements OnInit {
 
   addTicketType() {
     this.submitted = true;
-    console.log('Adding');
+    //console.log('Adding');
     if (this.addTicketTypeForm.valid) {
       const ticketType = new TicketType(
         null,
