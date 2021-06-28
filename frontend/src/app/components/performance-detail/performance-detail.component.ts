@@ -45,16 +45,18 @@ export class PerformanceDetailComponent implements OnInit {
     const performanceId = this.activeRoute.snapshot.params.id;
     this.performanceService.getPerformanceById(performanceId).subscribe(
       (response) => {
-        if (this.performance === null || this.performance === undefined) {
+        if (this.performance === null || this.performance === undefined || this.selectSeats) {
           this.performance = response;
         } else {
           this.performance.artist = response.artist;
           this.performance.date = response.date;
           this.performance.description = response.description;
           this.performance.id = response.id;
-          this.performance.ticketTypes = response.ticketTypes;
           this.performance.title = response.title;
           this.performance.venue = response.venue;
+          if(this.performance.ticketTypes === null || this.performance.ticketTypes === undefined) {
+            this.performance.ticketTypes = response.ticketTypes;
+          }
         }
 
         this.performance.ticketTypes.sort((a, b) => a.price - b.price);
