@@ -7,7 +7,7 @@
       <div class="btns-wrap">
         <button *ngIf="booking.status != 'RESERVED'" class="secondary" type="button" (click)="onDownloadClick(booking)">Download Invoice</button>
         <button *ngIf="booking.status === 'RESERVED'" class="secondary" type="button" (click)="onBuyClick(booking)">Buy</button>
-        <button *ngIf="booking.status !== 'CANCELLED'" class="secondary" type="button" (click)="onStornoClick(booking)">Cancel</button>
+        <button [ngClass]="{'locked deactivated': inThePast}" *ngIf="booking.status !== 'CANCELLED'" class="secondary" type="button" (click)="onStornoClick(booking)">Cancel</button>
       </div>
     </div>
   </div>
