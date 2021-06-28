@@ -41,7 +41,7 @@ export class CartItemComponent implements OnInit {
           this.success = true;
         },
         (error) => {
-          console.error(error);
+          //console.error(error);
           this.waiting = false;
         }
       );
@@ -57,7 +57,7 @@ export class CartItemComponent implements OnInit {
           this.success = true;
         },
         (error) => {
-          console.error(error);
+          //console.error(error);
           this.waiting = false;
         }
       );
@@ -93,7 +93,7 @@ export class CartItemComponent implements OnInit {
   }
 
   private defaultServiceErrorHandling(error: any) {
-    console.log(error);
+    //console.log(error);
     this.error = true;
     if (typeof error.error === 'object') {
       this.errorMessage = error.error.error;

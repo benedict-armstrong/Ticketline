@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { Address } from 'src/app/dtos/address';
 import { User } from '../../dtos/user';
 import { UserService } from '../../services/user.service';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-register',
@@ -24,6 +25,7 @@ export class RegisterComponent implements OnInit {
   constructor(
     private userService: UserService,
     private formBuilder: FormBuilder,
+    private authService: AuthService,
     private router: Router
   ) {
     this.registerForm = this.formBuilder.group({
@@ -81,7 +83,7 @@ export class RegisterComponent implements OnInit {
         }
       );
     } else {
-      console.log('Invalid input');
+      //console.log('Invalid input');
     }
   }
 
@@ -90,10 +92,14 @@ export class RegisterComponent implements OnInit {
     this.success = false;
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    if (this.authService.isLoggedIn()) {
+      this.router.navigate(['/']);
+    }
+  }
 
   private defaultServiceErrorHandling(error: any) {
-    console.log(error);
+    //console.log(error);
     this.error = true;
     if (typeof error.error === 'object') {
       this.errorMessage = error.error.error;

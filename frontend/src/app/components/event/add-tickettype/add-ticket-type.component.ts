@@ -37,31 +37,28 @@ export class AddTicketTypeComponent implements OnInit {
 
   addTicketType() {
     this.submitted = true;
-    console.log('Adding');
+    //console.log('Adding');
     if (this.addTicketTypeForm.valid) {
       const ticketType = new TicketType(
         null,
         this.addTicketTypeForm.value.name,
         this.addTicketTypeForm.value.sector,
-        this.addTicketTypeForm.value.price,
+        this.addTicketTypeForm.value.price * 100,
         );
 
       this.ticketTypes.push(ticketType);
 
-      this.createdTicketType();
+      this.ticketTypesChanged.emit(this.ticketTypes);
 
       this.addTicketTypeForm.reset();
       this.submitted = false;
     }
   }
 
-  removeTicketType(index: number) {
-    if (index > -1) {
-      this.ticketTypes.splice(index, 1);
-    }
-  }
-
-  createdTicketType() {
+  remove(ticketType: TicketType) {
+    this.ticketTypes = this.ticketTypes.filter(item => item.title !== ticketType.title ||
+                                                       item.sector.id !== ticketType.sector.id ||
+                                                       item.price !== ticketType.price);
     this.ticketTypesChanged.emit(this.ticketTypes);
   }
 

@@ -55,11 +55,21 @@ export class TicketService {
 
   reload(): void {
     this.updateShoppingCart().subscribe(() => {
-        this.updateCartState();
     },
     (error) => {
       this.defaultServiceErrorHandling(error);
   });
+  }
+
+  updateWrapper(): void {
+    this.cart.sort((a, b) => a[0].id - b[0].id);
+
+    for (const cartItem of this.cart) {
+      cartItem.sort((a, b) => a.seat.id - b.seat.id);
+    }
+    this.updatePrice();
+    this.updateSameSector();
+    this.updateCartState();
   }
 
   updatePrice(): void {
@@ -128,9 +138,7 @@ export class TicketService {
           });
 
           this.cart = newCart;
-          this.updatePrice();
-          this.updateSameSector();
-          this.updateCartState();
+          this.updateWrapper();
 
           this.loading = false;
           this.success = true;
@@ -182,9 +190,7 @@ export class TicketService {
           if (!done) {
             this.cart.push(tickets);
           }
-          this.updatePrice();
-          this.updateSameSector();
-          this.updateCartState();
+          this.updateWrapper();
           subscriber.next(this.cart);
         },
         (error) => {
@@ -205,9 +211,7 @@ export class TicketService {
               .find((t) => t.id === ticket.id);
             oldTicket.ticketType = ticket.ticketType;
 
-            this.updatePrice();
-            this.updateSameSector();
-            this.updateCartState();
+            this.updateWrapper();
             subscriber.next(ticket);
           }
         },
@@ -235,9 +239,7 @@ export class TicketService {
                 }
               }
             });
-            this.updatePrice();
-            this.updateSameSector();
-            this.updateCartState();
+            this.updateWrapper();
             subscriber.next(this.cart);
           }
         },
@@ -260,9 +262,7 @@ export class TicketService {
             } else {
               this.cart[cartIndex].splice(ticketIndex, 1);
             }
-            this.updatePrice();
-            this.updateSameSector();
-            this.updateCartState();
+            this.updateWrapper();
             subscriber.next(this.cart);
           }
         },
@@ -285,9 +285,7 @@ export class TicketService {
         (response: boolean) => {
           if (response) {
             this.cart.splice(cartIndex, 1);
-            this.updatePrice();
-            this.updateSameSector();
-            this.updateCartState();
+            this.updateWrapper();
             subscriber.next();
           }
         },
@@ -300,12 +298,10 @@ export class TicketService {
   }
 
   checkout(): Observable<boolean> {
-    this.updateCartState();
     return this.httpClient.put<boolean>(this.ticketBaseUri + '/checkout', null);
   }
 
   reserve(): Observable<boolean> {
-    this.updateCartState();
     return this.httpClient.put<boolean>(this.ticketBaseUri + '/reserve', null);
   }
 
@@ -322,7 +318,7 @@ export class TicketService {
   }
 
   private defaultServiceErrorHandling(error: any) {
-    console.log(error);
+    //console.log(error);
     this.error = true;
     if (typeof error.error === 'object') {
       if (error.error.error === '' || error.error.error === null || error.error.error === undefined) {

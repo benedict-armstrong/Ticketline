@@ -75,7 +75,7 @@ export class SearchResultComponent implements OnInit {
           this.noEvent = false;
         }
       }, error => {
-        console.error(error);
+        //console.error(error);
       }
     );
   }
@@ -188,12 +188,12 @@ export class SearchResultComponent implements OnInit {
             this.page++;
             this.noEvent = false;
           }
-          console.log(response);
+          //console.log(response);
 
           this.fullTextSearched = true;
           this.loadingFullTextSearch = false;
         }, error => {
-          console.error(error);
+          //console.error(error);
         }
       );
     }

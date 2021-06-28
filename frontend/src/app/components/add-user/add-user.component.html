@@ -10,7 +10,7 @@
           <input type="text" name="firstName" formControlName="firstName" class="text-input form-control" id="firstName"
             aria-describedby="firstNameHelp" placeholder="Enter first Name">
           <div *ngIf="submitted && addUserForm.controls.firstName.errors" class="error">
-            <small class="form-text text-warning" *ngIf="addUserForm.controls.firstName.errors.required">Your first Name
+            <small class="form-text text-danger" *ngIf="addUserForm.controls.firstName.errors.required">Your first Name
               is
               required!
             </small>
@@ -23,7 +23,7 @@
           <input type="text" name="lastName" formControlName="lastName" class="text-input form-control" id="lastName"
             aria-describedby="lastNameHelp" placeholder="Enter last Name">
           <div *ngIf="submitted && addUserForm.controls.lastName.errors" class="error">
-            <small class="form-text text-warning" *ngIf="addUserForm.controls.lastName.errors.required">Your last Name
+            <small class="form-text text-danger" *ngIf="addUserForm.controls.lastName.errors.required">Your last Name
               is
               required!
             </small>
@@ -37,7 +37,7 @@
       <input type="email" name="email" formControlName="email" class="text-input form-control" id="email"
         aria-describedby="emailHelp" placeholder="Enter email">
       <div *ngIf="submitted && addUserForm.controls.email.errors" class="error">
-        <small class="form-text text-warning" *ngIf="addUserForm.controls.email.errors.required">Your email is
+        <small class="form-text text-danger" *ngIf="addUserForm.controls.email.errors.required">Your email is
           required!
         </small>
       </div>
@@ -54,11 +54,11 @@
       <input type="password" name="password" formControlName="password" class="text-input form-control" id="password"
         placeholder="Password">
       <div *ngIf="submitted && addUserForm.controls.password.errors" class="error">
-        <small class="form-text text-warning" *ngIf="addUserForm.controls.password.errors.required">Your password
+        <small class="form-text text-danger" *ngIf="addUserForm.controls.password.errors.required">Your password
           is
           required!
         </small>
-        <small class="form-text text-warning" *ngIf="addUserForm.controls.password.errors.minlength">Your password
+        <small class="form-text text-danger" *ngIf="addUserForm.controls.password.errors.minlength">Your password
           must be at least 8 characters long!
         </small>
       </div>
@@ -69,7 +69,7 @@
       <input type="password" name="passwordRepeat" formControlName="passwordRepeat" class="text-input form-control"
         id="passwordRepeat" placeholder="Repeat Password">
       <div *ngIf="submitted" class="error">
-        <small class="form-text text-warning"
+        <small class="form-text text-danger"
           *ngIf="addUserForm.value.password != addUserForm.value.passwordRepeat">Your passwords must match.
         </small>
       </div>
@@ -86,7 +86,7 @@
             <option value="ADMIN">Admin</option>
           </select>
           <div *ngIf="submitted && addUserForm.controls.role.errors" class="error">
-            <small class="form-text text-warning" *ngIf="addUserForm.controls.role.errors.required">A User Role is
+            <small class="form-text text-danger" *ngIf="addUserForm.controls.role.errors.required">A User Role is
               required!
             </small>
           </div>
@@ -101,7 +101,7 @@
             <option value="BANNED">Banned</option>
           </select>
           <div *ngIf="submitted && addUserForm.controls.status.errors" class="error">
-            <small class="form-text text-warning" *ngIf="addUserForm.controls.status.errors.required">A status is
+            <small class="form-text text-danger" *ngIf="addUserForm.controls.status.errors.required">A status is
               required!
             </small>
           </div>
@@ -114,7 +114,7 @@
       <input type="text" name="addressName" formControlName="addressName" class="text-input form-control"
         id="addressName" aria-describedby="addressNameHelp" placeholder="Enter Address Name">
       <div *ngIf="submitted && addUserForm.controls.addressName.errors" class="error">
-        <small class="form-text text-warning" *ngIf="addUserForm.controls.addressName.errors.required">Your Address Name
+        <small class="form-text text-danger" *ngIf="addUserForm.controls.addressName.errors.required">Your Address Name
           is
           required!
         </small>
@@ -126,7 +126,7 @@
       <input type="text" name="lineOne" formControlName="lineOne" class="text-input form-control" id="lineOne"
         aria-describedby="lineOneHelp" placeholder="Enter line one">
       <div *ngIf="submitted && addUserForm.controls.lineOne.errors" class="error">
-        <small class="form-text text-warning" *ngIf="addUserForm.controls.lineOne.errors.required">Your line one is
+        <small class="form-text text-danger" *ngIf="addUserForm.controls.lineOne.errors.required">Your line one is
           required!
         </small>
       </div>
@@ -145,7 +145,7 @@
           <input type="text" name="city" formControlName="city" class="text-input form-control" id="city"
             aria-describedby="cityHelp" placeholder="Enter City name">
           <div *ngIf="submitted && addUserForm.controls.city.errors" class="error">
-            <small class="form-text text-warning" *ngIf="addUserForm.controls.city.errors.required">Your City Name is
+            <small class="form-text text-danger" *ngIf="addUserForm.controls.city.errors.required">Your City Name is
               required!
             </small>
           </div>
@@ -157,7 +157,7 @@
           <input type="text" name="postcode" formControlName="postcode" class="text-input form-control" id="postcode"
             aria-describedby="postcodeHelp" placeholder="Enter Postcode">
           <div *ngIf="submitted && addUserForm.controls.postcode.errors" class="error">
-            <small class="form-text text-warning" *ngIf="addUserForm.controls.postcode.errors.required">Your Postcode is
+            <small class="form-text text-danger" *ngIf="addUserForm.controls.postcode.errors.required">Your Postcode is
               required!
             </small>
           </div>
@@ -170,7 +170,7 @@
       <input type="text" name="country" formControlName="country" class="text-input form-control" id="country"
         aria-describedby="countryHelp" placeholder="Enter Country">
       <div *ngIf="submitted && addUserForm.controls.country.errors" class="error">
-        <small class="form-text text-warning" *ngIf="addUserForm.controls.country.errors.required">Your Country is
+        <small class="form-text text-danger" *ngIf="addUserForm.controls.country.errors.required">Your Country is
           required!
         </small>
       </div>
@@ -185,7 +185,7 @@
       </button>
     </div>
     <div *ngIf="success" class="col-12 alert alert-success alert-dismissible fade show" role="alert">
-      <strong>Success</strong> The user has been created.
+      <strong>Success:</strong> The user has been created. Redirect in 3...
       <button type="button" (click)="vanishAlert()" class="close" data-dismiss="alert" aria-label="Close">
         <span aria-hidden="true">&times;</span>
       </button>

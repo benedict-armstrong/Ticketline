@@ -31,7 +31,7 @@ export class AuthGuard implements CanActivate {
     if (route.data.roles.includes(userRole)) {
       return true;
     }
-    console.log('Not the necessary permissions');
+    //console.log('Not the necessary permissions');
     return false;
   }
 }
