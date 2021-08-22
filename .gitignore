@@ -4,6 +4,22 @@
 *.iml
 *.ipr
 
+*.cfe
+*.si
+*.cfs
+*.lock
+*.fdt
+*.fdx
+*.fnm
+*.nvm
+*.nvd
+segments_l
+segments_b
+*.doc
+*.pos
+*.tim
+*.tip
+
 ### VS Code ###
 .vscode/
 

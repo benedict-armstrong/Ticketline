@@ -1,0 +1,18 @@
+FROM openjdk:11
+
+WORKDIR /app
+
+COPY backend/.mvn/ ./backend/.mvn/
+COPY backend/pom.xml ./backend/
+COPY backend/mvnw ./backend/
+COPY backend/checkstyle.xml ./backend/
+
+COPY backend/src ./backend/src/
+COPY database/ ./database
+RUN mkdir /log
+
+RUN  cd backend; ./mvnw dependency:go-offline
+
+WORKDIR /app/backend
+
+CMD ["./mvnw", "spring-boot:run"]

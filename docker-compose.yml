@@ -1,0 +1,25 @@
+version: '3.9'
+services:
+  sepm-client:
+    container_name: sepm-client
+    build: ./docker-frontend/
+    image: benarmstrong/sepm-client:latest
+    restart: always
+    depends_on:
+      - sepm-backend
+
+  sepm-backend:
+    container_name: sepm-backend
+    build: ./docker-backend/
+    image: benarmstrong/sepm-backend:latest
+    restart: always
+    volumes:
+      - ./data:/app/database
+
+  sepm-proxy:
+    container_name: sepm-proxy
+    build: ./proxy/
+    image: benarmstrong/sepm-proxy:latest
+    restart: always
+    ports:
+      - 8004:8004

@@ -49,6 +49,8 @@ public class AddressEndpoint {
         return addressMapper.addressToAddressDto(addressService.getOneById(id));
     }
 
+    // Comment
+
     @Secured("ROLE_ORGANIZER")
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
